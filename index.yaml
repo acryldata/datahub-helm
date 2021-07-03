@@ -1,0 +1,225 @@
+apiVersion: v1
+entries:
+  datahub:
+  - apiVersion: v2
+    appVersion: 0.8.5
+    created: "2021-06-30T23:56:58.339588-07:00"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./charts/datahub-gms
+      version: 0.2.1
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./charts/datahub-frontend
+      version: 0.2.1
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mae-consumer
+      repository: file://./charts/datahub-mae-consumer
+      version: 0.2.1
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mce-consumer
+      repository: file://./charts/datahub-mce-consumer
+      version: 0.2.1
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./charts/datahub-ingestion-cron
+      version: 0.2.1
+    description: A Helm chart for LinkedIn DataHub
+    digest: f407fe375f4474eca32aba14107106bec9af80164f95a017937da1f80ffe952a
+    name: datahub
+    type: application
+    urls:
+    - https://helm.datahubproject.io/charts/datahub-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: 0.8.4
+    created: "2021-06-30T23:56:58.336154-07:00"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./charts/datahub-gms
+      version: 0.2.1
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./charts/datahub-frontend
+      version: 0.2.1
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mae-consumer
+      repository: file://./charts/datahub-mae-consumer
+      version: 0.2.1
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mce-consumer
+      repository: file://./charts/datahub-mce-consumer
+      version: 0.2.1
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./charts/datahub-ingestion-cron
+      version: 0.2.1
+    description: A Helm chart for LinkedIn DataHub
+    digest: b064b69749334d25bc229e8c84aa4d3d4ed1ed7b2e7d474428d41819a830d112
+    name: datahub
+    type: application
+    urls:
+    - https://helm.datahubproject.io/charts/datahub-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 0.8.3
+    created: "2021-06-30T23:56:58.333623-07:00"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./charts/datahub-gms
+      version: 0.2.1
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./charts/datahub-frontend
+      version: 0.2.1
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mae-consumer
+      repository: file://./charts/datahub-mae-consumer
+      version: 0.2.1
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mce-consumer
+      repository: file://./charts/datahub-mce-consumer
+      version: 0.2.1
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./charts/datahub-ingestion-cron
+      version: 0.2.1
+    description: A Helm chart for LinkedIn DataHub
+    digest: fb7c81adca6c479754729f41d2dd665b8a55e790bb338c6a8292bc0dab7d5d55
+    name: datahub
+    type: application
+    urls:
+    - https://helm.datahubproject.io/charts/datahub-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 0.8.1
+    created: "2021-06-30T23:56:58.331044-07:00"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./charts/datahub-gms
+      version: 0.2.1
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./charts/datahub-frontend
+      version: 0.2.1
+    - condition: datahub-mae-consumer.enabled
+      name: datahub-mae-consumer
+      repository: file://./charts/datahub-mae-consumer
+      version: 0.2.1
+    - condition: datahub-mce-consumer.enabled
+      name: datahub-mce-consumer
+      repository: file://./charts/datahub-mce-consumer
+      version: 0.2.1
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./charts/datahub-ingestion-cron
+      version: 0.2.1
+    description: A Helm chart for LinkedIn DataHub
+    digest: 03517909eb6bb4eec880496fcbabdf87294632792c59da23ebe4edbfb8771dc8
+    name: datahub
+    type: application
+    urls:
+    - https://helm.datahubproject.io/charts/datahub-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: latest
+    created: "2021-07-03T00:46:16.924436499Z"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./subcharts/datahub-gms
+      version: 0.2.1
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./subcharts/datahub-frontend
+      version: 0.2.1
+    - condition: datahub-mae-consumer.enabled
+      name: datahub-mae-consumer
+      repository: file://./subcharts/datahub-mae-consumer
+      version: 0.2.1
+    - condition: datahub-mce-consumer.enabled
+      name: datahub-mce-consumer
+      repository: file://./subcharts/datahub-mce-consumer
+      version: 0.2.1
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./subcharts/datahub-ingestion-cron
+      version: 0.2.1
+    description: A Helm chart for LinkedIn DataHub
+    digest: 44a24b6a74c20a6660899324784d490bd408cf67c5458fa93fb370525f2751e6
+    name: datahub
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-0.1.200/datahub-0.1.200.tgz
+    version: 0.1.200
+  - apiVersion: v2
+    appVersion: latest
+    created: "2021-06-30T23:56:58.322727-07:00"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./charts/datahub-gms
+      version: 0.2.1
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./charts/datahub-frontend
+      version: 0.2.1
+    - condition: datahub-mae-consumer.enabled
+      name: datahub-mae-consumer
+      repository: file://./charts/datahub-mae-consumer
+      version: 0.2.1
+    - condition: datahub-mce-consumer.enabled
+      name: datahub-mce-consumer
+      repository: file://./charts/datahub-mce-consumer
+      version: 0.2.1
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./charts/datahub-ingestion-cron
+      version: 0.2.1
+    description: A Helm chart for LinkedIn DataHub
+    digest: 1044719fd52d057a6f87816386d96ebe7d5b28f8a35284361d058b372582c03c
+    name: datahub
+    type: application
+    urls:
+    - https://helm.datahubproject.io/charts/datahub-0.1.2.tgz
+    version: 0.1.2
+  datahub-prerequisites:
+  - apiVersion: v2
+    created: "2021-06-30T23:56:58.359113-07:00"
+    dependencies:
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: 7.9.3
+    - condition: neo4j.enabled
+      name: neo4j
+      repository: https://neo4j-contrib.github.io/neo4j-helm/
+      version: 4.2.2-1
+    - condition: neo4j-community.enabled
+      name: neo4j-community
+      repository: https://equinor.github.io/helm-charts/charts/
+      version: 1.2.4
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.5.4
+    - condition: cp-helm-charts.enabled
+      name: cp-helm-charts
+      repository: https://confluentinc.github.io/cp-helm-charts/
+      version: 0.6.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.17.4
+    description: A Helm chart for packages that Datahub depends on
+    digest: 6ab39b4e1dde3e72a41324e919cda1358def8fe3b94109fa421b0a8fb796e369
+    name: datahub-prerequisites
+    type: application
+    urls:
+    - https://helm.datahubproject.io/charts/datahub-prerequisites-0.0.1.tgz
+    version: 0.0.1
+generated: "2021-07-03T00:46:16.924468803Z"

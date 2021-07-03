@@ -40,3 +40,5 @@ jobs:
           charts_repo_url: https://helm.datahubproject.io
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1

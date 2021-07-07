@@ -1,6 +1,9 @@
 name: Lint and Test Charts
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     paths-ignore:
       - 'README.md'

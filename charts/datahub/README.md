@@ -1,14 +1,14 @@
-datahub
+DataHub
 =======
 A Helm chart for LinkedIn DataHub
 
 ## Install DataHub
 Run the following command to install datahub with default configuration.
 
-``
+```
 helm repo add datahub https://helm.datahubproject.io
 helm install datahub datahub/datahub
-``
+```
 
 If the default configuration is not applicable, you can update the values listed below in a `values.yaml` file and run
 ```

@@ -24,10 +24,6 @@ spec:
     {{- with .Values.elasticsearchSetupJob.serviceAccount }}
       serviceAccountName: {{ . }}
     {{- end }}
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       volumes:
       {{- with .Values.elasticsearchSetupJob.extraVolumes }}
         {{- toYaml . | nindent 8}}

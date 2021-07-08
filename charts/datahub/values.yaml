@@ -1,105 +1,94 @@
-# Values to start up datahub after starting up the datahub-prerequisites chart with "prerequisites" release name
-# Copy this chart and change configuration as needed.
+# Default values for datahub.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
 datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    tag: "v0.8.5"
+    tag: "latest"
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    tag: "v0.8.5"
-  # Set up ingress to expose react front-end
-  ingress:
-    enabled: false
+    tag: "latest"
 
 datahub-mae-consumer:
   enabled: true
   image:
     repository: linkedin/datahub-mae-consumer
-    tag: "v0.8.5"
+    tag: "latest"
 
 datahub-mce-consumer:
   enabled: true
   image:
     repository: linkedin/datahub-mce-consumer
-    tag: "v0.8.5"
+    tag: "latest"
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: linkedin/datahub-ingestion
-    tag: "v0.8.5"
+    tag: "latest"
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    tag: "v0.8.5"
+    tag: "latest"
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    tag: "v0.8.5"
+    tag: "latest"
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    tag: "v0.8.5"
-
-datahubUpgrade:
-  enabled: true
-  image:
-    repository: acryldata/datahub-upgrade
-    tag: "v0.8.5"
-  noCodeDataMigration:
-    sqlDbType: "MYSQL"
+    tag: "latest"
 
 global:
-  graph_service_impl: neo4j
   datahub_analytics_enabled: true
-  datahub_standalone_consumers_enabled: false
 
   elasticsearch:
-    host: "elasticsearch-master"
+    host: "elasticsearch"
     port: "9200"
 
   kafka:
     bootstrap:
-      server: "prerequisites-kafka:9092"
+      server: "broker:9092"
     zookeeper:
-      server: "prerequisites-zookeeper:2181"
+      server: "zookeeper:2181"
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
+      url: "http://schema-registry:8081"
 
   neo4j:
-    host: "prerequisites-neo4j-community:7474"
-    uri: "bolt://prerequisites-neo4j-community"
+    host: "neo4j:7474"
+    uri: "bolt://neo4j"
     username: "neo4j"
     password:
-      secretRef: neo4j-secrets
-      secretKey: neo4j-password
+      secretRef: "neo4j-secrets"
+      secretKey: "neo4j-password"
 
   sql:
     datasource:
-      host: "prerequisites-mysql:3306"
-      hostForMysqlClient: "prerequisites-mysql"
+      host: "mysql:3306"
+      hostForMysqlClient: "mysql"
       port: "3306"
-      url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      url: "jdbc:mysql://mysql:3306/datahub?verifyServerCertificate=false&useSSL=true"
       driver: "com.mysql.jdbc.Driver"
-      username: "root"
+      username: "datahub"
       password:
-        secretRef: mysql-secrets
-        secretKey: mysql-root-password
+        secretRef: "mysql-secrets"
+        secretKey: "mysql-password"
 
   datahub:
     gms:
       port: "8080"
-    mae_consumer:
+    datahub-mae-consumer:
       port: "9091"
     appVersion: "1.0"
 

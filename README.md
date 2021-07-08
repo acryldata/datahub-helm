@@ -6,7 +6,8 @@ title: "Deploying with Kubernetes"
 
 ## Introduction
 [This repo](https://github.com/acryldata/datahub-helm) provides 
-the Kubernetes [Helm](https://helm.sh/) charts for deploying [Datahub](https://github.com/acryldata/datahub-helm/tree/master/charts/datahub) and it's [dependencies](https://github.com/acryldata/datahub-helm/tree/master/charts/prerequisites) 
+the Kubernetes [Helm](https://helm.sh/) charts for deploying 
+[Datahub](https://github.com/linkedin/datahub) and it's dependencies 
 (Elasticsearch, optionally Neo4j, MySQL, and Kafka) on a Kubernetes cluster.
 
 ## Setup
@@ -129,10 +130,11 @@ You should be able to access the frontend via http://localhost:9002.
 
 Once you confirm that the pods are running well, you can set up ingress for datahub-frontend 
 to expose the 9002 port to the public.  
-## Other useful commands
 
-| Command | Description | 
-|-----|------|
-| helm uninstall datahub | Remove DataHub |
-| helm ls | List of Helm charts |
-| helm history | Fetch a release history | 
+## Contributing
+
+We welcome contributions from the community. Please refer to our [Contributing Guidelines](CONTRIBUTING.md) for more details. 
+
+## Community
+
+Join our [slack workspace](https://slack.datahubproject.io) for discussions and important announcements. 

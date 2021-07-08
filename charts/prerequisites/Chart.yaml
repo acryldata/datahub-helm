@@ -4,7 +4,7 @@ description: A Helm chart for packages that Datahub depends on
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.0.3
+version: 0.0.4
 dependencies:
   - name: elasticsearch
     version: 7.9.3
@@ -17,7 +17,7 @@ dependencies:
     condition: neo4j.enabled
   # This chart deploys a community version of neo4j
   - name: neo4j-community
-    version: 1.2.4
+    version: 1.2.5
     repository: https://equinor.github.io/helm-charts/charts/
     condition: neo4j-community.enabled
   - name: mysql

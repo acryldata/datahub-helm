@@ -1,8 +1,5 @@
----
-title: "Deploying with Kubernetes"
----
-
-# Deploying Datahub with Kubernetes
+# DataHub Kubernetes Helm Charts
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/datahub)](https://artifacthub.io/packages/search?repo=datahub)
 
 ## Introduction
 [This repo](https://github.com/acryldata/datahub-helm) provides 

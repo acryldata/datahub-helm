@@ -29,3 +29,6 @@ dependencies:
     version: 0.2.1
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
+  - name: datahub-jmxexporter
+    version: 0.2.1
+    repository: file://./subcharts/datahub-jmxexporter

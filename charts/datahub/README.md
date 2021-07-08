@@ -1,5 +1,7 @@
 DataHub
 =======
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/datahub)](https://artifacthub.io/packages/search?repo=datahub)
+
 A Helm chart for LinkedIn DataHub
 
 ## Install DataHub

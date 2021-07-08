@@ -58,6 +58,10 @@ spec:
                   name: "{{ .password.secretRef }}"
                   key: "{{ .password.secretKey }}"
             {{- end }}
+            {{- with .Values.global.elasticsearch.indexPrefix }}
+            - name: INDEX_PREFIX
+              value: {{ . }}
+            {{- end }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
           {{- with .Values.elasticsearchSetupJob.extraEnvs }}

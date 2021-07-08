@@ -2,14 +2,18 @@ datahub
 =======
 A Helm chart for LinkedIn DataHub
 
-Current chart version is `0.1.2`
-
 ## Install DataHub
-Navigate to the current directory and run the below command.  Update the `datahub/values.yaml` file with valid hostname/IP address configuration for elasticsearch, neo4j, schema-registry, broker & mysql. 
+Run the following command to install datahub with default configuration.
 
 ``
-helm install datahub datahub/
+helm repo add datahub https://helm.datahubproject.io
+helm install datahub datahub/datahub
 ``
+
+If the default configuration is not applicable, you can update the values listed below in a `values.yaml` file and run
+```
+helm install datahub datahub/datahub --values <<path-to-values-file>>
+```
 
 ## Chart Values
 

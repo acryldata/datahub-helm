@@ -1,7 +1,7 @@
 # Default configuration for pre-requisites to get you started
 # Copy this file and update to the configuration of choice
 elasticsearch:
-  enabled: true # set this to false, if you want to provide your own ES instance.
+  enabled: true   # set this to false, if you want to provide your own ES instance.
   cluster:
     env:
       MINIMUM_MASTER_NODES: 1
@@ -32,7 +32,7 @@ elasticsearch:
 
   # # Request smaller persistent volumes.
   # volumeClaimTemplate:
-  #   accessModes: [ "ReadWriteOnce" ]
+  #   accessModes: ["ReadWriteOnce"]
   #   storageClassName: "standard"
   #   resources:
   #     requests:
@@ -40,7 +40,7 @@ elasticsearch:
 
 # Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
 neo4j:
-  enabled: false # set this to true, if you have a license for the enterprise edition
+  enabled: false  # set this to true, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
   neo4jPassword: "datahub"
@@ -51,7 +51,7 @@ neo4j:
 
 # Deploys neo4j community version. Only supports single node
 neo4j-community:
-  enabled: true # set this to false, if you have a license for the enterprise edition
+  enabled: true   # set this to false, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
   # For better security, add password to neo4j-secrets k8s secret and uncomment below
@@ -68,7 +68,7 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: true
     kafka:
-      bootstrapServers: "prerequisites-kafka:9092" ## <<release-name>>-kafka:9092
+      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
   cp-kafka:
     enabled: false
   cp-zookeeper:

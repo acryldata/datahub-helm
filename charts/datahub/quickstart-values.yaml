@@ -48,7 +48,6 @@ global:
   elasticsearch:
     host: "elasticsearch-master"
     port: "9200"
-    indexPrefix: demo
 
   kafka:
     bootstrap:

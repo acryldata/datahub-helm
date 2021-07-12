@@ -4,11 +4,15 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'NOTICE'
   pull_request:
     paths-ignore:
-      - 'README.md'
-      - 'charts/**/README.md'
+      - '**.md'
       - 'LICENSE'
+      - 'NOTICE'
 
 jobs:
   lint-test:

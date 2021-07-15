@@ -27,10 +27,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |
 | datahub-gms.image.tag | string | `"v0.8.6"` | Image tag for datahub-gms |
-| datahub-mae-consumer.enabled | bool | `true` | Enable MAE Consumer |
 | datahub-mae-consumer.image.repository | string | `"linkedin/datahub-mae-consumer"` | Image repository for datahub-mae-consumer |
 | datahub-mae-consumer.image.tag | string | `"v0.8.6"` | Image tag for datahub-mae-consumer |
-| datahub-mce-consumer.enabled | bool | `true` | Enable MCE Consumer |
 | datahub-mce-consumer.image.repository | string | `"linkedin/datahub-mce-consumer"` | Image repository for datahub-mce-consumer |
 | datahub-mce-consumer.image.tag | string | `"v0.8.6"` | Image tag for datahub-mce-consumer |
 | datahub-ingestion-cron.enabled | bool | `false` | Enable cronjob for periodic ingestion |
@@ -43,6 +41,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `""` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `""` | Image repository for mysqlSetupJob |
+| global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |
 | global.datahub_analytics_enabled | boolean | true | Enable datahub usage analytics |
 | global.datahub.appVersion | string | `"1.0"` | App version for annotation |
 | global.datahub.gms.port | string | `"8080"` | Port of GMS service |

@@ -42,6 +42,10 @@ spec:
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
+      initContainers:
+      {{- with .Values.extraInitContainers }}
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
       containers:
         - name: datahub-upgrade-job
           image: "{{ .Values.datahubUpgrade.image.repository }}:{{ .Values.datahubUpgrade.image.tag }}"
@@ -150,4 +154,16 @@ spec:
             requests:
               cpu: 300m
               memory: 256Mi
+      {{- with .Values.datahubUpgrade.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- with .Values.datahubUpgrade.affinity }}
+      affinity:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- with .Values.datahubUpgrade.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
 {{- end -}}

@@ -79,6 +79,8 @@ spec:
             - name: MAE_CONSUMER_ENABLED
               value: "true"
             {{- end }}
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
             - name: DATAHUB_ANALYTICS_ENABLED
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: EBEAN_DATASOURCE_USERNAME

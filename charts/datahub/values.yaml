@@ -71,6 +71,8 @@ global:
       server: "prerequisites-kafka:9092"
     zookeeper:
       server: "prerequisites-zookeeper:2181"
+    # partitions: 3
+    # replicationFactor: 3
     schemaregistry:
       url: "http://prerequisites-cp-schema-registry:8081"
       # type: AWS_GLUE

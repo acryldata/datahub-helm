@@ -66,6 +66,10 @@ spec:
                   key: {{ $envVarValue }}
             {{- end }}
             {{- end }}
+            - name: PARTITIONS
+              value: {{ .Values.global.kafka.partitions | default "3" }}
+            - name: REPLICATION_FACTOR
+              value: {{ .Values.global.kafka.replicationFactor | default "3" }}
           {{- with .Values.kafkaSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

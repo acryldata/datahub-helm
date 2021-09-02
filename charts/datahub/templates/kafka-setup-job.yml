@@ -68,11 +68,11 @@ spec:
             {{- end }}
             {{- with .Values.global.kafka.partitions }}
             - name: PARTITIONS
-              value: {{ .Values.global.kafka.partitions | quote }}
+              value: {{ . | quote }}
             {{- end }}
             {{- with .Values.global.kafka.replicationFactor }}
             - name: REPLICATION_FACTOR
-              value: {{ .Values.global.kafka.replicationFactor | quote }}
+              value: {{ . | quote }}
             {{- end }}
           {{- with .Values.kafkaSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}

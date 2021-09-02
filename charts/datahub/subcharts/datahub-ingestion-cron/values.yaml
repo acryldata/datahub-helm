@@ -50,3 +50,7 @@ crons: {}
     ## Add your own init container or uncomment and modify the given example.
     ##
     #extraInitContainers: {}
+
+    ## If you want to specify your own service account, set its name like so.
+    ##
+    #serviceAccountName: "my-cron-service"

@@ -25,3 +25,4 @@ A Helm chart for datahub's metadata-ingestion framework with kerberos authentica
 | crons.extraVolumes | array | `[]` | Additional volumes to add to the pods |
 | crons.extraVolumeMounts | array | `[]` | Additional volume mounts to add to the pods |
 | crons.extraInitContainers | object | `{}` | Init containers to add to the cronjob container |
+| crons.serviceAccountName | string | | Service account name used for the cronjob container |

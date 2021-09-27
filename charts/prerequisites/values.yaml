@@ -2,20 +2,10 @@
 # Copy this file and update to the configuration of choice
 elasticsearch:
   enabled: true   # set this to false, if you want to provide your own ES instance.
-  cluster:
-    env:
-      MINIMUM_MASTER_NODES: 1
-      EXPECTED_MASTER_NODES: 1
-      RECOVER_AFTER_MASTER_NODES: 1
-  master:
-    replicas: 1
-  data:
-    replicas: 1
-  client:
-    replicas: 1
-
-  # Uncomment if running on minikube - Reference https://github.com/elastic/helm-charts/blob/master/elasticsearch/examples/minikube/values.yaml
-  # # Permit co-located instances for solitary minikube virtual machines.
+  replicas: 3
+  minimumMasterNodes: 1
+  # Set replicas to 1 and uncomment this to allow the instance to be scheduled on
+  # a master node when deploying on a single node Minikube / Kind / etc cluster.
   # antiAffinity: "soft"
 
   # # Shrink default JVM heap.

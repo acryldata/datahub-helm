@@ -1,11 +1,8 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "datahub-frontend.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
+{{- $ingressApiVersion := include "datahub-frontend.ingress.apiVersion" . -}}
+apiVersion: {{ template "datahub-frontend.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -29,6 +26,28 @@ spec:
   rules:
   {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
+  {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
+      http:
+        paths:
+        {{- range .redirectPaths }}
+          - path: {{ .path }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .name }}
+                port:
+                  number: {{ .port }}
+        {{- end }}
+        {{- range .paths }}
+          - path: {{ . }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+        {{- end }}
+  {{- else }}
       http:
         paths:
         {{- range .redirectPaths }}
@@ -43,5 +62,6 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
         {{- end }}
+  {{- end }}
   {{- end }}
 {{- end }}

@@ -26,42 +26,37 @@ spec:
   rules:
   {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
-  {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
       http:
         paths:
         {{- range .redirectPaths }}
           - path: {{ .path }}
+            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .name }}
                 port:
                   number: {{ .port }}
+            {{- else }}
+            backend:
+              serviceName: {{ .name }}
+              servicePort: {{ .port }}
+            {{- end }}
         {{- end }}
         {{- range .paths }}
           - path: {{ . }}
+            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
-        {{- end }}
-  {{- else if or (eq $ingressApiVersion "extensions/v1beta1") (eq $ingressApiVersion "networking.k8s.io/v1beta1") }}
-      http:
-        paths:
-        {{- range .redirectPaths }}
-          - path: {{ .path }}
-            backend:
-              serviceName: {{ .name }}
-              servicePort: {{ .port }}
-        {{- end }}
-        {{- range .paths }}
-          - path: {{ . }}
+            {{- else }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
+            {{- end }}
         {{- end }}
-  {{- end }}
   {{- end }}
 {{- end }}

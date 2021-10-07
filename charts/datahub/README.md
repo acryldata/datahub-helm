@@ -55,7 +55,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.neo4j.username | string | `"neo4j"` | Neo4j user name |
 | global.neo4j.password.secretRef | string | `"neo4j-secrets"` | Secret that contains the Neo4j password |
 | global.neo4j.password.secretKey | string | `"neo4j-password"` | Secret key that contains the Neo4j password |
-| global.sql.datasource.driver | string | `"com.mysql.jdbc.Driver"` | Driver for the SQL database |
+| global.sql.datasource.driver | string | `"com.mysql.cj.jdbc.Driver"` | Driver for the SQL database |
 | global.sql.datasource.host | string | `"prerequisites-mysql:3306"` | SQL database host (with port) |
 | global.sql.datasource.hostForMysqlClient | string | `"prerequisites-mysql"` | SQL database host (without port) |
 | global.sql.datasource.url | string | `"jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` | URL to access SQL database |

@@ -4,13 +4,13 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    tag: "v0.8.11"
+    tag: "v0.8.14"
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    tag: "v0.8.11"
+    tag: "v0.8.14"
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -19,25 +19,25 @@ elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    tag: "v0.8.11"
+    tag: "v0.8.14"
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    tag: "v0.8.11"
+    tag: "v0.8.14"
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    tag: "v0.8.11"
+    tag: "v0.8.14"
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.8.11"
+    tag: "v0.8.14"
 
 datahub-ingestion-cron:
   enabled: false
@@ -71,7 +71,7 @@ global:
       hostForMysqlClient: "prerequisites-mysql"
       port: "3306"
       url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
-      driver: "com.mysql.jdbc.Driver"
+      driver: "com.mysql.cj.jdbc.Driver"
       username: "root"
       password:
         secretRef: mysql-secrets

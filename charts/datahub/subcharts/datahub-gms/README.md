@@ -30,7 +30,7 @@ Current chart version is `0.2.0`
 | global.neo4j.username | string | `"neo4j"` |  |
 | global.neo4j.password.secretRef | string | `"neo4j-secrets"` |  |
 | global.neo4j.password.secretKey | string | `"neo4j-password"` |  |
-| global.sql.datasource.driver | string | `"com.mysql.jdbc.Driver"` |  |
+| global.sql.datasource.driver | string | `"com.mysql.cj.jdbc.Driver"` |  |
 | global.sql.datasource.host | string | `"mysql"` |  |
 | global.sql.datasource.url | string | `"jdbc:mysql://mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` |  |
 | global.sql.datasource.username | string | `"datahub"` |  |

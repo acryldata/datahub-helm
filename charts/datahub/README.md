@@ -23,21 +23,21 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 |-----|------|---------|-------------|
 | datahub-frontend.enabled | bool | `true` | Enable Datahub Front-end |
 | datahub-frontend.image.repository | string | `"linkedin/datahub-frontend-react"` | Image repository for datahub-frontend |
-| datahub-frontend.image.tag | string | `"v0.8.11"` | Image tag for datahub-frontend |
+| datahub-frontend.image.tag | string | `"v0.8.14"` | Image tag for datahub-frontend |
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |
-| datahub-gms.image.tag | string | `"v0.8.11"` | Image tag for datahub-gms |
+| datahub-gms.image.tag | string | `"v0.8.14"` | Image tag for datahub-gms |
 | datahub-mae-consumer.image.repository | string | `"linkedin/datahub-mae-consumer"` | Image repository for datahub-mae-consumer |
-| datahub-mae-consumer.image.tag | string | `"v0.8.11"` | Image tag for datahub-mae-consumer |
+| datahub-mae-consumer.image.tag | string | `"v0.8.14"` | Image tag for datahub-mae-consumer |
 | datahub-mce-consumer.image.repository | string | `"linkedin/datahub-mce-consumer"` | Image repository for datahub-mce-consumer |
-| datahub-mce-consumer.image.tag | string | `"v0.8.11"` | Image tag for datahub-mce-consumer |
+| datahub-mce-consumer.image.tag | string | `"v0.8.14"` | Image tag for datahub-mce-consumer |
 | datahub-ingestion-cron.enabled | bool | `false` | Enable cronjob for periodic ingestion |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
-| elasticsearchSetupJob.image.tag | string | `"v0.8.11"` | Image repository for elasticsearchSetupJob |
+| elasticsearchSetupJob.image.tag | string | `"v0.8.14"` | Image repository for elasticsearchSetupJob |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
-| kafkaSetupJob.image.tag | string | `"v0.8.11"` | Image repository for kafkaSetupJob |
+| kafkaSetupJob.image.tag | string | `"v0.8.14"` | Image repository for kafkaSetupJob |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `""` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `""` | Image repository for mysqlSetupJob |
@@ -55,7 +55,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.neo4j.username | string | `"neo4j"` | Neo4j user name |
 | global.neo4j.password.secretRef | string | `"neo4j-secrets"` | Secret that contains the Neo4j password |
 | global.neo4j.password.secretKey | string | `"neo4j-password"` | Secret key that contains the Neo4j password |
-| global.sql.datasource.driver | string | `"com.mysql.jdbc.Driver"` | Driver for the SQL database |
+| global.sql.datasource.driver | string | `"com.mysql.cj.jdbc.Driver"` | Driver for the SQL database |
 | global.sql.datasource.host | string | `"prerequisites-mysql:3306"` | SQL database host (with port) |
 | global.sql.datasource.hostForMysqlClient | string | `"prerequisites-mysql"` | SQL database host (without port) |
 | global.sql.datasource.url | string | `"jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` | URL to access SQL database |

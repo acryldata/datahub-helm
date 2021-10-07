@@ -1,14 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := printf "%s-%s" .Release.Name "datahub-gms"}}
 {{- $svcPort := .Values.global.datahub.gms.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
+{{- $ingressApiVersion := include "datahub-gms.ingress.apiVersion" . -}}
+apiVersion: {{ template "datahub-gms.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ $fullName}}
+  name: {{ $fullName }}
   labels:
     {{- include "datahub-gms.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -33,15 +30,33 @@ spec:
         paths:
         {{- range .redirectPaths }}
           - path: {{ .path }}
+            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .name }}
+                port:
+                  number: {{ .port }}
+            {{- else }}
             backend:
               serviceName: {{ .name }}
               servicePort: {{ .port }}
+            {{- end }}
         {{- end }}
         {{- range .paths }}
           - path: {{ . }}
+            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+            {{- else }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
+            {{- end }}
         {{- end }}
   {{- end }}
 {{- end }}

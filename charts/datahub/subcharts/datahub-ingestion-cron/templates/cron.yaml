@@ -24,6 +24,9 @@ spec:
         {{- if .hostAliases }}
           hostAliases: {{- include "common.tplvalues.render" (dict "value" .hostAliases "context" $) | nindent 10 }}
         {{- end }}
+        {{- if .serviceAccountName }}
+          serviceAccountName: {{ .serviceAccountName }}
+        {{- end }}
           containers:
           - name: {{ $jobName }}-crawler
             image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"

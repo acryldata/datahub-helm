@@ -5,12 +5,18 @@ datahub-gms:
   image:
     repository: linkedin/datahub-gms
     tag: "v0.8.16"
+  service:
+    type: LoadBalancer  # ClusterIP or NodePort
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
     tag: "v0.8.16"
+  service:
+    type: LoadBalancer  # ClusterIP or NodePort
+    port: 9002
+    nodePort: "30000"
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -19,6 +25,8 @@ datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
     tag: "v0.8.16"
+  service:
+    type: ClusterIP  # NodePort
 
 datahub-mce-consumer:
   image:
@@ -104,8 +112,10 @@ global:
   datahub:
     gms:
       port: "8080"
+      nodePort: "30001"
     mae_consumer:
       port: "9091"
+      nodePort: "30002"
     appVersion: "1.0"
 
 #  hostAliases:

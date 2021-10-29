@@ -37,8 +37,9 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP or NodePort
   port: 9002
+  nodePort: "30000"
   # Annotations to add to the service, this will help in adding 
   # Internal load balancer or various other annotation support in AWS 
   annotations: {}

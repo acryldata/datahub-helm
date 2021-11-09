@@ -51,9 +51,9 @@ global:
 
   kafka:
     bootstrap:
-      server: "prerequisites-kafka:9092"
+      server: "prerequisites-cp-kafka:9092"
     zookeeper:
-      server: "prerequisites-zookeeper:2181"
+      server: "prerequisites-cp-zookeeper:2181"
     schemaregistry:
       url: "http://prerequisites-cp-schema-registry:8081"
 

@@ -58,7 +58,7 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: true
     kafka:
-      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
+      bootstrapServers: "prerequisites-cp-kafka:9092"  # <<release-name>>-cp-kafka:9092
   cp-kafka:
     enabled: false
   cp-zookeeper:

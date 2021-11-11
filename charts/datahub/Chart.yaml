@@ -17,21 +17,21 @@ dependencies:
     version: 0.2.1
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
-  - name: datahub-mae-consumer
-    version: 0.2.1
-    repository: file://./subcharts/datahub-mae-consumer
-    condition: global.datahub_standalone_consumers_enabled
-  - name: datahub-mce-consumer
-    version: 0.2.1
-    repository: file://./subcharts/datahub-mce-consumer
-    condition: global.datahub_standalone_consumers_enabled
-  - name: datahub-ingestion-cron
-    version: 0.2.2
-    repository: file://./subcharts/datahub-ingestion-cron
-    condition: datahub-ingestion-cron.enabled
-  - name: datahub-jmxexporter
-    version: 0.2.1
-    repository: file://./subcharts/datahub-jmxexporter
+  # - name: datahub-mae-consumer
+  #   version: 0.2.1
+  #   repository: file://./subcharts/datahub-mae-consumer
+  #   condition: global.datahub_standalone_consumers_enabled
+  # - name: datahub-mce-consumer
+  #   version: 0.2.1
+  #   repository: file://./subcharts/datahub-mce-consumer
+  #   condition: global.datahub_standalone_consumers_enabled
+  # - name: datahub-ingestion-cron
+  #   version: 0.2.2
+  #   repository: file://./subcharts/datahub-ingestion-cron
+  #   condition: datahub-ingestion-cron.enabled
+  # - name: datahub-jmxexporter
+  #   version: 0.2.1
+  #   repository: file://./subcharts/datahub-jmxexporter
 maintainers:
   - name: DataHub
     email: datahub@acryl.io

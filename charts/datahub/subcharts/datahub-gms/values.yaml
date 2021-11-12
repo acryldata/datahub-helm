@@ -44,6 +44,7 @@ service:
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
 ingress:
+  # className: ""
   enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
@@ -185,6 +186,9 @@ global:
   datahub:
     gms:
       port: "8080"
+      targetPort: http
+      protocol: TCP
+      name: http
     appVersion: "1.0"
 
   hostAliases:

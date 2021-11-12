@@ -3,7 +3,7 @@ entries:
   datahub-frontend:
   - apiVersion: v2
     appVersion: 0.3.1
-    created: "2021-11-12T14:06:46.34323+02:00"
+    created: "2021-11-12T14:42:00.3925+02:00"
     description: A Helm chart for Kubernetes
     digest: 1ab2c9fa1ae048b3f9516fa084dcd1604bbdfb9425171678156aa279a2209113
     name: datahub-frontend
@@ -14,7 +14,7 @@ entries:
   datahub-gms:
   - apiVersion: v2
     appVersion: 0.3.1
-    created: "2021-11-12T14:06:46.34454+02:00"
+    created: "2021-11-12T14:42:00.393498+02:00"
     description: A Helm chart for LinkedIn DataHub's datahub-gms component
     digest: 681f575a59957ce547215569042912e727f75e96b4620ee18835810839929993
     name: datahub-gms
@@ -25,7 +25,7 @@ entries:
   datahub-ingestion-cron:
   - apiVersion: v2
     appVersion: 0.3.2
-    created: "2021-11-12T14:06:46.345135+02:00"
+    created: "2021-11-12T14:42:00.394067+02:00"
     description: A Helm chart for Kubernetes
     digest: 3579dffa1c183deb646f46ce4c5bbcd889c1ddbb6daa5a18a9afd5d48ca9bfb8
     name: datahub-ingestion-cron
@@ -36,7 +36,7 @@ entries:
   datahub-jmxexporter:
   - apiVersion: v2
     appVersion: 0.3.1
-    created: "2021-11-12T14:06:46.345568+02:00"
+    created: "2021-11-12T14:42:00.394495+02:00"
     description: A Helm chart for Kubernetes
     digest: ecf2ce972ae73a21970b1badcab50e527a3b02bf7a2e96cd4bdb67a3e1156cbe
     name: datahub-jmxexporter
@@ -47,7 +47,7 @@ entries:
   datahub-mae-consumer:
   - apiVersion: v2
     appVersion: 0.3.1
-    created: "2021-11-12T14:06:46.346653+02:00"
+    created: "2021-11-12T14:42:00.395634+02:00"
     description: A Helm chart for Kubernetes
     digest: 757af2c0a8f7461bf23af9f4216fccf126c45db4b59c1f30807288ab0a6cb534
     name: datahub-mae-consumer
@@ -58,7 +58,7 @@ entries:
   datahub-mce-consumer:
   - apiVersion: v2
     appVersion: 0.3.1
-    created: "2021-11-12T14:06:46.347756+02:00"
+    created: "2021-11-12T14:42:00.397687+02:00"
     description: A Helm chart for Kubernetes
     digest: 5b7b31f2152f217bc5dbc1703a447a94d7f200f0bf9bdfd769c03f64e2e407d2
     name: datahub-mce-consumer
@@ -66,4 +66,4 @@ entries:
     urls:
     - charts/datahub-mce-consumer-0.2.1.tgz
     version: 0.2.1
-generated: "2021-11-12T14:06:46.34135+02:00"
+generated: "2021-11-12T14:42:00.390748+02:00"

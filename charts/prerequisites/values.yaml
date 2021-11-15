@@ -57,7 +57,7 @@ neo4j:
 
 
 # Deploys neo4j community version. Only supports single node
-neo4jCommunity:
+neo4j-community:
   enabled: true   # set this to false, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
@@ -113,4 +113,3 @@ cp-helm-charts:
 kafka:
   enabled: true
 
-ingress: {}

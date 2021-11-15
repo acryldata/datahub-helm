@@ -1,24 +1,24 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "datahub-frontend.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
-{{- $ingressApiVersion := include "datahub-frontend.ingress.apiVersion" . -}}
-apiVersion: {{ template "datahub-frontend.ingress.apiVersion" . }}
+{{- if .Values.neo4j-community.ingress.enabled -}}
+{{- $fullName := include "neo4j-community.fullname" . -}}
+{{- $svcPort := .Values.neo4j-community.service.port -}}
+{{- $ingressApiVersion := include "neo4j-community.ingress.apiVersion" . -}}
+apiVersion: {{ template "neo4j-community.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "datahub-frontend.labels" . | nindent 4 }}
+    {{- include "neo4j-community.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.ingress.className }}
-  ingressClassName: {{ .Values.ingress.className | quote }}
+{{- if .Values.neo4j-community.ingress.className }}
+  ingressClassName: {{ .Values.neo4j-community.ingress.className | quote }}
 {{- end }}
-{{- if .Values.ingress.tls }}
+{{- if .Values.neo4j-community.ingress.tls }}
   tls:
-  {{- range .Values.ingress.tls }}
+  {{- range .Values.neo4j-community.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . | quote }}
@@ -27,7 +27,7 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.ingress.hosts }}
+  {{- range .Values.neo4j-community.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

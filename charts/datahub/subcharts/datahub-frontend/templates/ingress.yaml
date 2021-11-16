@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "datahub-frontend.labels" . | nindent 4 }}
   annotations:
-    {{- include "merged-ingress-annotations" | nindent 4 }}
+    {{- include "merged-ingress-annotations" . | nindent 4 }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className | quote }}

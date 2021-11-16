@@ -56,9 +56,9 @@ All ingress annotations
 */}}
 
 {{- define "merged-ingress-annotations" -}}
-{{ .Values.ingress.annotations }}
-{{- if .Values.global.global-ingress.annotations -}}
-    {{ .Values.global.global-ingress.annotations }}
+{{- $annotations := merge .Values.ingress.annotations  .Values.ingress.annotations -}}
+{{- range $key, $value := $annotations }}
+    {{ $key }}: {{ $value }}
 {{- end -}}
 {{- end -}}
 

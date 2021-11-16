@@ -63,7 +63,7 @@ global:
   datahub_standalone_consumers_enabled: false
 
 # Section for shared values for all ingresses in subcharts
-  global_ingress:
+  globalIngress:
     annotations: {}
 
   elasticsearch:

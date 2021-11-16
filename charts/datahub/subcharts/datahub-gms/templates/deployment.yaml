@@ -179,7 +179,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
-        {{- include "datahub-jmxexporter.container" . }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

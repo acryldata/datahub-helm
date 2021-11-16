@@ -8,10 +8,8 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "datahub-gms.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- include "merged-ingress-annotations" | nindent 4 }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className | quote }}

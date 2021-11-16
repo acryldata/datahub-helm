@@ -62,6 +62,10 @@ global:
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
 
+# Section for shared values for all ingresses in subcharts
+  global_ingress:
+    annotations: {}
+
   elasticsearch:
     host: "elasticsearch-master"
     port: "9200"

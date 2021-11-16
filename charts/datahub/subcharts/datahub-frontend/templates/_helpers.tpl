@@ -52,6 +52,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+All ingress annotations
+*/}}
+
+{{- define "merged-ingress-annotations" -}}
+{{ .Values.ingress.annotations }}
+{{- if .Values.global.global-ingress.annotations -}}
+    {{ .Values.global.global-ingress.annotations }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "datahub-frontend.serviceAccountName" -}}

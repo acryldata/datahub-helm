@@ -62,7 +62,7 @@ global:
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
 
-# Section for shared values for all ingresses in subcharts
+
   globalIngress:
     annotations: {}
 

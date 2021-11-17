@@ -32,7 +32,7 @@ spec:
         {{- range .redirectPaths }}
           - path: {{ .path }}
             {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
-            pathType: Prefix
+            pathType: {{ .pathType | default "Prefix" | quote }}
             backend:
               service:
                 name: {{ .name }}
@@ -47,7 +47,7 @@ spec:
         {{- range .paths }}
           - path: {{ . }}
             {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
-            pathType: Prefix
+            pathType: {{ .pathType | default "Prefix" | quote }}
             backend:
               service:
                 name: {{ $fullName }}

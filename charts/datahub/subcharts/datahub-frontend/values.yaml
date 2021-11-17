@@ -51,11 +51,12 @@ ingress:
   # className: ""
   enabled: true
   annotations: {}
+  pathType: ""
   hosts:
     - host: chart-example.local
       paths: []
       redirectPaths: []
-      pathType: ""
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

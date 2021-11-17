@@ -31,8 +31,8 @@ spec:
         paths:
         {{- range .redirectPaths }}
           - path: {{ .path }}
-            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
             pathType: {{ $.Values.ingress.pathType | default "Prefix" | quote }}
+            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
             backend:
               service:
                 name: {{ .name }}
@@ -46,8 +46,8 @@ spec:
         {{- end }}
         {{- range .paths }}
           - path: {{ . }}
-            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
             pathType: {{ $.Values.ingress.pathType | default "Prefix" | quote }}
+            {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
             backend:
               service:
                 name: {{ $fullName }}

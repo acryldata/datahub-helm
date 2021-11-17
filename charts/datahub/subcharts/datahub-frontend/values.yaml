@@ -54,8 +54,9 @@ ingress:
   pathType: ""
   hosts:
     - host: chart-example.local
-      paths: []
+      paths: ["/"]
       redirectPaths: []
+      
 
   tls: []
   #  - secretName: chart-example-tls

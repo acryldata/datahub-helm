@@ -13,13 +13,13 @@ data:
     {{- if .Values.exporters.jmx.config.whitelistObjectNames }}
     {{- with .Values.exporters.jmx.config.whitelistObjectNames }}
     whitelistObjectNames:
-    {{- toYaml . | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- end }}
     {{- if .Values.exporters.jmx.config.blacklistObjectNames }}
     {{- with .Values.exporters.jmx.config.blacklistObjectNames }}
     blacklistObjectNames:
-    {{- toYaml . | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
     {{- end }}
     {{- end }}
     rules:

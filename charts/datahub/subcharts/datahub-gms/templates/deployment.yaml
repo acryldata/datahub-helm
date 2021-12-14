@@ -58,6 +58,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          {{- if .Values.exporters.jmx.enabled }}
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /health

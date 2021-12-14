@@ -105,6 +105,7 @@ exporters:
 #      pullPolicy: IfNotPresent
 #    config:
 #      lowercaseOutputName: true
+#      lowercaseOutputLabelNames: true
 #      rules:
 #        - pattern: ".*"
 #      startDelaySeconds: 30

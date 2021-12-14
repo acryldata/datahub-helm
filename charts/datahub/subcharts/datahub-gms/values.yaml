@@ -184,6 +184,9 @@ global:
         secretKey: "mysql-password"
 
   datahub:
+    monitoring:
+      enablePrometheus: false
+
     gms:
       port: "8080"
     appVersion: "1.0"

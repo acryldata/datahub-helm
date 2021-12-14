@@ -58,7 +58,7 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          {{- if .Values.exporters.jmx.enabled }}
+          {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: jmx
               containerPort: 4318
               protocol: TCP
@@ -78,6 +78,10 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{- end }}
             {{- if not .Values.global.datahub_standalone_consumers_enabled }}
             - name: MCE_CONSUMER_ENABLED
               value: "true"

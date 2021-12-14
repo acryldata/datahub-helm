@@ -58,6 +58,11 @@ spec:
             - name: http
               containerPort: 9091
               protocol: TCP
+          {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -73,6 +78,10 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{- end }}
             - name: MAE_CONSUMER_ENABLED
               value: "true"
             - name: ENTITY_REGISTRY_CONFIG_PATH

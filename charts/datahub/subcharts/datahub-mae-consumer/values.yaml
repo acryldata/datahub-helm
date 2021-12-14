@@ -167,6 +167,9 @@ global:
       secretKey: "neo4j-password"
 
   datahub:
+    monitoring:
+      enablePrometheus: false
+
     mae_consumer:
       port: "9091"
 

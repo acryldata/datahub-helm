@@ -54,11 +54,6 @@ spec:
             - name: http
               containerPort: 9002
               protocol: TCP
-          {{- if .Values.global.datahub.monitoring.enablePrometheus }}
-            - name: jmx
-              containerPort: 4318
-              protocol: TCP
-          {{- end }}
           livenessProbe:
             httpGet:
               path: /admin
@@ -74,10 +69,6 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
-            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
-            - name: ENABLE_PROMETHEUS
-              value: "true"
-            {{- end }}
             - name: DATAHUB_GMS_HOST
               value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
             - name: DATAHUB_GMS_PORT

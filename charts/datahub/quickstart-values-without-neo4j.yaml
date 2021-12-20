@@ -26,7 +26,7 @@ kafkaSetupJob:
   image:
     repository: linkedin/datahub-kafka-setup
     tag: "v0.8.20"
-
+    
 mysqlSetupJob:
   enabled: true
   image:

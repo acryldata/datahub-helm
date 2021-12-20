@@ -5,7 +5,7 @@ datahub-gms:
   image:
     repository: linkedin/datahub-gms
     tag: "v0.8.20"
-
+    
 datahub-frontend:
   enabled: true
   image:

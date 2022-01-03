@@ -89,9 +89,9 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- end }}
-            - name: GMS_HOST
+            - name: DATAHUB_GMS_HOST
               value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
-            - name: GMS_PORT
+            - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}

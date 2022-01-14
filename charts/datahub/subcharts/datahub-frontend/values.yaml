@@ -37,14 +37,19 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  type: LoadBalancer # ClusterIP or NodePort
   port: 9002
+  targetPort: http
+  nodePort: "30000"
+  protocol: TCP
+  name: http
   # Annotations to add to the service, this will help in adding 
   # Internal load balancer or various other annotation support in AWS 
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
 ingress:
+  # className: ""
   enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx

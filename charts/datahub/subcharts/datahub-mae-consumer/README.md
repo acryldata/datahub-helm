@@ -15,6 +15,8 @@ Current chart version is `0.2.0`
 | extraVolumeMounts | Templatable string of additional `volumeMounts` to be passed to the `tpl` function | "" |
 | fullnameOverride | string | `"datahub-mae-consumer"` |  |
 | global.datahub_analytics_enabled | boolean | true |  |
+| global.datahub.mae_consumer.port | string | `"9091"` |  |
+| global.datahub.mae_consumer.nodePort | string | `"30002"` |  |
 | global.elasticsearch.host | string | `"elasticsearch"` |  |
 | global.elasticsearch.port | string | `"9200"` |  |
 | global.kafka.bootstrap.server | string | `"broker:9092"` |  |

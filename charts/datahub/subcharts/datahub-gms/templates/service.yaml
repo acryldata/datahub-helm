@@ -12,8 +12,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.global.datahub.gms.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+      targetPort: {{ .Values.global.datahub.gms.targetPort }}
+      protocol: {{ .Values.global.datahub.gms.protocol }}
+      name: {{ .Values.global.datahub.gms.name }}
   selector:
     {{- include "datahub-gms.selectorLabels" . | nindent 4 }}

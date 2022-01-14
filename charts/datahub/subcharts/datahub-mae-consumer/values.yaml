@@ -37,7 +37,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: ClusterIP # NodePort
   port: 80
 
 ingress:
@@ -172,6 +172,7 @@ global:
 
     mae_consumer:
       port: "9091"
+      nodePort: "30002"
 
   hostAliases:
     - ip: "192.168.0.104"

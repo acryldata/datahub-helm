@@ -37,7 +37,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer #ClusterIP
+  type: LoadBalancer # ClusterIP or NodePort
   # Annotations to add to the service, this will help in adding 
   # Internal load balancer or various other annotation support in AWS 
   annotations: {}
@@ -191,6 +191,7 @@ global:
     gms:
       port: "8080"
       targetPort: http
+      nodePort: "30001"
       protocol: TCP
       name: http
     appVersion: "1.0"

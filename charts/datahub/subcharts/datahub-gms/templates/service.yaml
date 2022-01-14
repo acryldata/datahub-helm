@@ -15,5 +15,8 @@ spec:
       targetPort: {{ .Values.global.datahub.gms.targetPort }}
       protocol: {{ .Values.global.datahub.gms.protocol }}
       name: {{ .Values.global.datahub.gms.name }}
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.global.datahub.gms.nodePort }}
+      {{- end }}
   selector:
     {{- include "datahub-gms.selectorLabels" . | nindent 4 }}

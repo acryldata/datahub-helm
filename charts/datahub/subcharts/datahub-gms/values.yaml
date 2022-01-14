@@ -44,6 +44,7 @@ service:
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
 ingress:
+  # className: ""
   enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
@@ -105,6 +106,7 @@ exporters:
 #      pullPolicy: IfNotPresent
 #    config:
 #      lowercaseOutputName: true
+#      lowercaseOutputLabelNames: true
 #      rules:
 #        - pattern: ".*"
 #      startDelaySeconds: 30
@@ -183,9 +185,15 @@ global:
         secretKey: "mysql-password"
 
   datahub:
+    monitoring:
+      enablePrometheus: false
+
     gms:
       port: "8080"
+      targetPort: http
       nodePort: "30001"
+      protocol: TCP
+      name: http
     appVersion: "1.0"
 
   hostAliases:

@@ -10,17 +10,13 @@ data:
     hostPort: localhost:{{ .Values.env.JMXPORT }}
     lowercaseOutputName: {{ .Values.exporters.jmx.config.lowercaseOutputName }}
     lowercaseOutputLabelNames: {{ .Values.exporters.jmx.config.lowercaseOutputLabelNames }}
-    {{- if .Values.exporters.jmx.config.whitelistObjectNames }}
     {{- with .Values.exporters.jmx.config.whitelistObjectNames }}
     whitelistObjectNames:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    {{- end }}
-    {{- if .Values.exporters.jmx.config.blacklistObjectNames }}
     {{- with .Values.exporters.jmx.config.blacklistObjectNames }}
     blacklistObjectNames:
       {{- toYaml . | nindent 6 }}
-    {{- end }}
     {{- end }}
     rules:
 {{ .Values.exporters.jmx.config.rules | toYaml | indent 6 }}

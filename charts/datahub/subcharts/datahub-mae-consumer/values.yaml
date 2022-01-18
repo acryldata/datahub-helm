@@ -38,7 +38,10 @@ securityContext: {}
 
 service:
   type: ClusterIP # NodePort
-  port: 80
+  port: "9091"
+  targetPort: http
+  protocol: TCP
+  name: http
 
 ingress:
   enabled: false
@@ -172,7 +175,6 @@ global:
 
     mae_consumer:
       port: "9091"
-      nodePort: "30002"
 
   hostAliases:
     - ip: "192.168.0.104"

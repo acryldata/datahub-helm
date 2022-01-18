@@ -40,7 +40,6 @@ service:
   type: LoadBalancer # ClusterIP or NodePort
   port: 9002
   targetPort: http
-  nodePort: "30000"
   protocol: TCP
   name: http
   # Annotations to add to the service, this will help in adding 

@@ -179,26 +179,16 @@ spec:
               value: "true"
             - name: DATAHUB_TOKEN_SERVICE_SIGNING_KEY
               valueFrom:
-                {{- if .Values.existingGmsSecret }}
                 secretKeyRef:
-                  name: "{{ .Values.existingGmsSecret.name }}"
-                  key: "{{ .Values.existingGmsSecret.key }}"
-                {{- else }}
-                secretKeyRef:
-                  name: {{ printf "%s-gms-secret" .Release.Name }}
-                  key: datahub.gms.secret
-                {{- end }}
+                  name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey }}
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
             - name: DATAHUB_SYSTEM_CLIENT_SECRET
               valueFrom:
-                {{- if .Values.existingGmsSecret }}
                 secretKeyRef:
-                  name: "{{ .Values.existingGmsSecret.name }}"
-                  key: "{{ .Values.existingGmsSecret.key }}"
-                {{- else }}
-                secretKeyRef:
-                  name: {{ printf "%s-gms-secret" .Release.Name }}
-                  key: datahub.gms.secret
-                {{- end }}
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
             {{- end }}
             {{- if .Values.global.datahub.managed_ingestion.enabled }}
             - name: UI_INGESTION_ENABLED

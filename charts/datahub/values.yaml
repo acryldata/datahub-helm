@@ -114,12 +114,13 @@ global:
       secretRef: "encryption-key-secret"
       secretKey: "encryption-key-secret"
     managed_ingestion: 
-      enabled: false
+      enabled: true
       # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
 
     metadata_service_authentication: 
-      enabled: false
+      enabled: true
       tokenService:
+<<<<<<< HEAD
         signingKeySecret: 
           name: play-secret
           key: uuid_secret
@@ -156,3 +157,12 @@ global:
 #    ssl.truststore.type: JKS
 #    ssl.protocol: TLS
 #    ssl.endpoint.identification.algorithm:
+=======
+        signingKey: 
+          secretRef: play-secret
+          secretKey: uuid_secret
+      systemClientId: "__datahub_system"
+      systemClientSecret:
+        secretRef: play-secret
+        secretKey: uuid_secret
+>>>>>>> 71e02aa... Adding authentication to helm charts

@@ -117,6 +117,17 @@ global:
       enabled: false
       # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
 
+    metadata_service_authentication: 
+      enabled: false
+      tokenService:
+        signingKeySecret: 
+          name: play-secret
+          key: uuid_secret
+      systemClient:
+        secret: 
+          name: play-secret
+          key: uuid_secret
+
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

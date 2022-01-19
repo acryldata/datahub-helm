@@ -32,6 +32,10 @@ dependencies:
   - name: datahub-jmxexporter
     version: 0.2.1
     repository: file://./subcharts/datahub-jmxexporter
-maintainers:
+  - name: acryl-datahub-actions
+    version: 0.0.1
+    repository: file://./charts/acryl-datahub-actions
+    condition: acryl-datahub-actions.enabled
+=maintainers:
   - name: DataHub
     email: datahub@acryl.io

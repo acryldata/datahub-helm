@@ -38,6 +38,10 @@ securityContext: {}
 
 service:
   type: LoadBalancer # ClusterIP or NodePort
+  port: "8080"
+  targetPort: http
+  protocol: TCP
+  name: http
   # Annotations to add to the service, this will help in adding 
   # Internal load balancer or various other annotation support in AWS 
   annotations: {}
@@ -187,13 +191,8 @@ global:
   datahub:
     monitoring:
       enablePrometheus: false
-
     gms:
       port: "8080"
-      targetPort: http
-      nodePort: "30001"
-      protocol: TCP
-      name: http
     appVersion: "1.0"
 
   hostAliases:

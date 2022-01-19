@@ -16,7 +16,7 @@ Current chart version is `0.2.0`
 | fullnameOverride | string | `"datahub-gms-deployment"` |  |
 | global.datahub.appVersion | string | `"1.0"` |  |
 | global.datahub.gms.port | string | `"8080"` |  |
-| global.datahub.gms.nodePort | string | `"30001"` |  |
+| global.datahub.gms.nodePort | string | `""` |  |
 | global.elasticsearch.host | string | `"elasticsearch"` |  |
 | global.elasticsearch.port | string | `"9200"` |  |
 | global.hostAliases[0].hostnames[0] | string | `"broker"` |  |

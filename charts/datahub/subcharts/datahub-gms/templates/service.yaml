@@ -11,12 +11,14 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.global.datahub.gms.port }}
-      targetPort: {{ .Values.global.datahub.gms.targetPort }}
-      protocol: {{ .Values.global.datahub.gms.protocol }}
-      name: {{ .Values.global.datahub.gms.name }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
+      name: {{ .Values.service.name }}
       {{- if eq .Values.service.type "NodePort" }}
-      nodePort: {{ .Values.global.datahub.gms.nodePort }}
+      {{- with .Values.service.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
       {{- end }}
   selector:
     {{- include "datahub-gms.selectorLabels" . | nindent 4 }}

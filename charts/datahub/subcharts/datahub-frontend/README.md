@@ -42,7 +42,7 @@ Current chart version is `0.2.0`
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
 | service.port | int | `9001` |  |
-| service.nodePort | int | `30000` |  |
+| service.nodePort | int | `""` |  |
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |

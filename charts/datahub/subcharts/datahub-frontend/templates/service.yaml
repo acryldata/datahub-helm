@@ -16,7 +16,9 @@ spec:
       protocol: {{ .Values.service.protocol }}
       name: {{ .Values.service.name }}
       {{- if eq .Values.service.type "NodePort" }}
-      nodePort: {{ .Values.service.nodePort }}
+      {{- with .Values.service.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
       {{- end }}
   selector:
     {{- include "datahub-frontend.selectorLabels" . | nindent 4 }}

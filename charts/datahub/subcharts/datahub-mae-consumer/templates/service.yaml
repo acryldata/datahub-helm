@@ -7,12 +7,14 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.global.datahub.mae_consumer.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
+      name: {{ .Values.service.name }}
       {{- if eq .Values.service.type "NodePort" }}
-      nodePort: {{ .Values.global.datahub.mae_consumer.nodePort }}
+      {{- with .Values.service.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
       {{- end }}
   selector:
     {{- include "datahub-mae-consumer.selectorLabels" . | nindent 4 }}

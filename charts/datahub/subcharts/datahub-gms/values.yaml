@@ -197,18 +197,20 @@ global:
 
     managed_ingestion:
       enabled: false
-      # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
+      # defaultCliVersion: "0.8.20.0" --> Optional: Controls the acryl-datahub package version downloaded from PyPI. 
 
     metadata_service_authentication: 
       enabled: false
-      tokenService:
-        signingKey: 
-          secretRef: play-secret
-          secretKey: uuid_secret
+      # tokenService:
+      #   signingKey: 
+      #    secretRef: <secret-ref>
+      #    secretKey: <secret-key>
       systemClientId: "__datahub_system"
-      systemClientSecret:
-        secretRef: play-secret
-        secretKey: uuid_secret
+      # systemClientSecret:
+      #  secretRef: <secret-ref>
+      #  secretKey: <secret-key>
+
+      
 
     encryptionKey:
       secretRef: "encryption-key-secret"

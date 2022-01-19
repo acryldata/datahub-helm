@@ -177,6 +177,6 @@ global:
     metadata_service_authentication: 
       enabled: false
       systemClientId: "__datahub_system"
-      systemClientSecret:
-        secretRef: play-secret
-        secretKey: uuid_secret
+      # systemClientSecret:
+      #  secretRef: <secret-ref>
+      #  secretKey: <secret-key>

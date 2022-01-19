@@ -111,23 +111,23 @@ global:
     appVersion: "1.0"
 
     encryptionKey:
-      secretRef: "encryption-key-secret"
-      secretKey: "encryption-key-secret"
+      secretRef: "datahub-encryption-secrets" # Assumes there is an encryption key secret created! 
+      secretKey: "encryption_key_secret" # Assumes there is an encryption key secret created! 
+
     managed_ingestion: 
-      enabled: true
+      enabled: false
       # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
 
     metadata_service_authentication: 
-      enabled: true
+      enabled: false
+      systemClientId: "__datahub_system"
+      systemClientSecret:
+        secretRef: "datahub-auth-secrets"
+        secretKey: "token_service_signing_key"
       tokenService:
-<<<<<<< HEAD
         signingKeySecret: 
-          name: play-secret
-          key: uuid_secret
-      systemClient:
-        secret: 
-          name: play-secret
-          key: uuid_secret
+           name: "datahub-auth-secrets"
+           key: "token_service_signing_key"
 
 #  hostAliases:
 #    - ip: "192.168.0.104"
@@ -157,12 +157,3 @@ global:
 #    ssl.truststore.type: JKS
 #    ssl.protocol: TLS
 #    ssl.endpoint.identification.algorithm:
-=======
-        signingKey: 
-          secretRef: play-secret
-          secretKey: uuid_secret
-      systemClientId: "__datahub_system"
-      systemClientSecret:
-        secretRef: play-secret
-        secretKey: uuid_secret
->>>>>>> 71e02aa... Adding authentication to helm charts

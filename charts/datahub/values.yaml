@@ -110,6 +110,13 @@ global:
       nodePort: "30002"
     appVersion: "1.0"
 
+    encryptionKey:
+      secretRef: "encryption-key-secret"
+      secretKey: "encryption-key-secret"
+    managed_ingestion: 
+      enabled: false
+      # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
+
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

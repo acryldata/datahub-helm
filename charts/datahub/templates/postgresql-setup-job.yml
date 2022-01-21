@@ -1,0 +1,81 @@
+{{- if .Values.postgresqlSetupJob.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-postgresql-setup-job
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+    {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.postgresqlSetupJob.serviceAccount }}
+      serviceAccountName: {{ . }}
+    {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+      {{- with .Values.postgresqlSetupJob.extraVolumes }}
+        {{- toYaml . | nindent 8}}
+      {{- end }}
+      restartPolicy: Never
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: postgresql-setup-job
+          image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ .Values.postgresqlSetupJob.image.tag }}"
+          imagePullPolicy: {{ .Values.postgresqlSetupJob.imagePullPolicy | default "Always" }}
+          env:
+            - name: POSTGRES_USERNAME
+              value: {{ .Values.global.sql.datasource.username | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.sql.datasource.password.secretRef }}"
+                  key: "{{ .Values.global.sql.datasource.password.secretKey }}"
+            - name: POSTGRES_HOST
+              value: {{ .Values.global.sql.datasource.hostForpostgresqlClient | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.global.sql.datasource.port | quote }}
+          {{- with .Values.postgresqlSetupJob.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          {{- with .Values.postgresqlSetupJob.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 300m
+              memory: 256Mi
+      {{- with .Values.postgresqlSetupJob.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.postgresqlSetupJob.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.postgresqlSetupJob.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

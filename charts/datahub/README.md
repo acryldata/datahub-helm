@@ -41,6 +41,9 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `"v0.8.23.0"` | Image repository for mysqlSetupJob |
+| postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
+| postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
+| postgresqlSetupJob.image.tag | string | `"v0.8.23.0"` | Image repository for postgresqlSetupJob |
 | global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |
 | global.datahub_analytics_enabled | boolean | true | Enable datahub usage analytics |
 | global.datahub.appVersion | string | `"1.0"` | App version for annotation |

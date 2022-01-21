@@ -50,7 +50,7 @@ mysqlSetupJob:
     tag: "v0.8.23.0"
 
 postgresqlSetupJob:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
     tag: "v0.8.23.0"

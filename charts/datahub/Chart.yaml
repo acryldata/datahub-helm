@@ -34,7 +34,7 @@ dependencies:
     repository: file://./subcharts/datahub-jmxexporter
   - name: acryl-datahub-actions
     version: 0.0.1
-    repository: file://./charts/acryl-datahub-actions
+    repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
 maintainers:
   - name: DataHub

@@ -99,11 +99,11 @@ Run `kubectl get pods` to check whether all the datahub pods are running. You sh
 
 ```
 NAME                                               READY   STATUS      RESTARTS   AGE
+datahub-acryl-datahub-actions-58b676f77c-c6pfx     1/1     Running     0          4m2s
 datahub-datahub-frontend-84c58df9f7-5bgwx          1/1     Running     0          4m2s
 datahub-datahub-gms-58b676f77c-c6pfx               1/1     Running     0          4m2s
 datahub-datahub-mae-consumer-7b98bf65d-tjbwx       1/1     Running     0          4m3s
 datahub-datahub-mce-consumer-8c57d8587-vjv9m       1/1     Running     0          4m2s
-acryl-datahub-actions-58b676f77c-c6pfx             1/1     Running     0          4m2s
 datahub-elasticsearch-setup-job-8dz6b              0/1     Completed   0          4m50s
 datahub-kafka-setup-job-6blcj                      0/1     Completed   0          4m40s
 datahub-mysql-setup-job-b57kc                      0/1     Completed   0          4m7s

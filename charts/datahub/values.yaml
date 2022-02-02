@@ -4,13 +4,13 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    tag: "head"
+    tag: "v0.8.24"
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    tag: "head"
+    tag: "v0.8.24"
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -18,42 +18,42 @@ datahub-frontend:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    tag: "head"
+    tag: "v0.8.24"
 
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    tag: "head"
+    tag: "v0.8.24"
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    tag: "head"
+    tag: "v0.8.24.0"
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    tag: "head"
+    tag: "v0.8.24"
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    tag: "head"
+    tag: "v0.8.24"
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    tag: "late"
+    tag: "v0.8.24.0"
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "head"
+    tag: "v0.8.24.0"
   noCodeDataMigration:
     sqlDbType: "MYSQL"
 
@@ -111,15 +111,16 @@ global:
     appVersion: "1.0"
 
     encryptionKey:
-      secretRef: "datahub-encryption-secrets" # Assumes there is an encryption key secret created! 
-      secretKey: "encryption_key_secret" # Assumes there is an encryption key secret created! 
+      secretRef: "datahub-encryption-secrets"
+      secretKey: "encryption_key_secret" 
+      provisionSecret: true # Set to false if you'd like to provide your own secret. 
 
     managed_ingestion: 
       enabled: true
       # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
 
     metadata_service_authentication: 
-      enabled: true
+      enabled: false
       systemClientId: "__datahub_system"
       systemClientSecret:
         secretRef: "datahub-auth-secrets"
@@ -128,6 +129,7 @@ global:
         signingKey:
           secretRef: "datahub-auth-secrets"
           secretKey: "token_service_signing_key"
+      provisionSecrets: true # Set to false if you'd like to provide your own auth secrets. 
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

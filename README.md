@@ -20,7 +20,7 @@ the Kubernetes [Helm](https://helm.sh/) charts for deploying
      Note, we only support Helm 3.
    
 ## Components
-Datahub consists of 4 main components: [GMS](https://datahubproject.io/docs/gms), 
+Datahub consists of 4 main components: [GMS](https://datahubproject.io/docs/metadata-service/), 
 [MAE Consumer](https://datahubproject.io/docs/metadata-jobs/mae-consumer-job) (optional), 
 [MCE Consumer](https://datahubproject.io/docs/metadata-jobs/mce-consumer-job) (optional), and 
 [Frontend](https://datahubproject.io/docs/datahub-frontend). Kubernetes deployment 

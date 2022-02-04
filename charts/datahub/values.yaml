@@ -113,12 +113,12 @@ global:
     encryptionKey:
       secretRef: "datahub-encryption-secrets"
       secretKey: "encryption_key_secret"
-      # Set to false if you'd like to provide your own secret. 
+      # Set to false if you'd like to provide your own secret.
       provisionSecret: true
 
     managed_ingestion:
       enabled: true
-      # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI. 
+      # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI.
 
     metadata_service_authentication:
       enabled: false

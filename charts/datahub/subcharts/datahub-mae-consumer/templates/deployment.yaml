@@ -146,6 +146,25 @@ spec:
             {{- end }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: "{{ .Values.global.datahub_analytics_enabled }}"
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "true"
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+            {{- if .Values.global.datahub.managed_ingestion.enabled }}
+            - name: UI_INGESTION_ENABLED
+              value: "true"
+            {{- end }}
+            {{- if .Values.global.datahub.managed_ingestion.defaultCliVersion }}
+            - name: UI_INGESTION_DEFAULT_CLI_VERSION
+              value: "{{ .Values.global.datahub.managed_ingestion.defaultCliVersion }}"
+            {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}

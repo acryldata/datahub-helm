@@ -1,0 +1,79 @@
+# Default values for acryl-datahub-actions.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: public.ecr.aws/datahub/acryl-datahub-actions
+  tag: "head"
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+serviceMonitor:
+  create: false
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 9093
+
+
+# Extra environment variables
+# This will be appended to the current 'env:' key. You can use any of the kubernetes env
+# syntax here
+extraEnvs: []
+
+extraVolumes: []
+
+extraVolumeMounts: []
+
+extraInitContainers: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# The action pipeline to run: expected to be found at /etc/datahub/actions/{actionFileName} for the container
+actionFileName: "executor.yaml"
+
+actions:
+  kafkaAutoOffsetPolicy: "latest"
+
+global:
+
+  kafka:
+    bootstrap:
+      server: "broker:9092"
+    schemaregistry:
+      url: "http://prerequisites-cp-schema-registry:8081"
+
+  datahub:
+    gms:
+      port: "8080"
+    metadata_service_authentication: 
+      enabled: false
+      systemClientId: "__datahub_system"
+      # systemClientSecret:
+      #  secretRef: <secret-ref>
+      #  secretKey: <secret-key>

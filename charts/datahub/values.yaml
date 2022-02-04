@@ -110,6 +110,29 @@ global:
       nodePort: "30002"
     appVersion: "1.0"
 
+    encryptionKey:
+      secretRef: "datahub-encryption-secrets"
+      secretKey: "encryption_key_secret"
+      # Set to false if you'd like to provide your own secret.
+      provisionSecret: true
+
+    managed_ingestion:
+      enabled: true
+      # defaultCliVersion: "0.8.20.0" --> Controls the acryl-datahub package version downloaded from PyPI.
+
+    metadata_service_authentication:
+      enabled: false
+      systemClientId: "__datahub_system"
+      systemClientSecret:
+        secretRef: "datahub-auth-secrets"
+        secretKey: "token_service_signing_key"
+      tokenService:
+        signingKey:
+          secretRef: "datahub-auth-secrets"
+          secretKey: "token_service_signing_key"
+      # Set to false if you'd like to provide your own auth secrets
+      provisionSecrets: true
+
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

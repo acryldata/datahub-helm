@@ -195,6 +195,25 @@ global:
       port: "8080"
     appVersion: "1.0"
 
+    managed_ingestion:
+      enabled: true
+      # defaultCliVersion: "0.8.20.0" --> Optional: Controls the acryl-datahub package version downloaded from PyPI. 
+
+    metadata_service_authentication: 
+      enabled: false
+      # tokenService:
+      #   signingKey: 
+      #    secretRef: <secret-ref>
+      #    secretKey: <secret-key>
+      systemClientId: "__datahub_system"
+      # systemClientSecret:
+      #  secretRef: <secret-ref>
+      #  secretKey: <secret-key>
+
+    encryptionKey:
+      secretRef: "encryption-key-secret"
+      secretKey: "encryption-key-secret"
+
   hostAliases:
     - ip: "192.168.0.104"
       hostnames:

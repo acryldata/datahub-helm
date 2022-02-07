@@ -214,6 +214,8 @@ global:
       secretRef: "encryption-key-secret"
       secretKey: "encryption-key-secret"
 
+    enable_retention: false ## Set to true to enable retention on local DB
+
   hostAliases:
     - ip: "192.168.0.104"
       hostnames:

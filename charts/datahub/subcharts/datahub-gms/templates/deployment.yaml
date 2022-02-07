@@ -203,6 +203,10 @@ spec:
             - name: UI_INGESTION_DEFAULT_CLI_VERSION
               value: "{{ .Values.global.datahub.managed_ingestion.defaultCliVersion }}"
             {{- end }}
+            {{- if .Values.global.datahub.enable_retention }}
+            - name: ENTITY_SERVICE_ENABLE_RETENTION
+              value: "true"
+            {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

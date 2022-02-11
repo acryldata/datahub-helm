@@ -26,8 +26,7 @@ spec:
     {{- end }}
       restartPolicy: Never
       securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        {{- toYaml .Values.kafkaSetupJob.podSecurityContext | nindent 8 }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -77,6 +76,8 @@ spec:
           {{- with .Values.kafkaSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.kafkaSetupJob.securityContext | nindent 12 }}
           volumeMounts:
           {{- if .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir

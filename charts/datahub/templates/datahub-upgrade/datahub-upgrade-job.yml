@@ -40,8 +40,7 @@ spec:
       {{- end }}
       restartPolicy: Never
       securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        {{- toYaml .Values.datahubUpgrade.podSecurityContext | nindent 8 }}
       initContainers:
       {{- with .Values.datahubUpgrade.extraInitContainers }}
         {{- toYaml . | nindent 12 }}
@@ -141,6 +140,8 @@ spec:
           {{- with .Values.datahubUpgrade.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.datahubUpgrade.securityContext | nindent 12 }}
           volumeMounts:
           {{- with .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir

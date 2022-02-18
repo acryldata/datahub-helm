@@ -92,3 +92,7 @@ global:
     mae_consumer:
       port: "9091"
     appVersion: "1.0"
+
+    managed_ingestion:
+      enabled: true
+      defaultCliVersion: "0.8.26.6"

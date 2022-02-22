@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: linkedin/datahub-frontend-react
   tag: "head"
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""

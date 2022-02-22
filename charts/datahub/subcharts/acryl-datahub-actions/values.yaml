@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   repository: public.ecr.aws/datahub/acryl-datahub-actions
   tag: "head"
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""

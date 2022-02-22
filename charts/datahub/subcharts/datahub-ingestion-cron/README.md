@@ -6,7 +6,7 @@ A Helm chart for datahub's metadata-ingestion framework with kerberos authentica
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| image.pullPolicy | string | `"Always"` | Image pull policy |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.repository | string | `"linkedin/datahub-ingestion"` | DataHub Ingestion image repository |
 | image.tag | string | `"head"` | DataHub Ingestion image tag |
 | imagePullSecrets | array | `[]` (does not add image pull secrets to deployed pods) | Docker registry secret names as an array |

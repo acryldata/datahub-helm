@@ -36,8 +36,7 @@ spec:
           {{- end }}
           restartPolicy: Never
           securityContext:
-            runAsUser: 1000
-            fsGroup: 1000
+            {{- toYaml .Values.datahubUpgrade.podSecurityContext | nindent 12 }}
           initContainers:
           {{- with .Values.datahubUpgrade.extraInitContainers }}
             {{- toYaml . | nindent 12 }}
@@ -114,6 +113,8 @@ spec:
               {{- with .Values.datahubUpgrade.extraEnvs }}
                 {{- toYaml . | nindent 16 }}
               {{- end }}
+              securityContext:
+                {{- toYaml .Values.datahubUpgrade.securityContext | nindent 16 }}
               volumeMounts:
               {{- with .Values.datahubUpgrade.extraVolumeMounts }}
                 {{- toYaml . | nindent 16 }}

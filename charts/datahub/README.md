@@ -31,15 +31,23 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahub-mce-consumer.image.repository | string | `"linkedin/datahub-mce-consumer"` | Image repository for datahub-mce-consumer |
 | datahub-mce-consumer.image.tag | string | `"v0.8.26"` | Image tag for datahub-mce-consumer |
 | datahub-ingestion-cron.enabled | bool | `false` | Enable cronjob for periodic ingestion |
+| datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
+| datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.image.tag | string | `"v0.8.26"` | Image repository for elasticsearchSetupJob |
+| elasticsearchSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for elasticsearchSetupJob |
+| elasticsearchSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for elasticsearchSetupJob |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.image.tag | string | `"v0.8.26"` | Image repository for kafkaSetupJob |
+| kafkaSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for kafkaSetupJob |
+| kafkaSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for kafkaSetupJob |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `"v0.8.26.0"` | Image repository for mysqlSetupJob |
+| mysqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
+| mysqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |
 | global.datahub_analytics_enabled | boolean | true | Enable datahub usage analytics |
 | global.datahub.appVersion | string | `"1.0"` | App version for annotation |

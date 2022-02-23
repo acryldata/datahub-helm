@@ -34,8 +34,7 @@ spec:
       {{- end }}
       restartPolicy: Never
       securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        {{- toYaml .Values.mysqlSetupJob.podSecurityContext | nindent 8 }}
       containers:
         - name: mysql-setup-job
           image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ .Values.mysqlSetupJob.image.tag }}"
@@ -55,6 +54,8 @@ spec:
           {{- with .Values.mysqlSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.mysqlSetupJob.securityContext | nindent 12 }}
           volumeMounts:
           {{- with .Values.mysqlSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

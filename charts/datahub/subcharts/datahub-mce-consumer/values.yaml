@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: linkedin/datahub-mce-consumer
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   tag: head
 
 imagePullSecrets: []
@@ -154,6 +154,12 @@ global:
   datahub:
     gms:
       port: "8080"
+    metadata_service_authentication: 
+      enabled: false
+      systemClientId: "__datahub_system"
+      # systemClientSecret:
+      #  secretRef: <secret-ref>
+      #  secretKey: <secret-key>
 
   hostAliases:
     - ip: "192.168.0.104"

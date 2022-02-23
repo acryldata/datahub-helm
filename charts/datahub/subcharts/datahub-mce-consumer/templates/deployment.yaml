@@ -93,6 +93,17 @@ spec:
               value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "true"
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}

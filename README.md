@@ -20,7 +20,7 @@ the Kubernetes [Helm](https://helm.sh/) charts for deploying
      Note, we only support Helm 3.
    
 ## Components
-Datahub consists of 4 main components: [GMS](https://datahubproject.io/docs/gms), 
+Datahub consists of 4 main components: [GMS](https://datahubproject.io/docs/metadata-service/), 
 [MAE Consumer](https://datahubproject.io/docs/metadata-jobs/mae-consumer-job) (optional), 
 [MCE Consumer](https://datahubproject.io/docs/metadata-jobs/mce-consumer-job) (optional), and 
 [Frontend](https://datahubproject.io/docs/datahub-frontend). Kubernetes deployment 
@@ -99,6 +99,7 @@ Run `kubectl get pods` to check whether all the datahub pods are running. You sh
 
 ```
 NAME                                               READY   STATUS      RESTARTS   AGE
+datahub-acryl-datahub-actions-58b676f77c-c6pfx     1/1     Running     0          4m2s
 datahub-datahub-frontend-84c58df9f7-5bgwx          1/1     Running     0          4m2s
 datahub-datahub-gms-58b676f77c-c6pfx               1/1     Running     0          4m2s
 datahub-datahub-mae-consumer-7b98bf65d-tjbwx       1/1     Running     0          4m3s

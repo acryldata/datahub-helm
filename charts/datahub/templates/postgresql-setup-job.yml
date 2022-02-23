@@ -34,8 +34,7 @@ spec:
       {{- end }}
       restartPolicy: Never
       securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        {{- toYaml .Values.postgresqlSetupJob.podSecurityContext | nindent 8 }}
       containers:
         - name: postgresql-setup-job
           image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ .Values.postgresqlSetupJob.image.tag }}"
@@ -55,6 +54,8 @@ spec:
           {{- with .Values.postgresqlSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.postgresqlSetupJob.securityContext | nindent 12 }}
           volumeMounts:
           {{- with .Values.postgresqlSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

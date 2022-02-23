@@ -34,12 +34,11 @@ spec:
       {{- end }}
       restartPolicy: Never
       securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        {{- toYaml .Values.elasticsearchSetupJob.podSecurityContext | nindent 8 }}
       containers:
         - name: elasticsearch-setup-job
           image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ .Values.elasticsearchSetupJob.image.tag }}"
-          imagePullPolicy: {{ .Values.elasticsearchSetupJob.imagePullPolicy | default "Always" }}
+          imagePullPolicy: {{ .Values.elasticsearchSetupJob.imagePullPolicy | default "IfNotPresent" }}
           env:
             - name: ELASTICSEARCH_HOST
               value: {{ .Values.global.elasticsearch.host | quote }}
@@ -67,6 +66,8 @@ spec:
           {{- with .Values.elasticsearchSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.elasticsearchSetupJob.securityContext | nindent 12 }}
           volumeMounts:
           {{- with .Values.elasticsearchSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

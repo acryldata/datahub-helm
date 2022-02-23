@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: linkedin/datahub-mce-consumer
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   tag: head
 
 imagePullSecrets: []

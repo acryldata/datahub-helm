@@ -5,7 +5,7 @@
 image:
   repository: linkedin/datahub-ingestion
   tag: head
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 

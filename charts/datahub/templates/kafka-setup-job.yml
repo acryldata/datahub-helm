@@ -26,8 +26,7 @@ spec:
     {{- end }}
       restartPolicy: Never
       securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        {{- toYaml .Values.kafkaSetupJob.podSecurityContext | nindent 8 }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -45,7 +44,7 @@ spec:
       containers:
         - name: kafka-setup-job
           image: "{{ .Values.kafkaSetupJob.image.repository }}:{{ .Values.kafkaSetupJob.image.tag }}"
-          imagePullPolicy: {{ .Values.kafkaSetupJob.imagePullPolicy | default "Always" }}
+          imagePullPolicy: {{ .Values.kafkaSetupJob.imagePullPolicy | default "IfNotPresent" }}
           env:
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: {{ .Values.global.kafka.zookeeper.server | quote }}
@@ -77,6 +76,8 @@ spec:
           {{- with .Values.kafkaSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          securityContext:
+            {{- toYaml .Values.kafkaSetupJob.securityContext | nindent 12 }}
           volumeMounts:
           {{- if .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir

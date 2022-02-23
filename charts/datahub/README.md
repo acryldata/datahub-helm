@@ -50,7 +50,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | mysqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
 | postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
-| postgresqlSetupJob.image.tag | string | `"v0.8.23.0"` | Image repository for postgresqlSetupJob |
+| postgresqlSetupJob.image.tag | string | `"v0.8.26.0"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | postgresqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |

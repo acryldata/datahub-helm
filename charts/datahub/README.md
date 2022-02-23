@@ -103,3 +103,4 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.datahub.encryptionKey.secretKey | string | `encryption_key_secret` | The key of a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret value named `encryption_key_secret` within a secret named `datahub-encryption-secrets`. |
 | global.datahub.managed_ingestion.defaultCliVersion | string | `0.8.26.6` | This is the version of the DataHub CLI to use for UI ingestion, by default. |
 | global.datahub.encryptionKey.provisionSecret | bool | `true` | Whether an encryption key secret should be provisioned on the first deployment for you. Set this to false if you are overriding global.datahub.encryptionKey.secretRef. |
+| global.datahub.enable_retention | bool | `false` | Whether or not to enable retention on local DB |

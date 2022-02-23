@@ -65,7 +65,11 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    tag: "v0.8.23.0"
+    tag: "v0.8.26.0"
+  podSecurityContext:
+    fsGroup: 1000
+  securityContext:
+    runAsUser: 1000
 
 datahubUpgrade:
   enabled: true

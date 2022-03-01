@@ -27,14 +27,15 @@ dependencies:
   # This chart deploys an enterprise version of kafka that requires commercial license
   # Note, Schema registry and kafka rest proxy do not require the commercial license
   - name: cp-helm-charts
-    version: 0.6.0
-    repository: https://confluentinc.github.io/cp-helm-charts/
+    version: 0.6.1
+    repository: https://klarrio-kpn-rdc.github.io/cp-helm-charts/
     condition: cp-helm-charts.enabled
   # This chart deploys a community version of kafka
-  - name: kafka
-    version: 12.17.4
-    repository: https://charts.bitnami.com/bitnami
-    condition: kafka.enabled
+  # TODO replace this with reference to Strimzi cluster
+#  - name: kafka
+#    version: 12.17.4
+#    repository: https://charts.bitnami.com/bitnami
+#    condition: kafka.enabled
 maintainers:
   - name: DataHub
     email: datahub@acryl.io

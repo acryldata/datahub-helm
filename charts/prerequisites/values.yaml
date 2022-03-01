@@ -2,11 +2,11 @@
 # Copy this file and update to the configuration of choice
 elasticsearch:
   enabled: true   # set this to false, if you want to provide your own ES instance.
-  replicas: 3
+  replicas: 1
   minimumMasterNodes: 1
   # Set replicas to 1 and uncomment this to allow the instance to be scheduled on
   # a master node when deploying on a single node Minikube / Kind / etc cluster.
-  # antiAffinity: "soft"
+  antiAffinity: "soft"
 
   # # Shrink default JVM heap.
   # esJavaOpts: "-Xmx128m -Xms128m"
@@ -58,7 +58,7 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: true
     kafka:
-      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
+      bootstrapServers: "testing-strimzi-cluster-kafka-bootstrap:9092"  # <<release-name>>-kafka:9092
   cp-kafka:
     enabled: false
   cp-zookeeper:
@@ -74,4 +74,4 @@ cp-helm-charts:
 
 # Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
-  enabled: true
+  enabled: false

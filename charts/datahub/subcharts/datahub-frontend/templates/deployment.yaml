@@ -39,7 +39,7 @@ spec:
         {{- if .Values.exporters.jmx.enabled }}
         - name: config-jmx-exporter
           configMap:
-            name: {{ include "datahub-gms.fullname" . }}-config-jmx-exporter
+            name: {{ include "datahub-frontend.fullname" . }}-config-jmx-exporter
         {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}

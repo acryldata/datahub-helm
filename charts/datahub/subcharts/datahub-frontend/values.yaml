@@ -22,7 +22,9 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
-podAnnotations: {}
+podAnnotations:
+  prometheus.io/port: "5556"
+  prometheus.io/scrape: "true"
   # co.elastic.logs/enabled: "true"
 
 podSecurityContext: {}
@@ -103,46 +105,46 @@ env:
 
 exporters:
   jmx:
-    enabled: false
-#    image:
-#      repository: bitnami/jmx-exporter
-#      tag: 0.15.0
-#      pullPolicy: IfNotPresent
-#    config:
-#      lowercaseOutputName: true
-#      lowercaseOutputLabelNames: true
-#      rules:
-#        - pattern: ".*"
-#      startDelaySeconds: 30
-#    env: {}
-#    resources: {}
-#    path: /metrics
-#    ports:
-#      jmxxp:
-#        containerPort: 5556
-#        protocol: TCP
-#    livenessProbe:
-#      httpGet:
-#        path: /metrics
-#        port: jmxxp
-#      initialDelaySeconds: 30
-#      periodSeconds: 15
-#      timeoutSeconds: 60
-#      failureThreshold: 8
-#      successThreshold: 1
-#    readinessProbe:
-#      httpGet:
-#        path: /metrics
-#        port: jmxxp
-#      initialDelaySeconds: 30
-#      periodSeconds: 15
-#      timeoutSeconds: 60
-#      failureThreshold: 8
-#      successThreshold: 1
-#    serviceMonitor:
-#      interval: 30s
-#      scrapeTimeout: 30s
-#      scheme: http
+    enabled: true
+    image:
+      repository: bitnami/jmx-exporter
+      tag: 0.15.0
+      pullPolicy: IfNotPresent
+    config:
+      lowercaseOutputName: true
+      lowercaseOutputLabelNames: true
+      rules:
+        - pattern: ".*"
+      startDelaySeconds: 30
+    env: {}
+    resources: {}
+    path: /metrics
+    ports:
+      jmxxp:
+        containerPort: 5556
+        protocol: TCP
+    livenessProbe:
+      httpGet:
+        path: /metrics
+        port: jmxxp
+      initialDelaySeconds: 30
+      periodSeconds: 15
+      timeoutSeconds: 60
+      failureThreshold: 8
+      successThreshold: 1
+    readinessProbe:
+      httpGet:
+        path: /metrics
+        port: jmxxp
+      initialDelaySeconds: 30
+      periodSeconds: 15
+      timeoutSeconds: 60
+      failureThreshold: 8
+      successThreshold: 1
+    serviceMonitor:
+      interval: 30s
+      scrapeTimeout: 30s
+      scheme: http
 
 livenessProbe:
   initialDelaySeconds: 60

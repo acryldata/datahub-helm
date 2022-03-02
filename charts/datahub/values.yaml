@@ -16,7 +16,7 @@ datahub-frontend:
     enabled: false
 
 acryl-datahub-actions:
-  enabled: true
+  enabled: false
   image:
     repository: public.ecr.aws/datahub/acryl-datahub-actions
     tag: "v0.0.1-beta.8"

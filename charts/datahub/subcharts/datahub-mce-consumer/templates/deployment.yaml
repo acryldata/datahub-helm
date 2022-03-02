@@ -30,11 +30,15 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-        {{- if .Values.global.credentialsAndCertsSecrets }}
-        - name: datahub-certs-dir
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: truststore
           secret:
             defaultMode: 0444
-            secretName: {{ .Values.global.credentialsAndCertsSecrets.name }}
+            secretName: {{ .trustStore }}
+        - name: keystore
+          secret:
+            defaultMode: 0444
+            secretName: {{ .keyStore }}
         {{- end }}
         {{- if .Values.exporters.jmx.enabled }}
         - name: config-jmx-exporter
@@ -111,21 +115,45 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.global.credentialsAndCertsSecrets }}
-            {{- range $envVarName, $envVarValue := .Values.global.credentialsAndCertsSecrets.secureEnv }}
-            - name: SPRING_KAFKA_PROPERTIES_{{ $envVarName | replace "." "_" | upper }}
+            {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEY_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
-                  key: {{ $envVarValue }}
+                  name: {{ .keyStore }}
+                  key: {{ .secureEnv.keyPassword }}
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .trustStore }}
+                  key: {{ .secureEnv.truststorePassword }}
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .trustStore }}
+                  key: {{ .secureEnv.truststorePassword }}
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore }}
+                  key: {{ .secureEnv.keystorePassword }}
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore }}
+                  key: {{ .secureEnv.keystorePassword }}
             {{- end }}
             {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-          {{- with .Values.global.credentialsAndCertsSecrets }}
-            - name: datahub-certs-dir
-              mountPath: {{ .path | default "/mnt/certs" }}
+          {{- if .Values.global.credentialsAndCertsSecrets }}
+          - name: truststore
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.pathTrustStore }}
+            readOnly: true
+          - name: keystore
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.pathKeyStore }}
+            readOnly: true
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

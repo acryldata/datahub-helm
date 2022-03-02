@@ -107,9 +107,9 @@ global:
 
   kafka:
     bootstrap:
-      server: "prerequisites-kafka:9092"
+      server: "testing-strimzi-cluster-kafka-bootstrap:9092"
     zookeeper:
-      server: "prerequisites-zookeeper:2181"
+      server: "testing-strimzi-cluster-zookeeper-client:2181"
     ## For AWS MSK set this to a number larger than 1
     # partitions: 3
     # replicationFactor: 3
@@ -181,22 +181,24 @@ global:
 #        - "neo4j"
 
 ##  Add below to enable SSL for kafka
-#  credentialsAndCertsSecrets:
-#    name: datahub-certs
-#    path: /mnt/datahub/certs
-#    secureEnv:
-#      ssl.key.password: datahub.linkedin.com.KeyPass
-#      ssl.keystore.password: datahub.linkedin.com.KeyStorePass
-#      ssl.truststore.password: datahub.linkedin.com.TrustStorePass
-#      kafkastore.ssl.truststore.password: datahub.linkedin.com.TrustStorePass
-#
-#  springKafkaConfigurationOverrides:
-#    ssl.keystore.location: /mnt/datahub/certs/datahub.linkedin.com.keystore.jks
-#    ssl.truststore.location: /mnt/datahub/certs/datahub.linkedin.com.truststore.jks
-#    kafkastore.ssl.truststore.location: /mnt/datahub/certs/datahub.linkedin.com.truststore.jks
-#    security.protocol: SSL
-#    kafkastore.security.protocol: SSL
-#    ssl.keystore.type: JKS
-#    ssl.truststore.type: JKS
-#    ssl.protocol: TLS
-#    ssl.endpoint.identification.algorithm:
+  credentialsAndCertsSecrets:
+    trustStore: testing-strimzi-cluster-cluster-ca-cert
+    pathTrustStore: /mnt/datahub/truststore
+    keyStore: testing-my-user
+    pathKeyStore: /mnt/datahub/keystore
+    secureEnv:
+      keyPassword: user.password
+      keystorePassword: user.password
+      truststorePassword: ca.password
+
+  springKafkaConfigurationOverrides:
+    ssl.keystore.type: "PKCS12"
+    ssl.truststore.type: "PKCS12"
+    ssl.keystore.location: /mnt/datahub/keystore/user.p12
+    ssl.truststore.location: /mnt/datahub/truststore/ca.p12
+    kafkastore.ssl.truststore.location: /mnt/datahub/truststore/ca.p12
+    security.protocol: SSL
+    kafkastore.security.protocol: SSL
+    ssl.protocol: SSL
+    ssl.endpoint.identification.algorithm:
+    ssl.ca.location: /mnt/datahub/truststore/ca.crt

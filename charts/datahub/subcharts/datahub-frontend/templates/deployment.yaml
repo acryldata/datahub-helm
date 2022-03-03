@@ -30,11 +30,11 @@ spec:
         - name: truststore
           secret:
             defaultMode: 0444
-            secretName: {{ .trustStore }}
+            secretName: {{ .trustStore.secret }}
         - name: keystore
           secret:
             defaultMode: 0444
-            secretName: {{ .keyStore }}
+            secretName: {{ .keyStore.secret }}
         {{- end }}
         {{- if .Values.exporters.jmx.enabled }}
         - name: config-jmx-exporter
@@ -107,28 +107,28 @@ spec:
             - name: KAFKA_PROPERTIES_SSL_KEY_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .keyStore }}
-                  key: {{ .secureEnv.keyPassword }}
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.keyPassword }}
             - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .trustStore }}
-                  key: {{ .secureEnv.truststorePassword }}
+                  name: {{ .trustStore.secret }}
+                  key: {{ .trustStore.password }}
             - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .trustStore }}
-                  key: {{ .secureEnv.truststorePassword }}
+                  name: {{ .trustStore.secret }}
+                  key: {{ .trustStore.password }}
             - name: KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .keyStore }}
-                  key: {{ .secureEnv.keystorePassword }}
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.password }}
             - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_KEYSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .keyStore }}
-                  key: {{ .secureEnv.keystorePassword }}
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.password }}
             {{- end }}
             {{- end }}
             - name: ELASTIC_CLIENT_HOST
@@ -178,10 +178,10 @@ spec:
           volumeMounts:
           {{- if .Values.global.credentialsAndCertsSecrets }}
           - name: truststore
-            mountPath: {{ .Values.global.credentialsAndCertsSecrets.pathTrustStore }}
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.trustStore.mountPath }}
             readOnly: true
           - name: keystore
-            mountPath: {{ .Values.global.credentialsAndCertsSecrets.pathKeyStore }}
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.keyStore.mountPath }}
             readOnly: true
           {{- end }}
           {{- with .Values.extraVolumeMounts }}

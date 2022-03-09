@@ -19,7 +19,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: public.ecr.aws/datahub/acryl-datahub-actions
-    tag: "v0.0.1-beta.11"
+    tag: "v0.0.1-beta.13"
   resources:
     limits:
       cpu: 500m

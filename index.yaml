@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   datahub-prerequisites:
   - apiVersion: v2
-    created: "2022-03-10T11:08:38.915806138+01:00"
+    created: "2022-03-10T13:04:29.70141048+01:00"
     dependencies:
     - condition: elasticsearch.enabled
       name: elasticsearch
@@ -34,4 +34,4 @@ entries:
     urls:
     - https://klarrio-kpn-rdc.github.io/datahub-helm/datahub-prerequisites-0.0.6.tgz
     version: 0.0.6
-generated: "2022-03-10T11:08:38.890502567+01:00"
+generated: "2022-03-10T13:04:29.687237759+01:00"

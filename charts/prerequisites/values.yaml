@@ -59,16 +59,16 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: true
     kafka:
-      bootstrapServers: "testing-strimzi-cluster-kafka-bootstrap:9092"  # <<release-name>>-kafka:9092
+      bootstrapServers: "strimzi-cluster-kafka-bootstrap:9092"  # <<release-name>>-kafka:9092
       ssl: true
       credentialsAndCertsSecrets:
         keyStore:
-          secret: testing-my-user
+          secret: datahub-kafka-user
           mountPath: /mnt/datahub/keystore
           password: user.password
           keyPassword: user.password
         trustStore:
-          secret: testing-strimzi-cluster-cluster-ca-cert
+          secret: strimzi-cluster-cluster-ca-cert
           mountPath: /mnt/datahub/truststore
           password: ca.password
 

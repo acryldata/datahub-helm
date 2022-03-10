@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "acryl-datahub-actions.fullname" . }}
+  labels:
+    {{- include "acryl-datahub-actions.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "acryl-datahub-actions.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "acryl-datahub-actions.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "acryl-datahub-actions.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: truststore
+          secret:
+            defaultMode: 0444
+            secretName: {{ .trustStore.secret }}
+        - name: keystore
+          secret:
+            defaultMode: 0444
+            secretName: {{ .keyStore.secret }}
+      {{- end }}
+      {{- if .Values.extraVolumes }}
+        {{ toYaml .Values.extraVolumes | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- if .Values.extraInitContainers }}
+      {{- .Values.extraInitContainers | toYaml | nindent 6 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9093
+              protocol: TCP
+          env:
+            - name: GMS_HOST
+              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+            - name: GMS_PORT
+              value: "{{ .Values.global.datahub.gms.port }}"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "{{ .Values.global.kafka.bootstrap.server }}"
+            - name: SCHEMA_REGISTRY_URL
+              value: "{{ .Values.global.kafka.schemaregistry.url }}"
+            - name: KAFKA_AUTO_OFFSET_POLICY
+              value: "{{ .Values.actions.kafkaAutoOffsetPolicy }}"
+            - name: ACTION_FILE_NAME
+              value: "{{ .Values.actionFileName }}"
+            {{- if .Values.global.springKafkaConfigurationOverrides }}
+            {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
+            - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
+              value: {{ $configValue }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.credentialsAndCertsSecrets }}
+            {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: KAFKA_PROPERTIES_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.keyPassword }}
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .trustStore.secret }}
+                  key: {{ .trustStore.password }}
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .trustStore.secret }}
+                  key: {{ .trustStore.password }}
+            - name: KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.password }}
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.password }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+           {{- if .Values.extraEnvs }}
+            {{ toYaml .Values.extraEnvs | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          {{- if .Values.global.credentialsAndCertsSecrets }}
+          - name: truststore
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.trustStore.mountPath }}
+            readOnly: true
+          - name: keystore
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.keyStore.mountPath }}
+            readOnly: true
+          {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

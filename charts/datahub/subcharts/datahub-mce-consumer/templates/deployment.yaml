@@ -1,0 +1,187 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "datahub-mce-consumer.fullname" . }}
+  labels:
+    {{- include "datahub-mce-consumer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "datahub-mce-consumer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "datahub-mce-consumer.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.global.hostAliases }}
+      hostAliases:
+    {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "datahub-mce-consumer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: truststore
+          secret:
+            defaultMode: 0444
+            secretName: {{ .trustStore.secret }}
+        - name: keystore
+          secret:
+            defaultMode: 0444
+            secretName: {{ .keyStore.secret }}
+        {{- end }}
+        {{- if .Values.exporters.jmx.enabled }}
+        - name: config-jmx-exporter
+          configMap:
+            name: {{ include "datahub-mce-consumer.fullname" . }}-config-jmx-exporter
+        {{- end }}
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- with .Values.extraInitContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ - if .Values.global.datahub.monitoring.enablePrometheus }}
+          ports:
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          {{ - end }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          env:
+            {{ - if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{ - end }}
+            - name: MCE_CONSUMER_ENABLED
+              value: "true"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- with .Values.global.kafka.schemaregistry.url }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.type }}
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.glue }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_REGION
+              value: "{{ .region }}"
+            {{- with .registry }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_NAME
+              value: "{{ . }}"
+            {{- end }}
+            {{- end }}
+            - name: DATAHUB_GMS_HOST
+              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+            - name: DATAHUB_GMS_PORT
+              value: "{{ .Values.global.datahub.gms.port }}"
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "true"
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+            {{- if .Values.global.springKafkaConfigurationOverrides }}
+            {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
+              value: {{ $configValue }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.credentialsAndCertsSecrets }}
+            {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.keyPassword }}
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .trustStore.secret }}
+                  key: {{ .trustStore.password }}
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .trustStore.secret }}
+                  key: {{ .trustStore.password }}
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.password }}
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .keyStore.secret }}
+                  key: {{ .keyStore.password }}
+            {{- end }}
+            {{- end }}
+          {{- with .Values.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          {{- if .Values.global.credentialsAndCertsSecrets }}
+          - name: truststore
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.trustStore.mountPath }}
+            readOnly: true
+          - name: keystore
+            mountPath: {{ .Values.global.credentialsAndCertsSecrets.keyStore.mountPath }}
+            readOnly: true
+          {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+        {{- include "datahub-jmxexporter.container" . }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -49,7 +49,7 @@ service:
 
 ingress:
   # className: ""
-  enabled: true
+  enabled: false
   annotations: {}
   pathType: ""
   hosts:

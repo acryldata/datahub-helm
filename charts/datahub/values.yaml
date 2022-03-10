@@ -99,7 +99,7 @@ datahubUpgrade:
 global:
   graph_service_impl: neo4j
   datahub_analytics_enabled: true
-  datahub_standalone_consumers_enabled: false
+  datahub_standalone_consumers_enabled: true
 
   elasticsearch:
     host: "elasticsearch-master"

@@ -86,21 +86,17 @@ spec:
           - name: truststore_password
             valueFrom:
               secretKeyRef:
-                name: testing-strimzi-cluster-cluster-ca-cert
+                name: strimzi-cluster-cluster-ca-cert
                 key: ca.password
           - name: keystore_password
             valueFrom:
               secretKeyRef:
-                name: testing-my-user
+                name: datahub-kafka-user
                 key: user.password
           - name: SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL
             value: "ssl"
           - name: SCHEMA_REGISTRY_SECURITY_PROTOCOL
             value: "ssl"
-          #          - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
-          #            value: ""
-          #          - name: SCHEMA_REGISTRY_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
-          #            value: ""
           - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_TYPE
             value: "PKCS12"
           - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
@@ -108,7 +104,7 @@ spec:
           - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: testing-strimzi-cluster-cluster-ca-cert
+                name: strimzi-cluster-cluster-ca-cert
                 key: ca.password
           - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_KEYSTORE_TYPE
             value: "PKCS12"
@@ -117,36 +113,17 @@ spec:
           - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_KEYSTORE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: testing-my-user
+                name: datahub-kafka-user
                 key: user.password
-#          - name: SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE
-#            value: "PKCS12"
-#          - name: SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
-#            value: "/etc/certificates/truststore/ca.p12"
-#          - name: SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
-#            valueFrom:
-#              secretKeyRef:
-#                name: testing-strimzi-cluster-cluster-ca-cert
-#                key: ca.password
-#          - name: SCHEMA_REGISTRY_SSL_KEYSTORE_TYPE
-#            value: "PKCS12"
-#          - name: SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION
-#            value: "/etc/certificates/keystore/user.p12"
-#          - name: SCHEMA_REGISTRY_SSL_KEYSTORE_PASSWORD
-#            valueFrom:
-#              secretKeyRef:
-#                name: testing-my-user
-#                key: user.password
-          
           - name: JMX_PORT
             value: "5555"
       volumes:
       - name: truststore
         secret:
-          secretName: testing-strimzi-cluster-cluster-ca-cert
+          secretName: strimzi-cluster-cluster-ca-cert
       - name: keystore
         secret:
-          secretName: testing-my-user
+          secretName: datahub-kafka-user
       - name: jmx-config
         configMap:
           name: datahub-prerequisites-cp-schema-registry-jmx-configmap

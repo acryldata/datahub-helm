@@ -1,0 +1,26 @@
+---
+# Source: datahub-prerequisites/charts/neo4j-community/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-prerequisites-neo4j-community
+  labels:
+    neo4j.com/bolt: "true"
+    neo4j.com/http: "true"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datahub-prerequisites"
+    helm.sh/chart: "neo4j-community-1.2.5"
+    app.kubernetes.io/name: neo4j-community
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: tcp-http
+      port: 7474
+      targetPort: 7474
+    - name: tcp-bolt
+      port: 7687
+      targetPort: 7687
+  selector:
+    app.kubernetes.io/name: neo4j-community
+    app.kubernetes.io/instance: "datahub-prerequisites"

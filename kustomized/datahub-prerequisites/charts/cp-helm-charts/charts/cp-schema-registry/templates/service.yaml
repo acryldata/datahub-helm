@@ -1,0 +1,20 @@
+---
+# Source: datahub-prerequisites/charts/cp-helm-charts/charts/cp-schema-registry/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-prerequisites-cp-schema-registry
+  labels:
+    app: cp-schema-registry
+    chart: cp-schema-registry-0.1.0
+    release: datahub-prerequisites
+    heritage: Helm
+spec:
+  ports:
+    - name: schema-registry
+      port: 8081
+    - name: metrics
+      port: 5556
+  selector:
+    app: cp-schema-registry
+    release: datahub-prerequisites

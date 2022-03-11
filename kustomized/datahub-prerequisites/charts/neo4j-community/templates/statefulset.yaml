@@ -1,0 +1,104 @@
+---
+# Source: datahub-prerequisites/charts/neo4j-community/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "datahub-prerequisites-neo4j-community"
+  labels:
+    helm.sh/chart: neo4j-community-1.2.5
+    app.kubernetes.io/name: neo4j-community
+    app.kubernetes.io/instance: datahub-prerequisites
+    app.kubernetes.io/version: "4.2.4"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  podManagementPolicy: Parallel
+  serviceName: datahub-prerequisites-neo4j-community
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: "datahub-prerequisites"
+      app.kubernetes.io/name: neo4j-community
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/instance: "datahub-prerequisites"
+        helm.sh/chart: "neo4j-community-1.2.5"
+        app.kubernetes.io/name: neo4j-community
+    spec:
+      serviceAccountName: datahub-prerequisites-neo4j-community-sa
+      # High value permits checkpointing on Neo4j shutdown.  See: https://neo4j.com/developer/kb/checkpointing-and-log-pruning-interactions/
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: datahub-prerequisites-neo4j-community
+        image: "neo4j:4.2.4"
+        imagePullPolicy: "IfNotPresent"
+        env:
+          - name: AUTH_ENABLED
+            value: "true"
+          - name: NEO4J_SECRETS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: neo4j-secrets
+                key: neo4j-password
+          - name: dbms_jvm_additional
+            value: -Dcom.sun.management.jmxremote=true
+              -Dcom.sun.management.jmxremote.authenticate=false
+              -Dcom.sun.management.jmxremote.ssl=false
+              -Djava.rmi.server.hostname=localhost
+              -Dcom.sun.management.jmxremote.local.only=false
+              -Dcom.sun.management.jmxremote.rmi.port=1099
+              -Dcom.sun.management.jmxremote.port=1099
+        command:
+          - "/bin/bash"
+          - "-c"
+          - |
+            if [ "${AUTH_ENABLED:-}" == "true" ]; then
+              export NEO4J_AUTH="neo4j/${NEO4J_SECRETS_PASSWORD}"
+            else
+              export NEO4J_AUTH="none"
+            fi
+            # Once passed through to auth, unset this so Neo4j doesn't misinterpret it as config.
+            unset NEO4J_SECRETS_PASSWORD
+            exec /docker-entrypoint.sh "neo4j"
+        ports:
+        - containerPort: 7474
+          name: tcp-browser
+        - containerPort: 7687
+          name: tcp-bolt
+        volumeMounts:
+        - name: datadir
+          mountPath: "/data"
+        - name: plugins
+          mountPath: /plugins
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          tcpSocket:
+            port: 7687
+          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          tcpSocket:
+            port: 7687
+          timeoutSeconds: 2
+        resources:
+          {}
+      securityContext:
+        {}
+      volumes:
+        - name: plugins
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: datadir
+        annotations:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "10Gi"

@@ -35,7 +35,7 @@ prometheus.io/port: "4318"
 prometheus.io/scrape: "true"
 ```
 
-# Deploy
+# Local testing
 In order to deploy a version of DataHub to your kubernetes cluster, first change your working directory to `charts/datahub`.
 Next build the dependencies via
 
@@ -48,3 +48,8 @@ or if you've already build them and made a modification to any of the manifests 
 Afterwards you can simply install the helm charts to your K8s cluster via 
 
 `helm install datahub ./ --values values.yaml -n <namespace of kafka cluster>`
+
+# Generate Kustomize manifests from helm charts
+To generate all the manifests starting from a helm chart (e.g. prerequisites) do the following:
+
+`helm template datahub-prerequisites charts/prerequisites/ --values charts/prerequisites/values.yaml  --output-dir kustomized`

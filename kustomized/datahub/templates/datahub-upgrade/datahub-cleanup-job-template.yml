@@ -1,0 +1,87 @@
+---
+# Source: datahub/templates/datahub-upgrade/datahub-cleanup-job-template.yml
+# Job template for running datahub cleanup
+# Creates a suspended cronJob that you can use to create an adhoc job when ready to run clean up.
+# Run the following command to do so
+# kubectl create job --from=cronjob/<<release-name>>-datahub-cleanup-job-template datahub-cleanup-job
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: datahub-datahub-cleanup-job-template
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datahub"
+    app.kubernetes.io/version: 0.8.27
+    helm.sh/chart: "datahub-0.2.53"
+spec:
+  schedule: "* * * * *"
+  suspend: true
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          restartPolicy: Never
+          securityContext:
+            {}
+          initContainers:
+          containers:
+            - name: datahub-upgrade-job
+              image: "acryldata/datahub-upgrade:v0.8.27"
+              imagePullPolicy: IfNotPresent
+              args: [ "-u", "NoCodeDataMigrationCleanup" ]
+              env:
+                - name: ENTITY_REGISTRY_CONFIG_PATH
+                  value: /datahub/datahub-gms/resources/entity-registry.yml
+                - name: DATAHUB_GMS_HOST
+                  value: datahub-datahub-gms
+                - name: DATAHUB_GMS_PORT
+                  value: "8080"
+                - name: DATAHUB_MAE_CONSUMER_HOST
+                  value: datahub-datahub-mae-consumer
+                - name: DATAHUB_MAE_CONSUMER_PORT
+                  value: "9091"
+                - name: EBEAN_DATASOURCE_USERNAME
+                  value: "root"
+                - name: EBEAN_DATASOURCE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "mysql-secrets"
+                      key: "mysql-root-password"
+                - name: EBEAN_DATASOURCE_HOST
+                  value: "prerequisites-mysql:3306"
+                - name: EBEAN_DATASOURCE_URL
+                  value: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+                - name: EBEAN_DATASOURCE_DRIVER
+                  value: "com.mysql.cj.jdbc.Driver"
+                - name: KAFKA_BOOTSTRAP_SERVER
+                  value: "testing-strimzi-cluster-kafka-bootstrap:9092"
+                - name: KAFKA_SCHEMAREGISTRY_URL
+                  value: "http://prerequisites-cp-schema-registry:8081"
+                - name: ELASTICSEARCH_HOST
+                  value: "elasticsearch-master"
+                - name: ELASTICSEARCH_PORT
+                  value: "9200"
+                - name: GRAPH_SERVICE_IMPL
+                  value: neo4j
+                - name: NEO4J_HOST
+                  value: "prerequisites-neo4j-community:7474"
+                - name: NEO4J_URI
+                  value: "bolt://prerequisites-neo4j-community"
+                - name: NEO4J_USERNAME
+                  value: "neo4j"
+                - name: NEO4J_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "neo4j-secrets"
+                      key: "neo4j-password"
+              securityContext:
+                {}
+              volumeMounts:
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+                requests:
+                  cpu: 300m
+                  memory: 256Mi

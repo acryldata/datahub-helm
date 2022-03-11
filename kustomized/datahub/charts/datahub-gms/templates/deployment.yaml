@@ -1,0 +1,182 @@
+---
+# Source: datahub/charts/datahub-gms/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-datahub-gms
+  labels:
+    helm.sh/chart: datahub-gms-0.2.3
+    app.kubernetes.io/name: datahub-gms
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "0.3.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datahub-gms
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "4318"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/name: datahub-gms
+        app.kubernetes.io/instance: datahub
+    spec:
+      hostAliases:
+        - hostnames:
+          - broker
+          - mysql
+          - elasticsearch
+          - neo4j
+          ip: 192.168.0.104
+      serviceAccountName: datahub-datahub-gms
+      securityContext:
+        {}
+      volumes:
+        - name: truststore
+          secret:
+            defaultMode: 0444
+            secretName: strimzi-cluster-cluster-ca-cert
+        - name: keystore
+          secret:
+            defaultMode: 0444
+            secretName: datahub-kafka-user
+      initContainers:
+      containers:
+        - name: datahub-gms
+          securityContext:
+            {}
+          image: "linkedin/datahub-gms:v0.8.27"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 8
+          env:
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            - name: MCE_CONSUMER_ENABLED
+              value: "true"
+            - name: MAE_CONSUMER_ENABLED
+              value: "true"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: EBEAN_DATASOURCE_USERNAME
+              value: "root"
+            - name: EBEAN_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "mysql-secrets"
+                  key: "mysql-root-password"
+            - name: EBEAN_DATASOURCE_HOST
+              value: "prerequisites-mysql:3306"
+            - name: EBEAN_DATASOURCE_URL
+              value: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "com.mysql.cj.jdbc.Driver"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "testing-strimzi-cluster-kafka-bootstrap:9092"
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "http://prerequisites-cp-schema-registry:8081"
+            - name: ELASTICSEARCH_HOST
+              value: "elasticsearch-master"
+            - name: ELASTICSEARCH_PORT
+              value: "9200"
+            - name: GRAPH_SERVICE_IMPL
+              value: neo4j
+            - name: NEO4J_HOST
+              value: "prerequisites-neo4j-community:7474"
+            - name: NEO4J_URI
+              value: "bolt://prerequisites-neo4j-community"
+            - name: NEO4J_USERNAME
+              value: "neo4j"
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "neo4j-secrets"
+                  key: "neo4j-password"
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SECURITY_PROTOCOL
+              value: SSL
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: /mnt/datahub/truststore/ca.p12
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: SSL
+            - name: SPRING_KAFKA_PROPERTIES_SSL_CA_LOCATION
+              value: /mnt/datahub/truststore/ca.crt
+            - name: SPRING_KAFKA_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+              value: 
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_LOCATION
+              value: /mnt/datahub/keystore/user.p12
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_TYPE
+              value: PKCS12
+            - name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: SSL
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: /mnt/datahub/truststore/ca.p12
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_TYPE
+              value: PKCS12
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-kafka-user
+                  key: user.password
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: strimzi-cluster-cluster-ca-cert
+                  key: ca.password
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: strimzi-cluster-cluster-ca-cert
+                  key: ca.password
+            - name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-kafka-user
+                  key: user.password
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-kafka-user
+                  key: user.password
+            - name: UI_INGESTION_ENABLED
+              value: "true"
+            - name: SECRET_SERVICE_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "datahub-encryption-secrets"
+                  key: "encryption_key_secret"
+            - name: UI_INGESTION_DEFAULT_CLI_VERSION
+              value: "0.8.26.6"
+          volumeMounts:
+          - name: truststore
+            mountPath: /mnt/datahub/truststore
+            readOnly: true
+          - name: keystore
+            mountPath: /mnt/datahub/keystore
+            readOnly: true
+          resources:
+            {}

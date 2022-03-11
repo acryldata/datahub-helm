@@ -1,0 +1,50 @@
+---
+# Source: datahub/templates/mysql-setup-job.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datahub-mysql-setup-job
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datahub"
+    app.kubernetes.io/version: 0.8.27
+    helm.sh/chart: "datahub-0.2.53"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      volumes:
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: mysql-setup-job
+          image: "acryldata/datahub-mysql-setup:v0.8.27"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_USERNAME
+              value: "root"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "mysql-secrets"
+                  key: "mysql-root-password"
+            - name: MYSQL_HOST
+              value: "prerequisites-mysql"
+            - name: MYSQL_PORT
+              value: "3306"
+          securityContext:
+            runAsUser: 1000
+          volumeMounts:
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 300m
+              memory: 256Mi

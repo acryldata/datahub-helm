@@ -1,0 +1,139 @@
+---
+# Source: datahub/charts/datahub-frontend/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-datahub-frontend
+  labels:
+    helm.sh/chart: datahub-frontend-0.2.1
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "0.3.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datahub-frontend
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: datahub-frontend
+        app.kubernetes.io/instance: datahub
+    spec:
+      serviceAccountName: datahub-datahub-frontend
+      securityContext:
+        {}
+      volumes:
+        - name: truststore
+          secret:
+            defaultMode: 0444
+            secretName: strimzi-cluster-cluster-ca-cert
+        - name: keystore
+          secret:
+            defaultMode: 0444
+            secretName: datahub-kafka-user
+      initContainers:
+      containers:
+        - name: datahub-frontend
+          securityContext:
+            {}
+          image: "linkedin/datahub-frontend-react:v0.8.27"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9002
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /admin
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          readinessProbe:
+            httpGet:
+              path: /admin
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          env:
+            - name: DATAHUB_GMS_HOST
+              value: datahub-datahub-gms
+            - name: DATAHUB_GMS_PORT
+              value: "8080"
+            - name: DATAHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-gms-secret
+                  key: datahub.gms.secret
+            - name: DATAHUB_APP_VERSION
+              value: "1.0"
+            - name: DATAHUB_PLAY_MEM_BUFFER_SIZE
+              value: "10MB"
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "testing-strimzi-cluster-kafka-bootstrap:9092"
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SECURITY_PROTOCOL
+              value: SSL
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: /mnt/datahub/truststore/ca.p12
+            - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: SSL
+            - name: KAFKA_PROPERTIES_SSL_CA_LOCATION
+              value: /mnt/datahub/truststore/ca.crt
+            - name: KAFKA_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+              value: 
+            - name: KAFKA_PROPERTIES_SSL_KEYSTORE_LOCATION
+              value: /mnt/datahub/keystore/user.p12
+            - name: KAFKA_PROPERTIES_SSL_KEYSTORE_TYPE
+              value: PKCS12
+            - name: KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: SSL
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: /mnt/datahub/truststore/ca.p12
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_TYPE
+              value: PKCS12
+            - name: KAFKA_PROPERTIES_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-kafka-user
+                  key: user.password
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: strimzi-cluster-cluster-ca-cert
+                  key: ca.password
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: strimzi-cluster-cluster-ca-cert
+                  key: ca.password
+            - name: KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-kafka-user
+                  key: user.password
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-kafka-user
+                  key: user.password
+            - name: ELASTIC_CLIENT_HOST
+              value: "elasticsearch-master"
+            - name: ELASTIC_CLIENT_PORT
+              value: "9200"
+            - name: DATAHUB_TRACKING_TOPIC
+              value: "DataHubUsageEvent_v1"
+          volumeMounts:
+          - name: truststore
+            mountPath: /mnt/datahub/truststore
+            readOnly: true
+          - name: keystore
+            mountPath: /mnt/datahub/keystore
+            readOnly: true
+          resources:
+            {}

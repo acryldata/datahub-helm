@@ -76,7 +76,7 @@ spec:
             - name: DATAHUB_ANALYTICS_ENABLED
               value: "true"
             - name: KAFKA_BOOTSTRAP_SERVER
-              value: "testing-strimzi-cluster-kafka-bootstrap:9092"
+              value: "strimzi-cluster-kafka-bootstrap:9092"
             - name: KAFKA_PROPERTIES_KAFKASTORE_SECURITY_PROTOCOL
               value: SSL
             - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION

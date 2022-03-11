@@ -97,7 +97,7 @@ spec:
             - name: EBEAN_DATASOURCE_DRIVER
               value: "com.mysql.cj.jdbc.Driver"
             - name: KAFKA_BOOTSTRAP_SERVER
-              value: "testing-strimzi-cluster-kafka-bootstrap:9092"
+              value: "strimzi-cluster-kafka-bootstrap:9092"
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: "http://prerequisites-cp-schema-registry:8081"
             - name: ELASTICSEARCH_HOST

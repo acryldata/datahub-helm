@@ -107,9 +107,9 @@ global:
 
   kafka:
     bootstrap:
-      server: "testing-strimzi-cluster-kafka-bootstrap:9092"
+      server: "strimzi-cluster-kafka-bootstrap:9092"
     zookeeper:
-      server: "testing-strimzi-cluster-zookeeper-client:2181"
+      server: "strimzi-cluster-zookeeper-client:2181"
     ## For AWS MSK set this to a number larger than 1
     # partitions: 3
     # replicationFactor: 3

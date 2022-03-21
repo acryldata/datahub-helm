@@ -18,6 +18,13 @@ spec:
   jobTemplate:
     spec:
       template:
+        {{- if .Values.global.podLabels }}
+        metadata:
+          labels:
+            {{- range $key, $value := .Values.global.podLabels }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+        {{- end }}
         spec:
         {{- with .Values.global.hostAliases }}
           hostAliases:

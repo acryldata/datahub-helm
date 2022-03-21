@@ -66,7 +66,7 @@ Create the name of the service account to use
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "datahub-frontend.ingress.apiVersion" -}}
-{{- if semverCompare ">=1.22-0" .Capabilities.KubeVersion.Version -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.Version -}}
 {{- print "networking.k8s.io/v1" -}}
 {{- else if semverCompare "<1.14-0" .Capabilities.KubeVersion.Version }}
 {{- print "extensions/v1beta1" -}}

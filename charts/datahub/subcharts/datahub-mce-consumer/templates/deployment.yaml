@@ -17,6 +17,9 @@ spec:
     {{- end }}
       labels:
         {{- include "datahub-mce-consumer.selectorLabels" . | nindent 8 }}
+        {{- range $key, $value := .Values.global.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}
       hostAliases:

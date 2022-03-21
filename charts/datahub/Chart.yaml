@@ -4,25 +4,25 @@ description: A Helm chart for LinkedIn DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.2.62
+version: 0.2.63
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: 0.8.31
+appVersion: 0.8.32
 dependencies:
   - name: datahub-gms
-    version: 0.2.3
+    version: 0.2.4
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
-    version: 0.2.1
+    version: 0.2.2
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer
-    version: 0.2.3
+    version: 0.2.4
     repository: file://./subcharts/datahub-mae-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-mce-consumer
-    version: 0.2.3
+    version: 0.2.4
     repository: file://./subcharts/datahub-mce-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-ingestion-cron
@@ -33,7 +33,7 @@ dependencies:
     version: 0.2.1
     repository: file://./subcharts/datahub-jmxexporter
   - name: acryl-datahub-actions
-    version: 0.0.1
+    version: 0.0.2
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
 maintainers:

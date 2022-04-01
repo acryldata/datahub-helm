@@ -1,5 +1,5 @@
 {{- if .Values.datahubUpgrade.enabled -}}
-apiVersion: batch/v1
+apiVersion: {{ template "datahub-ingestion-cron.cronjob.apiVersion" . }}
 kind: Job
 metadata:
   name: {{ .Release.Name }}-datahub-upgrade-job

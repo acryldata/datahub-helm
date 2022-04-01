@@ -2,7 +2,7 @@
 {{- $labels := include "datahub-ingestion-cron.labels" .}}
 {{- range $jobName, $val := .Values.crons }}
 {{- $defaultCommand := printf "datahub ingest -c /etc/recipe/%s" $val.recipe.fileName }}
-apiVersion: batch/v1beta1
+apiVersion: {{ template "datahub-ingestion-cron.cronjob.apiVersion" . }}
 kind: CronJob
 metadata:
   name: "{{ $baseName }}-{{ $jobName }}"

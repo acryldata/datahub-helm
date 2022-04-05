@@ -5,6 +5,10 @@ datahub-gms:
   image:
     repository: linkedin/datahub-gms
     tag: "v0.8.27"
+  ingress:
+    enabled: true
+  service:
+    type: ClusterIP
 
 datahub-frontend:
   enabled: true
@@ -13,7 +17,13 @@ datahub-frontend:
     tag: "v0.8.27"
   # Set up ingress to expose react front-end
   ingress:
-    enabled: false
+    enabled: true
+  service:
+    type: ClusterIP
+  global:
+    datahub:
+      gms:
+        port: 8080
 
 acryl-datahub-actions:
   enabled: false
@@ -65,7 +75,7 @@ kafkaSetupJob:
     runAsUser: 1000
 
 mysqlSetupJob:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-mysql-setup
     tag: "v0.8.27"
@@ -114,15 +124,15 @@ global:
     # partitions: 3
     # replicationFactor: 3
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
+      url: "http://cp-schema-registry:8081"
       # type: AWS_GLUE
       # glue:
       #   region: us-east-1
       #   registry: datahub
 
   neo4j:
-    host: "prerequisites-neo4j-community:7474"
-    uri: "bolt://prerequisites-neo4j-community"
+    host: "neo4j-community:7474"
+    uri: "bolt://neo4j-community"
     username: "neo4j"
     password:
       secretRef: neo4j-secrets
@@ -130,15 +140,15 @@ global:
 
   sql:
     datasource:
-      host: "prerequisites-mysql:3306"
-      hostForMysqlClient: "prerequisites-mysql"
-      port: "3306"
-      url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
-      driver: "com.mysql.cj.jdbc.Driver"
-      username: "root"
+      host: "stolon-proxy-service:5432"
+      hostForMysqlClient: "datahub-prerequisites-mysql"
+      port: "5432"
+      url: "jdbc:postgresql://stolon-proxy-service:5432/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      driver: "org.postgresql.Driver"
+      username: "stolon"
       password:
-        secretRef: mysql-secrets
-        secretKey: mysql-root-password
+        secretRef: stolon
+        secretKey: password
 
   datahub:
     gms:

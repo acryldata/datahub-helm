@@ -17,6 +17,9 @@ spec:
     {{- end }}
       labels:
         {{- include "datahub-mae-consumer.selectorLabels" . | nindent 8 }}
+        {{- range $key, $value := .Values.global.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}
       hostAliases:
@@ -164,6 +167,9 @@ spec:
             {{- if .Values.global.datahub.managed_ingestion.enabled }}
             - name: UI_INGESTION_ENABLED
               value: "true"
+            {{- else }}
+            - name: UI_INGESTION_ENABLED
+              value: "false"
             {{- end }}
             {{- if .Values.global.datahub.managed_ingestion.defaultCliVersion }}
             - name: UI_INGESTION_DEFAULT_CLI_VERSION

@@ -17,6 +17,9 @@ spec:
     {{- end }}
       labels:
         {{- include "datahub-gms.selectorLabels" . | nindent 8 }}
+        {{- range $key, $value := .Values.global.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}
       hostAliases:
@@ -222,6 +225,9 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.global.datahub.encryptionKey.secretRef }}"
                   key: "{{ .Values.global.datahub.encryptionKey.secretKey }}"
+            {{- else }}
+            - name: UI_INGESTION_ENABLED
+              value: "false"
             {{- end }}
             {{- if .Values.global.datahub.managed_ingestion.defaultCliVersion }}
             - name: UI_INGESTION_DEFAULT_CLI_VERSION
@@ -231,6 +237,8 @@ spec:
             - name: ENTITY_SERVICE_ENABLE_RETENTION
               value: "true"
             {{- end }}
+            - name: SEARCH_SERVICE_ENABLE_CACHE
+              value: {{ .Values.global.datahub.enable_search_cache | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

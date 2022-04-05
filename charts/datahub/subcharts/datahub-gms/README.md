@@ -37,7 +37,7 @@ Current chart version is `0.2.0`
 | global.sql.datasource.username | string | `"datahub"` |  |
 | global.sql.datasource.password.secretRef | string | `"mysql-secrets"` |  |
 | global.sql.datasource.password.secretKey | string | `"mysql-password"` |  |
-| global.graph_service_impl | string | `neo4j` | One of `neo4j` or `elasticsearch`. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility.
+| global.graph_service_impl | string | `neo4j` | One of `neo4j` or `elasticsearch`. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"linkedin/datahub-gms"` |  |
 | image.tag | string | `"head"` |  |
@@ -73,5 +73,5 @@ Current chart version is `0.2.0`
 | global.datahub.managed_ingestion.enabled | bool | `true` | Whether or not UI-based ingestion experience is enabled. |
 | global.datahub.encryptionKey.secretRef | string | `nil` | The reference to a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. Required if managed_ingestion_enabled is 'true'. |
 | global.datahub.encryptionKey.secretKey | string | `nil` | The key of a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. Required if managed_ingestion_enabled is 'true'. |
-| global.datahub.managed_ingestion.defaultCliVersion | string | `nil` | This is the version of the DataHub CLI to use for UI ingestion, by default. You do not need to explicitly provide this. By default the underlying datahub-gms container will provide a latest version compatible with the server. |
+| global.datahub.managed_ingestion.defaultCliVersion | string | `0.8.32` | This is the version of the DataHub CLI to use for UI ingestion, by default. You do not need to explicitly provide this. By default the underlying datahub-gms container will provide a latest version compatible with the server. |
 | global.datahub.enable_retention | bool | `false` | Whether or not to enable retention on local DB |

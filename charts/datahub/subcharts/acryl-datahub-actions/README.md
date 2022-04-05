@@ -17,7 +17,7 @@ Current chart version is `0.0.1`
 | global.datahub.gms.port | string | `"8080"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"public.ecr.aws/datahub/acryl-datahub-actions"` |  |
-| image.tag | string | `"head"` |  |
+| image.tag | string | `"v0.0.1-beta.13"` |  |
 | imagePullSecrets | list | `[]` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |

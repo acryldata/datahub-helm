@@ -39,7 +39,11 @@ spec:
               service:
                 name: {{ .name }}
                 port:
+                {{- if eq .port "use-annotation" }}
+                  name: {{ .port }}
+                {{- else }}
                   number: {{ .port }}
+                {{- end }}
             {{- else }}
             backend:
               serviceName: {{ .name }}

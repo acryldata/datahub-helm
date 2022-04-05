@@ -20,8 +20,8 @@ spec:
     metadata:
       labels:
         {{- range $key, $value := .Values.global.podLabels }}
-          {{ $key }}: {{ $value | quote }}
-          {{- end }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}

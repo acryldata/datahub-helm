@@ -4,13 +4,13 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    tag: "v0.8.27"
+    tag: "v0.8.32"
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    tag: "v0.8.27"
+    tag: "v0.8.32"
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -19,7 +19,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: public.ecr.aws/datahub/acryl-datahub-actions
-    tag: "v0.0.1-beta.8"
+    tag: "v0.0.1-beta.13"
   resources:
     limits:
       cpu: 500m
@@ -32,31 +32,31 @@ elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    tag: "v0.8.27"
+    tag: "v0.8.32"
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    tag: "v0.8.27"
+    tag: "v0.8.32"
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    tag: "v0.8.27"
+    tag: "v0.8.32"
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.8.27"
+    tag: "v0.8.32"
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    tag: "v0.8.27"
+    tag: "v0.8.32"
 
 global:
   graph_service_impl: neo4j
@@ -102,4 +102,4 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.8.27"
+      defaultCliVersion: "0.8.32"

@@ -199,7 +199,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      # defaultCliVersion: "0.8.20.0" --> Optional: Controls the acryl-datahub package version downloaded from PyPI. 
+      # defaultCliVersion: "0.8.32" --> Optional: Controls the acryl-datahub package version downloaded from PyPI. 
 
     metadata_service_authentication: 
       enabled: false
@@ -217,6 +217,8 @@ global:
       secretKey: "encryption-key-secret"
 
     enable_retention: false ## Set to true to enable retention on local DB
+
+    enable_search_cache: false
 
   hostAliases:
     - ip: "192.168.0.104"

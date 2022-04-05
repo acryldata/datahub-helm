@@ -9,6 +9,9 @@ elasticsearch:
   antiAffinity: "soft"
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
+  # # If your running a single replica cluster add the following helm value
+  # clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+
   # # Shrink default JVM heap.
   # esJavaOpts: "-Xmx128m -Xms128m"
 

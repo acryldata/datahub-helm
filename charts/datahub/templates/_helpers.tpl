@@ -65,7 +65,7 @@ Create the name of the service account to use
 {{/*
 Return the appropriate apiVersion for cronjob.
 */}}
-{{- define "datahub-ingestion-cron.cronjob.apiVersion" -}}
+{{- define "datahub.cronjob.apiVersion" -}}
 {{- if semverCompare ">=1.21-0" .Capabilities.KubeVersion.Version -}}
 {{- print "batch/v1" -}}
 {{- else -}}

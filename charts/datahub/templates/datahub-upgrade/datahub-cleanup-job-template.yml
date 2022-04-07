@@ -3,7 +3,7 @@
 # Creates a suspended cronJob that you can use to create an adhoc job when ready to run clean up.
 # Run the following command to do so
 # kubectl create job --from=cronjob/<<release-name>>-datahub-cleanup-job-template datahub-cleanup-job
-apiVersion: {{ template "datahub-ingestion-cron.cronjob.apiVersion" . }}
+apiVersion: {{ include "datahub.cronjob.apiVersion" $}}
 kind: CronJob
 metadata:
   name: {{ .Release.Name }}-datahub-cleanup-job-template

@@ -88,7 +88,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.8.33.1"
+    tag: "v0.8.33"
   noCodeDataMigration:
     sqlDbType: "MYSQL"
   podSecurityContext: {}

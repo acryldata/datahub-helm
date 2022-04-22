@@ -57,6 +57,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+          {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /actuator/health

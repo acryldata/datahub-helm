@@ -61,7 +61,7 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+          {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
             - name: jmx
               containerPort: 4318
               protocol: TCP

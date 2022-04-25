@@ -22,7 +22,6 @@ acryl-datahub-actions:
     tag: "v0.0.1-beta.13"
   resources:
     limits:
-      cpu: 500m
       memory: 512Mi
     requests:
       cpu: 300m

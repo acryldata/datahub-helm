@@ -98,7 +98,7 @@ spec:
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
-              value: {{ $configValue }}
+              value: {{ $configValue | quote }}
             {{- end }}
             {{- end }}
             {{- if .Values.global.credentialsAndCertsSecrets }}

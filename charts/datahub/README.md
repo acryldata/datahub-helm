@@ -107,3 +107,4 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.datahub.managed_ingestion.defaultCliVersion | string | `0.8.36` | This is the version of the DataHub CLI to use for UI ingestion, by default. |
 | global.datahub.encryptionKey.provisionSecret | bool | `true` | Whether an encryption key secret should be provisioned on the first deployment for you. Set this to false if you are overriding global.datahub.encryptionKey.secretRef. |
 | global.datahub.enable_retention | bool | `false` | Whether or not to enable retention on local DB |
+| global.sql.datasource.hostForpostgresqlClient | string | `""` | SQL database host (without port) when using postgresqlSetupJob |

@@ -156,7 +156,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.8.35.1"
+      defaultCliVersion: "0.8.35"
 
     metadata_service_authentication:
       enabled: false

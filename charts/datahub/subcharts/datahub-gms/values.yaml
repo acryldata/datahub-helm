@@ -206,6 +206,9 @@ global:
       #   signingKey: 
       #    secretRef: <secret-ref>
       #    secretKey: <secret-key>
+      #   salt:
+      #    secretRef: <secret-ref>
+      #    secretKey: <secret-key>
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

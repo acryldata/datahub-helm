@@ -168,6 +168,9 @@ global:
         signingKey:
           secretRef: "datahub-auth-secrets"
           secretKey: "token_service_signing_key"
+        salt:
+          secretRef: "datahub-auth-secrets"
+          secretKey: "token_service_salt"
       # Set to false if you'd like to provide your own auth secrets
       provisionSecrets: true
 

@@ -70,6 +70,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.sql.datasource.driver | string | `"com.mysql.cj.jdbc.Driver"` | Driver for the SQL database |
 | global.sql.datasource.host | string | `"prerequisites-mysql:3306"` | SQL database host (with port) |
 | global.sql.datasource.hostForMysqlClient | string | `"prerequisites-mysql"` | SQL database host (without port) |
+| global.sql.datasource.port | string | `"3306"` | SQL database port |
 | global.sql.datasource.url | string | `"jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` | URL to access SQL database |
 | global.sql.datasource.username | string | `"root"` | SQL user name |
 | global.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL password |

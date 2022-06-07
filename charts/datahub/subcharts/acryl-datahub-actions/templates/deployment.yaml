@@ -63,8 +63,6 @@ spec:
               value: "{{ .Values.global.kafka.schemaregistry.url }}"
             - name: KAFKA_AUTO_OFFSET_POLICY
               value: "{{ .Values.actions.kafkaAutoOffsetPolicy }}"
-            - name: ACTION_FILE_NAME
-              value: "{{ .Values.actionFileName }}"
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}

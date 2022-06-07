@@ -4,8 +4,8 @@
 replicaCount: 1
 
 image:
-  repository: public.ecr.aws/datahub/acryl-datahub-actions
-  tag: "v0.0.1-beta.13"
+  repository: acryldata/datahub-actions
+  tag: "v0.0.1"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -53,9 +53,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-# The action pipeline to run: expected to be found at /etc/datahub/actions/{actionFileName} for the container
-actionFileName: "executor.yaml"
 
 actions:
   kafkaAutoOffsetPolicy: "latest"

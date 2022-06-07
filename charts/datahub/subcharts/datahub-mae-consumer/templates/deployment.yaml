@@ -87,6 +87,8 @@ spec:
             {{- end }}
             - name: MAE_CONSUMER_ENABLED
               value: "true"
+            - name: PE_CONSUMER_ENABLED
+              value: "true"
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-mae-consumer/resources/entity-registry.yml
             - name: DATAHUB_GMS_HOST

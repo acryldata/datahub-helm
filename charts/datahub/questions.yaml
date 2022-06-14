@@ -35,7 +35,7 @@ questions:
     subquestions:
       - variable: datahub-frontend.image.repository
         required: true
-        default: "linkedin/datahub-frontend"
+        default: "linkedin/datahub-frontend-react"
         type: string
         label: datahub-frontend Image Repository
         group: "datahub-frontend"

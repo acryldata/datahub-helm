@@ -33,6 +33,13 @@ questions:
     description: "Enable Frontend"
     show_subquestion_if: true
     subquestions:
+      - variable: datahub-frontend.image.repository
+        required: true
+        default: "linkedin/datahub-frontend"
+        type: string
+        label: datahub-frontend Image Repository
+        group: "datahub-frontend"
+        description: "Image repository for datahub-frontend"
       - variable: datahub-frontend.ingress.enabled
         default: false
         type: boolean
@@ -300,14 +307,14 @@ questions:
     description: "URL to kafka schema registry"
   - variable: global.neo4j.host
     required: true
-    default: "prerequisites-neo4j:7474"
+    default: "prerequisites-neo4j-community:7474"
     type: string
     label: Neo4j Host
     group: "global.neo4j"
     description: "Neo4j host address (with port)"
   - variable: global.neo4j.uri
     required: true
-    default: "bolt://prerequisites-neo4j"
+    default: "bolt://prerequisites-neo4j-community"
     type: string
     label: Neo4j URI
     group: "global.neo4j"

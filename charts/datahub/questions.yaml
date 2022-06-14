@@ -279,7 +279,7 @@ questions:
     description: "Elasticsearch port"
   - variable: global.kafka.bootstrap.server
     required: true
-    default: "prerequisites-broker:9092"
+    default: "prerequisites-kafka:9092"
     type: string
     label: Kafka Bootstrap Servers
     group: "global.kafka"
@@ -384,7 +384,7 @@ questions:
     description: "Secret that contains the MySQL password"
   - variable: global.sql.datasource.password.secretKey
     required: true
-    default: "mysql-password"
+    default: "mysql-root-password"
     type: string
     label: SQL Database Secret Key
     group: "global.sql"

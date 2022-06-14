@@ -137,7 +137,7 @@ questions:
     subquestions:
       - variable: elasticsearchSetupJob.image.repository
         required: true
-        default: "linkedin/elasticsearchSetupJob"
+        default: "linkedin/datahub-elasticsearch-setup"
         type: string
         label: elasticsearchSetupJob Image Repository
         group: "elasticsearchSetupJob"
@@ -159,7 +159,7 @@ questions:
     subquestions:
       - variable: kafkaSetupJob.image.repository
         required: true
-        default: "linkedin/kafkaSetupJob"
+        default: "linkedin/datahub-kafka-setup"
         type: string
         label: kafkaSetupJob Image Repository
         group: "kafkaSetupJob"
@@ -181,7 +181,7 @@ questions:
     subquestions:
       - variable: mysqlSetupJob.image.repository
         required: true
-        default: "acryldata/mysqlSetupJob"
+        default: "acryldata/datahub-mysql-setup"
         type: string
         label: mysqlSetupJob Image Repository
         group: "mysqlSetupJob"
@@ -203,7 +203,7 @@ questions:
     subquestions:
       - variable: postgresqlSetupJob.image.repository
         required: true
-        default: "acryldata/postgresqlSetupJob"
+        default: "acryldata/datahub-postgres-setup"
         type: string
         label: postgresqlSetupJob Image Repository
         group: "postgresqlSetupJob"
@@ -225,7 +225,7 @@ questions:
     subquestions:
       - variable: datahubUpgrade.image.repository
         required: true
-        default: "acryldata/datahubUpgrade"
+        default: "acryldata/datahub-upgrade"
         type: string
         label: datahubUpgrade Image Repository
         group: "datahubUpgrade"

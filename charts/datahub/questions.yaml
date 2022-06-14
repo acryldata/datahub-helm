@@ -11,44 +11,44 @@ questions:
     description: "Enable GMS"
     show_subquestion_if: true
     subquestions:
-      - variable: defaultImage
-        default: true
-        description: "Use default Docker image"
-        label: Use Default Image
-        type: boolean
+      - variable: datahub-gms.image.registry
+        default: "docker.io"
+        type: string
+        label: datahub-gms Image Registry
         group: "datahub-gms"
-        show_subquestion_if: false
-        subquestions:
-          - variable: datahub-gms.image.registry
-            default: "docker.io"
-            type: string
-            label: datahub-gms Image Registry
-            group: "datahub-gms"
-            description: "Image registry for datahub-gms"
-          - variable: datahub-gms.image.repository
-            default: "linkedin/datahub-gms"
-            type: string
-            label: datahub-gms Image Repository
-            group: "datahub-gms"
-            description: "Image repository for datahub-gms"
-          - variable: datahub-gms.image.tag
-            default: "v0.8.38"
-            type: string
-            label: datahub-gms Image Repository
-            group: "datahub-gms"
-            description: "Image tag for datahub-gms"
-  - variable: datahub-frontend.image.registry
-    default: "docker.io"
-    type: string
-    label: datahub-frontend Image Registry
-    group: "datahub-frontend"
-    description: "datahub-frontend Image Registry"
-  - variable: datahub-frontend.ingress.enabled
-    default: false
+        description: "Image registry for datahub-gms"
+      - variable: datahub-gms.image.repository
+        default: "linkedin/datahub-gms"
+        type: string
+        label: datahub-gms Image Repository
+        group: "datahub-gms"
+        description: "Image repository for datahub-gms"
+      - variable: datahub-gms.image.tag
+        default: "v0.8.38"
+        type: string
+        label: datahub-gms Image Repository
+        group: "datahub-gms"
+        description: "Image tag for datahub-gms"
+  - variable: datahub-frontend.enabled
+    default: true
     type: boolean
-    label: datahub-frontend Ingress
+    label: Enable Frontend
     group: "datahub-frontend"
-    description: "Set up ingress to expose react front-end"
+    description: "Enable Frontend"
+    show_subquestion_if: true
+    subquestions:
+      - variable: datahub-frontend.image.registry
+        default: "docker.io"
+        type: string
+        label: datahub-frontend Image Registry
+        group: "datahub-frontend"
+        description: "datahub-frontend Image Registry"
+      - variable: datahub-frontend.ingress.enabled
+        default: false
+        type: boolean
+        label: datahub-frontend Ingress
+        group: "datahub-frontend"
+        description: "Set up ingress to expose react front-end"
   - variable: acryl-datahub-actions.image.registry
     default: "docker.io"
     type: string

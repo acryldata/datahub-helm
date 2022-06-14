@@ -11,13 +11,6 @@ questions:
     description: "Enable GMS"
     show_subquestion_if: true
     subquestions:
-      - variable: datahub-gms.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: datahub-gms Image Registry
-        group: "datahub-gms"
-        description: "Image registry for datahub-gms"
       - variable: datahub-gms.image.repository
         required: true
         default: "linkedin/datahub-gms"
@@ -40,13 +33,6 @@ questions:
     description: "Enable Frontend"
     show_subquestion_if: true
     subquestions:
-      - variable: datahub-frontend.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: datahub-frontend Image Registry
-        group: "datahub-frontend"
-        description: "datahub-frontend Image Registry"
       - variable: datahub-frontend.ingress.enabled
         default: false
         type: boolean
@@ -61,13 +47,6 @@ questions:
     description: "Enable Actions"
     show_subquestion_if: true
     subquestions:
-      - variable: acryl-datahub-actions.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: acryl-datahub-actions Image Registry
-        group: "acryl-datahub-actions"
-        description: "acryl-datahub-actions Image Registry"
       - variable: acryl-datahub-actions.image.repository
         required: true
         default: "public.ecr.aws/datahub/acryl-datahub-actions"
@@ -90,13 +69,6 @@ questions:
     description: "Enable datahub-mae-consumer"
     show_subquestion_if: true
     subquestions:
-      - variable: datahub-mae-consumer.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: datahub-mae-consumer Image Registry
-        group: "datahub-mae-consumer"
-        description: "datahub-mae-consumer Image Registry"
       - variable: datahub-mae-consumer.image.repository
         required: true
         default: "linkedin/datahub-mae-consumer"
@@ -119,13 +91,6 @@ questions:
     description: "Enable datahub-mce-consumer"
     show_subquestion_if: true
     subquestions:
-      - variable: datahub-mce-consumer.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: datahub-mce-consumer Image Registry
-        group: "datahub-mce-consumer"
-        description: "datahub-mce-consumer Image Registry"
       - variable: datahub-mce-consumer.image.repository
         required: true
         default: "linkedin/datahub-mce-consumer"
@@ -148,13 +113,6 @@ questions:
     description: "Enable datahub-ingestion-cron"
     show_subquestion_if: true
     subquestions:
-      - variable: datahub-ingestion-cron.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: datahub-ingestion-cron Image Registry
-        group: "datahub-ingestion-cron"
-        description: "datahub-ingestion-cron Image Registry"
       - variable: datahub-ingestion-cron.image.repository
         required: true
         default: "acryldata/datahub-ingestion-cron"
@@ -177,13 +135,6 @@ questions:
     description: "Enable elasticsearchSetupJob"
     show_subquestion_if: true
     subquestions:
-      - variable: elasticsearchSetupJob.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: elasticsearchSetupJob Image Registry
-        group: "elasticsearchSetupJob"
-        description: "elasticsearchSetupJob Image Registry"
       - variable: elasticsearchSetupJob.image.repository
         required: true
         default: "linkedin/elasticsearchSetupJob"
@@ -206,13 +157,6 @@ questions:
     description: "Enable kafkaSetupJob"
     show_subquestion_if: true
     subquestions:
-      - variable: kafkaSetupJob.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: kafkaSetupJob Image Registry
-        group: "kafkaSetupJob"
-        description: "kafkaSetupJob Image Registry"
       - variable: kafkaSetupJob.image.repository
         required: true
         default: "linkedin/kafkaSetupJob"
@@ -235,13 +179,6 @@ questions:
     description: "Enable mysqlSetupJob"
     show_subquestion_if: true
     subquestions:
-      - variable: mysqlSetupJob.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: mysqlSetupJob Image Registry
-        group: "mysqlSetupJob"
-        description: "mysqlSetupJob Image Registry"
       - variable: mysqlSetupJob.image.repository
         required: true
         default: "acryldata/mysqlSetupJob"
@@ -264,13 +201,6 @@ questions:
     description: "Enable postgresqlSetupJob"
     show_subquestion_if: true
     subquestions:
-      - variable: postgresqlSetupJob.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: postgresqlSetupJob Image Registry
-        group: "postgresqlSetupJob"
-        description: "postgresqlSetupJob Image Registry"
       - variable: postgresqlSetupJob.image.repository
         required: true
         default: "acryldata/postgresqlSetupJob"
@@ -293,13 +223,6 @@ questions:
     description: "Enable datahubUpgrade"
     show_subquestion_if: true
     subquestions:
-      - variable: datahubUpgrade.image.registry
-        required: true
-        default: "docker.io"
-        type: string
-        label: datahubUpgrade Image Registry
-        group: "datahubUpgrade"
-        description: "datahubUpgrade Image Registry"
       - variable: datahubUpgrade.image.repository
         required: true
         default: "acryldata/datahubUpgrade"

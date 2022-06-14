@@ -3,7 +3,6 @@
 datahub-gms:
   enabled: true
   image:
-    registry: docker.io
     repository: linkedin/datahub-gms
     tag: "v0.8.38"
 

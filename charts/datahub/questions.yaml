@@ -1,0 +1,105 @@
+---
+categories:
+  - datahub
+  - datacatalog
+questions:
+  - variable: datahub-gms.enabled
+    default: true
+    type: boolean
+    label: Enable GMS
+    group: "datahub-gms"
+    description: "Enable GMS"
+    show_subquestion_if: true
+    subquestions:
+      - variable: defaultImage
+        default: true
+        description: "Use default Docker image"
+        label: Use Default Image
+        type: boolean
+        group: "datahub-gms"
+        show_subquestion_if: false
+        subquestions:
+          - variable: datahub-gms.image.registry
+            default: "docker.io"
+            type: string
+            label: datahub-gms Image Registry
+            group: "datahub-gms"
+            description: "Image registry for datahub-gms"
+          - variable: datahub-gms.image.repository
+            default: "linkedin/datahub-gms"
+            type: string
+            label: datahub-gms Image Repository
+            group: "datahub-gms"
+            description: "Image repository for datahub-gms"
+          - variable: datahub-gms.image.tag
+            default: "v0.8.38"
+            type: string
+            label: datahub-gms Image Repository
+            group: "datahub-gms"
+            description: "Image tag for datahub-gms"
+  - variable: datahub-frontend.image.registry
+    default: "docker.io"
+    type: string
+    label: datahub-frontend Image Registry
+    group: "datahub-frontend"
+    description: "datahub-frontend Image Registry"
+  - variable: datahub-frontend.ingress.enabled
+    default: false
+    type: boolean
+    label: datahub-frontend Ingress
+    group: "datahub-frontend"
+    description: "Set up ingress to expose react front-end"
+  - variable: acryl-datahub-actions.image.registry
+    default: "docker.io"
+    type: string
+    label: acryl-datahub-actions Image Registry
+    group: "acryl-datahub-actions"
+    description: "acryl-datahub-actions Image Registry"
+  - variable: datahub-mae-consumer.image.registry
+    default: "docker.io"
+    type: string
+    label: datahub-mae-consumer Image Registry
+    group: "datahub-mae-consumer"
+    description: "datahub-mae-consumer Image Registry"
+  - variable: datahub-mce-consumer.image.registry
+    default: "docker.io"
+    type: string
+    label: datahub-mce-consumer Image Registry
+    group: "datahub-mce-consumer"
+    description: "datahub-mce-consumer Image Registry"
+  - variable: datahub-ingestion-cron.image.registry
+    default: "docker.io"
+    type: string
+    label: datahub-ingestion-cron Image Registry
+    group: "datahub-ingestion-cron"
+    description: "datahub-ingestion-cron Image Registry"
+  - variable: elasticsearchSetupJob.image.registry
+    default: "docker.io"
+    type: string
+    label: elasticsearchSetupJob Image Registry
+    group: "elasticsearchSetupJob"
+    description: "elasticsearchSetupJob Image Registry"
+  - variable: kafkaSetupJob.image.registry
+    default: "docker.io"
+    type: string
+    label: kafkaSetupJob Image Registry
+    group: "kafkaSetupJob"
+    description: "kafkaSetupJob Image Registry"
+  - variable: mysqlSetupJob.image.registry
+    default: "docker.io"
+    type: string
+    label: mysqlSetupJob Image Registry
+    group: "mysqlSetupJob"
+    description: "mysqlSetupJob Image Registry"
+  - variable: postgresqlSetupJob.image.registry
+    default: "docker.io"
+    type: string
+    label: postgresqlSetupJob Image Registry
+    group: "postgresqlSetupJob"
+    description: "postgresqlSetupJob Image Registry"
+  - variable: datahubUpgrade.image.registry
+    default: "docker.io"
+    type: string
+    label: datahubUpgrade Image Registry
+    group: "datahubUpgrade"
+    description: "datahubUpgrade Image Registry"

@@ -3,12 +3,14 @@
 datahub-gms:
   enabled: true
   image:
+    registry: docker.io
     repository: linkedin/datahub-gms
     tag: "v0.8.38"
 
 datahub-frontend:
   enabled: true
   image:
+    registry: docker.io
     repository: linkedin/datahub-frontend-react
     tag: "v0.8.38"
   # Set up ingress to expose react front-end
@@ -18,6 +20,7 @@ datahub-frontend:
 acryl-datahub-actions:
   enabled: true
   image:
+    registry: docker.io
     repository: public.ecr.aws/datahub/acryl-datahub-actions
     tag: "v0.0.1-beta.13"
   resources:
@@ -29,23 +32,27 @@ acryl-datahub-actions:
 
 datahub-mae-consumer:
   image:
+    registry: docker.io
     repository: linkedin/datahub-mae-consumer
     tag: "v0.8.38"
 
 datahub-mce-consumer:
   image:
+    registry: docker.io
     repository: linkedin/datahub-mce-consumer
     tag: "v0.8.38"
 
 datahub-ingestion-cron:
   enabled: false
   image:
+    registry: docker.io
     repository: acryldata/datahub-ingestion
     tag: "v0.8.38"
 
 elasticsearchSetupJob:
   enabled: true
   image:
+    registry: docker.io
     repository: linkedin/datahub-elasticsearch-setup
     tag: "v0.8.38"
   podSecurityContext:
@@ -56,6 +63,7 @@ elasticsearchSetupJob:
 kafkaSetupJob:
   enabled: true
   image:
+    registry: docker.io
     repository: linkedin/datahub-kafka-setup
     tag: "v0.8.38"
   podSecurityContext:
@@ -66,6 +74,7 @@ kafkaSetupJob:
 mysqlSetupJob:
   enabled: true
   image:
+    registry: docker.io
     repository: acryldata/datahub-mysql-setup
     tag: "v0.8.38"
   podSecurityContext:
@@ -76,6 +85,7 @@ mysqlSetupJob:
 postgresqlSetupJob:
   enabled: false
   image:
+    registry: docker.io
     repository: acryldata/datahub-postgres-setup
     tag: "v0.8.38"
   podSecurityContext:
@@ -86,13 +96,16 @@ postgresqlSetupJob:
 datahubUpgrade:
   enabled: true
   image:
+    registry: docker.io
     repository: acryldata/datahub-upgrade
     tag: "v0.8.38"
   noCodeDataMigration:
     sqlDbType: "MYSQL"
-  podSecurityContext: {}
+  podSecurityContext:
+    {}
     # fsGroup: 1000
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: 1000
 
 global:
@@ -173,7 +186,6 @@ global:
           secretKey: "token_service_salt"
       # Set to false if you'd like to provide your own auth secrets
       provisionSecrets: true
-
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

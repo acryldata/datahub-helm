@@ -17,49 +17,53 @@ questions:
         label: Set Replicas
         group: "elasticsearch"
         description: "set the number of replicas for ES."
-        show_subquestion_if: 1
-        subquestions:
-          - variable: elasticsearch.antiAffinity
-            default: "soft"
-            type: string
-            label: Set antiAffinity
-            group: "elasticsearch"
-            description: "Set replicas to 1 and uncomment this to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
-          - variable: elasticsearch.clusterHealthCheckParams
-            default: "wait_for_status=yellow&timeout=1s"
-            type: string
-            label: Set clusterHealthCheckParams
-            group: "elasticsearch"
-            description: "If your running a single replica cluster add the following this value."
-          - variable: elasticsearch.readinessProbe.initialDelaySeconds
-            default: 30
-            type: int
-            label: Set readinessProbe.initialDelaySeconds
-            group: "elasticsearch"
-            description: "If your running a single replica cluster add the following this value."
+      - variable: elasticsearch.antiAffinity
+        default: "hard"
+        type: enum
+        options:
+          - "hard"
+          - "soft"
+        label: Set antiAffinity
+        group: "elasticsearch"
+        description: "Set replicas to 1 and antiAffinity to soft to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
+      - variable: elasticsearch.clusterHealthCheckParams
+        default: "wait_for_status=green&timeout=1s"
+        type: enum
+        options:
+          - "wait_for_status=green&timeout=1s"
+          - "wait_for_status=yellow&timeout=1s"
+        label: Set clusterHealthCheckParams
+        group: "elasticsearch"
+        description: "If your running a single replica cluster, wait_for_status should be yellow."
+      - variable: elasticsearch.readinessProbe.initialDelaySeconds
+        default: 30
+        type: int
+        label: Set readinessProbe.initialDelaySeconds
+        group: "elasticsearch"
+        description: "If your running a single replica cluster add the following this value."
       - variable: elasticsearch.minimumMasterNodes
         default: 1
         type: int
         label: Set Minimum Master Nodes
         group: "elasticsearch"
         description: "set the number of minimum master nodes for ES."
-      - variable: airGap
-        default: false
-        type: boolean
-        label: Air-Gap Settings
+  - variable: airGap
+    default: false
+    type: boolean
+    label: Air-Gap Settings
+    group: "elasticsearch"
+    description: "Set to true if deploying in Air-Gap environment"
+    show_subquestion_if: true
+    subquestions:
+      - variable: elasticsearch.image
+        default: "docker.elastic.co/elasticsearch/elasticsearch"
+        type: string
+        label: Docker Image for ES
         group: "elasticsearch"
-        description: "Set to true if deploying in Air-Gap environment"
-        show_subquestion_if: true
-        subquestions:
-          - variable: elasticsearch.image
-            default: "docker.elastic.co/elasticsearch/elasticsearch"
-            type: string
-            label: Docker Image for ES
-            group: "elasticsearch"
-            description: "Docker image for ES"
-          - variable: elasticsearch.esConfig
-            default: ""
-            type: string
-            label: esConfig for ES
-            group: "elasticsearch"
-            description: "esConfig for ES"
+        description: "Docker image for ES"
+      - variable: elasticsearch.esConfig
+        default: ""
+        type: string
+        label: esConfig for ES
+        group: "elasticsearch"
+        description: "esConfig for ES"

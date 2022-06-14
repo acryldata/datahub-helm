@@ -12,21 +12,24 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: datahub-gms.image.registry
+        required: true
         default: "docker.io"
         type: string
         label: datahub-gms Image Registry
         group: "datahub-gms"
         description: "Image registry for datahub-gms"
       - variable: datahub-gms.image.repository
+        required: true
         default: "linkedin/datahub-gms"
         type: string
         label: datahub-gms Image Repository
         group: "datahub-gms"
         description: "Image repository for datahub-gms"
       - variable: datahub-gms.image.tag
+        required: true
         default: "v0.8.38"
         type: string
-        label: datahub-gms Image Repository
+        label: datahub-gms Image Tag
         group: "datahub-gms"
         description: "Image tag for datahub-gms"
   - variable: datahub-frontend.enabled
@@ -38,6 +41,7 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: datahub-frontend.image.registry
+        required: true
         default: "docker.io"
         type: string
         label: datahub-frontend Image Registry
@@ -49,57 +53,426 @@ questions:
         label: datahub-frontend Ingress
         group: "datahub-frontend"
         description: "Set up ingress to expose react front-end"
-  - variable: acryl-datahub-actions.image.registry
-    default: "docker.io"
-    type: string
-    label: acryl-datahub-actions Image Registry
+  - variable: acryl-datahub-actions.enabled
+    default: true
+    type: boolean
+    label: Enable Actions
     group: "acryl-datahub-actions"
-    description: "acryl-datahub-actions Image Registry"
-  - variable: datahub-mae-consumer.image.registry
-    default: "docker.io"
-    type: string
-    label: datahub-mae-consumer Image Registry
+    description: "Enable Actions"
+    show_subquestion_if: true
+    subquestions:
+      - variable: acryl-datahub-actions.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: acryl-datahub-actions Image Registry
+        group: "acryl-datahub-actions"
+        description: "acryl-datahub-actions Image Registry"
+      - variable: acryl-datahub-actions.image.repository
+        required: true
+        default: "public.ecr.aws/datahub/acryl-datahub-actions"
+        type: string
+        label: acryl-datahub-actions Image Repository
+        group: "acryl-datahub-actions"
+        description: "Image repository for acryl-datahub-actions"
+      - variable: acryl-datahub-actions.image.tag
+        required: true
+        default: "v0.0.1-beta.13"
+        type: string
+        label: acryl-datahub-actions Image Tag
+        group: "acryl-datahub-actions"
+        description: "Image tag for acryl-datahub-actions"
+  - variable: datahub-mae-consumer.enabled
+    default: true
+    type: boolean
+    label: Enable datahub-mae-consumer
     group: "datahub-mae-consumer"
-    description: "datahub-mae-consumer Image Registry"
-  - variable: datahub-mce-consumer.image.registry
-    default: "docker.io"
-    type: string
-    label: datahub-mce-consumer Image Registry
+    description: "Enable datahub-mae-consumer"
+    show_subquestion_if: true
+    subquestions:
+      - variable: datahub-mae-consumer.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: datahub-mae-consumer Image Registry
+        group: "datahub-mae-consumer"
+        description: "datahub-mae-consumer Image Registry"
+      - variable: datahub-mae-consumer.image.repository
+        required: true
+        default: "linkedin/datahub-mae-consumer"
+        type: string
+        label: datahub-mae-consumer Image Repository
+        group: "datahub-mae-consumer"
+        description: "Image repository for datahub-mae-consumer"
+      - variable: datahub-mae-consumer.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: datahub-mae-consumer Image Tag
+        group: "datahub-mae-consumer"
+        description: "Image tag for datahub-mae-consumer"
+  - variable: datahub-mce-consumer.enabled
+    default: true
+    type: boolean
+    label: Enable datahub-mce-consumer
     group: "datahub-mce-consumer"
-    description: "datahub-mce-consumer Image Registry"
-  - variable: datahub-ingestion-cron.image.registry
-    default: "docker.io"
-    type: string
-    label: datahub-ingestion-cron Image Registry
+    description: "Enable datahub-mce-consumer"
+    show_subquestion_if: true
+    subquestions:
+      - variable: datahub-mce-consumer.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: datahub-mce-consumer Image Registry
+        group: "datahub-mce-consumer"
+        description: "datahub-mce-consumer Image Registry"
+      - variable: datahub-mce-consumer.image.repository
+        required: true
+        default: "linkedin/datahub-mce-consumer"
+        type: string
+        label: datahub-mce-consumer Image Repository
+        group: "datahub-mce-consumer"
+        description: "Image repository for datahub-mce-consumer"
+      - variable: datahub-mce-consumer.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: datahub-mce-consumer Image Tag
+        group: "datahub-mce-consumer"
+        description: "Image tag for datahub-mce-consumer"
+  - variable: datahub-ingestion-cron.enabled
+    default: false
+    type: boolean
+    label: Enable datahub-ingestion-cron
     group: "datahub-ingestion-cron"
-    description: "datahub-ingestion-cron Image Registry"
-  - variable: elasticsearchSetupJob.image.registry
-    default: "docker.io"
-    type: string
-    label: elasticsearchSetupJob Image Registry
+    description: "Enable datahub-ingestion-cron"
+    show_subquestion_if: true
+    subquestions:
+      - variable: datahub-ingestion-cron.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: datahub-ingestion-cron Image Registry
+        group: "datahub-ingestion-cron"
+        description: "datahub-ingestion-cron Image Registry"
+      - variable: datahub-ingestion-cron.image.repository
+        required: true
+        default: "acryldata/datahub-ingestion-cron"
+        type: string
+        label: datahub-ingestion-cron Image Repository
+        group: "datahub-ingestion-cron"
+        description: "Image repository for datahub-ingestion-cron"
+      - variable: datahub-ingestion-cron.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: datahub-ingestion-cron Image Tag
+        group: "datahub-ingestion-cron"
+        description: "Image tag for datahub-ingestion-cron"
+  - variable: elasticsearchSetupJob.enabled
+    default: true
+    type: boolean
+    label: Enable elasticsearchSetupJob
     group: "elasticsearchSetupJob"
-    description: "elasticsearchSetupJob Image Registry"
-  - variable: kafkaSetupJob.image.registry
-    default: "docker.io"
-    type: string
-    label: kafkaSetupJob Image Registry
+    description: "Enable elasticsearchSetupJob"
+    show_subquestion_if: true
+    subquestions:
+      - variable: elasticsearchSetupJob.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: elasticsearchSetupJob Image Registry
+        group: "elasticsearchSetupJob"
+        description: "elasticsearchSetupJob Image Registry"
+      - variable: elasticsearchSetupJob.image.repository
+        required: true
+        default: "linkedin/elasticsearchSetupJob"
+        type: string
+        label: elasticsearchSetupJob Image Repository
+        group: "elasticsearchSetupJob"
+        description: "Image repository for elasticsearchSetupJob"
+      - variable: elasticsearchSetupJob.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: elasticsearchSetupJob Image Tag
+        group: "elasticsearchSetupJob"
+        description: "Image tag for elasticsearchSetupJob"
+  - variable: kafkaSetupJob.enabled
+    default: true
+    type: boolean
+    label: Enable kafkaSetupJob
     group: "kafkaSetupJob"
-    description: "kafkaSetupJob Image Registry"
-  - variable: mysqlSetupJob.image.registry
-    default: "docker.io"
-    type: string
-    label: mysqlSetupJob Image Registry
+    description: "Enable kafkaSetupJob"
+    show_subquestion_if: true
+    subquestions:
+      - variable: kafkaSetupJob.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: kafkaSetupJob Image Registry
+        group: "kafkaSetupJob"
+        description: "kafkaSetupJob Image Registry"
+      - variable: kafkaSetupJob.image.repository
+        required: true
+        default: "linkedin/kafkaSetupJob"
+        type: string
+        label: kafkaSetupJob Image Repository
+        group: "kafkaSetupJob"
+        description: "Image repository for kafkaSetupJob"
+      - variable: kafkaSetupJob.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: kafkaSetupJob Image Tag
+        group: "kafkaSetupJob"
+        description: "Image tag for kafkaSetupJob"
+  - variable: mysqlSetupJob.enabled
+    default: true
+    type: boolean
+    label: Enable mysqlSetupJob
     group: "mysqlSetupJob"
-    description: "mysqlSetupJob Image Registry"
-  - variable: postgresqlSetupJob.image.registry
-    default: "docker.io"
-    type: string
-    label: postgresqlSetupJob Image Registry
+    description: "Enable mysqlSetupJob"
+    show_subquestion_if: true
+    subquestions:
+      - variable: mysqlSetupJob.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: mysqlSetupJob Image Registry
+        group: "mysqlSetupJob"
+        description: "mysqlSetupJob Image Registry"
+      - variable: mysqlSetupJob.image.repository
+        required: true
+        default: "acryldata/mysqlSetupJob"
+        type: string
+        label: mysqlSetupJob Image Repository
+        group: "mysqlSetupJob"
+        description: "Image repository for mysqlSetupJob"
+      - variable: mysqlSetupJob.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: mysqlSetupJob Image Tag
+        group: "mysqlSetupJob"
+        description: "Image tag for mysqlSetupJob"
+  - variable: postgresqlSetupJob.enabled
+    default: false
+    type: boolean
+    label: Enable postgresqlSetupJob
     group: "postgresqlSetupJob"
-    description: "postgresqlSetupJob Image Registry"
-  - variable: datahubUpgrade.image.registry
-    default: "docker.io"
-    type: string
-    label: datahubUpgrade Image Registry
+    description: "Enable postgresqlSetupJob"
+    show_subquestion_if: true
+    subquestions:
+      - variable: postgresqlSetupJob.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: postgresqlSetupJob Image Registry
+        group: "postgresqlSetupJob"
+        description: "postgresqlSetupJob Image Registry"
+      - variable: postgresqlSetupJob.image.repository
+        required: true
+        default: "acryldata/postgresqlSetupJob"
+        type: string
+        label: postgresqlSetupJob Image Repository
+        group: "postgresqlSetupJob"
+        description: "Image repository for postgresqlSetupJob"
+      - variable: postgresqlSetupJob.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: postgresqlSetupJob Image Tag
+        group: "postgresqlSetupJob"
+        description: "Image tag for postgresqlSetupJob"
+  - variable: datahubUpgrade.enabled
+    default: true
+    type: boolean
+    label: Enable datahubUpgrade
     group: "datahubUpgrade"
-    description: "datahubUpgrade Image Registry"
+    description: "Enable datahubUpgrade"
+    show_subquestion_if: true
+    subquestions:
+      - variable: datahubUpgrade.image.registry
+        required: true
+        default: "docker.io"
+        type: string
+        label: datahubUpgrade Image Registry
+        group: "datahubUpgrade"
+        description: "datahubUpgrade Image Registry"
+      - variable: datahubUpgrade.image.repository
+        required: true
+        default: "acryldata/datahubUpgrade"
+        type: string
+        label: datahubUpgrade Image Repository
+        group: "datahubUpgrade"
+        description: "Image repository for datahubUpgrade"
+      - variable: datahubUpgrade.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: datahubUpgrade Image Tag
+        group: "datahubUpgrade"
+        description: "Image tag for datahubUpgrade"
+  - variable: global.datahub_standalone_consumers_enabled
+    default: true
+    type: boolean
+    label: DataHub Standalone Consumers
+    group: "global.datahub"
+    description: "Enable standalone consumers for kafka"
+  - variable: global.datahub_analytics_enabled
+    default: true
+    type: boolean
+    label: DataHub Analytics
+    group: "global.datahub"
+    description: "Enable datahub usage analytics"
+  - variable: global.datahub.appVersion
+    required: true
+    default: "1.0"
+    type: string
+    label: DataHub App Version
+    group: "global.datahub"
+    description: "App version for annotation"
+  - variable: global.datahub.gms.port
+    required: true
+    default: "8080"
+    type: string
+    label: DataHub GMS Port
+    group: "global.datahub"
+    description: "Port of GMS service"
+  - variable: global.elasticsearch.host
+    required: true
+    default: "elasticsearch-master"
+    type: string
+    label: Elasticsearch Host
+    group: "global.elasticsearch"
+    description: "Elasticsearch host name (endpoint)"
+  - variable: global.elasticsearch.port
+    required: true
+    default: "9200"
+    type: string
+    label: Elasticsearch Port
+    group: "global.elasticsearch"
+    description: "Elasticsearch port"
+  - variable: global.kafka.bootstrap.server
+    required: true
+    default: "prerequisites-broker:9092"
+    type: string
+    label: Kafka Bootstrap Servers
+    group: "global.kafka"
+    description: "Kafka bootstrap servers (with port)"
+  - variable: global.kafka.zookeeper.server
+    required: true
+    default: "prerequisites-zookeeper:2181"
+    type: string
+    label: Kafka Zookeeper Servers
+    group: "global.kafka"
+    description: "Kafka zookeeper servers (with port)"
+  - variable: global.kafka.schemaregistry.url
+    required: true
+    default: "http://prerequisites-cp-schema-registry:8081"
+    type: string
+    label: Kafka Schema Registry
+    group: "global.kafka"
+    description: "URL to kafka schema registry"
+  - variable: global.neo4j.host
+    required: true
+    default: "prerequisites-neo4j:7474"
+    type: string
+    label: Neo4j Host
+    group: "global.neo4j"
+    description: "Neo4j host address (with port)"
+  - variable: global.neo4j.uri
+    required: true
+    default: "bolt://prerequisites-neo4j"
+    type: string
+    label: Neo4j URI
+    group: "global.neo4j"
+    description: "Neo4j URI"
+  - variable: global.neo4j.username
+    required: true
+    default: "neo4j"
+    type: string
+    label: Neo4j Username
+    group: "global.neo4j"
+    description: "Neo4j username"
+  - variable: global.neo4j.secretRef
+    required: true
+    default: "neo4j-secret"
+    type: string
+    label: Neo4j Secret Ref
+    group: "global.neo4j"
+    description: "Secret that contains the Neo4j password"
+  - variable: global.neo4j.secretKey
+    required: true
+    default: "neo4j-password"
+    type: string
+    label: Neo4j Secret Key
+    group: "global.neo4j"
+    description: "Secret key that contains the Neo4j password"
+  - variable: global.sql.datasource.driver
+    required: true
+    default: "com.mysql.cj.jdbc.Driver"
+    type: string
+    label: Driver for the SQL database
+    group: "global.sql"
+    description: "Driver for the SQL database"
+  - variable: global.sql.datasource.host
+    required: true
+    default: "prerequisites-mysql:3306"
+    type: string
+    label: SQL Database Host
+    group: "global.sql"
+    description: "SQL database host (with port)"
+  - variable: global.sql.datasource.hostForMysqlClient
+    required: true
+    default: "prerequisites-mysql"
+    type: string
+    label: Driver for the SQL database
+    group: "global.sql"
+    description: "SQL database host (without port)"
+  - variable: global.sql.datasource.port
+    required: true
+    default: "3306"
+    type: string
+    label: SQL Database Port
+    group: "global.sql"
+    description: "SQL database port"
+  - variable: global.sql.datasource.url
+    required: true
+    default: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"
+    type: string
+    label: URL to access SQL database
+    group: "global.sql"
+    description: "URL to access SQL database"
+  - variable: global.sql.datasource.username
+    required: true
+    default: "root"
+    type: string
+    label: SQL Username
+    group: "global.sql"
+    description: "SQL username"
+  - variable: global.sql.datasource.password.secretRef
+    required: true
+    default: "mysql-secrets"
+    type: string
+    label: SQL Database Secret Ref
+    group: "global.sql"
+    description: "Secret that contains the MySQL password"
+  - variable: global.sql.datasource.password.secretKey
+    required: true
+    default: "mysql-password"
+    type: string
+    label: SQL Database Secret Key
+    group: "global.sql"
+    description: "Secret key that contains the MySQL password"
+  - variable: global.graph_service_impl
+    required: true
+    default: "neo4j"
+    type: enum
+    options:
+      - "neo4j"
+      - "elasticsearch"
+    label: SQL Database Secret Key
+    group: "global.sql"
+    description: "One of neo4j or elasticsearch. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility"

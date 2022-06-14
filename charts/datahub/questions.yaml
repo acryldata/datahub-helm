@@ -473,6 +473,6 @@ questions:
     options:
       - "neo4j"
       - "elasticsearch"
-    label: SQL Database Secret Key
+    label: Graph Service for GMS
     group: "global.sql"
     description: "One of neo4j or elasticsearch. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility"

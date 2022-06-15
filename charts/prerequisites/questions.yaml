@@ -4,11 +4,11 @@ categories:
   - datacatalog
 questions:
   - variable: elasticsearch.enabled
-    default: true
-    type: boolean
-    label: Enable ES
-    group: "elasticsearch"
+    label: Enable Elasticsearch
     description: "set this to false, if you want to provide your own ES instance."
+    type: boolean
+    default: true
+    group: "elasticsearch"
     show_subquestion_if: true
     subquestions:
       - variable: elasticsearch.image
@@ -38,6 +38,7 @@ questions:
         label: Set antiAffinity
         description: "Setting this to 'hard' enforces the anti-affinity rules. If it is set to 'soft' it will be done 'best effort'. Other values will be ignored. Set replicas to 1 and antiAffinity to soft to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
         type: enum
+        required: true
         default: "hard"
         options:
           - "hard"
@@ -47,6 +48,7 @@ questions:
         label: Set clusterHealthCheckParams
         description: "The Elasticsearch cluster health status params that will be used by readiness probe command. If your running a single replica cluster, wait_for_status should be yellow."
         type: enum
+        required: true
         default: "wait_for_status=green&timeout=1s"
         options:
           - "wait_for_status=green&timeout=1s"
@@ -56,13 +58,13 @@ questions:
         label: Set readinessProbe.initialDelaySeconds
         description: "If your running a single replica cluster add the following this value."
         type: int
+        required: true
         default: 10
         group: "elasticsearch"
       - variable: elasticsearch.esJavaOpts
         default: ""
         type: enum
         options:
-          - ""
           - "-Xmx128m -Xms128m"
         label: Set esJavaOpts
         group: "elasticsearch"
@@ -70,6 +72,7 @@ questions:
       - variable: elasticsearch.resources.requests.cpu
         default: "1000m"
         type: enum
+        required: true
         options:
           - "1000m"
           - "100m"
@@ -79,6 +82,7 @@ questions:
       - variable: elasticsearch.resources.requests.memory
         default: "2Gi"
         type: enum
+        required: true
         options:
           - "2Gi"
           - "512M"
@@ -88,6 +92,7 @@ questions:
       - variable: elasticsearch.resources.limits.cpu
         default: "1000m"
         type: enum
+        required: true
         options:
           - "1000m"
         label: cpu Resource Limit
@@ -96,6 +101,7 @@ questions:
       - variable: elasticsearch.resources.limits.memory
         default: "2Gi"
         type: enum
+        required: true
         options:
           - "2Gi"
           - "512M"
@@ -106,7 +112,6 @@ questions:
         default: ""
         type: enum
         options:
-          - ""
           - "standard"
         label: storageClassName of volumeClaimTemplate
         group: "elasticsearch"
@@ -114,9 +119,140 @@ questions:
       - variable: elasticsearch.volumeClaimTemplate.resources.requests.storage
         default: "30Gi"
         type: enum
+        required: true
         options:
           - "30Gi"
           - "100M"
         label: storage Resource Request of volumeClaimTemplate
         group: "elasticsearch"
         description: "Configuration for the volumeClaimTemplate for StatefulSets. You will want to adjust the storage (default 30Gi ). Request smaller persistent volumes."
+  - variable: neo4j.enabled
+    label: Enable Neo4j (Enterprise Edition)
+    description: "set this to true, if you have a license for the enterprise edition."
+    type: boolean
+    default: false
+    group: "neo4j"
+    show_subquestion_if: true
+    subquestions:
+      - variable: neo4j.image
+        label: Docker Image for Neo4j (Enterprise Edition)
+        description: "If you use private registry, set to '{your-registry}/neo4j'."
+        type: string
+        default: "neo4j"
+        group: "neo4j"
+      - variable: neo4j.neo4jPassword
+        label: Password for Neo4j (Enterprise Edition)
+        description: "Password for Neo4j (Enterprise Edition)."
+        type: password
+        default: "datahub"
+        group: "neo4j"
+  - variable: neo4j-community.enabled
+    label: Enable Neo4j-community (Community Edition)
+    description: "set this to false, if you have a license for the enterprise edition. Community Edition only supports single node"
+    type: boolean
+    default: true
+    group: "neo4j-community"
+    show_subquestion_if: true
+    subquestions:
+      - variable: neo4j-community.image
+        label: Docker Image for Neo4j-community (Community Edition)
+        description: "If you use private registry, set to '{your-registry}/neo4j'."
+        type: string
+        default: "neo4j"
+        group: "neo4j-community"
+      - variable: neo4j-community.existingPasswordSecret
+        label: Secret for Neo4j-community (Community Edition)
+        description: "For better security, add password to neo4j-secrets k8s secret."
+        type: string
+        default: "neo4j-secrets"
+        group: "neo4j-community"
+  - variable: mysql.enabled
+    label: Enable mysql
+    description: "Enable mysql"
+    type: boolean
+    default: true
+    group: "mysql"
+    show_subquestion_if: true
+    subquestions:
+      - variable: mysql.image.registry
+        label: Image Registry for mysql
+        description: "Image Registry for mysql."
+        type: string
+        default: "docker.io"
+        group: "mysql"
+      - variable: mysql.image.repository
+        label: Image Repository for mysql
+        description: "Image Repository for mysql."
+        type: string
+        default: "bitnami/mysql"
+        group: "mysql"
+      - variable: mysql.auth.existingSecret
+        label: Secret for mysql
+        description: "For better security, add password to mysql-secrets k8s secret."
+        type: string
+        default: "mysql-secrets"
+        group: "mysql"
+  - variable: cp-helm-charts.cp-schema-registry.enabled
+    label: Enable cp-schema-registry
+    description: "Enable cp-schema-registry. Schema registry is under the community license."
+    type: boolean
+    default: true
+    group: "kafka"
+    show_subquestion_if: true
+    subquestions:
+      - variable: cp-helm-charts.cp-schema-registry.kafka.bootstrapServers
+        label: bootstrapServers
+        description: "<<release-name>>-kafka:9092"
+        type: string
+        default: "prerequisites-kafka:9092"
+        group: "kafka"
+      - variable: cp-helm-charts.cp-schema-registry.image
+        label: Docker image for cp-schema-registry
+        description: "Docker image for cp-schema-registry"
+        type: string
+        default: "confluentinc/cp-schema-registry"
+        group: "kafka"
+      - variable: cp-helm-charts.cp-schema-registry.prometheus.jmx.image
+        label: Docker image for cp-schema-registry.prometheus.jmx
+        description: "Docker image for cp-schema-registry.prometheus.jmx"
+        type: string
+        default: "solsson/kafka-prometheus-jmx-exporter@sha256"
+        group: "kafka"
+      - variable: cp-helm-charts.cp-schema-registry.prometheus.jmx.imageTag
+        label: Docker imageTag for cp-schema-registry.prometheus.jmx
+        description: "Docker imageTag for cp-schema-registry.prometheus.jmx"
+        type: string
+        default: "6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143"
+        group: "kafka"
+  - variable: kafka.enabled
+    label: Enable kafka
+    description: "Enable kafka. Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka"
+    type: boolean
+    default: true
+    group: "kafka"
+    show_subquestion_if: true
+    subquestions:
+      - variable: kafka.image.registry
+        label: Image Registry for kafka
+        description: "Image Registry for kafka"
+        type: string
+        default: "docker.io"
+        group: "kafka"
+      - variable: kafka.image.repository
+        label: Image Repository for kafka
+        description: "Image Repository for kafka"
+        type: string
+        default: "bitnami/kafka"
+        group: "kafka"
+      - variable: kafka.zookeeper.image.registry
+        label: Image Registry for zookeeper
+        description: "Image Registry for zookeeper"
+        type: string
+        default: "docker.io"
+        group: "kafka"
+      - variable: kafka.zookeeper.image.repository
+        label: Image Repository for zookeeper
+        description: "Image Repository for zookeeper"
+        type: string
+        default: "bitnami/zookeeper"
+        group: "kafka"

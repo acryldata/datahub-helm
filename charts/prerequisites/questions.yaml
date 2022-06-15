@@ -132,18 +132,21 @@ questions:
     type: boolean
     default: false
     group: "neo4j"
+    show_if: "neo4j-community.enabled=false"
     show_subquestion_if: true
     subquestions:
       - variable: neo4j.image
         label: Docker Image for Neo4j (Enterprise Edition)
         description: "If you use private registry, set to '{your-registry}/neo4j'."
         type: string
+        required: true
         default: "neo4j"
         group: "neo4j"
       - variable: neo4j.neo4jPassword
         label: Password for Neo4j (Enterprise Edition)
-        description: "Password for Neo4j (Enterprise Edition)."
+        description: "Password for Neo4j (Enterprise Edition). (default: datahub)"
         type: password
+        required: true
         default: "datahub"
         group: "neo4j"
   - variable: neo4j-community.enabled
@@ -152,18 +155,21 @@ questions:
     type: boolean
     default: true
     group: "neo4j-community"
+    show_if: "neo4j.enabled=false"
     show_subquestion_if: true
     subquestions:
       - variable: neo4j-community.image
         label: Docker Image for Neo4j-community (Community Edition)
         description: "If you use private registry, set to '{your-registry}/neo4j'."
         type: string
+        required: true
         default: "neo4j"
         group: "neo4j-community"
       - variable: neo4j-community.existingPasswordSecret
         label: Secret for Neo4j-community (Community Edition)
         description: "For better security, add password to neo4j-secrets k8s secret."
         type: string
+        required: true
         default: "neo4j-secrets"
         group: "neo4j-community"
   - variable: mysql.enabled
@@ -178,18 +184,21 @@ questions:
         label: Image Registry for mysql
         description: "Image Registry for mysql."
         type: string
+        required: true
         default: "docker.io"
         group: "mysql"
       - variable: mysql.image.repository
         label: Image Repository for mysql
         description: "Image Repository for mysql."
         type: string
+        required: true
         default: "bitnami/mysql"
         group: "mysql"
       - variable: mysql.auth.existingSecret
         label: Secret for mysql
         description: "For better security, add password to mysql-secrets k8s secret."
         type: string
+        required: true
         default: "mysql-secrets"
         group: "mysql"
   - variable: cp-helm-charts.cp-schema-registry.enabled
@@ -204,24 +213,28 @@ questions:
         label: bootstrapServers
         description: "<<release-name>>-kafka:9092"
         type: string
+        required: true
         default: "prerequisites-kafka:9092"
         group: "kafka"
       - variable: cp-helm-charts.cp-schema-registry.image
         label: Docker image for cp-schema-registry
         description: "Docker image for cp-schema-registry"
         type: string
+        required: true
         default: "confluentinc/cp-schema-registry"
         group: "kafka"
       - variable: cp-helm-charts.cp-schema-registry.prometheus.jmx.image
         label: Docker image for cp-schema-registry.prometheus.jmx
         description: "Docker image for cp-schema-registry.prometheus.jmx"
         type: string
+        required: true
         default: "solsson/kafka-prometheus-jmx-exporter@sha256"
         group: "kafka"
       - variable: cp-helm-charts.cp-schema-registry.prometheus.jmx.imageTag
         label: Docker imageTag for cp-schema-registry.prometheus.jmx
         description: "Docker imageTag for cp-schema-registry.prometheus.jmx"
         type: string
+        required: true
         default: "6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143"
         group: "kafka"
   - variable: kafka.enabled
@@ -236,23 +249,27 @@ questions:
         label: Image Registry for kafka
         description: "Image Registry for kafka"
         type: string
+        required: true
         default: "docker.io"
         group: "kafka"
       - variable: kafka.image.repository
         label: Image Repository for kafka
         description: "Image Repository for kafka"
         type: string
+        required: true
         default: "bitnami/kafka"
         group: "kafka"
       - variable: kafka.zookeeper.image.registry
         label: Image Registry for zookeeper
         description: "Image Registry for zookeeper"
         type: string
+        required: true
         default: "docker.io"
         group: "kafka"
       - variable: kafka.zookeeper.image.repository
         label: Image Repository for zookeeper
         description: "Image Repository for zookeeper"
         type: string
+        required: true
         default: "bitnami/zookeeper"
         group: "kafka"

@@ -18,13 +18,6 @@ questions:
         label: datahub-gms Image Repository
         group: "datahub-gms"
         description: "Image repository for datahub-gms"
-      - variable: datahub-gms.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: datahub-gms Image Tag
-        group: "datahub-gms"
-        description: "Image tag for datahub-gms"
   - variable: datahub-frontend.enabled
     default: true
     type: boolean
@@ -40,13 +33,6 @@ questions:
         label: datahub-frontend Image Repository
         group: "datahub-frontend"
         description: "Image repository for datahub-frontend"
-      - variable: datahub-frontend.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: datahub-frontend Image Tag
-        group: "datahub-frontend"
-        description: "Image tag for datahub-frontend"
       - variable: datahub-frontend.ingress.enabled
         default: false
         type: boolean
@@ -68,13 +54,6 @@ questions:
         label: acryl-datahub-actions Image Repository
         group: "acryl-datahub-actions"
         description: "Image repository for acryl-datahub-actions"
-      - variable: acryl-datahub-actions.image.tag
-        required: true
-        default: "v0.0.1-beta.13"
-        type: string
-        label: acryl-datahub-actions Image Tag
-        group: "acryl-datahub-actions"
-        description: "Image tag for acryl-datahub-actions"
   - variable: datahub-mae-consumer.enabled
     default: true
     type: boolean
@@ -90,13 +69,6 @@ questions:
         label: datahub-mae-consumer Image Repository
         group: "datahub-mae-consumer"
         description: "Image repository for datahub-mae-consumer"
-      - variable: datahub-mae-consumer.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: datahub-mae-consumer Image Tag
-        group: "datahub-mae-consumer"
-        description: "Image tag for datahub-mae-consumer"
   - variable: datahub-mce-consumer.enabled
     default: true
     type: boolean
@@ -112,13 +84,6 @@ questions:
         label: datahub-mce-consumer Image Repository
         group: "datahub-mce-consumer"
         description: "Image repository for datahub-mce-consumer"
-      - variable: datahub-mce-consumer.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: datahub-mce-consumer Image Tag
-        group: "datahub-mce-consumer"
-        description: "Image tag for datahub-mce-consumer"
   - variable: datahub-ingestion-cron.enabled
     default: false
     type: boolean
@@ -134,13 +99,6 @@ questions:
         label: datahub-ingestion-cron Image Repository
         group: "datahub-ingestion-cron"
         description: "Image repository for datahub-ingestion-cron"
-      - variable: datahub-ingestion-cron.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: datahub-ingestion-cron Image Tag
-        group: "datahub-ingestion-cron"
-        description: "Image tag for datahub-ingestion-cron"
   - variable: elasticsearchSetupJob.enabled
     default: true
     type: boolean
@@ -156,13 +114,6 @@ questions:
         label: elasticsearchSetupJob Image Repository
         group: "elasticsearchSetupJob"
         description: "Image repository for elasticsearchSetupJob"
-      - variable: elasticsearchSetupJob.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: elasticsearchSetupJob Image Tag
-        group: "elasticsearchSetupJob"
-        description: "Image tag for elasticsearchSetupJob"
   - variable: kafkaSetupJob.enabled
     default: true
     type: boolean
@@ -178,13 +129,6 @@ questions:
         label: kafkaSetupJob Image Repository
         group: "kafkaSetupJob"
         description: "Image repository for kafkaSetupJob"
-      - variable: kafkaSetupJob.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: kafkaSetupJob Image Tag
-        group: "kafkaSetupJob"
-        description: "Image tag for kafkaSetupJob"
   - variable: mysqlSetupJob.enabled
     default: true
     type: boolean
@@ -200,13 +144,6 @@ questions:
         label: mysqlSetupJob Image Repository
         group: "mysqlSetupJob"
         description: "Image repository for mysqlSetupJob"
-      - variable: mysqlSetupJob.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: mysqlSetupJob Image Tag
-        group: "mysqlSetupJob"
-        description: "Image tag for mysqlSetupJob"
   - variable: postgresqlSetupJob.enabled
     default: false
     type: boolean
@@ -222,13 +159,6 @@ questions:
         label: postgresqlSetupJob Image Repository
         group: "postgresqlSetupJob"
         description: "Image repository for postgresqlSetupJob"
-      - variable: postgresqlSetupJob.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: postgresqlSetupJob Image Tag
-        group: "postgresqlSetupJob"
-        description: "Image tag for postgresqlSetupJob"
   - variable: datahubUpgrade.enabled
     default: true
     type: boolean
@@ -244,13 +174,6 @@ questions:
         label: datahubUpgrade Image Repository
         group: "datahubUpgrade"
         description: "Image repository for datahubUpgrade"
-      - variable: datahubUpgrade.image.tag
-        required: true
-        default: "v0.8.38"
-        type: string
-        label: datahubUpgrade Image Tag
-        group: "datahubUpgrade"
-        description: "Image tag for datahubUpgrade"
   - variable: global.datahub_standalone_consumers_enabled
     default: true
     type: boolean

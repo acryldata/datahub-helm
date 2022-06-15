@@ -12,56 +12,60 @@ questions:
     show_subquestion_if: true
     subquestions:
       - variable: elasticsearch.image
-        default: "docker.elastic.co/elasticsearch/elasticsearch"
-        type: string
         label: Docker Image for ES
-        group: "elasticsearch"
         description: "Docker image for ES"
-      - variable: elasticsearch.esConfig."[elasticsearch.yml]"
-        default: ""
-        type: enum
-        options:
-          - ""
-          - "ingest.geoip.downloader.enabled: false"
+        type: string
+        required: true
+        default: "docker.elastic.co/elasticsearch/elasticsearch"
+        group: "elasticsearch"
+      - variable: elasticsearch.esConfig
         label: esConfig for ES
-        group: "elasticsearch"
         description: "If you deploy on air-gap environment, disable geoip."
-      - variable: elasticsearch.replicas
-        default: 3
-        type: int
-        label: Set Replicas
-        group: "elasticsearch"
-        description: "set the number of replicas for ES."
-      - variable: elasticsearch.minimumMasterNodes
-        default: 1
-        type: int
-        label: Set Minimum Master Nodes
-        group: "elasticsearch"
-        description: "set the number of minimum master nodes for ES."
-      - variable: elasticsearch.antiAffinity
-        default: "hard"
         type: enum
+        default: ""
+        options:
+          - "elasticsearch.yml: ingest.geoip.downloader.enabled: false"
+        group: "elasticsearch"
+      - variable: elasticsearch.replicas
+        label: Set Replicas
+        description: "set the number of replicas for ES."
+        type: int
+        required: true
+        default: 3
+        min: 1
+        group: "elasticsearch"
+      - variable: elasticsearch.minimumMasterNodes
+        label: Set Minimum Master Nodes
+        description: "set the number of minimum master nodes for ES."
+        type: int
+        required: true
+        default: 1
+        min: 1
+        group: "elasticsearch"
+      - variable: elasticsearch.antiAffinity
+        label: Set antiAffinity
+        description: "Setting this to 'hard' enforces the anti-affinity rules. If it is set to 'soft' it will be done 'best effort'. Other values will be ignored. Set replicas to 1 and antiAffinity to soft to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
+        type: enum
+        default: "hard"
         options:
           - "hard"
           - "soft"
-        label: Set antiAffinity
         group: "elasticsearch"
-        description: "Setting this to 'hard' enforces the anti-affinity rules. If it is set to 'soft' it will be done 'best effort'. Other values will be ignored. Set replicas to 1 and antiAffinity to soft to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
       - variable: elasticsearch.clusterHealthCheckParams
-        default: "wait_for_status=green&timeout=1s"
+        label: Set clusterHealthCheckParams
+        description: "The Elasticsearch cluster health status params that will be used by readiness probe command. If your running a single replica cluster, wait_for_status should be yellow."
         type: enum
+        default: "wait_for_status=green&timeout=1s"
         options:
           - "wait_for_status=green&timeout=1s"
           - "wait_for_status=yellow&timeout=1s"
-        label: Set clusterHealthCheckParams
         group: "elasticsearch"
-        description: "The Elasticsearch cluster health status params that will be used by readiness probe command. If your running a single replica cluster, wait_for_status should be yellow."
       - variable: elasticsearch.readinessProbe.initialDelaySeconds
-        default: 30
-        type: int
         label: Set readinessProbe.initialDelaySeconds
-        group: "elasticsearch"
         description: "If your running a single replica cluster add the following this value."
+        type: int
+        default: 10
+        group: "elasticsearch"
       - variable: elasticsearch.esJavaOpts
         default: ""
         type: enum

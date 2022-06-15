@@ -1,17 +1,21 @@
 DataHub
 =======
+
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/datahub)](https://artifacthub.io/packages/search?repo=datahub)
 
 A Helm chart for LinkedIn DataHub
 
 ## Install DataHub
+
 Run the following command to install datahub with default configuration.
 
 ```
 helm repo add datahub https://helm.datahubproject.io
 helm install datahub datahub/datahub
 ```
+
 If the default configuration is not applicable, you can update the values listed below in a `values.yaml` file and run
+
 ```
 helm install datahub datahub/datahub --values <<path-to-values-file>>
 ```
@@ -59,11 +63,11 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.datahub.gms.port | string | `"8080"` | Port of GMS service |
 | global.elasticsearch.host | string | `"elasticsearch-master"` | Elasticsearch host name (endpoint) |
 | global.elasticsearch.port | string | `"9200"` | Elasticsearch port |
-| global.kafka.bootstrap.server | string | `"prerequisites-broker:9092"` | Kafka bootstrap servers (with port) |
+| global.kafka.bootstrap.server | string | `"prerequisites-kafka:9092"` | Kafka bootstrap servers (with port) |
 | global.kafka.zookeeper.server | string | `"prerequisites-zookeeper:2181"` | Kafka zookeeper servers (with port) |
 | global.kafka.schemaregistry.url | string | `"http://prerequisites-cp-schema-registry:8081"` | URL to kafka schema registry |
-| global.neo4j.host | string | `"prerequisites-neo4j:7474"` | Neo4j host address (with port) |
-| global.neo4j.uri | string | `"bolt://prerequisites-neo4j"` | Neo4j URI |
+| global.neo4j.host | string | `"prerequisites-neo4j-community:7474"` | Neo4j host address (with port) |
+| global.neo4j.uri | string | `"bolt://prerequisites-neo4j-community"` | Neo4j URI |
 | global.neo4j.username | string | `"neo4j"` | Neo4j user name |
 | global.neo4j.password.secretRef | string | `"neo4j-secrets"` | Secret that contains the Neo4j password |
 | global.neo4j.password.secretKey | string | `"neo4j-password"` | Secret key that contains the Neo4j password |
@@ -74,7 +78,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.sql.datasource.url | string | `"jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` | URL to access SQL database |
 | global.sql.datasource.username | string | `"root"` | SQL user name |
 | global.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL password |
-| global.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the MySQL password |
+| global.sql.datasource.password.secretKey | string | `"mysql-root-password"` | Secret key that contains the MySQL password |
 | global.graph_service_impl | string | `neo4j` | One of `neo4j` or `elasticsearch`. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility |
 
 ## Optional Chart Values
@@ -97,7 +101,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.datahub.metadata_service_authentication.systemClientSecret.secretRef | string | `datahub-auth-secrets` | The reference to a secret containing the internal system secret that is used to communicate with DataHub GMS. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret called `datahub-auth-secrets`. |
 | global.datahub.metadata_service_authentication.systemClientSecret.secretKey | string | `system_client_secret` | The key of a secret containing the internal system secret that is used to communicate with DataHub GMS. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret value named `system_client_secret` within a secret named `datahub-auth-secrets`. |
 | global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef | string | `datahub-auth-secrets` | The reference to a secret containing the internal system secret that is used to sign JWT auth tokens issued by DataHub GMS. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret called `datahub-auth-secrets`. |
-| global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey | string | `token_service_signing_key` | The key of a secret containing the internal system secret that is used to sign JWT auth tokens issued by DataHub GMS. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret value named `token_service_signing_key` within a secret named `datahub-auth-secrets`. | 
+| global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey | string | `token_service_signing_key` | The key of a secret containing the internal system secret that is used to sign JWT auth tokens issued by DataHub GMS. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret value named `token_service_signing_key` within a secret named `datahub-auth-secrets`. |
 | global.datahub.metadata_service_authentication.tokenService.salt.secretRef | string | `datahub-auth-secrets` | The reference to a secret containing the internal system secret that is used to salt JWT auth tokens signatures issued by DataHub GMS that is part of the metadata graph. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret called `datahub-auth-secrets`. |
 | global.datahub.metadata_service_authentication.tokenService.salt.secretKey | string | `token_service_salt` | The key of a secret containing the internal system secret that is used to salt JWT auth tokens signatures issued by DataHub GMS that is part of the metadata graph. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret value named `token_service_salt` within a secret named `datahub-auth-secrets`. |
 | global.datahub.metadata_service_authentication.provisionSecrets | bool | `true` | Whether auth secrets (token signing key & system client secret) should be provisioned on the first deployment for you. Set this to false if you are overriding global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef or global.datahub.metadata_service_authentication systemClientSecret.secretRef. |

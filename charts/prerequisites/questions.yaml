@@ -11,12 +11,33 @@ questions:
     description: "set this to false, if you want to provide your own ES instance."
     show_subquestion_if: true
     subquestions:
+      - variable: elasticsearch.image
+        default: "docker.elastic.co/elasticsearch/elasticsearch"
+        type: string
+        label: Docker Image for ES
+        group: "elasticsearch"
+        description: "Docker image for ES"
+      - variable: elasticsearch.esConfig."[elasticsearch.yml]"
+        default: ""
+        type: enum
+        options:
+          - ""
+          - "ingest.geoip.downloader.enabled: false"
+        label: esConfig for ES
+        group: "elasticsearch"
+        description: "If you deploy on air-gap environment, disable geoip."
       - variable: elasticsearch.replicas
         default: 3
         type: int
         label: Set Replicas
         group: "elasticsearch"
         description: "set the number of replicas for ES."
+      - variable: elasticsearch.minimumMasterNodes
+        default: 1
+        type: int
+        label: Set Minimum Master Nodes
+        group: "elasticsearch"
+        description: "set the number of minimum master nodes for ES."
       - variable: elasticsearch.antiAffinity
         default: "hard"
         type: enum
@@ -25,7 +46,7 @@ questions:
           - "soft"
         label: Set antiAffinity
         group: "elasticsearch"
-        description: "Set replicas to 1 and antiAffinity to soft to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
+        description: "Setting this to 'hard' enforces the anti-affinity rules. If it is set to 'soft' it will be done 'best effort'. Other values will be ignored. Set replicas to 1 and antiAffinity to soft to allow the instance to be scheduled on a master node when deploying on a single node Minikube / Kind / etc cluster."
       - variable: elasticsearch.clusterHealthCheckParams
         default: "wait_for_status=green&timeout=1s"
         type: enum
@@ -34,36 +55,72 @@ questions:
           - "wait_for_status=yellow&timeout=1s"
         label: Set clusterHealthCheckParams
         group: "elasticsearch"
-        description: "If your running a single replica cluster, wait_for_status should be yellow."
+        description: "The Elasticsearch cluster health status params that will be used by readiness probe command. If your running a single replica cluster, wait_for_status should be yellow."
       - variable: elasticsearch.readinessProbe.initialDelaySeconds
         default: 30
         type: int
         label: Set readinessProbe.initialDelaySeconds
         group: "elasticsearch"
         description: "If your running a single replica cluster add the following this value."
-      - variable: elasticsearch.minimumMasterNodes
-        default: 1
-        type: int
-        label: Set Minimum Master Nodes
-        group: "elasticsearch"
-        description: "set the number of minimum master nodes for ES."
-  - variable: airGap
-    default: false
-    type: boolean
-    label: Air-Gap Settings
-    group: "elasticsearch"
-    description: "Set to true if deploying in Air-Gap environment"
-    show_subquestion_if: true
-    subquestions:
-      - variable: elasticsearch.image
-        default: "docker.elastic.co/elasticsearch/elasticsearch"
-        type: string
-        label: Docker Image for ES
-        group: "elasticsearch"
-        description: "Docker image for ES"
-      - variable: elasticsearch.esConfig
+      - variable: elasticsearch.esJavaOpts
         default: ""
-        type: string
-        label: esConfig for ES
+        type: enum
+        options:
+          - ""
+          - "-Xmx128m -Xms128m"
+        label: Set esJavaOpts
         group: "elasticsearch"
-        description: "esConfig for ES"
+        description: "Java options for Elasticsearch. This is where you could configure the jvm heap size. You can shrink default JVM heap."
+      - variable: elasticsearch.resources.requests.cpu
+        default: "1000m"
+        type: enum
+        options:
+          - "1000m"
+          - "100m"
+        label: cpu Resource Request
+        group: "elasticsearch"
+        description: "Allows you to set the resources for the StatefulSet. Allocate smaller chunks of memory per pod."
+      - variable: elasticsearch.resources.requests.memory
+        default: "2Gi"
+        type: enum
+        options:
+          - "2Gi"
+          - "512M"
+        label: memory Resource Request
+        group: "elasticsearch"
+        description: "Allows you to set the resources for the StatefulSet. Allocate smaller chunks of memory per pod."
+      - variable: elasticsearch.resources.limits.cpu
+        default: "1000m"
+        type: enum
+        options:
+          - "1000m"
+        label: cpu Resource Limit
+        group: "elasticsearch"
+        description: "Allows you to set the resources for the StatefulSet. Allocate smaller chunks of memory per pod."
+      - variable: elasticsearch.resources.limits.memory
+        default: "2Gi"
+        type: enum
+        options:
+          - "2Gi"
+          - "512M"
+        label: memory Resource Limit
+        group: "elasticsearch"
+        description: "Allows you to set the resources for the StatefulSet. Allocate smaller chunks of memory per pod."
+      - variable: elasticsearch.volumeClaimTemplate.storageClassName
+        default: ""
+        type: enum
+        options:
+          - ""
+          - "standard"
+        label: storageClassName of volumeClaimTemplate
+        group: "elasticsearch"
+        description: "Configuration for the volumeClaimTemplate for StatefulSets. You will want to adjust the storageClassName if you are using a different storage class. Request smaller persistent volumes."
+      - variable: elasticsearch.volumeClaimTemplate.resources.requests.storage
+        default: "30Gi"
+        type: enum
+        options:
+          - "30Gi"
+          - "100M"
+        label: storage Resource Request of volumeClaimTemplate
+        group: "elasticsearch"
+        description: "Configuration for the volumeClaimTemplate for StatefulSets. You will want to adjust the storage (default 30Gi ). Request smaller persistent volumes."

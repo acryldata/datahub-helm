@@ -40,6 +40,13 @@ questions:
         label: datahub-frontend Image Repository
         group: "datahub-frontend"
         description: "Image repository for datahub-frontend"
+      - variable: datahub-frontend.image.tag
+        required: true
+        default: "v0.8.38"
+        type: string
+        label: datahub-frontend Image Tag
+        group: "datahub-frontend"
+        description: "Image tag for datahub-frontend"
       - variable: datahub-frontend.ingress.enabled
         default: false
         type: boolean

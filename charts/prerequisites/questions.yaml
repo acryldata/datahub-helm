@@ -18,14 +18,6 @@ questions:
         required: true
         default: "docker.elastic.co/elasticsearch/elasticsearch"
         group: "elasticsearch"
-      - variable: elasticsearch.esConfig
-        label: esConfig for ES
-        description: "If you deploy on air-gap environment, disable geoip."
-        type: enum
-        default: ""
-        options:
-          - "elasticsearch.yml: ingest.geoip.downloader.enabled: false"
-        group: "elasticsearch"
       - variable: elasticsearch.replicas
         label: Set Replicas
         description: "set the number of replicas for ES."

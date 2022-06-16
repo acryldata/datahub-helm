@@ -18,8 +18,8 @@ datahub-frontend:
 acryl-datahub-actions:
   enabled: true
   image:
-    repository: public.ecr.aws/datahub/acryl-datahub-actions
-    tag: "v0.0.1-beta.13"
+    repository: acryldata/datahub-actions
+    tag: "v0.0.1"
   resources:
     limits:
       memory: 512Mi

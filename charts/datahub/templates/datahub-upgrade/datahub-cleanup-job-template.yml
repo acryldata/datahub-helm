@@ -18,8 +18,12 @@ spec:
   jobTemplate:
     spec:
       template:
-        {{- if .Values.global.podLabels }}
         metadata:
+        {{- with .Values.datahubUpgrade.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.global.podLabels }}
           labels:
             {{- range $key, $value := .Values.global.podLabels }}
             {{ $key }}: {{ $value | quote }}

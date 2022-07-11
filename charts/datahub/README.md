@@ -33,26 +33,31 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahub-ingestion-cron.enabled | bool | `false` | Enable cronjob for periodic ingestion |
 | datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
 | datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
+| datahubUpgrade.podAnnotations | object | `{}` | Pod annotations for datahubUpgrade jobs |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.image.tag | string | `"v0.8.40"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for elasticsearchSetupJob |
+| elasticsearchSetupJob.podAnnotations | object | `{}` | Pod annotations for elasticsearchSetupJob |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.image.tag | string | `"v0.8.40"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for kafkaSetupJob |
 | kafkaSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for kafkaSetupJob |
+| kafkaSetupJob.podAnnotations | object | `{}` | Pod annotations for kafkaSetupJob |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `"v0.8.40"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | mysqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
+| mysqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
 | postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
 | postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.image.tag | string | `"v0.8.40"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | postgresqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
+| postgresqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
 | global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |
 | global.datahub_analytics_enabled | boolean | true | Enable datahub usage analytics |
 | global.datahub.appVersion | string | `"1.0"` | App version for annotation |

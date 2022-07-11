@@ -53,6 +53,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          lifecycle: {{ .Values.lifecycle }}
           ports:
             - name: http
               containerPort: 9002

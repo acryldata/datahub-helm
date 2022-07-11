@@ -52,6 +52,7 @@ elasticsearchSetupJob:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  podAnnotations: {}
 
 kafkaSetupJob:
   enabled: true
@@ -62,6 +63,7 @@ kafkaSetupJob:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  podAnnotations: {}
 
 mysqlSetupJob:
   enabled: true
@@ -72,6 +74,7 @@ mysqlSetupJob:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  podAnnotations: {}
 
 postgresqlSetupJob:
   enabled: false
@@ -82,6 +85,7 @@ postgresqlSetupJob:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  podAnnotations: {}
 
 datahubUpgrade:
   enabled: true
@@ -94,6 +98,7 @@ datahubUpgrade:
     # fsGroup: 1000
   securityContext: {}
     # runAsUser: 1000
+  podAnnotations: {}
 
 global:
   graph_service_impl: neo4j

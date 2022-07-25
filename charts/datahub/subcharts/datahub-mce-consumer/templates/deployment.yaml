@@ -78,6 +78,10 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{- end }}
             - name: MCE_CONSUMER_ENABLED
               value: "true"
             - name: KAFKA_BOOTSTRAP_SERVER

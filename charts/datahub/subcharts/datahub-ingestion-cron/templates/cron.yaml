@@ -11,7 +11,12 @@ spec:
   schedule: {{ default "0 0 * * *" .schedule | quote}}
   jobTemplate:
     spec:
-      template:
+      template:        
+        {{- with $val.podAnnotations }}
+        metadata:
+          annotations:
+            {{- toYaml . | nindent 12 }}    
+        {{- end }}
         spec:
         {{- with $.Values.imagePullSecrets }}
           imagePullSecrets:

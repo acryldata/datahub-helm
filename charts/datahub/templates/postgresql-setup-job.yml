@@ -16,12 +16,18 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
-    {{- if .Values.global.podLabels }}
+    {{- if or .Values.global.podLabels .Values.postgresqlSetupJob.podAnnotations }}
     metadata:
+    {{- with .Values.postgresqlSetupJob.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.global.podLabels }}
       labels:
-        {{- range $key, $value := .Values.global.podLabels }}
+        {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+    {{- end }}
     {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}

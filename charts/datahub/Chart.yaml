@@ -7,14 +7,14 @@ type: application
 version: 0.2.88
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: 0.8.41
+appVersion: 0.8.42
 dependencies:
   - name: datahub-gms
     version: 0.2.5
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
-    version: 0.2.2
+    version: 0.2.3
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer

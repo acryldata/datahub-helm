@@ -62,6 +62,19 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# OIDC auth based on https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react
+oidcAuthentication:
+  enabled: false
+  # provider: google/okta/azure  <- choose only one
+  # clientId: your-client-id
+  # clientSecret: your-client-secret
+
+  # only needed if provider is `okta`
+  # oktaDomain: your-okta-domain.com
+
+  # only neede if provider is `azure`
+  # azureTenantId: your-azure-tenant-id
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here

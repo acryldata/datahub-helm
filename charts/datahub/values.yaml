@@ -94,9 +94,11 @@ datahubUpgrade:
     tag: "v0.8.41"
   noCodeDataMigration:
     sqlDbType: "MYSQL"
-  podSecurityContext: {}
+  podSecurityContext:
+    {}
     # fsGroup: 1000
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: 1000
   podAnnotations: {}
 
@@ -178,7 +180,6 @@ global:
           secretKey: "token_service_salt"
       # Set to false if you'd like to provide your own auth secrets
       provisionSecrets: true
-
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

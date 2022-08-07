@@ -94,7 +94,7 @@ questions:
     subquestions:
       - variable: datahub-ingestion-cron.image.repository
         required: true
-        default: "acryldata/datahub-ingestion-cron"
+        default: "acryldata/datahub-ingestion"
         type: string
         label: datahub-ingestion-cron Image Repository
         group: "datahub-ingestion-cron"

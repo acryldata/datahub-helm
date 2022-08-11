@@ -152,6 +152,40 @@ spec:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
             {{- end }}
+          {{- with .Values.oidcAuthentication }}
+            {{- if .enabled }}
+            - name: AUTH_OIDC_ENABLED
+              value: "true"
+            - name: AUTH_OIDC_CLIENT_ID
+              value: {{ .clientId }}
+            - name: AUTH_OIDC_CLIENT_SECRET
+              value: {{ .clientSecret }}
+            - name: AUTH_OIDC_BASE_URL
+              value: https://{{ (first $.Values.ingress.hosts).host }}
+            {{- if eq .provider "google" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: https://accounts.google.com/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: "openid profile email"
+            - name: AUTH_OIDC_USER_NAME_CLAIM
+              value: email
+            - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
+              value: ([^@]+)
+            {{- else if eq .provider "okta" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: https://{{ .oktaDomain }}/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: "openid profile email groups"
+            {{- else if eq .provider "azure" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: https://login.microsoftonline.com/{{ .azureTenantId }}/v2.0/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: "openid profile email"
+            {{- else }}
+            {{- fail (printf "unsupported .oidcAuthentication.provider value '%s'" .provider) }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

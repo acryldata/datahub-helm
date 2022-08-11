@@ -152,6 +152,8 @@ global:
       url: "http://schema-registry:8081"
 
   datahub:
+    monitoring:
+      enablePrometheus: false
     gms:
       port: "8080"
     metadata_service_authentication: 

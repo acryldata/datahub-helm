@@ -179,7 +179,7 @@ questions:
     type: boolean
     label: DataHub Standalone Consumers
     group: "global.datahub"
-    description: "Enable standalone consumers for kafka"
+    description: "If false, MCE/MAE consumers will be run within GMS pod rather than as isolated processes."
   - variable: global.datahub_analytics_enabled
     default: true
     type: boolean

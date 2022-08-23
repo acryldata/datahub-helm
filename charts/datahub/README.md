@@ -34,6 +34,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
 | datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
 | datahubUpgrade.podAnnotations | object | `{}` | Pod annotations for datahubUpgrade jobs |
+| datahubUpgrade.restoreIndices.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'restore indices' |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.image.tag | string | `"v0.8.43"` | Image repository for elasticsearchSetupJob |

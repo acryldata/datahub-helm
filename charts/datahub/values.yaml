@@ -92,6 +92,8 @@ datahubUpgrade:
   image:
     repository: acryldata/datahub-upgrade
     tag: "v0.8.43"
+  batchSize: 1000
+  batchDelayMs: 100
   noCodeDataMigration:
     sqlDbType: "MYSQL"
   podSecurityContext: {}

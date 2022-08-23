@@ -67,6 +67,10 @@ spec:
               args:
                 - "-u"
                 - "RestoreIndices"
+                - "-a"
+                - "batchSize={{ .Values.datahubUpgrade.batchSize }}"
+                - "-a"
+                - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
               env:
                 {{- include "datahub.upgrade.env" . | nindent 16}}
               {{- with .Values.datahubUpgrade.extraEnvs }}

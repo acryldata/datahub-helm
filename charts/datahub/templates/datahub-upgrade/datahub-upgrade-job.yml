@@ -66,9 +66,9 @@ spec:
             - "-u"
             - "NoCodeDataMigration"
             - "-a"
-            - "batchSize=1000"
+            - "batchSize={{ .Values.datahubUpgrade.batchSize }}"
             - "-a"
-            - "batchDelayMs=100"
+            - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
             - "-a"
             - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
           env:

@@ -48,6 +48,10 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.postgresqlSetupJob.podSecurityContext | nindent 8 }}
+      initContainers:
+      {{ - with .Values.postgresqlSetupJob.extraInitContainers }}
+        {{ - toYaml . | nindent 8 }}
+      {{ - end }}
       containers:
         - name: postgresql-setup-job
           image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ .Values.postgresqlSetupJob.image.tag }}"

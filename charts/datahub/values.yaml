@@ -78,6 +78,7 @@ mysqlSetupJob:
 
 postgresqlSetupJob:
   enabled: false
+  extraInitContainers: []
   image:
     repository: acryldata/datahub-postgres-setup
     tag: "v0.8.43"

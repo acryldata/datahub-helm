@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+revisionHistoryLimit: 10
+
 image:
   repository: linkedin/datahub-mae-consumer
   pullPolicy: IfNotPresent
@@ -176,7 +178,7 @@ global:
     mae_consumer:
       port: "9091"
 
-    metadata_service_authentication: 
+    metadata_service_authentication:
       enabled: false
       systemClientId: "__datahub_system"
       # systemClientSecret:

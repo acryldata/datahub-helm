@@ -158,9 +158,14 @@ global:
     gms:
       port: "8080"
       nodePort: "30001"
+
+    monitoring:
+      enablePrometheus: true
+
     mae_consumer:
       port: "9091"
       nodePort: "30002"
+
     appVersion: "1.0"
 
     encryptionKey:

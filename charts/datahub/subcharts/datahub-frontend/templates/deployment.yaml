@@ -159,7 +159,7 @@ spec:
             - name: AUTH_OIDC_CLIENT_ID
               value: {{ .clientId }}
             - name: AUTH_OIDC_CLIENT_SECRET
-            {{- if (.clientSecretRef).secretRef }}
+            {{- if .clientSecretRef }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .clientSecretRef.secretRef }}

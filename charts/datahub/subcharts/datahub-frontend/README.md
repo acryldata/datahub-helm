@@ -39,7 +39,7 @@ Current chart version is `0.2.0`
 | oidcAuthentication.clientId | string | `""` | A unique identifier for your application with the identity provider |
 | oidcAuthentication.clientSecret | string | `""` | A shared secret to use for exchange between you and your identity provider |
 | oidcAuthentication.clientSecretRef.secretRef | string | `"nil"` | Optional, this is the reference to the shared secret to use for exchange between you and your identity provider |
-| oidcAuthentication.clientSecret.secretKey | string | `"nil"` | Optional, this is the key of the shared secret to use for exchange between you and your identity provider |
+| oidcAuthentication.clientSecretRef.secretKey | string | `"nil"` | Optional, this is the key of the shared secret to use for exchange between you and your identity provider |
 | oidcAuthentication.oktaDomain | string | `""` | Okta domain, e.g. `dev-12345.okta.com`; needed only if `provider` is set to `okta` |
 | oidcAuthentication.azureTenantId | string | `""` | Azure directory (tenant) ID; neede only if `provider` is set to `azure` |
 | podAnnotations | object | `{}` |  |

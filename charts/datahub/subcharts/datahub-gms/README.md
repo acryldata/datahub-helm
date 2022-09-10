@@ -43,6 +43,7 @@ Current chart version is `0.2.0`
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
+| ingress.extraLabels | object | `{}` | provides extra labels for ingress configuration |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
 | ingress.tls | list | `[]` |  |

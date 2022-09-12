@@ -46,6 +46,7 @@ Current chart version is `0.2.0`
 | readinessProbe.periodSeconds | int | `30` |  |
 | readinessProbe.failureThreshold | int | `4` |  |
 | replicaCount | int | `1` |  |
+| revisionHistoryLimit | int | `10` |  |
 | lifecycle | object | `{}` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |

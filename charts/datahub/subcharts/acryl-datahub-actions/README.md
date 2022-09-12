@@ -2,7 +2,7 @@ acryl-datahub-actions
 ================
 A Helm chart for acryl-datahub-actions
 
-Current chart version is `0.0.1`
+Current chart version is `0.0.3`
 
 ## Chart Values
 

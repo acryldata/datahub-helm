@@ -43,6 +43,7 @@ Current chart version is `0.2.0`
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
+| ingress.extraLabels | object | `{}` | provides extra labels for ingress configuration |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
 | ingress.tls | list | `[]` |  |
@@ -57,6 +58,7 @@ Current chart version is `0.2.0`
 | readinessProbe.periodSeconds | int | `30` |  |
 | readinessProbe.failureThreshold | int | `8` |  |
 | replicaCount | int | `1` |  |
+| revisionHistoryLimit | int | `10` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
 | service.port | int | `8080` |  |

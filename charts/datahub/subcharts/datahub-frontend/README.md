@@ -24,6 +24,7 @@ Current chart version is `0.2.0`
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
+| ingress.extraLabels | object | `{}` | provides extra labels for ingress configuration |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
 | ingress.hosts[0].redirectPaths | list | `[]` |  |
@@ -37,6 +38,8 @@ Current chart version is `0.2.0`
 | oidcAuthentication.provider | string | `""` | One of the supported OIDC providers: [google](https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react-google), [okta](https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react-okta), or [azure](https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react-azure) |
 | oidcAuthentication.clientId | string | `""` | A unique identifier for your application with the identity provider |
 | oidcAuthentication.clientSecret | string | `""` | A shared secret to use for exchange between you and your identity provider |
+| oidcAuthentication.clientSecretRef.secretRef | string | `"nil"` | Optional, this is the reference to the shared secret to use for exchange between you and your identity provider |
+| oidcAuthentication.clientSecretRef.secretKey | string | `"nil"` | Optional, this is the key of the shared secret to use for exchange between you and your identity provider |
 | oidcAuthentication.oktaDomain | string | `""` | Okta domain, e.g. `dev-12345.okta.com`; needed only if `provider` is set to `okta` |
 | oidcAuthentication.azureTenantId | string | `""` | Azure directory (tenant) ID; neede only if `provider` is set to `azure` |
 | podAnnotations | object | `{}` |  |
@@ -45,6 +48,7 @@ Current chart version is `0.2.0`
 | readinessProbe.periodSeconds | int | `30` |  |
 | readinessProbe.failureThreshold | int | `4` |  |
 | replicaCount | int | `1` |  |
+| revisionHistoryLimit | int | `10` |  |
 | lifecycle | object | `{}` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |

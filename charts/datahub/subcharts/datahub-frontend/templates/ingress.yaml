@@ -8,6 +8,9 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "datahub-frontend.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.ingress.extraLabels }}
+    {{ $key }}: {{ $val }}
+    {{- end }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

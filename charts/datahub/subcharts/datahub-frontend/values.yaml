@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+revisionHistoryLimit: 10
+
 image:
   repository: linkedin/datahub-frontend-react
   tag: "head"
@@ -50,6 +52,7 @@ service:
 ingress:
   # className: ""
   enabled: false
+  extraLabels: {}
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -68,7 +71,10 @@ oidcAuthentication:
   # provider: google/okta/azure  <- choose only one
   # clientId: your-client-id
   # clientSecret: your-client-secret
-
+  # only needed if you would like to store the client secret in secret
+  # clientSecretRef:
+  #   secretRef: <secret-ref>
+  #   secretKey: <secret-key>
   # only needed if provider is `okta`
   # oktaDomain: your-okta-domain.com
 

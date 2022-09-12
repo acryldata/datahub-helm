@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+revisionHistoryLimit: 10
+
 image:
   repository: linkedin/datahub-gms
   pullPolicy: IfNotPresent
@@ -42,14 +44,15 @@ service:
   targetPort: http
   protocol: TCP
   name: http
-  # Annotations to add to the service, this will help in adding 
-  # Internal load balancer or various other annotation support in AWS 
+  # Annotations to add to the service, this will help in adding
+  # Internal load balancer or various other annotation support in AWS
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
 ingress:
   # className: ""
   enabled: false
+  extraLabels: {}
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -152,12 +155,12 @@ global:
 
     managed_ingestion:
       enabled: true
-      # defaultCliVersion: "X.X.X" --> Optional: Controls the acryl-datahub package version downloaded from PyPI. 
+      # defaultCliVersion: "X.X.X" --> Optional: Controls the acryl-datahub package version downloaded from PyPI.
 
-    metadata_service_authentication: 
+    metadata_service_authentication:
       enabled: false
       # tokenService:
-      #   signingKey: 
+      #   signingKey:
       #    secretRef: <secret-ref>
       #    secretKey: <secret-key>
       #   salt:

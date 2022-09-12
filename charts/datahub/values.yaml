@@ -96,6 +96,7 @@ datahubUpgrade:
   batchDelayMs: 100
   noCodeDataMigration:
     sqlDbType: "MYSQL"
+    # sqlDbType: "POSTGRES"
   podSecurityContext: {}
     # fsGroup: 1000
   securityContext: {}
@@ -154,6 +155,17 @@ global:
         secretRef: mysql-secrets
         secretKey: mysql-root-password
 
+      ## Use below for usage of PostgreSQL instead of MySQL
+      # host: "prerequisites-postgresql:5432"
+      # hostForpostgresqlClient: "prerequisites-postgresql"
+      # port: "5432"
+      # url: "jdbc:postgresql://prerequisites-postgresql:5432/datahub"
+      # driver: "org.postgresql.Driver"
+      # username: "postgres"
+      # password:
+      #   secretRef: postgresql-secrets
+      #   secretKey: postgres-password
+
   datahub:
     gms:
       port: "8080"
@@ -194,10 +206,11 @@ global:
 #      hostnames:
 #        - "broker"
 #        - "mysql"
+#        - "postgresql"
 #        - "elasticsearch"
 #        - "neo4j"
 
-##  Add below to enable SSL for kafka
+## Add below to enable SSL for kafka
 #  credentialsAndCertsSecrets:
 #    name: datahub-certs
 #    path: /mnt/datahub/certs

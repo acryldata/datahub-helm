@@ -6,6 +6,7 @@ metadata:
     {{- include "datahub-gms.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "datahub-gms.selectorLabels" . | nindent 6 }}

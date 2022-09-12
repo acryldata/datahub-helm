@@ -6,6 +6,7 @@ metadata:
     {{- include "datahub-mae-consumer.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "datahub-mae-consumer.selectorLabels" . | nindent 6 }}

@@ -160,7 +160,14 @@ spec:
             - name: AUTH_OIDC_CLIENT_ID
               value: {{ .clientId }}
             - name: AUTH_OIDC_CLIENT_SECRET
+            {{- if .clientSecretRef }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .clientSecretRef.secretRef }}
+                  key: {{ .clientSecretRef.secretKey }}
+            {{- else }}
               value: {{ .clientSecret }}
+            {{- end }}
             - name: AUTH_OIDC_BASE_URL
               value: https://{{ (first $.Values.ingress.hosts).host }}
             {{- if eq .provider "google" }}

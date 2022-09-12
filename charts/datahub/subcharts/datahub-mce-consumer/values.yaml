@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+revisionHistoryLimit: 10
+
 image:
   repository: linkedin/datahub-mce-consumer
   pullPolicy: IfNotPresent
@@ -156,7 +158,7 @@ global:
       enablePrometheus: false
     gms:
       port: "8080"
-    metadata_service_authentication: 
+    metadata_service_authentication:
       enabled: false
       systemClientId: "__datahub_system"
       # systemClientSecret:

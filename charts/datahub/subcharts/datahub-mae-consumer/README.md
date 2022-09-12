@@ -52,6 +52,7 @@ Current chart version is `0.2.0`
 | readinessProbe.periodSeconds | int | `30` |  |
 | readinessProbe.failureThreshold | int | `8` |  |
 | replicaCount | int | `1` |  |
+| revisionHistoryLimit | int | `10` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
 | service.port | int | `80` |  |

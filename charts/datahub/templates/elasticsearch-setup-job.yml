@@ -58,9 +58,9 @@ spec:
             - name: ELASTICSEARCH_PORT
               value: {{ .Values.global.elasticsearch.port | quote }}
             - name: SKIP_ELASTICSEARCH_CHECK
-              value: { { .Values.global.elasticsearch.skipcheck | quote } }
+              value: {{ .Values.global.elasticsearch.skipcheck | quote }}
             - name: ELASTICSEARCH_INSECURE
-              value: { { .Values.global.elasticsearch.insecure | quote } }
+              value: {{ .Values.global.elasticsearch.insecure | quote }}
             {{- with .Values.global.elasticsearch.useSSL }}
             - name: ELASTICSEARCH_USE_SSL
               value: {{ . | quote }}

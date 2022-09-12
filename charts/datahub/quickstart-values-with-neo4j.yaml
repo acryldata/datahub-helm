@@ -19,7 +19,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.4"
+    tag: "v0.0.6"
   resources:
     limits:
       cpu: 500m

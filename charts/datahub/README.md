@@ -87,6 +87,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| acryl-datahub-actions.ingestionSslSecrets.name | string | `""` | Name of the secret that holds SSL certificates and private keys that are used in your ingestion recipes |
 | global.credentialsAndCertsSecrets.name | string | `""` | Name of the secret that holds SSL certificates (keystores, truststores) |
 | global.credentialsAndCertsSecrets.path | string | `"/mnt/certs"` | Path to mount the SSL certificates |
 | global.credentialsAndCertsSecrets.secureEnv | map | `{}` | Map of SSL config name and the corresponding value in the secret |

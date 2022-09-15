@@ -111,6 +111,11 @@ datahubUpgrade:
         cpu: 300m
         memory: 256Mi
 
+prometheus-kafka-exporter:
+  enabled: false
+  kafkaServer:
+  - prerequisites-kafka:9092  # <<release-name>>-kafka:9092
+
 global:
   graph_service_impl: neo4j
   datahub_analytics_enabled: true

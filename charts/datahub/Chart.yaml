@@ -4,7 +4,7 @@ description: A Helm chart for LinkedIn DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.2.99
+version: 0.3.00
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 0.8.44
@@ -36,6 +36,11 @@ dependencies:
     version: 0.0.3
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
+  # This chart deploys kafka-exporter that export the metrics from Kafka in Prometheus format
+  - name: prometheus-kafka-exporter
+    version: 1.6.0
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus-kafka-exporter.enabled
 maintainers:
   - name: DataHub
     email: datahub@acryl.io

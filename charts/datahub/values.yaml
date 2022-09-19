@@ -115,6 +115,66 @@ prometheus-kafka-exporter:
   enabled: false
   kafkaServer:
   - prerequisites-kafka:9092  # <<release-name>>-kafka:9092
+  # Sarama logging
+  sarama:
+    logEnabled: false
+  env: []
+  # - name: <ENV_VAR_NAME>
+  #   value: <value>
+
+  # List of additional cli arguments to configure kafka-exporter
+  # for example: --log.enable-sarama, --log.level=debug, etc.
+  # all the possible args can be found here: https://github.com/danielqsj/kafka_exporter#flags
+  extraArgs: []
+  
+  prometheus:
+  serviceMonitor:
+    enabled: false
+    namespace: monitoring
+    interval: "30s"
+    # If serviceMonitor is enabled and you want prometheus to automatically register
+    # target using serviceMonitor, add additionalLabels with prometheus release name
+    # e.g. If you have deployed kube-prometheus-stack with release name kube-prometheus
+    # then additionalLabels will be
+    # additionalLabels:
+    #   release: kube-prometheus
+    additionalLabels: {}
+    targetLabels: []
+
+  # this allows the usage of tls connection to your kafka cluster based on a secret in tls format.
+  # Enable it if you are connecting to kafka cluster using tls connection or sasl_ssl
+  # mandatory keys:
+  # ca.crt
+  # tls.crt
+  # tls.key
+  tls:
+    enabled: false
+    insecureSkipVerify: true
+  # The kafka server's name. Used to verify the hostname on the returned certificates unless tls.insecureSkipVerify is set to true.
+    serverName: ""
+  # Secret containing ca.crt, tls.crt and tls.key Keys
+  # kubectl create secret generic <name of an existing secret> --from-file=tls.crt=./tls.crt --from-file=tls.key=./tls.key --from-literal=ca.crt=./ca.crt 
+  #  mountPath: /secret/certs
+  #  secretName: <name of an existing secret>
+
+  sasl:
+    enabled: false
+    handshake: true
+    scram:
+      enabled: false
+      # mechanism: <plain|scram-sha512|scram-sha256>   
+      # add username and password
+      # username:
+      # password:
+      # or use an existing secret
+      # secretName: <name of an existing secret>
+    kerberos:
+      enabled: false
+      # serviceName:
+      # realm:
+      # kerberosAuthType: <keytabAuth|userAuth>
+      # mountPath: /secret/kerberos
+      # secretName: <name of an existing secret>  
 
 global:
   graph_service_impl: neo4j

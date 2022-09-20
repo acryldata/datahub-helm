@@ -3,6 +3,51 @@ entries:
   datahub:
   - apiVersion: v2
     appVersion: 0.8.44
+    created: "2022-09-20T16:54:03.638003323Z"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./subcharts/datahub-gms
+      version: 0.2.8
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./subcharts/datahub-frontend
+      version: 0.2.8
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mae-consumer
+      repository: file://./subcharts/datahub-mae-consumer
+      version: 0.2.6
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mce-consumer
+      repository: file://./subcharts/datahub-mce-consumer
+      version: 0.2.7
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./subcharts/datahub-ingestion-cron
+      version: 0.2.4
+    - name: datahub-jmxexporter
+      repository: file://./subcharts/datahub-jmxexporter
+      version: 0.2.1
+    - condition: acryl-datahub-actions.enabled
+      name: acryl-datahub-actions
+      repository: file://./subcharts/acryl-datahub-actions
+      version: 0.0.3
+    - condition: prometheus-kafka-exporter.enabled
+      name: prometheus-kafka-exporter
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 1.6.0
+    description: A Helm chart for LinkedIn DataHub
+    digest: 4557541acb324664306832880a1296b923e3f584b58b50e32122c2be05443740
+    maintainers:
+    - email: datahub@acryl.io
+      name: DataHub
+    name: datahub
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-0.2.103/datahub-0.2.103.tgz
+    version: 0.2.103
+  - apiVersion: v2
+    appVersion: 0.8.44
     created: "2022-09-19T13:52:08.601161132Z"
     dependencies:
     - condition: datahub-gms.enabled
@@ -4288,4 +4333,4 @@ entries:
     urls:
     - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.1/datahub-prerequisites-0.0.1.tgz
     version: 0.0.1
-generated: "2022-09-19T13:52:08.602046554Z"
+generated: "2022-09-20T16:54:03.63906814Z"

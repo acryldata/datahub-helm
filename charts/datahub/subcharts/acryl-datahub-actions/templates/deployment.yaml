@@ -35,6 +35,12 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
       {{- end }}
+      {{- with .Values.ingestionSecretFiles }}
+        - name: ingestion-secret-files
+          secret:
+            defaultMode: 0444
+            secretName: {{ .name }}
+      {{- end }}
       {{- if .Values.extraVolumes }}
         {{ toYaml .Values.extraVolumes | nindent 8 }}
       {{- end }}
@@ -102,6 +108,11 @@ spec:
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ingestionSecretFiles }}
+            - name: ingestion-secret-files
+              readOnly: true
+              mountPath: "/etc/datahub/ingestion-secret-files"
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

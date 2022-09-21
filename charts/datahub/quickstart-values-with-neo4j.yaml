@@ -19,7 +19,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.4"
+    tag: "v0.0.7"
   resources:
     limits:
       cpu: 500m
@@ -102,4 +102,4 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.8.43"
+      defaultCliVersion: "0.8.44"

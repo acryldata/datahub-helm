@@ -87,6 +87,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| acryl-datahub-actions.ingestionSecretFiles.name | string | `""` | Name of the k8s secret that holds any secret files (e.g., SSL certificates and private keys) that are used in your ingestion recipes. The keys in the secret will be mounted as individual files under `/etc/datahub/ingestion-secret-files` |
 | global.credentialsAndCertsSecrets.name | string | `""` | Name of the secret that holds SSL certificates (keystores, truststores) |
 | global.credentialsAndCertsSecrets.path | string | `"/mnt/certs"` | Path to mount the SSL certificates |
 | global.credentialsAndCertsSecrets.secureEnv | map | `{}` | Map of SSL config name and the corresponding value in the secret |

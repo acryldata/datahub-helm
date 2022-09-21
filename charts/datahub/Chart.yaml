@@ -10,7 +10,7 @@ version: 0.2.104
 appVersion: 0.8.44
 dependencies:
   - name: datahub-gms
-    version: 0.2.8
+    version: 0.2.9
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
@@ -18,22 +18,19 @@ dependencies:
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer
-    version: 0.2.6
+    version: 0.2.7
     repository: file://./subcharts/datahub-mae-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-mce-consumer
-    version: 0.2.7
+    version: 0.2.8
     repository: file://./subcharts/datahub-mce-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-ingestion-cron
-    version: 0.2.4
+    version: 0.2.5
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
-  - name: datahub-jmxexporter
-    version: 0.2.1
-    repository: file://./subcharts/datahub-jmxexporter
   - name: acryl-datahub-actions
-    version: 0.0.3
+    version: 0.0.5
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
   # This chart deploys kafka-exporter that export the metrics from Kafka in Prometheus format

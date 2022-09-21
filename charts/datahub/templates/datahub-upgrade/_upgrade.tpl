@@ -34,6 +34,10 @@ Return the env variables for upgrade jobs
   value: {{ .Values.global.elasticsearch.host | quote }}
 - name: ELASTICSEARCH_PORT
   value: {{ .Values.global.elasticsearch.port | quote }}
+- name: SKIP_ELASTICSEARCH_CHECK
+  value: {{ .Values.global.elasticsearch.skipcheck | quote }}
+- name: ELASTICSEARCH_INSECURE
+  value: {{ .Values.global.elasticsearch.insecure | quote }}
 {{- with .Values.global.elasticsearch.useSSL }}
 - name: ELASTICSEARCH_USE_SSL
   value: {{ . | quote }}

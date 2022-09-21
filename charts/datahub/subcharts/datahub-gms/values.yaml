@@ -120,6 +120,7 @@ global:
   elasticsearch:
     host: "elasticsearch"
     port: "9200"
+    skipcheck: "false"
 
   kafka:
     bootstrap:

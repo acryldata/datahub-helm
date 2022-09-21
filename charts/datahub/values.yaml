@@ -140,6 +140,8 @@ global:
   elasticsearch:
     host: "elasticsearch-master"
     port: "9200"
+    skipcheck: "false"
+    insecure: "false"
 
   kafka:
     bootstrap:

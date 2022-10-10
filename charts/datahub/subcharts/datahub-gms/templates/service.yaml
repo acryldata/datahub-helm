@@ -20,5 +20,11 @@ spec:
       nodePort: {{ . }}
       {{- end }}
       {{- end }}
+    {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+    - name: jmx
+      port: 4318
+      targetPort: jmx
+      protocol: TCP
+    {{- end }}
   selector:
     {{- include "datahub-gms.selectorLabels" . | nindent 4 }}

@@ -48,6 +48,9 @@ service:
   protocol: TCP
   name: actuator
 
+serviceMonitor:
+  create: false
+
 ingress:
   enabled: false
   annotations: {}

@@ -40,11 +40,6 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
-        {{- if .Values.exporters.jmx.enabled }}
-        - name: config-jmx-exporter
-          configMap:
-            name: {{ include "datahub-mae-consumer.fullname" . }}-config-jmx-exporter
-        {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

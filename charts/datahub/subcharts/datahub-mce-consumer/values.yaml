@@ -42,8 +42,11 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
+  type: ClusterIP # NodePort
+  port: "9090"
+  targetPort: actuator
+  protocol: TCP
+  name: actuator
 
 ingress:
   enabled: false

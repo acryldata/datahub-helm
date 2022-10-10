@@ -53,6 +53,13 @@ elasticsearchSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
 
 kafkaSetupJob:
   enabled: true
@@ -64,6 +71,13 @@ kafkaSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
 
 mysqlSetupJob:
   enabled: true
@@ -75,6 +89,13 @@ mysqlSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
 
 postgresqlSetupJob:
   enabled: false
@@ -86,6 +107,13 @@ postgresqlSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
 
 datahubUpgrade:
   enabled: true

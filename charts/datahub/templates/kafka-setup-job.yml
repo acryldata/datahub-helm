@@ -99,13 +99,10 @@ spec:
           {{- with .Values.kafkaSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.kafkaSetupJob.resources }}
           resources:
-            limits:
-              cpu: 500m
-              memory: 512Mi
-            requests:
-              cpu: 300m
-              memory: 256Mi
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.kafkaSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

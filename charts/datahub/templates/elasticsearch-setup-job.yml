@@ -89,13 +89,10 @@ spec:
           {{- with .Values.elasticsearchSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- toYaml .Values.elasticsearchSetupJob.resources | nindent 8 }}
           resources:
-            limits:
-              cpu: 500m
-              memory: 512Mi
-            requests:
-              cpu: 300m
-              memory: 256Mi
+            {{ . }| nindent 12 }}
+          {{- end }}
       {{- with .Values.elasticsearchSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

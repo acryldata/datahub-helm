@@ -44,9 +44,9 @@ securityContext: {}
 service:
   type: ClusterIP # NodePort
   port: "9090"
-  targetPort: actuator
+  targetPort: http
   protocol: TCP
-  name: actuator
+  name: http
 
 serviceMonitor:
   create: false

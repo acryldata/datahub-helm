@@ -24,6 +24,9 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
+serviceAccount:
+  create: false
+
 podAnnotations: {}
   # co.elastic.logs/enabled: "true"
 
@@ -39,8 +42,14 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
+  type: ClusterIP # NodePort
+  port: "9090"
+  targetPort: http
+  protocol: TCP
+  name: http
+
+serviceMonitor:
+  create: false
 
 ingress:
   enabled: false

@@ -207,7 +207,12 @@ global:
       secretRef: "datahub-encryption-secrets"
       secretKey: "encryption_key_secret"
       # Set to false if you'd like to provide your own secret.
-      provisionSecret: true
+      provisionSecret:
+        enabled: true
+        autoGenerate: true
+      # Only specify if autoGenerate set to false
+      #  secretValues:
+      #    encryptionKey: <encryption key value>
 
     managed_ingestion:
       enabled: true
@@ -227,7 +232,14 @@ global:
           secretRef: "datahub-auth-secrets"
           secretKey: "token_service_salt"
       # Set to false if you'd like to provide your own auth secrets
-      provisionSecrets: true
+      provisionSecrets:
+        enabled: true
+        autoGenerate: true
+      # Only specify if autoGenerate set to false
+      #  secretValues:
+      #    secret: <secret value>
+      #    signingKey: <signing key value>
+      #    salt: <salt value>
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

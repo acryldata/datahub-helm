@@ -49,6 +49,9 @@ service:
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 
+serviceMonitor:
+  create: false
+
 ingress:
   # className: ""
   enabled: false

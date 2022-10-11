@@ -1,0 +1,25 @@
+{{- if and .Values.serviceMonitor.create .Values.global.datahub.monitoring.enablePrometheus -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "datahub-frontend" }}
+  labels:
+    {{- include "datahub-frontend.labels" . | nindent 4 }}
+  {{- with .Values.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  endpoints:
+  - port: jmx
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: datahub-frontend
+{{- end -}}

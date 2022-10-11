@@ -91,7 +91,7 @@ spec:
           {{- end }}
           {{- toYaml .Values.elasticsearchSetupJob.resources | nindent 8 }}
           resources:
-            {{ . }| nindent 12 }}
+            {{ . | nindent 12 }}
           {{- end }}
       {{- with .Values.elasticsearchSetupJob.nodeSelector }}
       nodeSelector:

@@ -4,7 +4,7 @@ description: A Helm chart for packages that Datahub depends on
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.0.6
+version: 0.0.10
 dependencies:
   - name: elasticsearch
     version: 7.16.2
@@ -21,9 +21,13 @@ dependencies:
     repository: https://equinor.github.io/helm-charts/charts/
     condition: neo4j-community.enabled
   - name: mysql
-    version: 8.5.4
+    version: 9.1.2
     repository: https://charts.bitnami.com/bitnami
     condition: mysql.enabled
+  - name: postgresql
+    version: 11.2.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
   # This chart deploys an enterprise version of kafka that requires commercial license
   # Note, Schema registry and kafka rest proxy do not require the commercial license
   - name: cp-helm-charts
@@ -32,7 +36,7 @@ dependencies:
     condition: cp-helm-charts.enabled
   # This chart deploys a community version of kafka
   - name: kafka
-    version: 12.17.4
+    version: 17.1.0
     repository: https://charts.bitnami.com/bitnami
     condition: kafka.enabled
 maintainers:

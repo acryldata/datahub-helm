@@ -56,6 +56,12 @@ mysql:
     # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
     existingSecret: mysql-secrets
 
+postgresql:
+  enabled: false
+  auth:
+    # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
+    existingSecret: postgresql-secrets
+
 cp-helm-charts:
   # Schema registry is under the community license
   cp-schema-registry:

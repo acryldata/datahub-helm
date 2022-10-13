@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+revisionHistoryLimit: 10
+
 image:
   repository: linkedin/datahub-mce-consumer
   pullPolicy: IfNotPresent
@@ -22,6 +24,9 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
+serviceAccount:
+  create: false
+
 podAnnotations: {}
   # co.elastic.logs/enabled: "true"
 
@@ -37,8 +42,14 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
+  type: ClusterIP # NodePort
+  port: "9090"
+  targetPort: http
+  protocol: TCP
+  name: http
+
+serviceMonitor:
+  create: false
 
 ingress:
   enabled: false
@@ -152,9 +163,11 @@ global:
       url: "http://schema-registry:8081"
 
   datahub:
+    monitoring:
+      enablePrometheus: false
     gms:
       port: "8080"
-    metadata_service_authentication: 
+    metadata_service_authentication:
       enabled: false
       systemClientId: "__datahub_system"
       # systemClientSecret:

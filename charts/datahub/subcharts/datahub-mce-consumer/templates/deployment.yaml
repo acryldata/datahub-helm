@@ -6,6 +6,7 @@ metadata:
     {{- include "datahub-mce-consumer.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "datahub-mce-consumer.selectorLabels" . | nindent 6 }}
@@ -39,11 +40,6 @@ spec:
             defaultMode: 0444
             secretName: {{ .Values.global.credentialsAndCertsSecrets.name }}
         {{- end }}
-        {{- if .Values.exporters.jmx.enabled }}
-        - name: config-jmx-exporter
-          configMap:
-            name: {{ include "datahub-mce-consumer.fullname" . }}-config-jmx-exporter
-        {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -58,6 +54,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
+            - name: http 
+              containerPort: 9090
+              protocol: TCP
           {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
             - name: jmx
               containerPort: 4318
@@ -66,18 +65,22 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: 9090
+              port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 9090
+              port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{- end }}
             - name: MCE_CONSUMER_ENABLED
               value: "true"
             - name: KAFKA_BOOTSTRAP_SERVER
@@ -141,8 +144,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
-        {{- include "datahub-jmxexporter.container" . }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

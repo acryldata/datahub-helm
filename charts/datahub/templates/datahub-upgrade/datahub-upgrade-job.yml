@@ -16,12 +16,18 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
-    {{- if .Values.global.podLabels }}
+    {{- if or .Values.global.podLabels .Values.datahubUpgrade.podAnnotations}}
     metadata:
+    {{- with .Values.datahubUpgrade.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.global.podLabels }}
       labels:
-        {{- range $key, $value := .Values.global.podLabels }}
+        {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+    {{- end }}
     {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}
@@ -60,9 +66,9 @@ spec:
             - "-u"
             - "NoCodeDataMigration"
             - "-a"
-            - "batchSize=1000"
+            - "batchSize={{ .Values.datahubUpgrade.batchSize }}"
             - "-a"
-            - "batchDelayMs=100"
+            - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
             - "-a"
             - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
           env:

@@ -6,6 +6,7 @@ metadata:
     {{- include "datahub-frontend.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "datahub-frontend.selectorLabels" . | nindent 6 }}
@@ -35,11 +36,6 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
-        {{- if .Values.exporters.jmx.enabled }}
-        - name: config-jmx-exporter
-          configMap:
-            name: {{ include "datahub-gms.fullname" . }}-config-jmx-exporter
-        {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -53,10 +49,16 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          lifecycle: {{ .Values.lifecycle }}
           ports:
             - name: http
               containerPort: 9002
               protocol: TCP
+          {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /admin
@@ -72,6 +74,10 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{- end }}
             - name: DATAHUB_GMS_HOST
               value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
             - name: DATAHUB_GMS_PORT
@@ -151,6 +157,47 @@ spec:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
             {{- end }}
+          {{- with .Values.oidcAuthentication }}
+            {{- if .enabled }}
+            - name: AUTH_OIDC_ENABLED
+              value: "true"
+            - name: AUTH_OIDC_CLIENT_ID
+              value: {{ .clientId }}
+            - name: AUTH_OIDC_CLIENT_SECRET
+            {{- if .clientSecretRef }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .clientSecretRef.secretRef }}
+                  key: {{ .clientSecretRef.secretKey }}
+            {{- else }}
+              value: {{ .clientSecret }}
+            {{- end }}
+            - name: AUTH_OIDC_BASE_URL
+              value: https://{{ (first $.Values.ingress.hosts).host }}
+            {{- if eq .provider "google" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: https://accounts.google.com/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: "openid profile email"
+            - name: AUTH_OIDC_USER_NAME_CLAIM
+              value: email
+            - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
+              value: ([^@]+)
+            {{- else if eq .provider "okta" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: https://{{ .oktaDomain }}/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: "openid profile email groups"
+            {{- else if eq .provider "azure" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: https://login.microsoftonline.com/{{ .azureTenantId }}/v2.0/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: "openid profile email"
+            {{- else }}
+            {{- fail (printf "unsupported .oidcAuthentication.provider value '%s'" .provider) }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -164,8 +211,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
-        {{- include "datahub-jmxexporter.container" . }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

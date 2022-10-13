@@ -6,6 +6,7 @@ metadata:
     {{- include "datahub-mae-consumer.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "datahub-mae-consumer.selectorLabels" . | nindent 6 }}
@@ -38,11 +39,6 @@ spec:
           secret:
             defaultMode: 0444
             secretName: {{ .name }}
-        {{- end }}
-        {{- if .Values.exporters.jmx.enabled }}
-        - name: config-jmx-exporter
-          configMap:
-            name: {{ include "datahub-mae-consumer.fullname" . }}-config-jmx-exporter
         {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
@@ -117,6 +113,8 @@ spec:
               value: "{{ .Values.global.elasticsearch.host }}"
             - name: ELASTICSEARCH_PORT
               value: "{{ .Values.global.elasticsearch.port }}"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "{{ .Values.global.elasticsearch.skipcheck }}"
             {{- with .Values.global.elasticsearch.useSSL }}
             - name: ELASTICSEARCH_USE_SSL
               value: {{ . | quote }}
@@ -201,8 +199,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
-        {{- include "datahub-jmxexporter.container" . }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

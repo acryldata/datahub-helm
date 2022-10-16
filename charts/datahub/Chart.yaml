@@ -33,11 +33,6 @@ dependencies:
     version: 0.0.5
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
-  # This chart deploys kafka-exporter that export the metrics from Kafka in Prometheus format
-  - name: prometheus-kafka-exporter
-    version: 1.6.0
-    repository: https://prometheus-community.github.io/helm-charts
-    condition: prometheus-kafka-exporter.enabled
 maintainers:
   - name: DataHub
     email: datahub@acryl.io

@@ -23,7 +23,7 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      - name: Bump version and push tag
+      - name: Generate new version
         id: tag
         uses: anothrNick/github-tag-action@v1
         env:
@@ -31,7 +31,9 @@ jobs:
           WITH_V: false
           DRY_RUN: true # just generates the new tag, but doesn't push it
       - name: Bump chart versions
-        run: ./.github/scripts/bump-chart-versions.sh ${{ steps.tag.outputs.new_tag }}
+        uses: mikefarah/yq@master
+        with:
+          cmd: ./.github/scripts/bump-chart-versions.sh ${{ steps.tag.outputs.new_tag }}
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
@@ -60,3 +62,10 @@ jobs:
           file_pattern: "*.yaml" 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag the the update-charts commit 
+        id: tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+          DRY_RUN: false

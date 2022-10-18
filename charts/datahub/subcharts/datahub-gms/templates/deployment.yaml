@@ -147,6 +147,14 @@ spec:
             - name: INDEX_PREFIX
               value: {{ . }}
             {{- end }}
+            {{- with .Values.global.datahub.gms.elasticsearch.index.settingsOverrides }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.datahub.gms.elasticsearch.index.entitySettingsOverrides }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}
             {{- if eq .Values.global.graph_service_impl "neo4j" }}

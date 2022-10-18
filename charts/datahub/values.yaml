@@ -193,6 +193,12 @@ global:
     gms:
       port: "8080"
       nodePort: "30001"
+      elasticsearch:
+        index:
+          settingsOverrides: ""
+          entitySettingsOverrides: ""
+          refreshIntervalSeconds: 1
+
 
     monitoring:
       enablePrometheus: true

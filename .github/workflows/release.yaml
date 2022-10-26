@@ -30,6 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
+          DEFAULT_BUMP: patch
           DRY_RUN: true # just generates the new tag, but doesn't push it
       - name: Bump chart versions
         uses: mikefarah/yq@master
@@ -69,3 +70,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: false
           DRY_RUN: false
+          DEFAULT_BUMP: patch

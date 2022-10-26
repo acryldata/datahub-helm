@@ -111,27 +111,6 @@ datahubUpgrade:
         cpu: 300m
         memory: 256Mi
 
-prometheus-kafka-exporter:
-  enabled: false
-  kafkaServer:
-  - prerequisites-kafka:9092  # <<release-name>>-kafka:9092
-  # Sarama logging
-  sarama:
-    logEnabled: true
-  prometheus:
-    serviceMonitor:
-      enabled: true
-      namespace: monitoring
-      interval: "30s"
-      # If serviceMonitor is enabled and you want prometheus to automatically register
-      # target using serviceMonitor, add additionalLabels with prometheus release name
-      # e.g. If you have deployed kube-prometheus-stack with release name kube-prometheus
-      # then additionalLabels will be
-      # additionalLabels:
-      #   release: kube-prometheus
-      additionalLabels: {}
-      targetLabels: []
-
 global:
   graph_service_impl: neo4j
   datahub_analytics_enabled: true

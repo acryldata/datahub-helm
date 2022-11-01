@@ -22,14 +22,14 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 |-----|------|---------|-------------|
 | datahub-frontend.enabled | bool | `true` | Enable Datahub Front-end |
 | datahub-frontend.image.repository | string | `"linkedin/datahub-frontend-react"` | Image repository for datahub-frontend |
-| datahub-frontend.image.tag | string | `"v0.9.0"` | Image tag for datahub-frontend |
+| datahub-frontend.image.tag | string | `"v0.9.1"` | Image tag for datahub-frontend |
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |
-| datahub-gms.image.tag | string | `"v0.9.0"` | Image tag for datahub-gms |
+| datahub-gms.image.tag | string | `"v0.9.1"` | Image tag for datahub-gms |
 | datahub-mae-consumer.image.repository | string | `"linkedin/datahub-mae-consumer"` | Image repository for datahub-mae-consumer |
-| datahub-mae-consumer.image.tag | string | `"v0.9.0"` | Image tag for datahub-mae-consumer |
+| datahub-mae-consumer.image.tag | string | `"v0.9.1"` | Image tag for datahub-mae-consumer |
 | datahub-mce-consumer.image.repository | string | `"linkedin/datahub-mce-consumer"` | Image repository for datahub-mce-consumer |
-| datahub-mce-consumer.image.tag | string | `"v0.9.0"` | Image tag for datahub-mce-consumer |
+| datahub-mce-consumer.image.tag | string | `"v0.9.1"` | Image tag for datahub-mce-consumer |
 | datahub-ingestion-cron.enabled | bool | `false` | Enable cronjob for periodic ingestion |
 | datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
 | datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
@@ -37,25 +37,25 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahubUpgrade.restoreIndices.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'restore indices' |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
-| elasticsearchSetupJob.image.tag | string | `"v0.9.0"` | Image repository for elasticsearchSetupJob |
+| elasticsearchSetupJob.image.tag | string | `"v0.9.1"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.podAnnotations | object | `{}` | Pod annotations for elasticsearchSetupJob |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
-| kafkaSetupJob.image.tag | string | `"v0.9.0"` | Image repository for kafkaSetupJob |
+| kafkaSetupJob.image.tag | string | `"v0.9.1"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for kafkaSetupJob |
 | kafkaSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for kafkaSetupJob |
 | kafkaSetupJob.podAnnotations | object | `{}` | Pod annotations for kafkaSetupJob |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
-| mysqlSetupJob.image.tag | string | `"v0.9.0"` | Image repository for mysqlSetupJob |
+| mysqlSetupJob.image.tag | string | `"v0.9.1"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | mysqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | mysqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
 | postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
 | postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
-| postgresqlSetupJob.image.tag | string | `"v0.9.0"` | Image repository for postgresqlSetupJob |
+| postgresqlSetupJob.image.tag | string | `"v0.9.1"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | postgresqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | postgresqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
@@ -115,7 +115,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.datahub.managed_ingestion.enabled | bool | `true` | Whether or not UI-based ingestion experience is enabled. |
 | global.datahub.encryptionKey.secretRef | string | `datahub-encryption-secrets` | The reference to a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret named `datahub-encryption-secrets`. |
 | global.datahub.encryptionKey.secretKey | string | `encryption_key_secret` | The key of a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. If a secret reference is not provided, a random one will be generated for you in a Kubernetes secret value named `encryption_key_secret` within a secret named `datahub-encryption-secrets`. |
-| global.datahub.managed_ingestion.defaultCliVersion | string | `0.9.0` | This is the version of the DataHub CLI to use for UI ingestion, by default. |
+| global.datahub.managed_ingestion.defaultCliVersion | string | `0.9.1` | This is the version of the DataHub CLI to use for UI ingestion, by default. |
 | global.datahub.encryptionKey.provisionSecret.enabled | bool | `true` | Whether an encryption key secret should be provisioned on the first deployment for you. Set this to false if you are overriding global.datahub.encryptionKey.secretRef. |
 | global.datahub.encryptionKey.provisionSecret.autoGenerate | bool | `true` | Whether an encryption key secret should be provisioned for you **with a random seed** on the first deployment for you. Set this to false and use `global.datahub.encryptionKey.provisionSecret.secretValues.encryptionKey` if you would like to specify the secret values directly. |
 | global.datahub.encryptionKey.provisionSecret.secretValues.encryptionKey | string | `` | The encryption key value to be used if specified directly. |

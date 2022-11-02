@@ -218,6 +218,10 @@ spec:
             - name: ENTITY_SERVICE_ENABLE_RETENTION
               value: "true"
             {{- end }}
+            {{- if .Values.global.datahub.hide_glossary }}
+            - name: REACT_APP_HIDE_GLOSSARY
+              value: "true"
+            {{- end }}
             - name: SEARCH_SERVICE_ENABLE_CACHE
               value: {{ .Values.global.datahub.enable_search_cache | quote }}
           {{- with .Values.extraEnvs }}

@@ -44,4 +44,4 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint  --check-version-increment false 
+        run: ct lint 

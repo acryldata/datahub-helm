@@ -1,3 +1,5 @@
+
+
 name: Release Charts
 
 on:
@@ -11,7 +13,6 @@ on:
 
 jobs:
   release:
-    if: "! contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,18 +25,6 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      - name: Generate new version
-        id: tag
-        uses: anothrNick/github-tag-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: false
-          DEFAULT_BUMP: patch
-          DRY_RUN: true # just generates the new tag, but doesn't push it
-      - name: Bump chart versions
-        uses: mikefarah/yq@master
-        with:
-          cmd: ./.github/scripts/bump-chart-versions.sh ${{ steps.tag.outputs.new_tag }}
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
@@ -56,18 +45,3 @@ jobs:
           charts_repo_url: https://helm.datahubproject.io
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      - name: 'Commit push'
-        uses: stefanzweifel/git-auto-commit-action@v2.5.0
-        with:
-          commit_message: '[skip ci] Update chart versions'
-          branch: 'master'
-          file_pattern: "*.yaml" 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Tag the the update-charts commit 
-        uses: anothrNick/github-tag-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: false
-          DRY_RUN: false
-          DEFAULT_BUMP: patch

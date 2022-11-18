@@ -94,11 +94,11 @@ spec:
             - name: DATAHUB_ANALYTICS_ENABLED
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: EBEAN_DATASOURCE_USERNAME
-              value: "{{ .Values.sql.datasource.username | default .Values.global.sql.datasource.username }}"
+              value: {{ .Values.sql.datasource.username | default .Values.global.sql.datasource.username | quote }}
             - name: EBEAN_DATASOURCE_PASSWORD
               {{- $passwordValue := .Values.sql.datasource.password.value | default .Values.global.sql.datasource.password.value }}
               {{- if $passwordValue }}
-              value: "{{ $passwordValue }}"
+              value: {{ $passwordValue | quote }}
               {{- else }}
               valueFrom:
                 secretKeyRef:

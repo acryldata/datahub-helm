@@ -81,12 +81,25 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.sql.datasource.username | string | `"root"` | SQL user name |
 | global.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL password |
 | global.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the MySQL password |
+| global.sql.datasource.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value instead |
 | global.graph_service_impl | string | `neo4j` | One of `neo4j` or `elasticsearch`. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility |
 
 ## Optional Chart Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| datahub-gms.sql.datasource.username | string | `root` | SQL username for GMS (overrides global value) |
+| datahub-gms.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL password (overrides global value) |
+| datahub-gms.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the GMS SQL password (overrides global value) |
+| datahub-gms.sql.datasource.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value for GMS SQL login (overrides global value) |
+| mysqlSetupJob.username | string | `root` | SQL username for mysqlSetupJob (overrides global value) |
+| mysqlSetupJob.password.secretRef | string | `"mysql-secrets"` | Secret that contains the mysqlSetupJob SQL password (overrides global value) |
+| mysqlSetupJob.password.secretKey | string | `"mysql-password"` | Secret key that contains the mysqlSetupJob SQL password (overrides global value) |
+| mysqlSetupJob.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value for mysqlSetupJob SQL login (overrides global value) |
+| postgresqlSetupJob.username | string | `root` | SQL username for postgresqlSetupJob (overrides global value) |
+| postgresqlSetupJob.password.secretRef | string | `"mysql-secrets"` | Secret that contains the postgresqlSetupJob SQL password (overrides global value) |
+| postgresqlSetupJob.password.secretKey | string | `"mysql-password"` | Secret key that contains the postgresqlSetupJob SQL password (overrides global value) |
+| postgresqlSetupJob.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value for postgresqlSetupJob SQL login (overrides global value) |
 | acryl-datahub-actions.ingestionSecretFiles.name | string | `""` | Name of the k8s secret that holds any secret files (e.g., SSL certificates and private keys) that are used in your ingestion recipes. The keys in the secret will be mounted as individual files under `/etc/datahub/ingestion-secret-files` |
 | global.credentialsAndCertsSecrets.name | string | `""` | Name of the secret that holds SSL certificates (keystores, truststores) |
 | global.credentialsAndCertsSecrets.path | string | `"/mnt/certs"` | Path to mount the SSL certificates |

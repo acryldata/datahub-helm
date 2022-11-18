@@ -83,7 +83,7 @@ mysqlSetupJob:
     runAsUser: 1000
   podAnnotations: {}
   # Optionally set a set-up job specific login (defaults to global login)
-  # username: "gms-login"
+  # username: "mysqlSetupJob-login"
   # password:
   #   secretRef: sql-secret
   #   secretKey: sql-password
@@ -99,7 +99,7 @@ postgresqlSetupJob:
     runAsUser: 1000
   podAnnotations: {}
   # Optionally set a set-up job specific login (defaults to global login)
-  # username: "gms-login"
+  # username: "postgresqlSetupJob-login"
   # password:
   #   secretRef: sql-secret
   #   secretKey: sql-password

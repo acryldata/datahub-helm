@@ -175,7 +175,7 @@ global:
         secretKey: mysql-root-password
       # --------------OR----------------
       # value: password
-      
+
       ## Use below for usage of PostgreSQL instead of MySQL
       # host: "prerequisites-postgresql:5432"
       # hostForpostgresqlClient: "prerequisites-postgresql"

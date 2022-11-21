@@ -5,6 +5,13 @@ datahub-gms:
   image:
     repository: linkedin/datahub-gms
     tag: "v0.9.2"
+  # Optionally set a GMS specific SQL login (defaults to global login)
+  # sql:
+  #   datasource:
+  #     username: "gms-login"
+  #     password:
+  #       secretRef: gms-secret
+  #       secretKey: gms-password
 
 datahub-frontend:
   enabled: true
@@ -75,6 +82,11 @@ mysqlSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Optionally set a set-up job specific login (defaults to global login)
+  # username: "mysqlSetupJob-login"
+  # password:
+  #   secretRef: mysqlSetupJob-secret
+  #   secretKey: mysqlSetupJob-password
 
 postgresqlSetupJob:
   enabled: false
@@ -86,6 +98,11 @@ postgresqlSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Optionally set a set-up job specific login (defaults to global login)
+  # username: "postgresqlSetupJob-login"
+  # password:
+  #   secretRef: postgresqlSetupJob-secret
+  #   secretKey: postgresqlSetupJob-password
 
 datahubUpgrade:
   enabled: true
@@ -156,6 +173,8 @@ global:
       password:
         secretRef: mysql-secrets
         secretKey: mysql-root-password
+      # --------------OR----------------
+      # value: password
 
       ## Use below for usage of PostgreSQL instead of MySQL
       # host: "prerequisites-postgresql:5432"
@@ -167,6 +186,8 @@ global:
       # password:
       #   secretRef: postgresql-secrets
       #   secretKey: postgres-password
+      # --------------OR----------------
+      #   value: password
 
   datahub:
     gms:

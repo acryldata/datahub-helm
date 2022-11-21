@@ -54,12 +54,17 @@ spec:
           imagePullPolicy: {{ .Values.postgresqlSetupJob.imagePullPolicy | default "Always" }}
           env:
             - name: POSTGRES_USERNAME
-              value: {{ .Values.global.sql.datasource.username | quote }}
+              value: {{ .Values.postgresqlSetupJob.username | default .Values.global.sql.datasource.username | quote }}
             - name: POSTGRES_PASSWORD
+              {{- $passwordValue := (.Values.postgresqlSetupJob.password).value | default .Values.global.sql.datasource.password.value }}
+              {{- if $passwordValue }}
+              value: {{ $passwordValue | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.global.sql.datasource.password.secretRef }}"
-                  key: "{{ .Values.global.sql.datasource.password.secretKey }}"
+                  name: "{{ (.Values.postgresqlSetupJob.password).secretRef | default .Values.global.sql.datasource.password.secretRef }}"
+                  key: "{{ (.Values.postgresqlSetupJob.password).secretKey | default .Values.global.sql.datasource.password.secretKey }}"
+              {{- end }}
             - name: POSTGRES_HOST
               value: {{ .Values.global.sql.datasource.hostForpostgresqlClient | quote }}
             - name: POSTGRES_PORT

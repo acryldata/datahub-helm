@@ -58,7 +58,7 @@ Current chart version is `0.2.0`
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
-| serviceMonitoring.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
+| serviceMonitor.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
 | tolerations | list | `[]` |  |
 | global.elasticsearch.host | string | `"elasticsearch"` |  |
 | global.elasticsearch.port | string | `"9200"` |  |

@@ -138,6 +138,7 @@ global:
     port: "9200"
     skipcheck: "false"
     insecure: "false"
+    useSSL: "false"
 
   kafka:
     bootstrap:

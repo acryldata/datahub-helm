@@ -27,7 +27,8 @@ spec:
           {{- toYaml .extraInitContainers | nindent 12 }}
           {{- end }}
         {{- if .hostAliases }}
-          hostAliases: {{- include "common.tplvalues.render" (dict "value" .hostAliases "context" $) | nindent 10 }}
+          hostAliases:
+          {{- toYaml .hostAliases | nindent 12 }}
         {{- end }}
         {{- if .serviceAccountName }}
           serviceAccountName: {{ .serviceAccountName }}

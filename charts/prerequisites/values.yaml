@@ -47,7 +47,7 @@ neo4j-community:
   enabled: true   # set this to false, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
-  # For better security, add password to neo4j-secrets k8s secret and uncomment below
+  # For better security, add neo4j-secrets k8s secret with neo4j-password and uncomment below
   existingPasswordSecret: neo4j-secrets
 
 mysql:

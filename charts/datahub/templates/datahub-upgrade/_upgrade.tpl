@@ -26,6 +26,7 @@ Return the env variables for upgrade jobs
   value: "{{ .Values.global.sql.datasource.url }}"
 - name: EBEAN_DATASOURCE_DRIVER
   value: "{{ .Values.global.sql.datasource.driver }}"
+{{- if .Values.global.datahub.metadata_service_authentication.enabled }}
 - name: DATAHUB_SYSTEM_CLIENT_ID
   value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
 - name: DATAHUB_SYSTEM_CLIENT_SECRET
@@ -33,6 +34,7 @@ Return the env variables for upgrade jobs
     secretKeyRef:
       name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
       key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+{{- end }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
 - name: KAFKA_SCHEMAREGISTRY_URL

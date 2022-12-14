@@ -16,10 +16,14 @@ Return the env variables for upgrade jobs
 - name: EBEAN_DATASOURCE_USERNAME
   value: "{{ .Values.global.sql.datasource.username }}"
 - name: EBEAN_DATASOURCE_PASSWORD
+  {{- if .Values.global.sql.datasource.password.value }}
+  value: {{ .Values.global.sql.datasource.password.value | quote }}
+  {{- else }}
   valueFrom:
     secretKeyRef:
       name: "{{ .Values.global.sql.datasource.password.secretRef }}"
       key: "{{ .Values.global.sql.datasource.password.secretKey }}"
+  {{- end }}
 - name: EBEAN_DATASOURCE_HOST
   value: "{{ .Values.global.sql.datasource.host }}"
 - name: EBEAN_DATASOURCE_URL

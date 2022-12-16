@@ -56,7 +56,7 @@ spec:
       {{- end }}
       containers:
         - name: kafka-setup-job
-          image: "{{ .Values.kafkaSetupJob.image.repository }}:{{ .Values.kafkaSetupJob.image.tag }}"
+          image: "{{ .Values.kafkaSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.kafkaSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.kafkaSetupJob.imagePullPolicy | default "IfNotPresent" }}
           env:
             - name: KAFKA_ZOOKEEPER_CONNECT

@@ -35,7 +35,7 @@ spec:
         {{- end }}
           containers:
           - name: {{ $jobName }}-crawler
-            image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+            image: "{{ $.Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             volumeMounts:
               - name: recipe

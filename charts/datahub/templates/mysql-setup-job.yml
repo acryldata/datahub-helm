@@ -50,7 +50,7 @@ spec:
         {{- toYaml .Values.mysqlSetupJob.podSecurityContext | nindent 8 }}
       containers:
         - name: mysql-setup-job
-          image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ .Values.mysqlSetupJob.image.tag }}"
+          image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.mysqlSetupJob.imagePullPolicy | default "IfNotPresent" }}
           env:
             - name: MYSQL_USERNAME

@@ -47,9 +47,10 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          lifecycle: {{ .Values.lifecycle }}
+          lifecycle:
+            {{- toYaml .Values.lifecycle | nindent 12 }}
           ports:
             - name: http
               containerPort: 9002

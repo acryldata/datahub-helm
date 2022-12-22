@@ -50,7 +50,7 @@ spec:
         {{- toYaml .Values.elasticsearchSetupJob.podSecurityContext | nindent 8 }}
       containers:
         - name: elasticsearch-setup-job
-          image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ .Values.elasticsearchSetupJob.image.tag }}"
+          image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.elasticsearchSetupJob.imagePullPolicy | default "IfNotPresent" }}
           env:
             - name: ELASTICSEARCH_HOST

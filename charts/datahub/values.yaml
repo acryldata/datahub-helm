@@ -4,13 +4,20 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    tag: "v0.9.0"
+    # tag: "v0.9.3 # defaults to .global.datahub.version
+  # Optionally set a GMS specific SQL login (defaults to global login)
+  # sql:
+  #   datasource:
+  #     username: "gms-login"
+  #     password:
+  #       secretRef: gms-secret
+  #       secretKey: gms-password
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # # defaults to .global.datahub.version
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -30,24 +37,24 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
 
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -58,7 +65,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -69,29 +76,39 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Optionally set a set-up job specific login (defaults to global login)
+  # username: "mysqlSetupJob-login"
+  # password:
+  #   secretRef: mysqlSetupJob-secret
+  #   secretKey: mysqlSetupJob-password
 
 postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    tag: "v0.9.0"
+    # tag: "v0.9.3" # defaults to .global.datahub.version
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Optionally set a set-up job specific login (defaults to global login)
+  # username: "postgresqlSetupJob-login"
+  # password:
+  #   secretRef: postgresqlSetupJob-secret
+  #   secretKey: postgresqlSetupJob-password
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.9.0"
+    # tag: "v0.9.3"# defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
@@ -111,27 +128,6 @@ datahubUpgrade:
         cpu: 300m
         memory: 256Mi
 
-prometheus-kafka-exporter:
-  enabled: false
-  kafkaServer:
-  - prerequisites-kafka:9092  # <<release-name>>-kafka:9092
-  # Sarama logging
-  sarama:
-    logEnabled: true
-  prometheus:
-    serviceMonitor:
-      enabled: true
-      namespace: monitoring
-      interval: "30s"
-      # If serviceMonitor is enabled and you want prometheus to automatically register
-      # target using serviceMonitor, add additionalLabels with prometheus release name
-      # e.g. If you have deployed kube-prometheus-stack with release name kube-prometheus
-      # then additionalLabels will be
-      # additionalLabels:
-      #   release: kube-prometheus
-      additionalLabels: {}
-      targetLabels: []
-
 global:
   graph_service_impl: neo4j
   datahub_analytics_enabled: true
@@ -142,6 +138,7 @@ global:
     port: "9200"
     skipcheck: "false"
     insecure: "false"
+    useSSL: "false"
 
   kafka:
     bootstrap:
@@ -177,6 +174,8 @@ global:
       password:
         secretRef: mysql-secrets
         secretKey: mysql-root-password
+      # --------------OR----------------
+      # value: password
 
       ## Use below for usage of PostgreSQL instead of MySQL
       # host: "prerequisites-postgresql:5432"
@@ -188,8 +187,11 @@ global:
       # password:
       #   secretRef: postgresql-secrets
       #   secretKey: postgres-password
+      # --------------OR----------------
+      #   value: password
 
   datahub:
+    version: v0.9.3
     gms:
       port: "8080"
       nodePort: "30001"
@@ -216,7 +218,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.9.0"
+      defaultCliVersion: "0.9.1"
 
     metadata_service_authentication:
       enabled: false

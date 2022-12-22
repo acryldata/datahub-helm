@@ -16,16 +16,29 @@ Return the env variables for upgrade jobs
 - name: EBEAN_DATASOURCE_USERNAME
   value: "{{ .Values.global.sql.datasource.username }}"
 - name: EBEAN_DATASOURCE_PASSWORD
+  {{- if .Values.global.sql.datasource.password.value }}
+  value: {{ .Values.global.sql.datasource.password.value | quote }}
+  {{- else }}
   valueFrom:
     secretKeyRef:
       name: "{{ .Values.global.sql.datasource.password.secretRef }}"
       key: "{{ .Values.global.sql.datasource.password.secretKey }}"
+  {{- end }}
 - name: EBEAN_DATASOURCE_HOST
   value: "{{ .Values.global.sql.datasource.host }}"
 - name: EBEAN_DATASOURCE_URL
   value: "{{ .Values.global.sql.datasource.url }}"
 - name: EBEAN_DATASOURCE_DRIVER
   value: "{{ .Values.global.sql.datasource.driver }}"
+{{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+- name: DATAHUB_SYSTEM_CLIENT_ID
+  value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+- name: DATAHUB_SYSTEM_CLIENT_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+      key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+{{- end }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
 - name: KAFKA_SCHEMAREGISTRY_URL

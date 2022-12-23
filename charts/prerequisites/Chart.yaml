@@ -22,7 +22,7 @@ dependencies:
     condition: neo4j-community.enabled
   - name: mysql
     version: 9.1.8
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: mysql.enabled
   - name: postgresql
     version: 11.2.6

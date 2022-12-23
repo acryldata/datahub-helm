@@ -66,7 +66,7 @@ Current chart version is `0.2.0`
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
-| serviceMonitoring.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
+| serviceMonitor.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
 | tolerations | list | `[]` |  |
 | datahub.metadata_service_authentication.enabled | bool | `false` | Whether Metadata Service Authentication is enabled. |
 | global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` | The internal system id that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
@@ -79,5 +79,5 @@ Current chart version is `0.2.0`
 | global.datahub.managed_ingestion.enabled | bool | `true` | Whether or not UI-based ingestion experience is enabled. |
 | global.datahub.encryptionKey.secretRef | string | `nil` | The reference to a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. Required if managed_ingestion_enabled is 'true'. |
 | global.datahub.encryptionKey.secretKey | string | `nil` | The key of a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. Required if managed_ingestion_enabled is 'true'. |
-| global.datahub.managed_ingestion.defaultCliVersion | string | `0.9.0` | This is the version of the DataHub CLI to use for UI ingestion, by default. You do not need to explicitly provide this. By default the underlying datahub-gms container will provide a latest version compatible with the server. |
+| global.datahub.managed_ingestion.defaultCliVersion | string | `0.9.1` | This is the version of the DataHub CLI to use for UI ingestion, by default. You do not need to explicitly provide this. By default the underlying datahub-gms container will provide a latest version compatible with the server. |
 | global.datahub.enable_retention | bool | `false` | Whether or not to enable retention on local DB |

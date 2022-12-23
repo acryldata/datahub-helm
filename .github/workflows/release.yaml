@@ -1,3 +1,5 @@
+
+
 name: Release Charts
 
 on:
@@ -23,7 +25,6 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:

@@ -102,7 +102,7 @@ extraVolumeMounts: []
 
 extraInitContainers: []
 
-lifecycle:
+lifecycle: {}
   # To add a new user to datahub in JAAS config without mounting the user.props file
   # postStart:
   #   exec:
@@ -114,11 +114,11 @@ resources: {}
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #   cpu: 500m
+  #   memory: 2Gi
   # requests:
   #   cpu: 100m
-  #   memory: 128Mi
+  #   memory: 1Gi
 
 nodeSelector: {}
 

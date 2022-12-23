@@ -50,16 +50,21 @@ spec:
         {{- toYaml .Values.mysqlSetupJob.podSecurityContext | nindent 8 }}
       containers:
         - name: mysql-setup-job
-          image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ .Values.mysqlSetupJob.image.tag }}"
+          image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.mysqlSetupJob.imagePullPolicy | default "IfNotPresent" }}
           env:
             - name: MYSQL_USERNAME
-              value: {{ .Values.global.sql.datasource.username | quote }}
+              value: {{ .Values.mysqlSetupJob.username | default .Values.global.sql.datasource.username | quote }}
             - name: MYSQL_PASSWORD
+              {{- $passwordValue := (.Values.mysqlSetupJob.password).value | default .Values.global.sql.datasource.password.value }}
+              {{- if $passwordValue }}
+              value: {{ $passwordValue | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.global.sql.datasource.password.secretRef }}"
-                  key: "{{ .Values.global.sql.datasource.password.secretKey }}"
+                  name: "{{ (.Values.mysqlSetupJob.password).secretRef | default .Values.global.sql.datasource.password.secretRef }}"
+                  key: "{{ (.Values.mysqlSetupJob.password).secretKey | default .Values.global.sql.datasource.password.secretKey }}"
+              {{- end }}
             - name: MYSQL_HOST
               value: {{ .Values.global.sql.datasource.hostForMysqlClient | quote }}
             - name: MYSQL_PORT

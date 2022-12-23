@@ -37,7 +37,7 @@ dependencies:
   # This chart deploys a community version of kafka
   - name: kafka
     version: 17.1.0
-    repository:  https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: kafka.enabled
 maintainers:
   - name: DataHub

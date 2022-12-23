@@ -7,7 +7,7 @@ type: application
 version: 0.0.11
 dependencies:
   - name: elasticsearch
-    version: 7.16.2
+    version: 7.17.1
     repository: https://helm.elastic.co
     condition: elasticsearch.enabled
   # This chart deploys an enterprise version of neo4j that requires commercial license

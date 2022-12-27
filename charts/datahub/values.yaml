@@ -136,7 +136,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.9.4" # defaults to .global.datahub.version, v0.9.5 broken due to https://github.com/datahub-project/datahub/pull/6381
+    tag: "v0.9.4"  # defaults to .global.datahub.version, v0.9.5 broken due to https://github.com/datahub-project/datahub/pull/6381
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:

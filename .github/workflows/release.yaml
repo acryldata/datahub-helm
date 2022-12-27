@@ -1,0 +1,45 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'NOTICE'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Fetch history
+        run: git fetch --prune --unshallow
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+
+      - name: Add Helm repos
+        run: |
+          helm repo add elasticsearch https://helm.elastic.co
+          helm repo add neo4j https://neo4j-contrib.github.io/neo4j-helm
+          helm repo add neo4j-community https://equinor.github.io/helm-charts/charts
+          helm repo add mysql https://charts.bitnami.com/bitnami
+          helm repo add cp-helm-charts https://confluentinc.github.io/cp-helm-charts
+          helm repo add kafka https://charts.bitnami.com/bitnami
+          
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.2.1
+        with:
+          charts_repo_url: https://helm.datahubproject.io
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

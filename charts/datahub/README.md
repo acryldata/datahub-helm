@@ -38,24 +38,28 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.image.tag | string | `"v0.9.3"` | Image repository for elasticsearchSetupJob |
+| elasticsearchSetupJob.resources | object | '{}' | Kube Resource definitions for elasticsearchSetupJob |
 | elasticsearchSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.podAnnotations | object | `{}` | Pod annotations for elasticsearchSetupJob |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.image.tag | string | `"v0.9.3"` | Image repository for kafkaSetupJob |
+| kafkaSetupJob.resources | object | '{}' | Kube Resource definitions for kafkaSetupJob |
 | kafkaSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for kafkaSetupJob |
 | kafkaSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for kafkaSetupJob |
 | kafkaSetupJob.podAnnotations | object | `{}` | Pod annotations for kafkaSetupJob |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `"v0.9.3"` | Image repository for mysqlSetupJob |
+| mysqlSetupJob.resources | object | '{}' | Kube Resource definitions for mysqlSetupJob |
 | mysqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | mysqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | mysqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
 | postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
 | postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.image.tag | string | `"v0.9.3"` | Image repository for postgresqlSetupJob |
+| postgresqlSetupJob.resources | object | '{}' | Kube Resource definitions for postgresqlSetupJob |
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | postgresqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | postgresqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |

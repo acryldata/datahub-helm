@@ -101,11 +101,11 @@ spec:
           {{- end }}
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: {{ .Values.kafkaSetupJob.resources.limits.cpu }}
+              memory: {{ .Values.kafkaSetupJob.resources.limits.memory }}
             requests:
-              cpu: 300m
-              memory: 256Mi
+              cpu: {{ .Values.kafkaSetupJob.resources.requests.cpu }}
+              memory: {{ .Values.kafkaSetupJob.resources.requests.memory }}
       {{- with .Values.kafkaSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

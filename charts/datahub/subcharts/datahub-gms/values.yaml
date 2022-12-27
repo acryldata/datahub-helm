@@ -9,7 +9,7 @@ revisionHistoryLimit: 10
 image:
   repository: linkedin/datahub-gms
   pullPolicy: IfNotPresent
-  tag: head
+  tag:
 
 imagePullSecrets: []
 nameOverride: ""
@@ -151,6 +151,7 @@ global:
         secretKey: "mysql-password"
 
   datahub:
+    version: head
     monitoring:
       enablePrometheus: false
       enableJMXPort: false

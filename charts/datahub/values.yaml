@@ -55,6 +55,13 @@ elasticsearchSetupJob:
   image:
     repository: linkedin/datahub-elasticsearch-setup
     # tag: "v0.9.3" # defaults to .global.datahub.version
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -66,6 +73,13 @@ kafkaSetupJob:
   image:
     repository: linkedin/datahub-kafka-setup
     # tag: "v0.9.3" # defaults to .global.datahub.version
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 300m
+      memory: 768Mi
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -77,6 +91,13 @@ mysqlSetupJob:
   image:
     repository: acryldata/datahub-mysql-setup
     # tag: "v0.9.3" # defaults to .global.datahub.version
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -93,6 +114,13 @@ postgresqlSetupJob:
   image:
     repository: acryldata/datahub-postgres-setup
     # tag: "v0.9.3" # defaults to .global.datahub.version
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -108,7 +136,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.9.3"# defaults to .global.datahub.version
+    tag: "v0.9.3"  # defaults to .global.datahub.version, v0.9.5 broken due to https://github.com/datahub-project/datahub/pull/6381
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
@@ -191,7 +219,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.9.3
+    version: v0.9.5
     gms:
       port: "8080"
       nodePort: "30001"
@@ -218,7 +246,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.9.1"
+      defaultCliVersion: "0.9.5"
 
     metadata_service_authentication:
       enabled: false

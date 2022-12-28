@@ -9,7 +9,7 @@ revisionHistoryLimit: 10
 image:
   repository: linkedin/datahub-mce-consumer
   pullPolicy: IfNotPresent
-  tag: head
+  tag:
 
 imagePullSecrets: []
 nameOverride: ""
@@ -163,6 +163,7 @@ global:
       url: "http://schema-registry:8081"
 
   datahub:
+    version: head
     monitoring:
       enablePrometheus: false
     gms:

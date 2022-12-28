@@ -8,7 +8,7 @@ revisionHistoryLimit: 10
 
 image:
   repository: linkedin/datahub-frontend-react
-  tag: "head"
+  tag:
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -199,6 +199,7 @@ global:
       server: "broker:9092"
 
   datahub:
+    version: head
     gms:
       port: "8080"
     appVersion: "1.0"

@@ -79,12 +79,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
-            limits:
-              cpu: 500m
-              memory: 512Mi
-            requests:
-              cpu: 300m
-              memory: 256Mi
+            {{- toYaml .Values.mysqlSetupJob.resources | nindent 12 }}
       {{- with .Values.mysqlSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

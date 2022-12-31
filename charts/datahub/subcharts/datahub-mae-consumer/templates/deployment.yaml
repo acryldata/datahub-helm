@@ -132,6 +132,10 @@ spec:
             - name: INDEX_PREFIX
               value: {{ . }}
             {{- end }}
+            {{- if .Values.global.elasticsearch.index.upgrade.enabled }}
+            - name: BUILD_INDICES_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: {{ printf "%s-%s" .Release.Name "bihe-consumer-job-client-mcl" }}
+            {{- end }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}
             {{- if eq .Values.global.graph_service_impl "neo4j" }}

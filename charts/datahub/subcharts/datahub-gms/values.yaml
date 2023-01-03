@@ -126,6 +126,12 @@ global:
     port: "9200"
     skipcheck: "false"
 
+    ## Settings for supporting datahub-upgrade job for index creation/reindex
+    index:
+      ## The following options control settings for datahub-upgrade job when creating or reindexing indices
+      upgrade:
+        enabled: true
+
   kafka:
     bootstrap:
       server: "broker:9092"

@@ -152,6 +152,10 @@ spec:
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
               value: {{ . | quote }}
             {{- end }}
+            {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: {{ . | quote }}
+            {{- end }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}
             {{- if eq .Values.global.graph_service_impl "neo4j" }}

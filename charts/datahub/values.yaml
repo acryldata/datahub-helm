@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.9.3 # defaults to .global.datahub.version
+    # tag: "v0.9.5 # defaults to .global.datahub.version
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:
@@ -17,7 +17,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.9.3" # # defaults to .global.datahub.version
+    # tag: "v0.9.5" # # defaults to .global.datahub.version
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -37,24 +37,24 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
 
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -72,7 +72,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -90,7 +90,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -113,7 +113,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.9.3" # defaults to .global.datahub.version
+    # tag: "v0.9.5" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -136,7 +136,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.9.3"  # defaults to .global.datahub.version, v0.9.5 broken due to https://github.com/datahub-project/datahub/pull/6381
+    tag: "v0.9.5"  # defaults to .global.datahub.version, v0.9.5 broken due to https://github.com/datahub-project/datahub/pull/6381
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
@@ -156,6 +156,27 @@ datahubUpgrade:
         cpu: 300m
         memory: 256Mi
 
+## Elasticsearch Indices Creation/Reindex
+## ** This feature is currently under development **
+## See global.elasticsearch.index for additional configuration
+datahubUpgradeBuildIndices:
+  enabled: false
+  image:
+    repository: acryldata/datahub-upgrade
+    # tag:
+  podSecurityContext: {}
+    # fsGroup: 1000
+  securityContext: {}
+    # runAsUser: 1000
+  podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+
 global:
   graph_service_impl: neo4j
   datahub_analytics_enabled: true
@@ -167,6 +188,44 @@ global:
     skipcheck: "false"
     insecure: "false"
     useSSL: "false"
+
+    ## The following section controls when and how reindexing of elasticsearch indices are performed
+    index:
+      ## Enable reindexing when mappings change based on the data model annotations
+      enableMappingsReindex: false
+
+      ## Enable reindexing when static index settings change.
+      ## Dynamic settings which do not require reindexing are not affected
+      ## Primarily this should be enabled when re-sharding is necessary for scaling/performance.
+      enableSettingsReindex: false
+
+      ## Index settings can be overridden for entity indices or other indices on an index by index basis
+      ## Some index settings, such as # of shards, requires reindexing while others, i.e. replicas, do not
+      ## Non-Entity indices do not require the prefix
+      # settingsOverrides: '{"graph_service_v1":{"number_of_shards":"5"},"system_metadata_service_v1":{"number_of_shards":"5"}}'
+      ## Entity indices do not require the prefix or suffix
+      # entitySettingsOverrides: '{"dataset":{"number_of_shards":"10"}}'
+
+      ## The amount of delay between indexing a document and having it returned in queries
+      ## Increasing this value can improve performance when ingesting large amounts of data
+      # refreshIntervalSeconds: 1
+
+      ## The following options control settings for datahub-upgrade job when creating or reindexing indices
+      upgrade:
+        enabled: true
+
+        ## When reindexing is required, this option will clone the existing index as a backup
+        ## The clone indices are not currently managed.
+        # cloneIndices: true
+
+        ## Typically when reindexing the document counts between the original and destination indices should match.
+        ## In some cases reindexing might not be able to proceed due to incompatibilities between a document in the
+        ## orignal index and the new index's mappings. This document could be dropped and re-ingested or restored from
+        ## the SQL database.
+        ##
+        ## This setting allows continuing if and only if the cloneIndices setting is also enabled which
+        ## ensures a complete backup of the original index is preserved.
+        # allowDocCountMismatch: false
 
   kafka:
     bootstrap:

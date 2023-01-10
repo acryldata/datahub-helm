@@ -192,12 +192,12 @@ global:
     ## The following section controls when and how reindexing of elasticsearch indices are performed
     index:
       ## Enable reindexing when mappings change based on the data model annotations
-      enableMappingsReindex: false
+      enableMappingsReindex: true
 
       ## Enable reindexing when static index settings change.
       ## Dynamic settings which do not require reindexing are not affected
       ## Primarily this should be enabled when re-sharding is necessary for scaling/performance.
-      enableSettingsReindex: false
+      enableSettingsReindex: true
 
       ## Index settings can be overridden for entity indices or other indices on an index by index basis
       ## Some index settings, such as # of shards, requires reindexing while others, i.e. replicas, do not

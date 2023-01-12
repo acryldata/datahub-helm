@@ -55,6 +55,7 @@ elasticsearchSetupJob:
   image:
     repository: linkedin/datahub-elasticsearch-setup
     # tag: "v0.9.5" # defaults to .global.datahub.version
+  ttlSecondsAfterFinished: 30
   resources:
     limits:
       cpu: 500m
@@ -73,6 +74,7 @@ kafkaSetupJob:
   image:
     repository: linkedin/datahub-kafka-setup
     # tag: "v0.9.5" # defaults to .global.datahub.version
+  ttlSecondsAfterFinished: 30
   resources:
     limits:
       cpu: 500m
@@ -91,6 +93,7 @@ mysqlSetupJob:
   image:
     repository: acryldata/datahub-mysql-setup
     # tag: "v0.9.5" # defaults to .global.datahub.version
+  ttlSecondsAfterFinished: 30
   resources:
     limits:
       cpu: 500m
@@ -114,6 +117,7 @@ postgresqlSetupJob:
   image:
     repository: acryldata/datahub-postgres-setup
     # tag: "v0.9.5" # defaults to .global.datahub.version
+  ttlSecondsAfterFinished: 30
   resources:
     limits:
       cpu: 500m
@@ -137,6 +141,7 @@ datahubUpgrade:
   image:
     repository: acryldata/datahub-upgrade
     tag: "v0.9.5"  # defaults to .global.datahub.version, v0.9.5 broken due to https://github.com/datahub-project/datahub/pull/6381
+  ttlSecondsAfterFinished: 30
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:

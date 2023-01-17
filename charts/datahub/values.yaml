@@ -237,7 +237,7 @@ global:
     # replicationFactor: 3
     schemaregistry:
       url: "http://prerequisites-cp-schema-registry:8081"
-      # type: AWS_GLUE
+      type: KAFKA
       # glue:
       #   region: us-east-1
       #   registry: datahub

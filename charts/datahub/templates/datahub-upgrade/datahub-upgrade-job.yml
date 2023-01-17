@@ -60,8 +60,8 @@ spec:
       {{- end }}
       containers:
         - name: datahub-upgrade-job
-          image: "{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
-          imagePullPolicy: {{ .Values.datahubUpgrade.imagePullPolicy | default "IfNotPresent" }}
+          image: "{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" ($.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
+          imagePullPolicy: {{ .Values.datahubUpgrade.image.pullPolicy | default "IfNotPresent" }}
           args:
             - "-u"
             - "NoCodeDataMigration"

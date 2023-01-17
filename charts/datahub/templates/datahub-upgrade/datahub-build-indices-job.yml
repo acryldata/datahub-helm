@@ -61,7 +61,7 @@ spec:
       containers:
         - name: datahub-build-indices-job
           image: "{{ .Values.datahubUpgradeBuildIndices.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgradeBuildIndices.image.tag | default .Values.global.datahub.version) }}"
-          imagePullPolicy: {{ .Values.datahubUpgradeBuildIndices.imagePullPolicy | default "IfNotPresent" }}
+          imagePullPolicy: {{ .Values.datahubUpgradeBuildIndices.image.pullPolicy | default "IfNotPresent" }}
           args:
             - "-u"
             - "BuildIndices"

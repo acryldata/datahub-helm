@@ -51,7 +51,7 @@ spec:
       containers:
         - name: postgresql-setup-job
           image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.postgresqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
-          imagePullPolicy: {{ .Values.postgresqlSetupJob.imagePullPolicy | default "Always" }}
+          imagePullPolicy: {{ .Values.postgresqlSetupJob.image.pullPolicy | default "Always" }}
           env:
             - name: POSTGRES_USERNAME
               value: {{ .Values.postgresqlSetupJob.username | default .Values.global.sql.datasource.username | quote }}

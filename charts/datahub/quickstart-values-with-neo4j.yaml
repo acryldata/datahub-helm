@@ -4,13 +4,15 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -32,31 +34,36 @@ elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    tag: "v0.9.5"
+    # tag: "v0.9.6 # defaults to .global.datahub.version
+
 
 global:
   graph_service_impl: neo4j
@@ -94,6 +101,7 @@ global:
         secretKey: mysql-root-password
 
   datahub:
+    version: v0.9.6
     gms:
       port: "8080"
     mae_consumer:

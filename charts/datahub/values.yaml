@@ -136,7 +136,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    #tag: "v0.9.6"  # defaults to .global.datahub.version
+    # tag: "v0.9.6"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:

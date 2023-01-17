@@ -5,6 +5,12 @@ datahub-gms:
   image:
     repository: linkedin/datahub-gms
     # tag: "v0.9.6 # defaults to .global.datahub.version
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:
@@ -18,6 +24,12 @@ datahub-frontend:
   image:
     repository: linkedin/datahub-frontend-react
     # tag: "v0.9.6" # # defaults to .global.datahub.version
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -38,11 +50,23 @@ datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
     # tag: "v0.9.6" # defaults to .global.datahub.version
+  resources:
+    limits:
+      memory: 1536Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
     # tag: "v0.9.6" # defaults to .global.datahub.version
+  resources:
+    limits:
+      memory: 1536Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
 datahub-ingestion-cron:
   enabled: false

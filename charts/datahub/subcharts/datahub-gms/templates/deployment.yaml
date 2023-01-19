@@ -62,6 +62,11 @@ spec:
               containerPort: 4318
               protocol: TCP
           {{- end }}
+          {{- if gt .Values.replicaCount 1.0}}
+            - name: hazelcast
+              containerPort: 5701
+              protocol: TCP
+          {{- end}}
           livenessProbe:
             httpGet:
               path: /health
@@ -77,6 +82,12 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if gt .Values.replicaCount 1.0}}
+            - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
+              value: "hazelcast"
+            - name: SEARCH_SERVICE_HAZELCAST_SERVICE_NAME
+              value: {{ printf "%s-%s" .Release.Name "hazelcast-service" }}
+            {{- end}}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: ENABLE_PROMETHEUS
               value: "true"

@@ -1,0 +1,16 @@
+{{- if gt .Values.replicaCount 1.0}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "hazelcast-service" }}
+spec:
+  clusterIP: None
+  ports:
+    - name: hazelcast
+      port: 5701
+      protocol: TCP
+      targetPort: 5701
+  selector:
+    app.kubernetes.io/name: {{- include "datahub-gms.name" . | nindent 6 }}
+  type: ClusterIP
+{{- end}}

@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.9.6 # defaults to .global.datahub.version
+    # tag: "v0.9.6.1 # defaults to .global.datahub.version
   resources:
     limits:
       memory: 2Gi
@@ -23,7 +23,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.9.6" # # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # # defaults to .global.datahub.version
   resources:
     limits:
       memory: 512Mi
@@ -49,7 +49,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -60,7 +60,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -72,7 +72,7 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
@@ -96,7 +96,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -114,7 +114,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -137,7 +137,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.9.6.1" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -160,7 +160,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.9.6"  # defaults to .global.datahub.version
+    # tag: "v0.9.6.1"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:

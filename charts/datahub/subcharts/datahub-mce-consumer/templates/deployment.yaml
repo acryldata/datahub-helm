@@ -101,11 +101,6 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- end }}
-            # TODO: Remove DATAHUB_GMS_HOST/PORT after v0.9.6
-            - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
-            - name: DATAHUB_GMS_PORT
-              value: "{{ .Values.global.datahub.gms.port }}"
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-mce-consumer/resources/entity-registry.yml
             - name: EBEAN_DATASOURCE_USERNAME

@@ -26,10 +26,10 @@ datahub-frontend:
     # tag: "v0.9.6.1" # # defaults to .global.datahub.version
   resources:
     limits:
-      memory: 512Mi
+      memory: 1400Mi
     requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 512Mi
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
@@ -302,7 +302,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.9.6
+    version: v0.9.6.1
     gms:
       port: "8080"
       nodePort: "30001"

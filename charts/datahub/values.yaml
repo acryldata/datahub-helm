@@ -273,6 +273,8 @@ global:
     password:
       secretRef: neo4j-secrets
       secretKey: neo4j-password
+    # --------------OR----------------
+    # value: password
 
   sql:
     datasource:

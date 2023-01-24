@@ -175,6 +175,16 @@ global:
       #  secretRef: <secret-ref>
       #  secretKey: <secret-key>
 
+  sql:
+    datasource:
+      host: "mysql:3306"
+      url: "jdbc:mysql://mysql:3306/datahub?verifyServerCertificate=false&useSSL=true"
+      driver: "com.mysql.cj.jdbc.Driver"
+      username: "datahub"
+      password:
+        secretRef: "mysql-secrets"
+        secretKey: "mysql-password"
+
   hostAliases:
     - ip: "192.168.0.104"
       hostnames:

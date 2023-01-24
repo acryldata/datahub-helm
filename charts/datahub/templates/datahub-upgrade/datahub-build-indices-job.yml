@@ -1,0 +1,216 @@
+{{- if .Values.datahubUpgradeBuildIndices.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-datahub-build-indices-job
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    {{- if or .Values.global.podLabels .Values.datahubUpgradeBuildIndices.podAnnotations}}
+    metadata:
+    {{- with .Values.datahubUpgradeBuildIndices.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.global.podLabels }}
+      labels:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    spec:
+    {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.datahubUpgradeBuildIndices.serviceAccount }}
+      serviceAccountName: {{ . }}
+    {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: {{ .name }}
+        {{- end }}
+      {{- with .Values.datahubUpgradeBuildIndices.extraVolumes }}
+        {{- toYaml . | nindent 8}}
+      {{- end }}
+      restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.datahubUpgradeBuildIndices.podSecurityContext | nindent 8 }}
+      initContainers:
+      {{- with .Values.datahubUpgradeBuildIndices.extraInitContainers }}
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      containers:
+        - name: datahub-build-indices-job
+          image: "{{ .Values.datahubUpgradeBuildIndices.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgradeBuildIndices.image.tag | default .Values.global.datahub.version) }}"
+          imagePullPolicy: {{ .Values.datahubUpgradeBuildIndices.image.pullPolicy | default "IfNotPresent" }}
+          args:
+            - "-u"
+            - "BuildIndices"
+          env:
+            {{- include "datahub.upgrade.env" . | nindent 12}}
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: EBEAN_DATASOURCE_USERNAME
+              value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
+            - name: EBEAN_DATASOURCE_PASSWORD
+              {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
+              {{- if $passwordValue }}
+              value: {{ $passwordValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ (.Values.sql).datasource.password.secretRef | default .Values.global.sql.datasource.password.secretRef }}"
+                  key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
+              {{- end }}
+            - name: EBEAN_DATASOURCE_HOST
+              value: "{{ .Values.global.sql.datasource.host }}"
+            - name: EBEAN_DATASOURCE_URL
+              value: "{{ .Values.global.sql.datasource.url }}"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "{{ .Values.global.sql.datasource.driver }}"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- with .Values.global.kafka.schemaregistry.url }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.type }}
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.glue }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_REGION
+              value: "{{ .region }}"
+            {{- with .registry }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_NAME
+              value: "{{ . }}"
+            {{- end }}
+            {{- end }}
+            - name: ELASTICSEARCH_HOST
+              value: "{{ .Values.global.elasticsearch.host }}"
+            - name: ELASTICSEARCH_PORT
+              value: "{{ .Values.global.elasticsearch.port }}"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "{{ .Values.global.elasticsearch.skipcheck }}"
+            {{- with .Values.global.elasticsearch.useSSL }}
+            - name: ELASTICSEARCH_USE_SSL
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.auth }}
+            - name: ELASTICSEARCH_USERNAME
+              value: {{ .username }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .password.secretRef }}"
+                  key: "{{ .password.secretKey }}"
+            {{- end }}
+            {{- with .Values.global.elasticsearch.indexPrefix }}
+            - name: INDEX_PREFIX
+              value: {{ . }}
+            {{- end }}
+            - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneIndices | quote }}
+            {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.enableSettingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.settingsOverrides }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.entitySettingsOverrides }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.refreshIntervalSeconds }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: {{ . | quote }}
+            {{- end }}
+            - name: GRAPH_SERVICE_IMPL
+              value: {{ .Values.global.graph_service_impl }}
+            {{- if eq .Values.global.graph_service_impl "neo4j" }}
+            - name: NEO4J_HOST
+              value: "{{ .Values.global.neo4j.host }}"
+            - name: NEO4J_URI
+              value: "{{ .Values.global.neo4j.uri }}"
+            - name: NEO4J_USERNAME
+              value: "{{ .Values.global.neo4j.username }}"
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.neo4j.password.secretRef }}"
+                  key: "{{ .Values.global.neo4j.password.secretKey }}"
+            {{- end }}
+            {{- if .Values.global.springKafkaConfigurationOverrides }}
+            {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
+              value: {{ $configValue | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.credentialsAndCertsSecrets }}
+            {{- range $envVarName, $envVarValue := .Values.global.credentialsAndCertsSecrets.secureEnv }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $envVarName | replace "." "_" | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
+                  key: {{ $envVarValue }}
+            {{- end }}
+            {{- end }}
+          {{- with .Values.datahubUpgradeBuildIndices.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.datahubUpgradeBuildIndices.securityContext | nindent 12 }}
+          volumeMounts:
+          {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: datahub-certs-dir
+              mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- with .Values.datahubUpgradeBuildIndices.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.datahubUpgradeBuildIndices.resources | nindent 12 }}
+      {{- with .Values.datahubUpgradeBuildIndices.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- with .Values.datahubUpgradeBuildIndices.affinity }}
+      affinity:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- with .Values.datahubUpgradeBuildIndices.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+{{- end -}}

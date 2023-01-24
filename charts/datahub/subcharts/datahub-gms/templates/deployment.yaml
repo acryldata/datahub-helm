@@ -152,6 +152,10 @@ spec:
             - name: INDEX_PREFIX
               value: {{ . }}
             {{- end }}
+            {{- if .Values.global.elasticsearch.index.upgrade.enabled }}
+            - name: BUILD_INDICES_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: {{ printf "%s-%s" .Release.Name "bihe-consumer-job-client-gms" }}
+            {{- end }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}
             {{- if eq .Values.global.graph_service_impl "neo4j" }}
@@ -225,6 +229,14 @@ spec:
             {{- end }}
             - name: SEARCH_SERVICE_ENABLE_CACHE
               value: {{ .Values.global.datahub.enable_search_cache | quote }}
+            {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.enableSettingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

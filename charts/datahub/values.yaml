@@ -256,6 +256,8 @@ global:
       server: "prerequisites-kafka:9092"
     zookeeper:
       server: "prerequisites-zookeeper:2181"
+    # This section defines the names for the kafka topics that DataHub depends on, at a global level. Do not override this config 
+    # at a sub-chart level.
     topics:
       metadata_change_event_name: "MetadataChangeEvent_v4"
       failed_metadata_change_event_name: "FailedMetadataChangeEvent_v4"

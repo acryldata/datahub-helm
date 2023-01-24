@@ -179,7 +179,7 @@ spec:
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://accounts.google.com/.well-known/openid-configuration
             - name: AUTH_OIDC_SCOPE
-              value: "openid profile email"
+              value: {{ .scope | default "openid profile email" }}
             - name: AUTH_OIDC_USER_NAME_CLAIM
               value: email
             - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
@@ -188,12 +188,12 @@ spec:
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://{{ .oktaDomain }}/.well-known/openid-configuration
             - name: AUTH_OIDC_SCOPE
-              value: "openid profile email groups"
+              value: {{ .scope | default "openid profile email groups" }}
             {{- else if eq .provider "azure" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://login.microsoftonline.com/{{ .azureTenantId }}/v2.0/.well-known/openid-configuration
             - name: AUTH_OIDC_SCOPE
-              value: "openid profile email"
+              value: {{ .scope | default "openid profile email" }}
             {{- else }}
             {{- fail (printf "unsupported .oidcAuthentication.provider value '%s'" .provider) }}
             {{- end }}

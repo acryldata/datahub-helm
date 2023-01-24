@@ -72,6 +72,7 @@ ingress:
 oidcAuthentication:
   enabled: false
   # provider: google/okta/azure  <- choose only one
+
   # clientId: your-client-id
   # clientSecret: your-client-secret
   # only needed if you would like to store the client secret in secret
@@ -81,8 +82,10 @@ oidcAuthentication:
   # only needed if provider is `okta`
   # oktaDomain: your-okta-domain.com
 
-  # only neede if provider is `azure`
+  # only needed if provider is `azure`
   # azureTenantId: your-azure-tenant-id
+  # if needed, it should set meaningful defaults from provider
+  # scope: "openid profile email"
 
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env

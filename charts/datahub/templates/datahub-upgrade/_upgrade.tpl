@@ -102,4 +102,20 @@ Return the env variables for upgrade jobs
       key: {{ $envVarValue }}
 {{- end }}
 {{- end }}
+{{- with .Values.global.kafka.topics }}
+- name: METADATA_CHANGE_EVENT_NAME
+  value: {{ .metadata_change_event_name }}
+- name: FAILED_METADATA_CHANGE_EVENT_NAME
+  value: {{ .failed_metadata_change_event_name }}
+- name: METADATA_AUDIT_EVENT_NAME
+  value: {{ .metadata_audit_event_name }}
+- name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+  value: {{ .metadata_change_proposal_topic_name }}
+- name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+  value: {{ .failed_metadata_change_proposal_topic_name }}
+- name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+  value: {{ .metadata_change_log_versioned_topic_name }}
+- name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+  value: {{ .metadata_change_log_timeseries_topic_name }}
+{{- end }}
 {{- end -}}

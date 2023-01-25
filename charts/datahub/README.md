@@ -79,6 +79,15 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.elasticsearch.port | string | `"9200"` | Elasticsearch port |
 | global.kafka.bootstrap.server | string | `"prerequisites-broker:9092"` | Kafka bootstrap servers (with port) |
 | global.kafka.zookeeper.server | string | `"prerequisites-zookeeper:2181"` | Kafka zookeeper servers (with port) |
+| global.kafka.topics.metadata_change_event_name | string | `"MetadataChangeEvent_v4"` | Kafka topic name for Metadata Change Events (deprecated) |
+| global.kafka.topics.failed_metadata_change_event_name | string | `"FailedMetadataChangeEvent_v4"` | Kafka topic name for Failed Metadata Change events (deprecated) |
+| global.kafka.topics.metadata_audit_event_name | string | `"MetadataAuditEvent_v4"` | Kafka topic name for Metadata Audit events (deprecated) |
+| global.kafka.topics.datahub_usage_event_name | string | `"DataHubUsageEvent_v1"` | Kafka topic name for DataHub Usage events |
+| global.kafka.topics.metadata_change_proposal_topic_name | string | `"MetadataChangeProposal_v1"` | Kafka topic name for Metadata Change Proposal events |
+| global.kafka.topics.failed_metadata_change_proposal_topic_name | string | `"FailedMetadataChangeProposal_v1"` | Kafka topic name for Failed Metadata Change Proposal events |
+| global.kafka.topics.metadata_change_log_versioned_topic_name | string | `"MetadataChangeLog_Versioned_v1"` | Kafka topic name for Versioned Metadata Change Log events |
+| global.kafka.topics.metadata_change_log_timeseries_topic_name | string | `"MetadataChangeLog_Timeseries_v1"` | Kafka topic name for Timeseries Metadata Change Log events |
+| global.kafka.topics.platform_event_topic_name | string | `"PlatformEvent_v1"` | Kafka topic name for Platform events |
 | global.kafka.schemaregistry.url | string | `"http://prerequisites-cp-schema-registry:8081"` | URL to kafka schema registry |
 | global.neo4j.host | string | `"prerequisites-neo4j:7474"` | Neo4j host address (with port) |
 | global.neo4j.uri | string | `"bolt://prerequisites-neo4j"` | Neo4j URI |

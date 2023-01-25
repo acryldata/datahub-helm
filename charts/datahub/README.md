@@ -22,7 +22,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 |-----|------|---------|-------------|
 | datahub-frontend.enabled | bool | `true` | Enable Datahub Front-end |
 | datahub-frontend.image.repository | string | `"linkedin/datahub-frontend-react"` | Image repository for datahub-frontend |
-| datahub-frontend.image.tag | string | `".1"` | Image tag for datahub-frontend |
+| datahub-frontend.image.tag | string | `"v0.9.6.1"` | Image tag for datahub-frontend |
 | datahub-frontend.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-frontend |
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |

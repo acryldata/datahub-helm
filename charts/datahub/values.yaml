@@ -156,6 +156,7 @@ postgresqlSetupJob:
   #   secretRef: postgresqlSetupJob-secret
   #   secretKey: postgresqlSetupJob-password
 
+## No code data migration
 datahubUpgrade:
   enabled: true
   image:
@@ -180,11 +181,10 @@ datahubUpgrade:
         cpu: 300m
         memory: 256Mi
 
-## Elasticsearch Indices Creation/Reindex
-## ** This feature is currently under development **
-## See global.elasticsearch.index for additional configuration
-datahubUpgradeBuildIndices:
-  enabled: false
+## Runs system update processes
+## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
+datahubSystemUpdate:
+  enabled: true
   image:
     repository: acryldata/datahub-upgrade
     # tag:
@@ -236,11 +236,9 @@ global:
 
       ## The following options control settings for datahub-upgrade job when creating or reindexing indices
       upgrade:
-        enabled: true
-
         ## When reindexing is required, this option will clone the existing index as a backup
         ## The clone indices are not currently managed.
-        # cloneIndices: true
+        cloneIndices: true
 
         ## Typically when reindexing the document counts between the original and destination indices should match.
         ## In some cases reindexing might not be able to proceed due to incompatibilities between a document in the
@@ -249,7 +247,7 @@ global:
         ##
         ## This setting allows continuing if and only if the cloneIndices setting is also enabled which
         ## ensures a complete backup of the original index is preserved.
-        # allowDocCountMismatch: false
+        allowDocCountMismatch: false
 
   kafka:
     bootstrap:
@@ -315,6 +313,10 @@ global:
       nodePort: "30002"
 
     appVersion: "1.0"
+    systemUpdate:
+      ## The following options control settings for datahub-upgrade job which will
+      ## managed ES indices and other update related work
+      enabled: true
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"

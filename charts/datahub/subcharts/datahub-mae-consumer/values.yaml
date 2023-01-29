@@ -161,12 +161,6 @@ global:
     port: "9200"
     skipcheck: "false"
 
-    ## Settings for supporting datahub-upgrade job for index creation/reindex
-    index:
-      ## The following options control settings for datahub-upgrade job when creating or reindexing indices
-      upgrade:
-        enabled: true
-
   kafka:
     bootstrap:
       server: "broker:9092"
@@ -185,6 +179,11 @@ global:
     version: head
     monitoring:
       enablePrometheus: false
+
+    systemUpdate:
+      ## The following options control settings for datahub-upgrade job which will
+      ## managed ES indices and other update related work
+      enabled: true
 
     mae_consumer:
       port: "9091"

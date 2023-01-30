@@ -202,7 +202,7 @@ datahubSystemUpdate:
       memory: 256Mi
 
 global:
-  graph_service_impl: neo4j
+  graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
 

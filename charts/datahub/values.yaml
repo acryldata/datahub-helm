@@ -184,7 +184,6 @@ datahubUpgrade:
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
 datahubSystemUpdate:
-  enabled: true
   image:
     repository: acryldata/datahub-upgrade
     # tag:
@@ -328,7 +327,9 @@ global:
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
-      enabled: true
+
+      # Enable on v0.9.7 release
+      enabled: false
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"

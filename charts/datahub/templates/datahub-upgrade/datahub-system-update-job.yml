@@ -1,4 +1,4 @@
-{{- if .Values.datahubSystemUpdate.enabled -}}
+{{- if .Values.global.datahub.systemUpdate.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:

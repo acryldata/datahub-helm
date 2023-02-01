@@ -175,6 +175,11 @@ global:
       #  secretRef: <secret-ref>
       #  secretKey: <secret-key>
 
+    systemUpdate:
+      ## The following options control settings for datahub-upgrade job which will
+      ## managed ES indices and other update related work
+      enabled: true
+
   sql:
     datasource:
       host: "mysql:3306"

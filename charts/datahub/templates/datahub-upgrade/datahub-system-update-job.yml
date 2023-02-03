@@ -11,7 +11,7 @@ metadata:
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
-    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "-4"
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
@@ -66,6 +66,10 @@ spec:
             - "-u"
             - "SystemUpdate"
           env:
+            {{- with .Values.global.kafka.topics }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
+            {{- end }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12}}

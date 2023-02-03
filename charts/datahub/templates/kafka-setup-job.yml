@@ -97,6 +97,8 @@ spec:
               value: {{ .metadata_change_log_timeseries_topic_name }}
             - name: PLATFORM_EVENT_TOPIC_NAME
               value: {{ .platform_event_topic_name }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
             {{- end }}
             {{- with .Values.global.kafka.partitions }}
             - name: PARTITIONS

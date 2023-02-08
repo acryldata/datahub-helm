@@ -78,10 +78,14 @@ Return the env variables for upgrade jobs
 - name: NEO4J_USERNAME
   value: "{{ .Values.global.neo4j.username }}"
 - name: NEO4J_PASSWORD
+  {{- if .Values.global.neo4j.password.value }}
+  value: {{ .Values.global.neo4j.password.value | quote }}
+  {{- else }}
   valueFrom:
     secretKeyRef:
       name: "{{ .Values.global.neo4j.password.secretRef }}"
       key: "{{ .Values.global.neo4j.password.secretKey }}"
+  {{- end }}
 {{- end }}
 {{- if .Values.global.springKafkaConfigurationOverrides }}
 {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}

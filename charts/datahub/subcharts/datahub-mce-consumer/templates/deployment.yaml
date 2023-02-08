@@ -77,6 +77,12 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.datahub.systemUpdate.enabled }}
+            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: {{ printf "%s-%s" .Release.Name "duhe-consumer-job-client-mcp" }}
+            - name: DATAHUB_REVISION
+              value: {{ .Release.Revision | quote }}
+            {{- end }}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: ENABLE_PROMETHEUS
               value: "true"
@@ -101,11 +107,6 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- end }}
-            # TODO: Remove DATAHUB_GMS_HOST/PORT after v0.9.6
-            - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
-            - name: DATAHUB_GMS_PORT
-              value: "{{ .Values.global.datahub.gms.port }}"
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-mce-consumer/resources/entity-registry.yml
             - name: EBEAN_DATASOURCE_USERNAME
@@ -189,6 +190,22 @@ spec:
                   name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
                   key: {{ $envVarValue }}
             {{- end }}
+            {{- end }}
+            {{- with .Values.global.kafka.topics }}
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: {{ .metadata_change_event_name }}
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: {{ .failed_metadata_change_event_name }}
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .metadata_change_proposal_topic_name }}
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .failed_metadata_change_proposal_topic_name }}
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: {{ .metadata_change_log_versioned_topic_name }}
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: {{ .metadata_change_log_timeseries_topic_name }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
             {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}

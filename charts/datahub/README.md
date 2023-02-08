@@ -22,17 +22,17 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 |-----|------|---------|-------------|
 | datahub-frontend.enabled | bool | `true` | Enable Datahub Front-end |
 | datahub-frontend.image.repository | string | `"linkedin/datahub-frontend-react"` | Image repository for datahub-frontend |
-| datahub-frontend.image.tag | string | `"v0.9.6"` | Image tag for datahub-frontend |
+| datahub-frontend.image.tag | string | `"v0.9.6.1"` | Image tag for datahub-frontend |
 | datahub-frontend.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-frontend |
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |
-| datahub-gms.image.tag | string | `"v0.9.6"` | Image tag for datahub-gms |
+| datahub-gms.image.tag | string | `"v0.9.6.1"` | Image tag for datahub-gms |
 | datahub-gms.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-gms |
 | datahub-mae-consumer.image.repository | string | `"linkedin/datahub-mae-consumer"` | Image repository for datahub-mae-consumer |
-| datahub-mae-consumer.image.tag | string | `"v0.9.6"` | Image tag for datahub-mae-consumer |
+| datahub-mae-consumer.image.tag | string | `"v0.9.6.1"` | Image tag for datahub-mae-consumer |
 | datahub-mae-consumer.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-mae-consumer |
 | datahub-mce-consumer.image.repository | string | `"linkedin/datahub-mce-consumer"` | Image repository for datahub-mce-consumer |
-| datahub-mce-consumer.image.tag | string | `"v0.9.6"` | Image tag for datahub-mce-consumer |
+| datahub-mce-consumer.image.tag | string | `"v0.9.6.1"` | Image tag for datahub-mce-consumer |
 | datahub-mce-consumer.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-mce-consumer |
 | datahub-ingestion-cron.enabled | bool | `false` | Enable cronjob for periodic ingestion |
 | datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
@@ -41,7 +41,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahubUpgrade.restoreIndices.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'restore indices' |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
-| elasticsearchSetupJob.image.tag | string | `"v0.9.6"` | Image repository for elasticsearchSetupJob |
+| elasticsearchSetupJob.image.tag | string | `"v0.9.6.1"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for elasticsearchSetupJob |
 | elasticsearchSetupJob.resources | object | '{}' | Kube Resource definitions for elasticsearchSetupJob |
 | elasticsearchSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for elasticsearchSetupJob |
@@ -49,7 +49,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | elasticsearchSetupJob.podAnnotations | object | `{}` | Pod annotations for elasticsearchSetupJob |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
-| kafkaSetupJob.image.tag | string | `"v0.9.6"` | Image repository for kafkaSetupJob |
+| kafkaSetupJob.image.tag | string | `"v0.9.6.1"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for kafkaSetupJob|
 | kafkaSetupJob.resources | object | '{}' | Kube Resource definitions for kafkaSetupJob |
 | kafkaSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for kafkaSetupJob |
@@ -57,7 +57,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | kafkaSetupJob.podAnnotations | object | `{}` | Pod annotations for kafkaSetupJob |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
-| mysqlSetupJob.image.tag | string | `"v0.9.6"` | Image repository for mysqlSetupJob |
+| mysqlSetupJob.image.tag | string | `"v0.9.6.1"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for mysqlSetupJob|
 | mysqlSetupJob.resources | object | '{}' | Kube Resource definitions for mysqlSetupJob |
 | mysqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
@@ -65,7 +65,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | mysqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
 | postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
 | postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
-| postgresqlSetupJob.image.tag | string | `"v0.9.6"` | Image repository for postgresqlSetupJob |
+| postgresqlSetupJob.image.tag | string | `"v0.9.6.1"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for postgresqlSetupJob|
 | postgresqlSetupJob.resources | object | '{}' | Kube Resource definitions for postgresqlSetupJob |
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
@@ -79,6 +79,15 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.elasticsearch.port | string | `"9200"` | Elasticsearch port |
 | global.kafka.bootstrap.server | string | `"prerequisites-broker:9092"` | Kafka bootstrap servers (with port) |
 | global.kafka.zookeeper.server | string | `"prerequisites-zookeeper:2181"` | Kafka zookeeper servers (with port) |
+| global.kafka.topics.metadata_change_event_name | string | `"MetadataChangeEvent_v4"` | Kafka topic name for Metadata Change Events (deprecated) |
+| global.kafka.topics.failed_metadata_change_event_name | string | `"FailedMetadataChangeEvent_v4"` | Kafka topic name for Failed Metadata Change events (deprecated) |
+| global.kafka.topics.metadata_audit_event_name | string | `"MetadataAuditEvent_v4"` | Kafka topic name for Metadata Audit events (deprecated) |
+| global.kafka.topics.datahub_usage_event_name | string | `"DataHubUsageEvent_v1"` | Kafka topic name for DataHub Usage events |
+| global.kafka.topics.metadata_change_proposal_topic_name | string | `"MetadataChangeProposal_v1"` | Kafka topic name for Metadata Change Proposal events |
+| global.kafka.topics.failed_metadata_change_proposal_topic_name | string | `"FailedMetadataChangeProposal_v1"` | Kafka topic name for Failed Metadata Change Proposal events |
+| global.kafka.topics.metadata_change_log_versioned_topic_name | string | `"MetadataChangeLog_Versioned_v1"` | Kafka topic name for Versioned Metadata Change Log events |
+| global.kafka.topics.metadata_change_log_timeseries_topic_name | string | `"MetadataChangeLog_Timeseries_v1"` | Kafka topic name for Timeseries Metadata Change Log events |
+| global.kafka.topics.platform_event_topic_name | string | `"PlatformEvent_v1"` | Kafka topic name for Platform events |
 | global.kafka.schemaregistry.url | string | `"http://prerequisites-cp-schema-registry:8081"` | URL to kafka schema registry |
 | global.neo4j.host | string | `"prerequisites-neo4j:7474"` | Neo4j host address (with port) |
 | global.neo4j.uri | string | `"bolt://prerequisites-neo4j"` | Neo4j URI |

@@ -11,7 +11,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.10.0.1 # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
   # Set up ingress to expose react front-end
   ingress:

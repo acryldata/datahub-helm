@@ -62,6 +62,11 @@ spec:
               containerPort: 4318
               protocol: TCP
           {{- end }}
+          {{- if gt .Values.replicaCount 1.0}}
+            - name: hazelcast
+              containerPort: 5701
+              protocol: TCP
+          {{- end}}
           livenessProbe:
             httpGet:
               path: /health
@@ -77,6 +82,18 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if gt .Values.replicaCount 1.0}}
+            - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
+              value: "hazelcast"
+            - name: SEARCH_SERVICE_HAZELCAST_SERVICE_NAME
+              value: {{ printf "%s-%s" .Release.Name "hazelcast-service" }}
+            {{- end}}
+            {{- if .Values.global.datahub.systemUpdate.enabled }}
+            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: {{ printf "%s-%s" .Release.Name "duhe-consumer-job-client-gms" }}
+            - name: DATAHUB_REVISION
+              value: {{ .Release.Revision | quote }}
+            {{- end }}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: ENABLE_PROMETHEUS
               value: "true"
@@ -152,10 +169,6 @@ spec:
             - name: INDEX_PREFIX
               value: {{ . }}
             {{- end }}
-            {{- if .Values.global.elasticsearch.index.upgrade.enabled }}
-            - name: BUILD_INDICES_HISTORY_KAFKA_CONSUMER_GROUP_ID
-              value: {{ printf "%s-%s" .Release.Name "bihe-consumer-job-client-gms" }}
-            {{- end }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}
             {{- if eq .Values.global.graph_service_impl "neo4j" }}
@@ -185,6 +198,28 @@ spec:
                   name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
                   key: {{ $envVarValue }}
             {{- end }}
+            {{- end }}
+            {{- with .Values.global.kafka.topics }}
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: {{ .metadata_change_event_name }}
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: {{ .failed_metadata_change_event_name }}
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: {{ .metadata_audit_event_name }}
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: {{ .datahub_usage_event_name }}
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .metadata_change_proposal_topic_name }}
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .failed_metadata_change_proposal_topic_name }}
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: {{ .metadata_change_log_versioned_topic_name }}
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: {{ .metadata_change_log_timeseries_topic_name }}
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: {{ .platform_event_topic_name }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
             {{- end }}
             {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
             - name: METADATA_SERVICE_AUTH_ENABLED

@@ -117,5 +117,7 @@ Return the env variables for upgrade jobs
   value: {{ .metadata_change_log_versioned_topic_name }}
 - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
   value: {{ .metadata_change_log_timeseries_topic_name }}
+- name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+  value: {{ .datahub_upgrade_history_topic_name }}
 {{- end }}
 {{- end -}}

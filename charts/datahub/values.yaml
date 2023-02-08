@@ -156,6 +156,7 @@ postgresqlSetupJob:
   #   secretRef: postgresqlSetupJob-secret
   #   secretKey: postgresqlSetupJob-password
 
+## No code data migration
 datahubUpgrade:
   enabled: true
   image:
@@ -180,11 +181,9 @@ datahubUpgrade:
         cpu: 300m
         memory: 256Mi
 
-## Elasticsearch Indices Creation/Reindex
-## ** This feature is currently under development **
-## See global.elasticsearch.index for additional configuration
-datahubUpgradeBuildIndices:
-  enabled: false
+## Runs system update processes
+## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
+datahubSystemUpdate:
   image:
     repository: acryldata/datahub-upgrade
     # tag:
@@ -202,7 +201,7 @@ datahubUpgradeBuildIndices:
       memory: 256Mi
 
 global:
-  graph_service_impl: neo4j
+  graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
 
@@ -236,11 +235,9 @@ global:
 
       ## The following options control settings for datahub-upgrade job when creating or reindexing indices
       upgrade:
-        enabled: true
-
         ## When reindexing is required, this option will clone the existing index as a backup
         ## The clone indices are not currently managed.
-        # cloneIndices: true
+        cloneIndices: true
 
         ## Typically when reindexing the document counts between the original and destination indices should match.
         ## In some cases reindexing might not be able to proceed due to incompatibilities between a document in the
@@ -249,14 +246,14 @@ global:
         ##
         ## This setting allows continuing if and only if the cloneIndices setting is also enabled which
         ## ensures a complete backup of the original index is preserved.
-        # allowDocCountMismatch: false
+        allowDocCountMismatch: false
 
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"
     zookeeper:
       server: "prerequisites-zookeeper:2181"
-    # This section defines the names for the kafka topics that DataHub depends on, at a global level. Do not override this config 
+    # This section defines the names for the kafka topics that DataHub depends on, at a global level. Do not override this config
     # at a sub-chart level.
     topics:
       metadata_change_event_name: "MetadataChangeEvent_v4"
@@ -268,6 +265,7 @@ global:
       metadata_change_log_versioned_topic_name: "MetadataChangeLog_Versioned_v1"
       metadata_change_log_timeseries_topic_name: "MetadataChangeLog_Timeseries_v1"
       platform_event_topic_name: "PlatformEvent_v1"
+      datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
     ## For AWS MSK set this to a number larger than 1
     # partitions: 3
     # replicationFactor: 3
@@ -329,6 +327,12 @@ global:
       nodePort: "30002"
 
     appVersion: "1.0"
+    systemUpdate:
+      ## The following options control settings for datahub-upgrade job which will
+      ## managed ES indices and other update related work
+
+      # Enable on v0.9.7 release
+      enabled: false
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"

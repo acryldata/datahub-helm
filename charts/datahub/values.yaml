@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.9.6.1 # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
   resources:
     limits:
       memory: 2Gi
@@ -23,7 +23,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.9.6.1" # # defaults to .global.datahub.version
+    # tag: "v0.10.0" # # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1400Mi
@@ -38,7 +38,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.7"
+    tag: "v0.0.11"
   resources:
     limits:
       memory: 512Mi
@@ -49,7 +49,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # tag: "v0.9.6.1" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -60,7 +60,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # tag: "v0.9.6.1" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -72,13 +72,13 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.9.6.1" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: "v0.9.6" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -96,7 +96,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.9.6.1" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -114,7 +114,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.9.6.1" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -137,7 +137,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.9.6.1" # defaults to .global.datahub.version
+    # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -161,7 +161,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.9.6.1"  # defaults to .global.datahub.version
+    # tag: "v0.10.0"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
@@ -314,7 +314,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.9.6.1
+    version: v0.10.0
     gms:
       port: "8080"
       nodePort: "30001"
@@ -330,9 +330,7 @@ global:
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
-
-      # Enable on v0.9.7 release
-      enabled: false
+      enabled: true
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"
@@ -347,7 +345,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.9.6"
+      defaultCliVersion: "0.10.0"
 
     metadata_service_authentication:
       enabled: false

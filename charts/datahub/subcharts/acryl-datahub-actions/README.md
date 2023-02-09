@@ -10,6 +10,7 @@ Current chart version is `0.0.3`
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | exporters.jmx.enabled | boolean | false |  |
+| extraLabels | object | `{}` | Extra labels for deployment configuration |
 | extraEnvs | Extra [environment variables][] which will be appended to the `env:` definition for the container | `[]` |
 | extraVolumes | Templatable string of additional `volumes` to be passed to the `tpl` function | "" |
 | extraVolumeMounts | Templatable string of additional `volumeMounts` to be passed to the `tpl` function | "" |

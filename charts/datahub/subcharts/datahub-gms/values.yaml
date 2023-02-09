@@ -69,6 +69,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Extra labels for Deployment
+extraLabels: {}
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here

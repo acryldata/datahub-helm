@@ -63,6 +63,8 @@ ingress:
 
 # Extra labels for Deployment
 extraLabels: {}
+  # owner: myteam
+  # environment: test
 
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env

@@ -4,6 +4,9 @@ metadata:
   name: {{ include "acryl-datahub-actions.fullname" . }}
   labels:
     {{- include "acryl-datahub-actions.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

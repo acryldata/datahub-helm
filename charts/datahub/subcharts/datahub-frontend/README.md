@@ -12,6 +12,7 @@ Current chart version is `0.2.0`
 | datahub.play.mem.buffer.size | string | `"10MB"` |  |
 | existingGmsSecret | object | {} | Reference to GMS secret if already exists |
 | exporters.jmx.enabled | boolean | false |  |
+| extraLabels | object | `{}` | Extra labels for deployment configuration |
 | extraEnvs | Extra [environment variables][] which will be appended to the `env:` definition for the container | `[]` |
 | extraVolumes | Templatable string of additional `volumes` to be passed to the `tpl` function | "" |
 | extraVolumeMounts | Templatable string of additional `volumeMounts` to be passed to the `tpl` function | "" |

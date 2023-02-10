@@ -34,6 +34,10 @@ service:
   type: ClusterIP
   port: 9093
 
+# Extra labels for Deployment
+extraLabels: {}
+  # owner: myteam
+  # environment: test
 
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
@@ -68,7 +72,7 @@ global:
   datahub:
     gms:
       port: "8080"
-    metadata_service_authentication: 
+    metadata_service_authentication:
       enabled: false
       systemClientId: "__datahub_system"
       # systemClientSecret:

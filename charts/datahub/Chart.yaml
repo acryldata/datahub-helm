@@ -4,8 +4,8 @@ description: A Helm chart for LinkedIn DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-# This is the version number of the application being deployed. This version number should be
 version: 0.2.151
+# This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 0.10.0
 dependencies:

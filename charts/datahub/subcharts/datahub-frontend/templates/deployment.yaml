@@ -133,10 +133,14 @@ spec:
             - name: ELASTIC_CLIENT_USERNAME
               value: {{ .username }}
             - name: ELASTIC_CLIENT_PASSWORD
+              {{- if .password.value }}
+              value: {{ .password.value | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: "{{ .password.secretRef }}"
                   key: "{{ .password.secretKey }}"
+              {{- end }}
             {{- end }}
             {{- with .Values.global.elasticsearch.indexPrefix }}
             - name: ELASTIC_INDEX_PREFIX

@@ -130,6 +130,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.elasticsearch.auth.username | string | `""` | Elasticsearch username |
 | global.elasticsearch.auth.password.secretRef | string | `""` | Secret that contains the elasticsearch password |
 | global.elasticsearch.auth.password.secretKey | string | `""` | Secret key that contains the elasticsearch password |
+| global.elasticsearch.auth.password.value | string | `""` | Alternative to using the secret above, uses raw string value instead |
 | global.kafka.schemaregistry.type | string | `"KAFKA"` | Type of schema registry (KAFKA or AWS_GLUE) |
 | global.kafka.schemaregistry.glue.region | string | `""` | Region of the AWS Glue schema registry |
 | global.kafka.schemaregistry.glue.registry | string | `""` | Name of the AWS Glue schema registry |

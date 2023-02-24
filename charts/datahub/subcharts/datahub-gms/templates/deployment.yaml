@@ -8,7 +8,7 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  {{- if and (gt .Values.replicaCount 1.0) (.Values.global.datahub.managed_ingestion.enabled) (not .Values.global.datahub_standalone_consumers_enabled)}}
+  {{- if and (.Values.global.strict_mode) (gt .Values.replicaCount 1.0) (.Values.global.datahub.managed_ingestion.enabled) (not .Values.global.datahub_standalone_consumers_enabled)}}
   {{- fail "\nManaged ingestion can not be used with multiple GMS instances in non standalone mode. Please enable standalone mode with only 1 MCE replica if you wish to run multiple GMS instances and managed ingestion." }}
   {{- else }}
   replicas:  {{ .Values.replicaCount }}

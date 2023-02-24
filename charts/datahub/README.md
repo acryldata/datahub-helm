@@ -71,6 +71,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | postgresqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | postgresqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
+| global.strict_mode | boolean | true | Enables validations in helm charts to ensure features work as expected. Recommended NOT TO CHANGE. |
 | global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |
 | global.datahub_analytics_enabled | boolean | true | Enable datahub usage analytics |
 | global.datahub.appVersion | string | `"1.0"` | App version for annotation |

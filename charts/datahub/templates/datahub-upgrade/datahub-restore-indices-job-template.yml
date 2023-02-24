@@ -72,24 +72,6 @@ spec:
                 - "-a"
                 - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
               env:
-                - name: EBEAN_DATASOURCE_USERNAME
-                  value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
-                - name: EBEAN_DATASOURCE_PASSWORD
-                  {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
-                  {{- if $passwordValue }}
-                  value: {{ $passwordValue | quote }}
-                  {{- else }}
-                  valueFrom:
-                    secretKeyRef:
-                      name: "{{ (.Values.sql).datasource.password.secretRef | default .Values.global.sql.datasource.password.secretRef }}"
-                      key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
-                  {{- end }}
-                - name: EBEAN_DATASOURCE_HOST
-                  value: "{{ .Values.global.sql.datasource.host }}"
-                - name: EBEAN_DATASOURCE_URL
-                  value: "{{ .Values.global.sql.datasource.url }}"
-                - name: EBEAN_DATASOURCE_DRIVER
-                  value: "{{ .Values.global.sql.datasource.driver }}"
                 {{- include "datahub.upgrade.env" . | nindent 16}}
               {{- with .Values.datahubUpgrade.extraEnvs }}
                 {{- toYaml . | nindent 16 }}

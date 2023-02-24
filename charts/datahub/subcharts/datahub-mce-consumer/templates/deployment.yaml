@@ -4,6 +4,9 @@ metadata:
   name: {{ include "datahub-mce-consumer.fullname" . }}
   labels:
     {{- include "datahub-mce-consumer.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
@@ -54,7 +57,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http 
+            - name: http
               containerPort: 9090
               protocol: TCP
           {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
@@ -141,10 +144,14 @@ spec:
             - name: ELASTICSEARCH_USERNAME
               value: {{ .username }}
             - name: ELASTICSEARCH_PASSWORD
+              {{- if .password.value }}
+              value: {{ .password.value | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: "{{ .password.secretRef }}"
                   key: "{{ .password.secretKey }}"
+              {{- end }}
             {{- end }}
             {{- with .Values.global.elasticsearch.indexPrefix }}
             - name: INDEX_PREFIX

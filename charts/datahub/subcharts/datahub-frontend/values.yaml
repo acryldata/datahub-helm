@@ -87,12 +87,17 @@ oidcAuthentication:
   # if needed, it should set meaningful defaults from provider
   # scope: "openid profile email"
 
+# Extra labels for Deployment
+extraLabels: {}
+  # owner: myteam
+  # environment: test
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
 extraEnvs: []
   # - name: MY_ENVIRONMENT_VAR
- #   value: the_value_goes_here
+  #   value: the_value_goes_here
 
 extraVolumes: []
   # - name: extras

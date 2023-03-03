@@ -370,7 +370,7 @@ global:
       #    secret: <secret value>
       #    signingKey: <signing key value>
       #    salt: <salt value>
-    
+
     ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
     alwaysEmitChangeLog: true
 

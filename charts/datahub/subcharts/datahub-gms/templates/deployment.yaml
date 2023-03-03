@@ -4,8 +4,15 @@ metadata:
   name: {{ include "datahub-gms.fullname" . }}
   labels:
     {{- include "datahub-gms.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  {{- if and (.Values.global.strict_mode) (gt .Values.replicaCount 1.0) (.Values.global.datahub.managed_ingestion.enabled) (not .Values.global.datahub_standalone_consumers_enabled)}}
+  {{- fail "\nManaged ingestion can not be used with multiple GMS instances in non standalone mode. Please enable standalone mode with only 1 MCE replica if you wish to run multiple GMS instances and managed ingestion." }}
+  {{- else }}
+  replicas:  {{ .Values.replicaCount }}
+  {{- end }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
@@ -160,10 +167,14 @@ spec:
             - name: ELASTICSEARCH_USERNAME
               value: {{ .username }}
             - name: ELASTICSEARCH_PASSWORD
+              {{- if .password.value }}
+              value: {{ .password.value | quote }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: "{{ .password.secretRef }}"
                   key: "{{ .password.secretKey }}"
+              {{- end }}
             {{- end }}
             {{- with .Values.global.elasticsearch.indexPrefix }}
             - name: INDEX_PREFIX

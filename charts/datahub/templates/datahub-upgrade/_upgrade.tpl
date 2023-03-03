@@ -14,15 +14,16 @@ Return the env variables for upgrade jobs
 - name: DATAHUB_MAE_CONSUMER_PORT
   value: "{{ .Values.global.datahub.mae_consumer.port }}"
 - name: EBEAN_DATASOURCE_USERNAME
-  value: "{{ .Values.global.sql.datasource.username }}"
+  value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
 - name: EBEAN_DATASOURCE_PASSWORD
-  {{- if .Values.global.sql.datasource.password.value }}
-  value: {{ .Values.global.sql.datasource.password.value | quote }}
+  {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
+  {{- if $passwordValue }}
+  value: {{ $passwordValue | quote }}
   {{- else }}
   valueFrom:
     secretKeyRef:
-      name: "{{ .Values.global.sql.datasource.password.secretRef }}"
-      key: "{{ .Values.global.sql.datasource.password.secretKey }}"
+      name: "{{ (.Values.sql).datasource.password.secretRef | default .Values.global.sql.datasource.password.secretRef }}"
+      key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
   {{- end }}
 - name: EBEAN_DATASOURCE_HOST
   value: "{{ .Values.global.sql.datasource.host }}"
@@ -59,10 +60,14 @@ Return the env variables for upgrade jobs
 - name: ELASTICSEARCH_USERNAME
   value: {{ .username }}
 - name: ELASTICSEARCH_PASSWORD
+  {{- if .password.value }}
+  value: {{ .password.value | quote }}
+  {{- else }}
   valueFrom:
     secretKeyRef:
       name: "{{ .password.secretRef }}"
       key: "{{ .password.secretKey }}"
+  {{- end }}
 {{- end }}
 {{- with .Values.global.elasticsearch.indexPrefix }}
 - name: INDEX_PREFIX

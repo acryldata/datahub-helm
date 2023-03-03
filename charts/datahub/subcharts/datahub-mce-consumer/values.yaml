@@ -182,6 +182,9 @@ global:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
       enabled: true
+    
+    ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
+    alwaysEmitChangeLog: true
 
   sql:
     datasource:

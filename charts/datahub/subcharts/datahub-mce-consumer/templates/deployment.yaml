@@ -218,6 +218,8 @@ spec:
             - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
               value: {{ .datahub_upgrade_history_topic_name }}
             {{- end }}
+            - name: ALWAYS_EMIT_CHANGE_LOG
+              value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

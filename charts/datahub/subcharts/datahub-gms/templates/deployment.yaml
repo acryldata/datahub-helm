@@ -283,6 +283,8 @@ spec:
             - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
               value: {{ . | quote }}
             {{- end }}
+            - name: ALWAYS_EMIT_CHANGE_LOG
+              value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

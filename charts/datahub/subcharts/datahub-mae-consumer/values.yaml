@@ -200,6 +200,9 @@ global:
       #  secretRef: <secret-ref>
       #  secretKey: <secret-key>
 
+    ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
+    alwaysEmitChangeLog: true
+
   hostAliases:
     - ip: "192.168.0.104"
       hostnames:

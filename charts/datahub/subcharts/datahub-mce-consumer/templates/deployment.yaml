@@ -220,6 +220,8 @@ spec:
             {{- end }}
             - name: ALWAYS_EMIT_CHANGE_LOG
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
+            - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
+              value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

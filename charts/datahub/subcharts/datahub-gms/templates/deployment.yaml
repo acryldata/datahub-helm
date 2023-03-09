@@ -293,9 +293,9 @@ spec:
               value: {{ .Values.global.elasticsearch.search.graph.batchSize | quote }}
             - name: ELASTICSEARCH_SEARCH_GRAPH_MAX_RESULT
               value: {{ .Values.global.elasticsearch.search.graph.maxResult | quote }}
-            {{- if .Values.global.datahub.cache.search.enabled }}
             - name: SEARCH_SERVICE_ENABLE_CACHE
               value: {{ .Values.global.datahub.cache.search.enabled | quote }}
+            {{- if .Values.global.datahub.cache.search.enabled }}
             - name: CACHE_TTL_SECONDS
               value: {{ .Values.global.datahub.cache.search.primary.ttlSeconds | quote }}
             - name: CACHE_MAX_SIZE
@@ -303,9 +303,9 @@ spec:
             - name: CACHE_ENTITY_COUNTS_TTL_SECONDS
               value: {{ .Values.global.datahub.cache.search.homepage.entityCounts.ttlSeconds | quote }}
             {{- end }}
-            {{- if .Values.global.datahub.cache.search.lineage.enabled }}
             - name: LINEAGE_SEARCH_CACHE_ENABLED
               value: {{ .Values.global.datahub.cache.search.lineage.enabled | quote }}
+            {{- if .Values.global.datahub.cache.search.lineage.enabled }}
             - name: CACHE_SEARCH_LINEAGE_TTL_SECONDS
               value: {{ .Values.global.datahub.cache.search.lineage.ttlSeconds | quote }}
             - name: CACHE_SEARCH_LINEAGE_LIGHTNING_THRESHOLD

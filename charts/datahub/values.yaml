@@ -249,6 +249,35 @@ global:
         ## ensures a complete backup of the original index is preserved.
         allowDocCountMismatch: false
 
+    ## Search related configuration
+    search:
+      ## Maximum terms in aggregations
+      maxTermBucketSize: 20
+
+      ## Configuration around exact matching for search
+      exactMatch:
+        ## if false will only apply weights, if true will exclude non-exact
+        exclusive: false
+        ## include prefix exact matches
+        withPrefix: true
+        ## boost multiplier when exact with case
+        exactFactor: 2.0
+        ## boost multiplier when exact prefix
+        prefixFactor: 1.6
+        ## stacked boost multiplier when case mismatch
+        caseSensitivityFactor: 0.7
+        ## enable exact match on structured search
+        enableStructured: true
+
+      ## Configuration for graph service dao
+      graph:
+        ## graph dao timeout seconds
+        timeoutSeconds: 50
+        ## graph dao batch size
+        batchSize: 1000
+        ## graph dao max result size
+        maxResult: 10000
+
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"
@@ -370,6 +399,12 @@ global:
       #    secret: <secret value>
       #    signingKey: <signing key value>
       #    salt: <salt value>
+
+    ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
+    alwaysEmitChangeLog: true
+
+    ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
+    enableGraphDiffMode: true
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

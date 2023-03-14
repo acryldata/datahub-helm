@@ -193,6 +193,12 @@ global:
         secretRef: "mysql-secrets"
         secretKey: "mysql-password"
 
+    ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
+    alwaysEmitChangeLog: true
+
+    ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
+    enableGraphDiffMode: true
+
   hostAliases:
     - ip: "192.168.0.104"
       hostnames:

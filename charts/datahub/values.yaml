@@ -86,6 +86,7 @@ elasticsearchSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -110,6 +111,7 @@ kafkaSetupJob:
     requests:
       cpu: 300m
       memory: 768Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -134,6 +136,7 @@ mysqlSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -163,6 +166,7 @@ postgresqlSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
@@ -210,6 +214,7 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+  extraInitContainers: []
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -235,6 +240,7 @@ datahubSystemUpdate:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
 
 global:
   strict_mode: true

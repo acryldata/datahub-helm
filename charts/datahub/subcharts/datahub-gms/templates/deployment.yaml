@@ -130,11 +130,11 @@ spec:
                   key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
               {{- end }}
             - name: EBEAN_DATASOURCE_HOST
-              value: "{{ .Values.global.sql.datasource.host }}"
+              value: {{ (.Values.sql).datasource.host | default .Values.global.sql.datasource.host | quote }}
             - name: EBEAN_DATASOURCE_URL
-              value: "{{ .Values.global.sql.datasource.url }}"
+              value: {{ (.Values.sql).datasource.url | default .Values.global.sql.datasource.url | quote }}
             - name: EBEAN_DATASOURCE_DRIVER
-              value: "{{ .Values.global.sql.datasource.driver }}"
+              value: {{ (.Values.sql).datasource.driver | default .Values.global.sql.datasource.driver | quote }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- with .Values.global.kafka.schemaregistry.url }}

@@ -382,7 +382,7 @@ global:
       systemClientId: "__datahub_system"
       systemClientSecret:
         secretRef: "datahub-auth-secrets"
-        secretKey: "token_service_signing_key"
+        secretKey: "system_client_secret"
       tokenService:
         signingKey:
           secretRef: "datahub-auth-secrets"

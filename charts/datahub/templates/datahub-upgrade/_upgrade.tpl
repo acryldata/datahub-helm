@@ -14,7 +14,15 @@ Return the env variables for upgrade jobs
 - name: DATAHUB_MAE_CONSUMER_PORT
   value: "{{ .Values.global.datahub.mae_consumer.port }}"
 - name: EBEAN_DATASOURCE_USERNAME
-  value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
+  {{- $usernameSecretRef := (.Values.sql).datasource.username.secretRef | default .Values.global.sql.datasource.username.secretRef }}
+  {{- if $usernameSecretRef }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $usernameSecretRef }}
+      key: "{{ (.Values.sql).datasource.username.secretKey | default .Values.global.sql.datasource.username.secretKey }}"
+  {{- else }}
+  value:  {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
+  {{- end }}
 - name: EBEAN_DATASOURCE_PASSWORD
   {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
   {{- if $passwordValue }}

@@ -41,7 +41,7 @@ spec:
       {{- with .Values.ingestionSecretFiles }}
         - name: ingestion-secret-files
           secret:
-            defaultMode: {{ default "0444" .defaultMode}}
+            defaultMode: {{ .defaultMode }}
             secretName: {{ .name }}
       {{- end }}
       {{- if .Values.extraVolumes }}

@@ -28,3 +28,9 @@ spec:
     {{- end }}
   selector:
     {{- include "datahub-frontend.selectorLabels" . | nindent 4 }}
+  {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := .Values.service.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+  {{- end }}
+  {{- end }}

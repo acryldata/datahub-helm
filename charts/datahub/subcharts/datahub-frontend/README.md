@@ -54,6 +54,7 @@ Current chart version is `0.2.0`
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
 | service.port | int | `9001` |  |
+| service.loadBalancerSourceRanges | list | `[]` | If `service.type=LoadBalancer` (default), this creates a CIDR-based source range allow-list for the resulting load balancer |
 | service.nodePort | int | `""` |  |
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount.annotations | object | `{}` |  |

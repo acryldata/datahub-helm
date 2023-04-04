@@ -280,9 +280,9 @@ global:
 
   kafka:
     bootstrap:
-      server: "prerequisites-kafka:9092"
+      server: "datahub-kafka:9092"
     zookeeper:
-      server: "prerequisites-zookeeper:2181"
+      server: "datahub-zookeeper:2181"
     # This section defines the names for the kafka topics that DataHub depends on, at a global level. Do not override this config
     # at a sub-chart level.
     topics:
@@ -300,15 +300,15 @@ global:
     # partitions: 3
     # replicationFactor: 3
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
+      url: "http://datahub-cp-schema-registry:8081"
       type: KAFKA
       # glue:
       #   region: us-east-1
       #   registry: datahub
 
   neo4j:
-    host: "prerequisites-neo4j-community:7474"
-    uri: "bolt://prerequisites-neo4j-community"
+    host: "datahub-neo4j-community:7474"
+    uri: "bolt://datahub-neo4j-community"
     username: "neo4j"
     password:
       secretRef: neo4j-secrets
@@ -318,10 +318,10 @@ global:
 
   sql:
     datasource:
-      host: "prerequisites-mysql:3306"
-      hostForMysqlClient: "prerequisites-mysql"
+      host: "datahub-mysql:3306"
+      hostForMysqlClient: "datahub-mysql"
       port: "3306"
-      url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      url: "jdbc:mysql://datahub-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
       driver: "com.mysql.cj.jdbc.Driver"
       username: "root"
       password:
@@ -331,10 +331,10 @@ global:
       # value: password
 
       ## Use below for usage of PostgreSQL instead of MySQL
-      # host: "prerequisites-postgresql:5432"
-      # hostForpostgresqlClient: "prerequisites-postgresql"
+      # host: "datahub-postgresql:5432"
+      # hostForpostgresqlClient: "datahub-postgresql"
       # port: "5432"
-      # url: "jdbc:postgresql://prerequisites-postgresql:5432/datahub"
+      # url: "jdbc:postgresql://datahub-postgresql:5432/datahub"
       # driver: "org.postgresql.Driver"
       # username: "postgres"
       # password:
@@ -435,3 +435,91 @@ global:
 #    ssl.truststore.type: JKS
 #    ssl.protocol: TLS
 #    ssl.endpoint.identification.algorithm:
+
+elasticsearch:
+  enabled: true   # set this to false, if you want to provide your own ES instance.
+
+  # If you're running in production, set this to 3 and comment out antiAffinity below
+  # Or alternatively if you're running production, bring your own ElasticSearch
+  replicas: 1
+  minimumMasterNodes: 1
+  # Set replicas to 1 and uncomment this to allow the instance to be scheduled on
+  # a master node when deploying on a single node Minikube / Kind / etc cluster.
+  antiAffinity: "soft"
+
+  # # If you are running a multi-replica cluster, comment this out
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+
+  # # Shrink default JVM heap.
+  esJavaOpts: "-Xmx384m -Xms384m"
+
+  # # Allocate smaller chunks of memory per pod.
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "768M"
+    limits:
+      cpu: "1000m"
+      memory: "768M"
+
+  # # Request smaller persistent volumes.
+  # volumeClaimTemplate:
+  #   accessModes: ["ReadWriteOnce"]
+  #   storageClassName: "standard"
+  #   resources:
+  #     requests:
+  #       storage: 100M
+
+# Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
+neo4j:
+  enabled: false  # set this to true, if you have a license for the enterprise edition
+  acceptLicenseAgreement: "yes"
+  defaultDatabase: "graph.db"
+  neo4jPassword: "datahub"
+  # For better security, add password to neo4j-secrets k8s secret and uncomment below
+  # existingPasswordSecret: neo4j-secrets
+  core:
+    standalone: true
+
+# Deploys neo4j community version. Only supports single node
+neo4j-community:
+  enabled: false   # set this to true, if you want to run neo4j community edition
+  acceptLicenseAgreement: "yes"
+  defaultDatabase: "graph.db"
+  # For better security, add neo4j-secrets k8s secret with neo4j-password and uncomment below
+  existingPasswordSecret: neo4j-secrets
+
+mysql:
+  enabled: true
+  auth:
+    # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
+    existingSecret: mysql-secrets
+
+postgresql:
+  enabled: false
+  auth:
+    # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
+    existingSecret: postgresql-secrets
+
+cp-helm-charts:
+  # Schema registry is under the community license
+  cp-schema-registry:
+    enabled: true
+    kafka:
+      bootstrapServers: "datahub-kafka:9092"  # <<release-name>>-kafka:9092
+  cp-kafka:
+    enabled: false
+  cp-zookeeper:
+    enabled: false
+  cp-kafka-rest:
+    enabled: false
+  cp-kafka-connect:
+    enabled: false
+  cp-ksql-server:
+    enabled: false
+  cp-control-center:
+    enabled: false
+
+# Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
+kafka:
+  enabled: true

@@ -51,6 +51,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
+EBEAN_DATASOURCE_HOST # initcontainer for db to be ready
+KAFKA_BOOTSTRAP_SERVER # for kafka
+KAFKA_SCHEMAREGISTRY_URL # for cp-schema
+ELASTICSEARCH_HOST:ELASTICSEARCH_PORT # for elastic
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

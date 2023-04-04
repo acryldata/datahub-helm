@@ -76,11 +76,11 @@ You should get a result similar to below.
 ```
 NAME                                               READY   STATUS      RESTARTS   AGE
 elasticsearch-master-0                             1/1     Running     0          62m
-prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          63m
-prerequisites-kafka-0                              1/1     Running     2          62m
-prerequisites-mysql-0                              1/1     Running     1          62m
-prerequisites-neo4j-community-0                    1/1     Running     0          52m
-prerequisites-zookeeper-0                          1/1     Running     0          62m
+datahub-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          63m
+datahub-kafka-0                              1/1     Running     2          62m
+datahub-mysql-0                              1/1     Running     1          62m
+datahub-neo4j-community-0                    1/1     Running     0          52m
+datahub-zookeeper-0                          1/1     Running     0          62m
 ```
 
 deploy Datahub by running the following
@@ -106,11 +106,11 @@ datahub-elasticsearch-setup-job-8dz6b              0/1     Completed   0        
 datahub-kafka-setup-job-6blcj                      0/1     Completed   0          4m40s
 datahub-mysql-setup-job-b57kc                      0/1     Completed   0          4m7s
 elasticsearch-master-0                             1/1     Running     0          97m
-prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          99m
-prerequisites-kafka-0                              1/1     Running     2          97m
-prerequisites-mysql-0                              1/1     Running     1          97m
-prerequisites-neo4j-community-0                    1/1     Running     0          88m
-prerequisites-zookeeper-0                          1/1     Running     0          97m
+datahub-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          99m
+datahub-kafka-0                              1/1     Running     2          97m
+datahub-mysql-0                              1/1     Running     1          97m
+datahub-neo4j-community-0                    1/1     Running     0          88m
+datahub-zookeeper-0                          1/1     Running     0          97m
 ```
 
 You can run the following to expose the frontend locally. Note, you can find the pod name using the command above. 

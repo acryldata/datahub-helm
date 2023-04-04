@@ -8,12 +8,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-  annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "-4"
-    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
     {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations}}
@@ -55,6 +49,13 @@ spec:
       securityContext:
         {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
       initContainers:
+        - name: wait-for-datahub
+          image: "jwilder/dockerize:latest"
+          imagePullPolicy: {{ .Values.elasticsearchSetupJob.image.pullPolicy | default "IfNotPresent" }}
+          command:
+            - /bin/sh
+            - -c
+            - dockerize -wait "http://{{ printf "%s-%s" .Release.Name "datahub-gms" }}/health" -timeout 360s
       {{- with .Values.datahubSystemUpdate.extraInitContainers }}
         {{- toYaml . | nindent 12 }}
       {{- end }}

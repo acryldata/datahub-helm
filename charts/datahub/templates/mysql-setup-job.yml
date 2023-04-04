@@ -1,4 +1,5 @@
 {{- if .Values.mysqlSetupJob.enabled -}}
+{{ $mysqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForMysqlClient .Values.global.sql.datasource.port }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -8,12 +9,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-  annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
     {{- if or .Values.global.podLabels .Values.mysqlSetupJob.podAnnotations }}
@@ -48,6 +43,14 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.mysqlSetupJob.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-mysql
+          image: "jwilder/dockerize:latest"
+          imagePullPolicy: {{ .Values.mysqlSetupJob.image.pullPolicy | default "IfNotPresent" }}
+          command:
+            - /bin/sh
+            - -c
+            - dockerize -wait "tcp://{{ $mysqlUrl }}/" -timeout 360s
       containers:
         - name: mysql-setup-job
           image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) }}"

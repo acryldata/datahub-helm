@@ -74,10 +74,10 @@ spec:
             - "-a"
             - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
             - "-a"
-            {{- if hasPrefix .Values.global.sql.datasource.url  "jdbc:mysql" }}
+            {{- if contains "mysql" .Values.global.sql.datasource.driver }}
             - "dbType=MYSQL"
             {{- end }}
-            {{- if hasPrefix .Values.global.sql.datasource.url  "jdbc:postgresql" }}
+            {{- if contains "postgresql" .Values.global.sql.datasource.driver }}
             - "dbType=POSTGRES"
             {{- end }}
           env:

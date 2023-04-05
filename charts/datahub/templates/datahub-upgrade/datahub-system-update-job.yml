@@ -87,7 +87,7 @@ spec:
                 do echo "Waiting for {{ .Release.Name }}-postgresql-setup-job" && sleep 1; done;
         {{- end }}
       {{- with .Values.datahubSystemUpdate.extraInitContainers }}
-        {{- toYaml . | nindent 12 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: datahub-system-update-job

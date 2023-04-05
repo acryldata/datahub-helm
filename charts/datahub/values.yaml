@@ -164,9 +164,6 @@ datahubUpgrade:
     # tag: "v0.10.0"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
-  noCodeDataMigration:
-    sqlDbType: "MYSQL"
-    # sqlDbType: "POSTGRES"
   podSecurityContext: {}
     # fsGroup: 1000
   securityContext: {}

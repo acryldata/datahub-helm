@@ -126,6 +126,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | postgresqlSetupJob.password.secretKey | string | `"mysql-password"` | Secret key that contains the postgresqlSetupJob SQL password (overrides global value) |
 | postgresqlSetupJob.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value for postgresqlSetupJob SQL login (overrides global value) |
 | acryl-datahub-actions.ingestionSecretFiles.name | string | `""` | Name of the k8s secret that holds any secret files (e.g., SSL certificates and private keys) that are used in your ingestion recipes. The keys in the secret will be mounted as individual files under `/etc/datahub/ingestion-secret-files` |
+| acryl-datahub-actions.ingestionSecretFiles.defaultMode | string | `""` | The permission mode for the volume that mounts k8s secret under `/etc/datahub/ingestion-secret-files`, default value is 0444 which allows read access by owner, group, and other users |
 | global.credentialsAndCertsSecrets.name | string | `""` | Name of the secret that holds SSL certificates (keystores, truststores) |
 | global.credentialsAndCertsSecrets.path | string | `"/mnt/certs"` | Path to mount the SSL certificates |
 | global.credentialsAndCertsSecrets.secureEnv | map | `{}` | Map of SSL config name and the corresponding value in the secret |

@@ -76,8 +76,6 @@ You should get a result similar to below.
 ```
 NAME                                               READY   STATUS      RESTARTS   AGE
 elasticsearch-master-0                             1/1     Running     0          62m
-elasticsearch-master-1                             1/1     Running     0          62m
-elasticsearch-master-2                             1/1     Running     0          62m
 prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          63m
 prerequisites-kafka-0                              1/1     Running     2          62m
 prerequisites-mysql-0                              1/1     Running     1          62m
@@ -108,8 +106,6 @@ datahub-elasticsearch-setup-job-8dz6b              0/1     Completed   0        
 datahub-kafka-setup-job-6blcj                      0/1     Completed   0          4m40s
 datahub-mysql-setup-job-b57kc                      0/1     Completed   0          4m7s
 elasticsearch-master-0                             1/1     Running     0          97m
-elasticsearch-master-1                             1/1     Running     0          97m
-elasticsearch-master-2                             1/1     Running     0          97m
 prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          99m
 prerequisites-kafka-0                              1/1     Running     2          97m
 prerequisites-mysql-0                              1/1     Running     1          97m

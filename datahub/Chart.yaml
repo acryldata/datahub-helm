@@ -30,7 +30,7 @@ dependencies:
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
   - name: acryl-datahub-actions
-    version: 0.2.134
+    version: 0.2.135
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
   - name: elasticsearch

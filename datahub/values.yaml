@@ -39,6 +39,10 @@ acryl-datahub-actions:
   image:
     repository: acryldata/datahub-actions
     tag: "v0.0.11"
+  # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
+  # ingestionSecretFiles:
+  #   name: ${K8S_SECRET_NAME}
+  #   defaultMode: "0444"
   resources:
     limits:
       memory: 512Mi

@@ -58,8 +58,9 @@ spec:
             - sh
             - -c
             - |
-              until kubectl get job {{ .Release.Name }}-datahub-system-update-job | grep -q '1/1'; \
-                do echo "Waiting for {{ .Release.Name }}-datahub-system-update-job" && sleep 1; done;
+              echo "Waiting for {{ .Release.Name }}-datahub-system-update-job"
+              kubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=300s
+              kubectl delete job {{ .Release.Name }}-datahub-system-update-job
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -82,7 +83,7 @@ spec:
             - name: hazelcast
               containerPort: 5701
               protocol: TCP
-          {{- end}}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /health
@@ -345,7 +346,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

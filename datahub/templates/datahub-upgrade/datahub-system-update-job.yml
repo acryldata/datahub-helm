@@ -11,7 +11,7 @@ metadata:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   template:
-    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations}}
+    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations }}
     metadata:
     {{- with .Values.datahubSystemUpdate.podAnnotations }}
       annotations:
@@ -54,16 +54,16 @@ spec:
             - sh
             - -c
             - |
-              until kubectl get job {{ .Release.Name }}-elasticsearch-setup-job | grep -q '1/1'; \
-                do echo "Waiting for {{ .Release.Name }}-elasticsearch-setup-job" && sleep 1; done;
+              echo "Waiting for {{ .Release.Name }}-elasticsearch-setup-job"
+              kubectl wait --for=condition=complete job/{{ .Release.Name }}-elasticsearch-setup-job --timeout=300s
         - name: wait-for-kafka-setup
           image: bitnami/kubectl:latest
           command: 
             - sh
             - -c
             - |
-              until kubectl get job {{ .Release.Name }}-kafka-setup-job | grep -q '1/1'; \
-                do echo "Waiting for {{ .Release.Name }}-kafka-setup-job" && sleep 1; done;
+              echo "Waiting for {{ .Release.Name }}-kafka-setup-job"
+              kubectl wait --for=condition=complete job/{{ .Release.Name }}-kafka-setup-job --timeout=300s
         {{- if contains "mysql" .Values.global.sql.datasource.driver }}
         {{ $mysqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForMysqlClient .Values.global.sql.datasource.port }}
         - name: wait-for-mysql-setup
@@ -72,8 +72,8 @@ spec:
             - sh
             - -c
             - |
-              until kubectl get job {{ .Release.Name }}-mysql-setup-job | grep -q '1/1'; \
-                do echo "Waiting for {{ .Release.Name }}-mysql-setup-job" && sleep 1; done;
+              echo "Waiting for {{ .Release.Name }}-mysql-setup-job"
+              kubectl wait --for=condition=complete job/{{ .Release.Name }}-mysql-setup-job --timeout=300s
         {{- end }}
         {{- if contains "postgresql" .Values.global.sql.datasource.driver }}
         {{ $postgresqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForPostgresqlClient .Values.global.sql.datasource.port }}
@@ -83,8 +83,8 @@ spec:
             - sh
             - -c
             - |
-              until kubectl get job {{ .Release.Name }}-postgresql-setup-job | grep -q '1/1'; \
-                do echo "Waiting for {{ .Release.Name }}-postgresql-setup-job" && sleep 1; done;
+              echo "Waiting for {{ .Release.Name }}-postgresql-setup-job"
+              kubectl wait --for=condition=complete job/{{ .Release.Name }}-postgresql-setup-job --timeout=300s
         {{- end }}
       {{- with .Values.datahubSystemUpdate.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
@@ -99,7 +99,7 @@ spec:
           env:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
             {{- with .Values.global.kafka.schemaregistry.type }}

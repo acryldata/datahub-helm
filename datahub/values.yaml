@@ -95,6 +95,15 @@ elasticsearchSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  initContainers:
+    - name: wait-for-elasticsearch
+      image: "jwilder/dockerize:latest"
+      command:
+        - /bin/sh
+        - -c
+        - |
+          export elasticsearchUrl={{ printf "%s:%s" .Values.global.elasticsearch.host .Values.global.elasticsearch.port }}
+          dockerize -wait "tcp://${elasticsearchUrl}/" -timeout 360s
 
 kafkaSetupJob:
   enabled: true
@@ -113,6 +122,13 @@ kafkaSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  initContainers:
+    - name: wait-for-kafka
+      image: "jwilder/dockerize:latest"
+      command:
+        - /bin/sh
+        - -c
+        - dockerize -wait "tcp://{{ .Values.global.kafka.bootstrap.server | quote }}/" -timeout 360s
 
 mysqlSetupJob:
   enabled: true
@@ -136,6 +152,15 @@ mysqlSetupJob:
   # password:
   #   secretRef: mysqlSetupJob-secret
   #   secretKey: mysqlSetupJob-password
+  initContainers:
+    - name: wait-for-mysql
+      image: "jwilder/dockerize:latest"
+      command:
+        - /bin/sh
+        - -c
+        - |
+          mysqlUrl={{ printf "%s:%s" .Values.global.sql.datasource.hostForMysqlClient .Values.global.sql.datasource.port }}
+          dockerize -wait "tcp://${mysqlUrl}/" -timeout 360s
 
 postgresqlSetupJob:
   enabled: false
@@ -159,6 +184,15 @@ postgresqlSetupJob:
   # password:
   #   secretRef: postgresqlSetupJob-secret
   #   secretKey: postgresqlSetupJob-password
+  initContainers:
+    - name: wait-for-postgresql
+      image: "jwilder/dockerize:latest"
+      command:
+        - /bin/sh
+        - -c
+        - |
+          export postgresqlUrl={{ printf "%s:%s" .Values.global.sql.datasource.hostForpostgresqlClient .Values.global.sql.datasource.port }}
+          dockerize -wait "tcp://${postgresqlUrl}/" -timeout 360s
 
 ## No code data migration
 datahubUpgrade:

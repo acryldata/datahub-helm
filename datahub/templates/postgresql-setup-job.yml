@@ -1,5 +1,4 @@
 {{- if .Values.postgresqlSetupJob.enabled -}}
-{{ $postgresqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForpostgresqlClient .Values.global.sql.datasource.port }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -44,13 +43,9 @@ spec:
       securityContext:
         {{- toYaml .Values.postgresqlSetupJob.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: wait-for-postgresql
-          image: "jwilder/dockerize:latest"
-          imagePullPolicy: {{ .Values.postgresqlSetupJob.image.pullPolicy | default "Always" }}
-          command:
-            - /bin/sh
-            - -c
-            - dockerize -wait "tcp://{{ $postgresqlUrl }}/" -timeout 360s
+      {{- if .Values.postgresqlSetupJob.initContainers }}
+      {{-  tpl (toYaml .Values.postgresqlSetupJob.initContainers) . | nindent 6 }}
+      {{- end }}
       containers:
         - name: postgresql-setup-job
           image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.postgresqlSetupJob.image.tag | default .Values.global.datahub.version) }}"

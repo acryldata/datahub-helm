@@ -1,5 +1,4 @@
 {{- if .Values.mysqlSetupJob.enabled -}}
-{{ $mysqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForMysqlClient .Values.global.sql.datasource.port }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -44,13 +43,9 @@ spec:
       securityContext:
         {{- toYaml .Values.mysqlSetupJob.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: wait-for-mysql
-          image: "jwilder/dockerize:latest"
-          imagePullPolicy: {{ .Values.mysqlSetupJob.image.pullPolicy | default "IfNotPresent" }}
-          command:
-            - /bin/sh
-            - -c
-            - dockerize -wait "tcp://{{ $mysqlUrl }}/" -timeout 360s
+      {{- if .Values.mysqlSetupJob.initContainers }}
+      {{-  tpl (toYaml .Values.mysqlSetupJob.initContainers) . | nindent 6 }}
+      {{- end }}
       containers:
         - name: mysql-setup-job
           image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) }}"

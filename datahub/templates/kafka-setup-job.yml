@@ -49,13 +49,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
-        - name: wait-for-kafka
-          image: "jwilder/dockerize:latest"
-          imagePullPolicy: {{ .Values.kafkaSetupJob.image.pullPolicy | default "IfNotPresent" }}
-          command:
-            - /bin/sh
-            - -c
-            - dockerize -wait "tcp://{{ .Values.global.kafka.bootstrap.server | quote }}/" -timeout 360s
+      {{- if .Values.kafkaSetupJob.initContainers }}
+      {{-  tpl (toYaml .Values.kafkaSetupJob.initContainers) . | nindent 6 }}
+      {{- end }}
       containers:
         - name: kafka-setup-job
           image: "{{ .Values.kafkaSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.kafkaSetupJob.image.tag | default .Values.global.datahub.version) }}"

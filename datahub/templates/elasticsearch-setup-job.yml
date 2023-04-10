@@ -1,5 +1,4 @@
 {{- if .Values.elasticsearchSetupJob.enabled -}}
-{{ $elasticsearchUrl := printf "%s:%s" .Values.global.elasticsearch.host .Values.global.elasticsearch.port }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -44,13 +43,9 @@ spec:
       securityContext:
         {{- toYaml .Values.elasticsearchSetupJob.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: wait-for-elasticsearch
-          image: "jwilder/dockerize:latest"
-          imagePullPolicy: {{ .Values.elasticsearchSetupJob.image.pullPolicy | default "IfNotPresent" }}
-          command:
-            - /bin/sh
-            - -c
-            - dockerize -wait "tcp://{{ $elasticsearchUrl }}/" -timeout 360s
+      {{- if .Values.elasticsearchSetupJob.initContainers }}
+      {{-  tpl (toYaml .Values.elasticsearchSetupJob.initContainers) . | nindent 6 }}
+      {{- end }}
       containers:
         - name: elasticsearch-setup-job
           image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) }}"

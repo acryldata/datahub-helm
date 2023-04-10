@@ -48,44 +48,9 @@ spec:
       securityContext:
         {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: wait-for-elasticsearch-setup
-          image: bitnami/kubectl:latest
-          command: 
-            - sh
-            - -c
-            - |
-              echo "Waiting for {{ .Release.Name }}-elasticsearch-setup-job"
-              kubectl wait --for=condition=complete job/{{ .Release.Name }}-elasticsearch-setup-job --timeout=300s
-        - name: wait-for-kafka-setup
-          image: bitnami/kubectl:latest
-          command: 
-            - sh
-            - -c
-            - |
-              echo "Waiting for {{ .Release.Name }}-kafka-setup-job"
-              kubectl wait --for=condition=complete job/{{ .Release.Name }}-kafka-setup-job --timeout=300s
-        {{- if contains "mysql" .Values.global.sql.datasource.driver }}
-        {{ $mysqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForMysqlClient .Values.global.sql.datasource.port }}
-        - name: wait-for-mysql-setup
-          image: bitnami/kubectl:latest
-          command: 
-            - sh
-            - -c
-            - |
-              echo "Waiting for {{ .Release.Name }}-mysql-setup-job"
-              kubectl wait --for=condition=complete job/{{ .Release.Name }}-mysql-setup-job --timeout=300s
-        {{- end }}
-        {{- if contains "postgresql" .Values.global.sql.datasource.driver }}
-        {{ $postgresqlUrl := printf "%s:%s" .Values.global.sql.datasource.hostForPostgresqlClient .Values.global.sql.datasource.port }}
-        - name: wait-for-postgresql-setup
-          image: bitnami/kubectl:latest
-          command: 
-            - sh
-            - -c
-            - |
-              echo "Waiting for {{ .Release.Name }}-postgresql-setup-job"
-              kubectl wait --for=condition=complete job/{{ .Release.Name }}-postgresql-setup-job --timeout=300s
-        {{- end }}
+      {{- if .Values.datahubSystemUpdate.initContainers }}
+      {{-  tpl (toYaml .Values.datahubSystemUpdate.initContainers) . | nindent 6 }}
+      {{- end }}
       {{- with .Values.datahubSystemUpdate.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -181,6 +181,17 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+  initContainers:
+    - name: wait-for-datahub-gms
+      image: curlimages/curl:latest
+      command:
+        - sh
+        - -c
+        - |
+          export datahubGmsHost={{ printf "%s:%s" (printf "%s-%s" .Release.Name "datahub-gms") "8080" }}
+          until curl -I --connect-timeout 5 http://${datahubGmsHost}/health; do
+            echo "Waiting for http://${datahubGmsHost}/health";
+          done;
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -200,6 +211,36 @@ datahubSystemUpdate:
     requests:
       cpu: 300m
       memory: 256Mi
+  initContainers:
+    - name: wait-for-elasticsearch-setup
+      image: bitnami/kubectl:latest
+      command: 
+        - sh
+        - -c
+        - |
+          echo "Waiting for {{ .Release.Name }}-elasticsearch-setup-job"
+          kubectl wait --for=condition=complete job/{{ .Release.Name }}-elasticsearch-setup-job --timeout=300s
+    - name: wait-for-kafka-setup
+      image: bitnami/kubectl:latest
+      command: 
+        - sh
+        - -c
+        - |
+          echo "Waiting for {{ .Release.Name }}-kafka-setup-job"
+          kubectl wait --for=condition=complete job/{{ .Release.Name }}-kafka-setup-job --timeout=300s
+    - name: wait-for-database-setup
+      image: bitnami/kubectl:latest
+      command: 
+        - sh
+        - -c
+        - |
+          {{- if contains "mysql" .Values.global.sql.datasource.driver }}
+          echo "Waiting for {{ .Release.Name }}-mysql-setup-job"
+          kubectl wait --for=condition=complete job/{{ .Release.Name }}-mysql-setup-job --timeout=300s
+          {{ else if contains "postgresql" .Values.global.sql.datasource.driver }}
+          echo "Waiting for {{ .Release.Name }}-postgresql-setup-job"
+          kubectl wait --for=condition=complete job/{{ .Release.Name }}-postgresql-setup-job --timeout=300s
+          {{- end }}
 
 global:
   strict_mode: true

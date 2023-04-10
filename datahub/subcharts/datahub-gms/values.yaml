@@ -90,6 +90,17 @@ extraVolumeMounts: []
   #   mountPath: /usr/share/extras
   #   readOnly: true
 
+initContainers:
+  - name: wait-for-system-update
+    image: bitnami/kubectl:latest
+    command: 
+      - sh
+      - -c
+      - |
+        echo "Waiting for {{ .Release.Name }}-datahub-system-update-job"
+        kubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=300s
+        kubectl delete job {{ .Release.Name }}-datahub-system-update-job
+
 extraInitContainers: []
 
 resources: {}

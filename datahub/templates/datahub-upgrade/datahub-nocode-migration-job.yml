@@ -1,5 +1,4 @@
 {{- if .Values.datahubUpgrade.enabled -}}
-{{ $datahubGmsHost := printf "%s:%s" (printf "%s-%s" .Release.Name "datahub-gms") "8080" }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -50,15 +49,9 @@ spec:
       securityContext:
         {{- toYaml .Values.datahubUpgrade.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: wait-for-datahub-gms
-          image: curlimages/curl:latest
-          command:
-            - sh
-            - -c
-            - |
-              until curl -I --connect-timeout 5 http://{{ $datahubGmsHost }}/health; do
-                echo "Waiting for http://{{ $datahubGmsHost }}/health";
-              done;
+      {{- if .Values.datahubUpgrade.initContainers }}
+      {{-  tpl (toYaml .Values.datahubUpgrade.initContainers) . | nindent 6 }}
+      {{- end }}
       {{- with .Values.datahubUpgrade.extraInitContainers }}
         {{- toYaml . | nindent 12 }}
       {{- end }}

@@ -13,9 +13,9 @@ spec:
   template:
     {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations }}
     metadata:
-    {{- with .Values.datahubSystemUpdate.podAnnotations }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
+    {{- with .Values.datahubSystemUpdate.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.global.podLabels }}

@@ -254,6 +254,7 @@ datahubSystemUpdate:
         - |
           echo "Waiting for {{ .Release.Name }}-elasticsearch-setup-job"
           kubectl wait --for=condition=complete job/{{ .Release.Name }}-elasticsearch-setup-job --timeout=300s
+          kubectl delete job {{ .Release.Name }}-elasticsearch-setup-job
     - name: wait-for-kafka-setup
       image: bitnami/kubectl:latest
       command: 
@@ -262,6 +263,7 @@ datahubSystemUpdate:
         - |
           echo "Waiting for {{ .Release.Name }}-kafka-setup-job"
           kubectl wait --for=condition=complete job/{{ .Release.Name }}-kafka-setup-job --timeout=300s
+          kubectl delete job {{ .Release.Name }}-kafka-setup-job
     - name: wait-for-database-setup
       image: bitnami/kubectl:latest
       command: 
@@ -271,9 +273,11 @@ datahubSystemUpdate:
           {{- if contains "mysql" .Values.global.sql.datasource.driver }}
           echo "Waiting for {{ .Release.Name }}-mysql-setup-job"
           kubectl wait --for=condition=complete job/{{ .Release.Name }}-mysql-setup-job --timeout=300s
+          kubectl delete job {{ .Release.Name }}-mysql-setup-job
           {{ else if contains "postgresql" .Values.global.sql.datasource.driver }}
           echo "Waiting for {{ .Release.Name }}-postgresql-setup-job"
           kubectl wait --for=condition=complete job/{{ .Release.Name }}-postgresql-setup-job --timeout=300s
+          kubectl delete job {{ .Release.Name }}-postgresql-setup-job
           {{- end }}
 
 global:

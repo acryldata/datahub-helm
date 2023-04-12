@@ -1,4 +1,5 @@
 {{- if .Values.global.datahub.systemUpdate.enabled -}}
+{{ $elasticsearchUrl := printf "%s:%s" .Values.global.elasticsearch.host .Values.global.elasticsearch.port }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -8,20 +9,15 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-  annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "-4"
-    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
-    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations}}
     metadata:
-    {{- with .Values.datahubSystemUpdate.podAnnotations }}
       annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations }}
+        {{- with .Values.datahubUpgrade.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
     {{- with .Values.global.podLabels }}
       labels:
         {{- range $key, $value := . }}
@@ -34,9 +30,7 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.datahubSystemUpdate.serviceAccount }}
-      serviceAccountName: {{ . }}
-    {{- end }}
+      serviceAccountName: datahub-gms
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -55,8 +49,11 @@ spec:
       securityContext:
         {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
       initContainers:
+      {{- if .Values.datahubSystemUpdate.initContainers }}
+      {{-  tpl (toYaml .Values.datahubSystemUpdate.initContainers) . | nindent 6 }}
+      {{- end }}
       {{- with .Values.datahubSystemUpdate.extraInitContainers }}
-        {{- toYaml . | nindent 12 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: datahub-system-update-job
@@ -68,7 +65,7 @@ spec:
           env:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
             {{- with .Values.global.kafka.schemaregistry.type }}

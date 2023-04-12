@@ -22,7 +22,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: datahub-gms
 
 serviceMonitor:
   create: false
@@ -89,6 +89,19 @@ extraVolumeMounts: []
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
+
+initContainers:
+  - name: wait-for-system-update
+    image: bitnami/kubectl:latest
+    command: 
+      - sh
+      - -c
+      - |
+        {{- if or .Release.IsInstall .Release.IsUpgrade .Release.IsRollback }}
+        echo "Waiting for {{ .Release.Name }}-datahub-system-update-job"
+        kubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=300s
+        kubectl delete job {{ .Release.Name }}-datahub-system-update-job
+        {{- end }}
 
 extraInitContainers: []
 

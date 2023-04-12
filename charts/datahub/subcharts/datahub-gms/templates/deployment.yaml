@@ -1,7 +1,8 @@
+{{ $elasticsearchUrl := printf "%s:%s" .Values.global.elasticsearch.host .Values.global.elasticsearch.port }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "datahub-gms.fullname" . }}
+  name: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
   labels:
     {{- include "datahub-gms.labels" . | nindent 4 }}
     {{- range $key, $val := .Values.extraLabels }}
@@ -51,6 +52,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
+      {{- if .Values.initContainers }}
+      {{-  tpl (toYaml .Values.initContainers) . | nindent 6 }}
+      {{- end }}
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -73,7 +77,7 @@ spec:
             - name: hazelcast
               containerPort: 5701
               protocol: TCP
-          {{- end}}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /health
@@ -336,7 +340,6 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

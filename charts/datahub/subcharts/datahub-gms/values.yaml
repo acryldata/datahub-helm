@@ -99,8 +99,7 @@ initContainers:
       - |
         {{- if or .Release.IsInstall .Release.IsUpgrade .Release.IsRollback }}
         echo "Waiting for {{ .Release.Name }}-datahub-system-update-job"
-        kubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=300s
-        kubectl delete job {{ .Release.Name }}-datahub-system-update-job
+        kubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=360s
         {{- end }}
 
 extraInitContainers: []

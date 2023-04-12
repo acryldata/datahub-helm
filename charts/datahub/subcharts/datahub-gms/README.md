@@ -72,7 +72,7 @@ A Helm chart for LinkedIn DataHub's datahub-gms component
 | ingress.tls | list | `[]` |  |
 | initContainers[0].command[0] | string | `"sh"` |  |
 | initContainers[0].command[1] | string | `"-c"` |  |
-| initContainers[0].command[2] | string | `"{{- if or .Release.IsInstall .Release.IsUpgrade .Release.IsRollback }}\necho \"Waiting for {{ .Release.Name }}-datahub-system-update-job\"\nkubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=300s\nkubectl delete job {{ .Release.Name }}-datahub-system-update-job\n{{- end }}\n"` |  |
+| initContainers[0].command[2] | string | `"{{- if or .Release.IsInstall .Release.IsUpgrade .Release.IsRollback }}\necho \"Waiting for {{ .Release.Name }}-datahub-system-update-job\"\nkubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=360s\n{{- end }}\n"` |  |
 | initContainers[0].image | string | `"bitnami/kubectl:latest"` |  |
 | initContainers[0].name | string | `"wait-for-system-update"` |  |
 | livenessProbe.failureThreshold | int | `8` |  |

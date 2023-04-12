@@ -514,6 +514,7 @@ global:
 
 elasticsearch:
   enabled: true   # set this to false, if you want to provide your own ES instance.
+  fullnameOverride: "elasticsearch-master"
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -581,6 +582,7 @@ cp-helm-charts:
   # Schema registry is under the community license
   cp-schema-registry:
     enabled: true
+    fullnameOverride: datahub-cp-schema-registry
     kafka:
       bootstrapServers: "datahub-kafka:9092"  # <<release-name>>-kafka:9092
   cp-kafka:
@@ -599,3 +601,14 @@ cp-helm-charts:
 # Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
   enabled: true
+  fullnameOverride: datahub-kafka
+  initContainers:
+    - name: wait-for-zookeeper
+      image: "jwilder/dockerize:latest"
+      command:
+        - /bin/sh
+        - -c
+        - |
+          dockerize -wait "tcp://{{ .Values.global.kafka.zookeeper.server }}/" -timeout 360s
+  zookeeper:
+    fullnameOverride: datahub-zookeeper

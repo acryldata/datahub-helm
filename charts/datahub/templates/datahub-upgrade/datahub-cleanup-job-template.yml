@@ -1,4 +1,4 @@
-{{- if .Values.datahubUpgrade.enabled -}}
+{{- if .Values.datahubUpgrade.cronJobs.enabled -}}
 # Job template for running datahub cleanup
 # Creates a suspended cronJob that you can use to create an adhoc job when ready to run clean up.
 # Run the following command to do so

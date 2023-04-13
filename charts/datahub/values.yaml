@@ -197,6 +197,8 @@ postgresqlSetupJob:
 ## No code data migration
 datahubUpgrade:
   enabled: true
+  cronJobs:
+    enabled: true
   image:
     repository: acryldata/datahub-upgrade
     # tag: "v0.10.0"  # defaults to .global.datahub.version

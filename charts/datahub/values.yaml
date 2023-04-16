@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       memory: 2Gi
@@ -23,7 +23,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.10.0" # # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1400Mi
@@ -38,7 +38,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.11"
+    tag: "v0.0.12"
   # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
   # ingestionSecretFiles:
   #   name: ${K8S_SECRET_NAME}
@@ -53,7 +53,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -64,7 +64,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -76,13 +76,13 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -109,7 +109,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -134,7 +134,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -166,7 +166,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -201,7 +201,7 @@ datahubUpgrade:
     enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.10.0"  # defaults to .global.datahub.version
+    # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   podSecurityContext: {}

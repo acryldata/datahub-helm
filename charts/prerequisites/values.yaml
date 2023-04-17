@@ -2,7 +2,7 @@
 # Copy this file and update to the configuration of choice
 elasticsearch:
   enabled: true   # set this to false, if you want to provide your own ES instance.
-  imageTag: "7.17.9"
+
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
   replicas: 1
@@ -11,13 +11,13 @@ elasticsearch:
   # a master node when deploying on a single node Minikube / Kind / etc cluster.
   antiAffinity: "soft"
 
-  # If you are running a multi-replica cluster, comment this out
+  # # If you are running a multi-replica cluster, comment this out
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
-  # Shrink default JVM heap.
+  # # Shrink default JVM heap.
   esJavaOpts: "-Xmx384m -Xms384m"
 
-  # Allocate smaller chunks of memory per pod.
+  # # Allocate smaller chunks of memory per pod.
   resources:
     requests:
       cpu: "100m"
@@ -26,7 +26,7 @@ elasticsearch:
       cpu: "1000m"
       memory: "768M"
 
-  # Request smaller persistent volumes.
+  # # Request smaller persistent volumes.
   # volumeClaimTemplate:
   #   accessModes: ["ReadWriteOnce"]
   #   storageClassName: "standard"
@@ -36,7 +36,7 @@ elasticsearch:
 
 # Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
 neo4j:
-  enabled: false   # set this to true, if you have a license for the enterprise edition
+  enabled: false  # set this to true, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
   neo4jPassword: "datahub"

@@ -196,6 +196,17 @@ datahubUpgrade:
   securityContext: {}
     # runAsUser: 1000
   podAnnotations: {}
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
+  cleanupJob:
+    # Add extra sidecar containers to job pod
+    extraSidecars: []
+      # - name: my-image-name
+      #   image: my-image
+      #   imagePullPolicy: Always
   restoreIndices:
     resources:
       limits:

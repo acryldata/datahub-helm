@@ -87,7 +87,7 @@
         size: 1Gi
   cp-helm-charts:
     cp-schema-registry:
-      fullnameOverride: datahub-cp-schema-registry
+      fullnameOverride: datahub-schema-registry
   elasticsearch:
     fullnameOverride: elasticsearch-master
     resources:

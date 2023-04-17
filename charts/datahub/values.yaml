@@ -378,7 +378,7 @@ global:
     # partitions: 3
     # replicationFactor: 3
     schemaregistry:
-      url: "http://datahub-cp-schema-registry:8081"
+      url: "http://datahub-schema-registry:8081"
       type: KAFKA
       # glue:
       #   region: us-east-1
@@ -581,30 +581,51 @@ postgresql:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
 
-cp-helm-charts:
-  # Schema registry is under the community license
-  cp-schema-registry:
-    enabled: true
-    fullnameOverride: datahub-cp-schema-registry
-    kafka:
-      bootstrapServers: "datahub-kafka:9092" # <<release-name>>-kafka:9092
-  cp-kafka:
-    enabled: false
-  cp-zookeeper:
-    enabled: false
-  cp-kafka-rest:
-    enabled: false
-  cp-kafka-connect:
-    enabled: false
-  cp-ksql-server:
-    enabled: false
-  cp-control-center:
-    enabled: false
-
-# Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
-kafka:
+schema-registry:
   enabled: true
+  fullnameOverride: datahub-schema-registry
+  kafka:
+    enabled: false
+  externalKafka:
+    brokers:
+      - plaintext://datahub-kafka:9092
+
+kafka:
   fullnameOverride: datahub-kafka
+  enabled: true
+  replicaCount: 1
+  auth:
+    clientProtocol: plaintext
+    interBrokerProtocol: plaintext
+    tls:
+      existingSecrets: []
+      password: ""
+      endpointIdentificationAlgorithm: https
+    sasl:
+      jaas:
+        clientUsers:
+          - user
+        clientPasswords: []
+        interBrokerUser: admin
+        interBrokerPassword: ""
+        zookeeperUser: ""
+        zookeeperPassword: ""
+        existingSecret: ""
+  service:
+    ports:
+      client: 9092
+  zookeeper:
+    enabled: true
+    fullnameOverride: datahub-zookeeper
+    replicaCount: 1
+    auth:
+      client:
+        enabled: false
+        clientUser: zookeeperUser
+        clientPassword: ""
+        serverUsers: zookeeperUser
+        serverPasswords: ""
+        existingSecret: ""
   initContainers:
     - name: wait-for-zookeeper
       image: "jwilder/dockerize:latest"
@@ -613,5 +634,3 @@ kafka:
         - -c
         - |
           dockerize -wait "tcp://{{ .Values.global.kafka.zookeeper.server }}/" -timeout 360s
-  zookeeper:
-    fullnameOverride: datahub-zookeeper

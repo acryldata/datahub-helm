@@ -78,7 +78,7 @@ global:
     zookeeper:
       server: "datahub-zookeeper:2181"
     schemaregistry:
-      url: "http://datahub-cp-schema-registry:8081"
+      url: "http://datahub-schema-registry:8081"
 
   neo4j:
     host: "datahub-neo4j-community:7474"

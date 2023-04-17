@@ -20,7 +20,7 @@ A Helm chart for Kubernetes
 | global.datahub.metadata_service_authentication.enabled | bool | `false` |  |
 | global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` |  |
 | global.kafka.bootstrap.server | string | `"broker:9092"` |  |
-| global.kafka.schemaregistry.url | string | `"http://datahub-cp-schema-registry:8081"` |  |
+| global.kafka.schemaregistry.url | string | `"http://datahub-schema-registry:8081"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"acryldata/datahub-actions"` |  |
 | image.tag | string | `"v0.0.1"` |  |

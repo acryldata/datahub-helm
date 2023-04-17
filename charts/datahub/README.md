@@ -89,7 +89,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.kafka.topics.metadata_change_log_versioned_topic_name | string | `"MetadataChangeLog_Versioned_v1"` | Kafka topic name for Versioned Metadata Change Log events |
 | global.kafka.topics.metadata_change_log_timeseries_topic_name | string | `"MetadataChangeLog_Timeseries_v1"` | Kafka topic name for Timeseries Metadata Change Log events |
 | global.kafka.topics.platform_event_topic_name | string | `"PlatformEvent_v1"` | Kafka topic name for Platform events |
-| global.kafka.schemaregistry.url | string | `"http://datahub-cp-schema-registry:8081"` | URL to kafka schema registry |
+| global.kafka.schemaregistry.url | string | `"http://datahub-schema-registry:8081"` | URL to kafka schema registry |
 | global.neo4j.host | string | `"datahub-neo4j:7474"` | Neo4j host address (with port) |
 | global.neo4j.uri | string | `"bolt://datahub-neo4j"` | Neo4j URI |
 | global.neo4j.username | string | `"neo4j"` | Neo4j user name |

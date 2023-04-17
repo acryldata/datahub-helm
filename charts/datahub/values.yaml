@@ -588,7 +588,8 @@ schema-registry:
     enabled: false
   externalKafka:
     brokers:
-      - plaintext://datahub-kafka:9092
+      # String must be one of: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL
+      - PLAINTEXT://datahub-kafka:9092
 
 kafka:
   fullnameOverride: datahub-kafka

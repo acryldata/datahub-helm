@@ -1,0 +1,99 @@
+  fullnameOverride: datahub
+  postgresqlSetupJob:
+    enabled: true
+  mysqlSetupJob:
+    enabled: false
+  global:
+    sql:
+      datasource:
+        host: "postgresql:5432"
+        hostForpostgresqlClient: "postgresql"
+        port: "5432"
+        url: "jdbc:postgresql://postgresql:5432/datahub"
+        driver: "org.postgresql.Driver"
+        username: "postgres"
+        password:
+          value: "velotixSuite"
+  datahub-gms:
+    fullnameOverride: suite-datahub-gms
+    service:
+      type: ClusterIP
+  datahub-frontend:
+    fullnameOverride: datahub-datahub-frontend
+    service:
+      type: ClusterIP
+    # currently being tested, might change
+    resources:
+      limits:
+        memory: 3000Mi
+      requests:
+        cpu: 256m
+        memory: 1800Mi
+  datahub-mae-consumer:
+    fullnameOverride: datahub-datahub-mae-consumer
+  datahub-mce-consumer:
+    fullnameOverride: datahub-datahub-mce-consumer
+  acryl-datahub-actions:
+    fullnameOverride: datahub-acryl-datahub-actions
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+    image:
+      repository: velotixai/datahub-actions
+  postgresql:
+    enabled: true
+    fullnameOverride: postgresql
+    auth:
+      postgresPassword: velotixSuite
+      password: velotixSuite
+      existingSecret: ""
+    primary:
+      persistence:
+        size: 10Gi
+      initdb:
+        scripts:
+          create-databases.sql: |
+            CREATE USER keycloak WITH PASSWORD 'keycloak';
+            CREATE DATABASE keycloak OWNER keycloak;
+            GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
+
+            CREATE USER superset WITH PASSWORD 'superset';
+            CREATE DATABASE superset OWNER superset;
+            GRANT ALL PRIVILEGES ON DATABASE superset TO superset;
+  mysql:
+    enabled: true
+    fullnameOverride: mysql
+    auth:
+      username: velotix-admin
+      rootPassword: velotixSuite
+      password: velotixSuite
+      existingSecret: ""
+    initdbScripts:
+      velotix-initdb.sql: |
+        CREATE DATABASE IF NOT EXISTS velotix;
+        CREATE DATABASE IF NOT EXISTS velotix_de;
+        GRANT ALL PRIVILEGES ON *.* TO "velotix-admin"@"%";
+        FLUSH PRIVILEGES;
+  kafka:
+    fullnameOverride: datahub-kafka
+    persistence:
+      size: 1Gi
+    zookeeper:
+      fullnameOverride: datahub-zookeeper
+      persistence:
+        size: 1Gi
+  cp-helm-charts:
+    cp-schema-registry:
+      fullnameOverride: datahub-cp-schema-registry
+  elasticsearch:
+    fullnameOverride: elasticsearch-master
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "2Gi"
+      limits:
+        cpu: "1"
+        memory: "4Gi"

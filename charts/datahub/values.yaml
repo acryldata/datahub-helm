@@ -527,13 +527,13 @@ elasticsearch:
   # a master node when deploying on a single node Minikube / Kind / etc cluster.
   antiAffinity: "soft"
 
-  # # If you are running a multi-replica cluster, comment this out
+  # If you are running a multi-replica cluster, comment this out
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
-  # # Shrink default JVM heap.
+  # Shrink default JVM heap.
   esJavaOpts: "-Xmx384m -Xms384m"
 
-  # # Allocate smaller chunks of memory per pod.
+  # Allocate smaller chunks of memory per pod.
   resources:
     requests:
       cpu: "100m"
@@ -542,7 +542,7 @@ elasticsearch:
       cpu: "1000m"
       memory: "768M"
 
-  # # Request smaller persistent volumes.
+  # Request smaller persistent volumes.
   # volumeClaimTemplate:
   #   accessModes: ["ReadWriteOnce"]
   #   storageClassName: "standard"

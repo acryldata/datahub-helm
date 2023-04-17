@@ -59,7 +59,7 @@ dependencies:
   # This chart deploys an enterprise version of kafka that requires commercial license
   # Note, Schema registry and kafka rest proxy do not require the commercial license
   - name: cp-helm-charts
-    version: 0.6.0
+    version: 0.6.1
     repository: https://confluentinc.github.io/cp-helm-charts/
     condition: cp-helm-charts.enabled
   # This chart deploys a community version of kafka

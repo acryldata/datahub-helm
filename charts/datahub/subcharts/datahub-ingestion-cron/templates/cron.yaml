@@ -68,8 +68,8 @@ spec:
           {{- if .extraVolumes }}
             {{- toYaml .extraVolumes | nindent 12 }}
           {{- end }}
-        {{- with .Values.extraSidecars }}
-          {{- toYaml . | nindent 10 }}
+        {{- if .extraSidecars }}
+          {{- toYaml .extraSidecars | nindent 10 }}
         {{- end }}
 ---
 {{- end }}

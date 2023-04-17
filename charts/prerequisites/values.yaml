@@ -36,7 +36,7 @@ elasticsearch:
 
 # Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
 neo4j:
-  enabled: false  # set this to true, if you have a license for the enterprise edition
+  enabled: false   # set this to true, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
   neo4jPassword: "datahub"

@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       memory: 2Gi
@@ -23,7 +23,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1400Mi
@@ -53,7 +53,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -64,7 +64,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -76,13 +76,13 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -109,7 +109,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -134,7 +134,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -166,7 +166,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -201,7 +201,7 @@ datahubUpgrade:
     enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # defaults to .global.datahub.version
+    tag: ""   # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   podSecurityContext: {}

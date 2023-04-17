@@ -88,6 +88,9 @@ spec:
               {{- end }}
               resources:
                 {{- toYaml .Values.datahubUpgrade.restoreIndices.resources | nindent 16}}
+            {{- with .Values.datahubUpgrade.restoreIndices.extraSidecars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.datahubUpgrade.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

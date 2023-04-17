@@ -95,6 +95,11 @@ elasticsearchSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 kafkaSetupJob:
   enabled: true
@@ -113,6 +118,11 @@ kafkaSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 mysqlSetupJob:
   enabled: true
@@ -136,6 +146,11 @@ mysqlSetupJob:
   # password:
   #   secretRef: mysqlSetupJob-secret
   #   secretKey: mysqlSetupJob-password
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 postgresqlSetupJob:
   enabled: false
@@ -159,6 +174,11 @@ postgresqlSetupJob:
   # password:
   #   secretRef: postgresqlSetupJob-secret
   #   secretKey: postgresqlSetupJob-password
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 ## No code data migration
 datahubUpgrade:
@@ -184,6 +204,11 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+    # Add extra sidecar containers to job pod
+    extraSidecars: []
+      # - name: my-image-name
+      #   image: my-image
+      #   imagePullPolicy: Always
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -203,6 +228,11 @@ datahubSystemUpdate:
     requests:
       cpu: 300m
       memory: 256Mi
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 global:
   strict_mode: true

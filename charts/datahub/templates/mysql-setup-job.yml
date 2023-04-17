@@ -80,6 +80,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.mysqlSetupJob.resources | nindent 12 }}
+        {{- with .Values.mysqlSetupJob.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.mysqlSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

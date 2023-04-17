@@ -110,6 +110,12 @@ extraVolumeMounts: []
 
 extraInitContainers: []
 
+# Add extra sidecar containers to deployment pod
+extraSidecars: []
+  # - name: my-image-name
+  #   image: my-image
+  #   imagePullPolicy: Always
+
 lifecycle: {}
   # To add a new user to datahub in JAAS config without mounting the user.props file
   # postStart:

@@ -22,7 +22,7 @@ datahub-gms:
   # initContainers:
   # - name: wait-for-system-update
   #   image: bitnami/kubectl:latest
-  #   command: 
+  #   command:
   #     - sh
   #     - -c
   #     - |

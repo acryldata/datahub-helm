@@ -78,7 +78,7 @@ global:
     zookeeper:
       server: "prerequisites-zookeeper:2181"
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
+      url: "http://prerequisites-schema-registry:8081"
 
   neo4j:
     host: "prerequisites-neo4j-community:7474"

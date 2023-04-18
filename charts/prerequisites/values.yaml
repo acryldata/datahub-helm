@@ -114,4 +114,4 @@ kafka:
         - /bin/sh
         - -c
         - |
-          dockerize -wait "tcp://{{ .Values.global.kafka.zookeeper.server }}/" -timeout 360s
+          dockerize -wait "tcp://{{ .Release.Name }}-zookeeper:2181/" -timeout 360s

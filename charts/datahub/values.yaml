@@ -404,7 +404,7 @@ global:
     # partitions: 3
     # replicationFactor: 3
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
+      url: "http://prerequisites-schema-registry:8081"
       type: KAFKA
       # glue:
       #   region: us-east-1

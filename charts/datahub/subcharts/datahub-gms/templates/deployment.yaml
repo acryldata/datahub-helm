@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "datahub-gms.fullname" . }}
+  name: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
   labels:
     {{- include "datahub-gms.labels" . | nindent 4 }}
     {{- range $key, $val := .Values.extraLabels }}

@@ -72,7 +72,7 @@ global:
     bootstrap:
       server: "broker:9092"
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
+      url: "http://prerequisites-schema-registry:8081"
 
   datahub:
     gms:

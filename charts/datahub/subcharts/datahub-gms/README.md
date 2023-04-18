@@ -1,46 +1,24 @@
-# datahub-gms
-
-![Version: 0.2.150](https://img.shields.io/badge/Version-0.2.150-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.10.0](https://img.shields.io/badge/AppVersion-v0.10.0-informational?style=flat-square)
-
+datahub-gms
+===========
 A Helm chart for LinkedIn DataHub's datahub-gms component
 
-## Values
+Current chart version is `0.2.0`
+
+## Chart Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| extraEnvs | list | `[]` |  |
-| extraInitContainers | list | `[]` |  |
-| extraLabels | object | `{}` |  |
-| extraVolumeMounts | list | `[]` |  |
-| extraVolumes | list | `[]` |  |
-| fullnameOverride | string | `""` |  |
-| global.datahub.alwaysEmitChangeLog | bool | `true` |  |
+| extraLabels | object | `{}` | Extra labels for deployment configuration |
+| extraEnvs | Extra [environment variables][] which will be appended to the `env:` definition for the container | `[]` |
+| extraVolumes | Templatable string of additional `volumes` to be passed to the `tpl` function | "" |
+| extraVolumeMounts | Templatable string of additional `volumeMounts` to be passed to the `tpl` function | "" |
+| fullnameOverride | string | `"datahub-gms-deployment"` |  |
 | global.datahub.appVersion | string | `"1.0"` |  |
-| global.datahub.cache.search.enabled | bool | `false` |  |
-| global.datahub.cache.search.homepage.entityCounts.ttlSeconds | int | `600` |  |
-| global.datahub.cache.search.lineage.enabled | bool | `false` |  |
-| global.datahub.cache.search.lineage.lightningThreshold | int | `300` |  |
-| global.datahub.cache.search.lineage.ttlSeconds | int | `86400` |  |
-| global.datahub.cache.search.primary.maxSize | int | `10000` |  |
-| global.datahub.cache.search.primary.ttlSeconds | int | `600` |  |
-| global.datahub.enableGraphDiffMode | bool | `true` |  |
-| global.datahub.enable_retention | bool | `false` |  |
-| global.datahub.encryptionKey.secretKey | string | `"encryption-key-secret"` |  |
-| global.datahub.encryptionKey.secretRef | string | `"encryption-key-secret"` |  |
 | global.datahub.gms.port | string | `"8080"` |  |
-| global.datahub.managed_ingestion.enabled | bool | `true` |  |
-| global.datahub.metadata_service_authentication.enabled | bool | `false` |  |
-| global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` |  |
-| global.datahub.monitoring.enableJMXPort | bool | `false` |  |
-| global.datahub.monitoring.enablePrometheus | bool | `false` |  |
-| global.datahub.systemUpdate.enabled | bool | `true` |  |
-| global.datahub.version | string | `"head"` |  |
-| global.datahub_analytics_enabled | bool | `true` |  |
+| global.datahub.gms.nodePort | string | `""` |  |
 | global.elasticsearch.host | string | `"elasticsearch"` |  |
 | global.elasticsearch.port | string | `"9200"` |  |
-| global.elasticsearch.skipcheck | string | `"false"` |  |
-| global.graph_service_impl | string | `"neo4j"` |  |
 | global.hostAliases[0].hostnames[0] | string | `"broker"` |  |
 | global.hostAliases[0].hostnames[1] | string | `"mysql"` |  |
 | global.hostAliases[0].hostnames[2] | string | `"elasticsearch"` |  |
@@ -49,57 +27,58 @@ A Helm chart for LinkedIn DataHub's datahub-gms component
 | global.kafka.bootstrap.server | string | `"broker:9092"` |  |
 | global.kafka.schemaregistry.url | string | `"http://schema-registry:8081"` |  |
 | global.neo4j.host | string | `"neo4j:7474"` |  |
-| global.neo4j.password.secretKey | string | `"neo4j-password"` |  |
-| global.neo4j.password.secretRef | string | `"neo4j-secrets"` |  |
 | global.neo4j.uri | string | `"bolt://neo4j"` |  |
 | global.neo4j.username | string | `"neo4j"` |  |
+| global.neo4j.password.secretRef | string | `"neo4j-secrets"` |  |
+| global.neo4j.password.secretKey | string | `"neo4j-password"` |  |
 | global.sql.datasource.driver | string | `"com.mysql.cj.jdbc.Driver"` |  |
-| global.sql.datasource.host | string | `"mysql:3306"` |  |
-| global.sql.datasource.password.secretKey | string | `"mysql-password"` |  |
-| global.sql.datasource.password.secretRef | string | `"mysql-secrets"` |  |
-| global.sql.datasource.url | string | `"jdbc:mysql://mysql:3306/datahub?verifyServerCertificate=false&useSSL=true"` |  |
+| global.sql.datasource.host | string | `"mysql"` |  |
+| global.sql.datasource.url | string | `"jdbc:mysql://mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` |  |
 | global.sql.datasource.username | string | `"datahub"` |  |
+| global.sql.datasource.password.secretRef | string | `"mysql-secrets"` |  |
+| global.sql.datasource.password.secretKey | string | `"mysql-password"` |  |
+| global.graph_service_impl | string | `neo4j` | One of `neo4j` or `elasticsearch`. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"linkedin/datahub-gms"` |  |
-| image.tag | string | `nil` |  |
+| image.tag | string | `"head"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
-| ingress.extraLabels | object | `{}` |  |
+| ingress.extraLabels | object | `{}` | provides extra labels for ingress configuration |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
-| ingress.hosts[0].redirectPaths | list | `[]` |  |
 | ingress.tls | list | `[]` |  |
-| initContainers[0].command[0] | string | `"sh"` |  |
-| initContainers[0].command[1] | string | `"-c"` |  |
-| initContainers[0].command[2] | string | `"{{- if or .Release.IsInstall .Release.IsUpgrade .Release.IsRollback }}\necho \"Waiting for {{ .Release.Name }}-datahub-system-update-job\"\nkubectl wait --for=condition=complete job/{{ .Release.Name }}-datahub-system-update-job --timeout=360s\n{{- end }}\n"` |  |
-| initContainers[0].image | string | `"bitnami/kubectl:latest"` |  |
-| initContainers[0].name | string | `"wait-for-system-update"` |  |
-| livenessProbe.failureThreshold | int | `8` |  |
 | livenessProbe.initialDelaySeconds | int | `60` |  |
 | livenessProbe.periodSeconds | int | `30` |  |
+| livenessProbe.failureThreshold | int | `8` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| readinessProbe.failureThreshold | int | `8` |  |
 | readinessProbe.initialDelaySeconds | int | `60` |  |
 | readinessProbe.periodSeconds | int | `30` |  |
+| readinessProbe.failureThreshold | int | `8` |  |
 | replicaCount | int | `1` |  |
-| resources | object | `{}` |  |
 | revisionHistoryLimit | int | `10` |  |
+| resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.annotations | object | `{}` |  |
-| service.name | string | `"http"` |  |
-| service.port | string | `"8080"` |  |
-| service.protocol | string | `"TCP"` |  |
-| service.targetPort | string | `"http"` |  |
+| service.port | int | `8080` |  |
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `"datahub-gms"` |  |
-| serviceMonitor.create | bool | `false` |  |
+| serviceAccount.name | string | `nil` |  |
+| serviceMonitor.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
 | tolerations | list | `[]` |  |
-
-----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
+| global.datahub.metadata_service_authentication.enabled | bool | `false` | Whether Metadata Service Authentication is enabled. |
+| global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` | The internal system id that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.systemClientSecret.secretRef | string | `nil` | The reference to a secret containing the internal system secret that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.systemClientSecret.secretKey | string | `nil` | The key of a secret containing the internal system secret that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef | string | `nil` | The reference to a secret containing the internal system secret that is used to sign JWT auth tokens issued by DataHub GMS. |
+| global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey | string | `nil` | The key of a secret containing the internal system secret that is used to sign JWT auth tokens issued by DataHub GMS. |
+| global.datahub.metadata_service_authentication.tokenService.salt.secretRef | string | `nil` | The reference to a secret containing the internal system salt that is used to salt JWT auth tokens signatures issued by DataHub GMS that is part of the metadata graph. |
+| global.datahub.metadata_service_authentication.tokenService.salt.secretKey | string | `nil` | The key of a secret containing the internal system secret that is used to to salt JWT auth tokens signatures issued by DataHub GMS that is part of the metadata graph. |
+| global.datahub.managed_ingestion.enabled | bool | `true` | Whether or not UI-based ingestion experience is enabled. |
+| global.datahub.encryptionKey.secretRef | string | `nil` | The reference to a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. Required if managed_ingestion_enabled is 'true'. |
+| global.datahub.encryptionKey.secretKey | string | `nil` | The key of a secret containing an alpha-numeric encryption key, which is used to encrypt Secrets on DataHub. Required if managed_ingestion_enabled is 'true'. |
+| global.datahub.managed_ingestion.defaultCliVersion | string | `0.10.0` | This is the version of the DataHub CLI to use for UI ingestion, by default. You do not need to explicitly provide this. By default the underlying datahub-gms container will provide a latest version compatible with the server. |
+| global.datahub.enable_retention | bool | `false` | Whether or not to enable retention on local DB |

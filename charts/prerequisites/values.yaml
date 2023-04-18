@@ -1,7 +1,6 @@
-# Default configuration for pre-requisites to get you started
-# Copy this file and update to the configuration of choice
 elasticsearch:
   enabled: true   # set this to false, if you want to provide your own ES instance.
+  imageTag: "7.17.9"
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -11,13 +10,13 @@ elasticsearch:
   # a master node when deploying on a single node Minikube / Kind / etc cluster.
   antiAffinity: "soft"
 
-  # # If you are running a multi-replica cluster, comment this out
+  # If you are running a multi-replica cluster, comment this out
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
-  # # Shrink default JVM heap.
+  # Shrink default JVM heap.
   esJavaOpts: "-Xmx384m -Xms384m"
 
-  # # Allocate smaller chunks of memory per pod.
+  # Allocate smaller chunks of memory per pod.
   resources:
     requests:
       cpu: "100m"
@@ -26,7 +25,7 @@ elasticsearch:
       cpu: "1000m"
       memory: "768M"
 
-  # # Request smaller persistent volumes.
+  # Request smaller persistent volumes.
   # volumeClaimTemplate:
   #   accessModes: ["ReadWriteOnce"]
   #   storageClassName: "standard"
@@ -36,7 +35,7 @@ elasticsearch:
 
 # Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
 neo4j:
-  enabled: false  # set this to true, if you have a license for the enterprise edition
+  enabled: false   # set this to true, if you have a license for the enterprise edition
   acceptLicenseAgreement: "yes"
   defaultDatabase: "graph.db"
   neo4jPassword: "datahub"
@@ -65,25 +64,54 @@ postgresql:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
 
-cp-helm-charts:
-  # Schema registry is under the community license
-  cp-schema-registry:
-    enabled: true
-    kafka:
-      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
-  cp-kafka:
+schema-registry:
+  enabled: true
+  kafka:
     enabled: false
-  cp-zookeeper:
-    enabled: false
-  cp-kafka-rest:
-    enabled: false
-  cp-kafka-connect:
-    enabled: false
-  cp-ksql-server:
-    enabled: false
-  cp-control-center:
-    enabled: false
+  externalKafka:
+    brokers:
+      # String must be one of: PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL
+      - PLAINTEXT://prerequisites-kafka:9092
 
-# Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
   enabled: true
+  replicaCount: 1
+  auth:
+    clientProtocol: plaintext
+    interBrokerProtocol: plaintext
+    tls:
+      existingSecrets: []
+      password: ""
+      endpointIdentificationAlgorithm: https
+    sasl:
+      jaas:
+        clientUsers:
+          - user
+        clientPasswords: []
+        interBrokerUser: admin
+        interBrokerPassword: ""
+        zookeeperUser: ""
+        zookeeperPassword: ""
+        existingSecret: ""
+  service:
+    ports:
+      client: 9092
+  zookeeper:
+    enabled: true
+    replicaCount: 1
+    auth:
+      client:
+        enabled: false
+        clientUser: zookeeperUser
+        clientPassword: ""
+        serverUsers: zookeeperUser
+        serverPasswords: ""
+        existingSecret: ""
+  initContainers:
+    - name: wait-for-zookeeper
+      image: "jwilder/dockerize:latest"
+      command:
+        - /bin/sh
+        - -c
+        - |
+          dockerize -wait "tcp://{{ .Values.global.kafka.zookeeper.server }}/" -timeout 360s

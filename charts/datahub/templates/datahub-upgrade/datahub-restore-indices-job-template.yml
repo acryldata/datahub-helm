@@ -1,4 +1,4 @@
-{{- if .Values.datahubUpgrade.cronJobs.enabled -}}
+{{- if .Values.datahubUpgrade.enabled -}}
 # Job template for restoring indices by sending MAE corresponding to all entities in the local db
 # Creates a suspended cronJob that you can use to create an adhoc job when ready to run clean up.
 # Run the following command to do so
@@ -72,7 +72,7 @@ spec:
                 - "-a"
                 - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
               env:
-                {{- include "datahub.upgrade.env" . | nindent 16}}
+                {{- include "datahub.upgrade.env" . | nindent 16 }}
               {{- with .Values.datahubUpgrade.extraEnvs }}
                 {{- toYaml . | nindent 16 }}
               {{- end }}
@@ -87,7 +87,7 @@ spec:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               resources:
-                {{- toYaml .Values.datahubUpgrade.restoreIndices.resources | nindent 16}}
+                {{- toYaml .Values.datahubUpgrade.restoreIndices.resources | nindent 16 }}
           {{- with .Values.datahubUpgrade.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

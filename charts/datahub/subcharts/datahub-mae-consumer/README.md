@@ -1,80 +1,69 @@
-# datahub-mae-consumer
+datahub-mae-consumer
+====================
+A Helm chart for datahub-mae-consumer
 
-![Version: 0.2.142](https://img.shields.io/badge/Version-0.2.142-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.10.0](https://img.shields.io/badge/AppVersion-v0.10.0-informational?style=flat-square)
+Current chart version is `0.2.0`
 
-A Helm chart for Kubernetes
-
-## Values
+## Chart Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| env.JMXPORT | int | `1099` |  |
-| exporters.jmx.enabled | bool | `false` |  |
-| extraEnvs | list | `[]` |  |
-| extraInitContainers | list | `[]` |  |
-| extraLabels | object | `{}` |  |
-| extraVolumeMounts | list | `[]` |  |
-| extraVolumes | list | `[]` |  |
-| fullnameOverride | string | `""` |  |
-| global.datahub.alwaysEmitChangeLog | bool | `true` |  |
-| global.datahub.enableGraphDiffMode | bool | `true` |  |
+| exporters.jmx.enabled | boolean | false |  |
+| extraLabels | object | `{}` | Extra labels for deployment configuration |
+| extraEnvs | Extra [environment variables][] which will be appended to the `env:` definition for the container | `[]` |
+| extraVolumes | Templatable string of additional `volumes` to be passed to the `tpl` function | "" |
+| extraVolumeMounts | Templatable string of additional `volumeMounts` to be passed to the `tpl` function | "" |
+| fullnameOverride | string | `"datahub-mae-consumer"` |  |
+| global.datahub_analytics_enabled | boolean | true |  |
 | global.datahub.mae_consumer.port | string | `"9091"` |  |
-| global.datahub.metadata_service_authentication.enabled | bool | `false` |  |
-| global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` |  |
-| global.datahub.monitoring.enablePrometheus | bool | `false` |  |
-| global.datahub.systemUpdate.enabled | bool | `true` |  |
-| global.datahub.version | string | `"head"` |  |
-| global.datahub_analytics_enabled | bool | `true` |  |
+| global.datahub.mae_consumer.nodePort | string | `"30002"` |  |
 | global.elasticsearch.host | string | `"elasticsearch"` |  |
 | global.elasticsearch.port | string | `"9200"` |  |
-| global.elasticsearch.skipcheck | string | `"false"` |  |
-| global.graph_service_impl | string | `"neo4j"` |  |
+| global.kafka.bootstrap.server | string | `"broker:9092"` |  |
+| global.kafka.schemaregistry.url | string | `"http://schema-registry:8081"` |  |
+| global.neo4j.host | string | `"neo4j:7474"` |  |
+| global.neo4j.uri | string | `"bolt://neo4j"` |  |
+| global.neo4j.username | string | `"neo4j"` |  |
+| global.neo4j.password.secretRef | string | `"neo4j-secrets"` |  |
+| global.neo4j.password.secretKey | string | `"neo4j-password"` |  |
 | global.hostAliases[0].hostnames[0] | string | `"broker"` |  |
 | global.hostAliases[0].hostnames[1] | string | `"mysql"` |  |
 | global.hostAliases[0].hostnames[2] | string | `"elasticsearch"` |  |
 | global.hostAliases[0].hostnames[3] | string | `"neo4j"` |  |
 | global.hostAliases[0].ip | string | `"192.168.0.104"` |  |
-| global.kafka.bootstrap.server | string | `"broker:9092"` |  |
-| global.kafka.schemaregistry.url | string | `"http://schema-registry:8081"` |  |
-| global.neo4j.host | string | `"neo4j:7474"` |  |
-| global.neo4j.password.secretKey | string | `"neo4j-password"` |  |
-| global.neo4j.password.secretRef | string | `"neo4j-secrets"` |  |
-| global.neo4j.uri | string | `"bolt://neo4j"` |  |
-| global.neo4j.username | string | `"neo4j"` |  |
+| global.graph_service_impl | string | `neo4j` | One of `neo4j` or `elasticsearch`. Determines which backend to use for the GMS graph service. Elastic is recommended for a simplified deployment. Neo4j will be the default for now to maintain backwards compatibility |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"linkedin/datahub-mae-consumer"` |  |
-| image.tag | string | `nil` |  |
+| image.tag | string | `"head"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
 | ingress.tls | list | `[]` |  |
-| livenessProbe.failureThreshold | int | `8` |  |
 | livenessProbe.initialDelaySeconds | int | `60` |  |
 | livenessProbe.periodSeconds | int | `30` |  |
+| livenessProbe.failureThreshold | int | `8` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| readinessProbe.failureThreshold | int | `8` |  |
 | readinessProbe.initialDelaySeconds | int | `60` |  |
 | readinessProbe.periodSeconds | int | `30` |  |
+| readinessProbe.failureThreshold | int | `8` |  |
 | replicaCount | int | `1` |  |
-| resources | object | `{}` |  |
 | revisionHistoryLimit | int | `10` |  |
+| resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.name | string | `"http"` |  |
-| service.port | string | `"9091"` |  |
-| service.protocol | string | `"TCP"` |  |
-| service.targetPort | string | `"http"` |  |
+| service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
-| serviceMonitor.create | bool | `false` |  |
+| serviceMonitor.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
 | tolerations | list | `[]` |  |
-
-----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
+| datahub.metadata_service_authentication.enabled | bool | `false` | Whether Metadata Service Authentication is enabled. |
+| global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` | The internal system id that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.systemClientSecret.secretRef | string | `nil` | The reference to a secret containing the internal system secret that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.systemClientSecret.secretKey | string | `nil` | The key of a secret containing the internal system secret that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |

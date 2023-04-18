@@ -4,14 +4,14 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
   # Set up ingress to expose react front-end
   ingress:
@@ -34,35 +34,35 @@ elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: ""   # defaults to .global.datahub.version
+    # tag: "v0.10.0 # defaults to .global.datahub.version
 
 
 global:
@@ -74,15 +74,15 @@ global:
 
   kafka:
     bootstrap:
-      server: "datahub-kafka:9092"
+      server: "prerequisites-kafka:9092"
     zookeeper:
-      server: "datahub-zookeeper:2181"
+      server: "prerequisites-zookeeper:2181"
     schemaregistry:
-      url: "http://datahub-schema-registry:8081"
+      url: "http://prerequisites-cp-schema-registry:8081"
 
   neo4j:
-    host: "datahub-neo4j-community:7474"
-    uri: "bolt://datahub-neo4j-community"
+    host: "prerequisites-neo4j-community:7474"
+    uri: "bolt://prerequisites-neo4j-community"
     username: "neo4j"
     password:
       secretRef: neo4j-secrets
@@ -90,10 +90,10 @@ global:
 
   sql:
     datasource:
-      host: "datahub-mysql:3306"
-      hostForMysqlClient: "datahub-mysql"
+      host: "prerequisites-mysql:3306"
+      hostForMysqlClient: "prerequisites-mysql"
       port: "3306"
-      url: "jdbc:mysql://datahub-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
       driver: "com.mysql.cj.jdbc.Driver"
       username: "root"
       password:

@@ -8,15 +8,22 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  {{- if .Values.global.helmHooks }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-2"
+    "helm.sh/hook-delete-policy": before-hook-creation
+  {{- end }}
 spec:
   template:
+    {{- if or .Values.global.podLabels .Values.datahubUpgrade.podAnnotations }}
     metadata:
+    {{- with .Values.datahubUpgrade.podAnnotations }}
       annotations:
-        rollme: {{ randAlphaNum 5 | quote }}
-    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations }}
-        {{- with .Values.datahubUpgrade.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+    {{- end }}
     {{- with .Values.global.podLabels }}
       labels:
         {{- range $key, $value := . }}
@@ -44,7 +51,7 @@ spec:
             secretName: {{ .name }}
         {{- end }}
       {{- with .Values.datahubUpgrade.extraVolumes }}
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8}}
       {{- end }}
       restartPolicy: Never
       securityContext:
@@ -52,9 +59,6 @@ spec:
       initContainers:
       {{- if .Values.datahubUpgrade.initContainers }}
       {{-  tpl (toYaml .Values.datahubUpgrade.initContainers) . | nindent 6 }}
-      {{- end }}
-      {{- with .Values.datahubUpgrade.extraInitContainers }}
-        {{- toYaml . | nindent 12 }}
       {{- end }}
       containers:
         - name: datahub-upgrade-job
@@ -68,14 +72,9 @@ spec:
             - "-a"
             - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
             - "-a"
-            {{- if contains "mysql" .Values.global.sql.datasource.driver }}
-            - "dbType=MYSQL"
-            {{- end }}
-            {{- if contains "postgresql" .Values.global.sql.datasource.driver }}
-            - "dbType=POSTGRES"
-            {{- end }}
+            - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
           env:
-            {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
           {{- with .Values.datahubUpgrade.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

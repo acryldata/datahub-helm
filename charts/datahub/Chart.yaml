@@ -4,14 +4,13 @@ description: A Helm chart for LinkedIn DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-
-version: 0.3.0
+version: 0.2.164
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 0.10.2
 dependencies:
   - name: datahub-gms
-    version: 0.2.150
+    version: 0.2.147
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
@@ -34,39 +33,6 @@ dependencies:
     version: 0.2.135
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
-  - name: elasticsearch
-    version: 7.17.3
-    repository: https://helm.elastic.co
-    condition: elasticsearch.enabled
-  # This chart deploys an enterprise version of neo4j that requires commercial license
-  - name: neo4j
-    version: 4.2.2-1
-    repository: https://neo4j-contrib.github.io/neo4j-helm/
-    condition: neo4j.enabled
-  # This chart deploys a community version of neo4j
-  - name: neo4j-community
-    version: 1.2.5
-    repository: https://equinor.github.io/helm-charts/charts/
-    condition: neo4j-community.enabled
-  - name: mysql
-    version: 9.7.1
-    repository: https://charts.bitnami.com/bitnami
-    condition: mysql.enabled
-  - name: postgresql
-    version: 12.2.7
-    repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled
-  # This chart deploys an enterprise version of kafka that requires commercial license
-  # Note, Schema registry and kafka rest proxy do not require the commercial license
-  - name: schema-registry
-    version: 9.0.3
-    repository: https://charts.bitnami.com/bitnami
-    condition: cp-helm-charts.enabled
-  # This chart deploys a community version of kafka
-  - name: kafka
-    version: 21.4.4
-    repository: https://charts.bitnami.com/bitnami
-    condition: kafka.enabled
 maintainers:
   - name: DataHub
     email: datahub@acryl.io

@@ -1,76 +1,59 @@
-# datahub-mce-consumer
+datahub-mce-consumer
+====================
+A Helm chart for datahub-mce-consumer
 
-![Version: 0.2.144](https://img.shields.io/badge/Version-0.2.144-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.10.0](https://img.shields.io/badge/AppVersion-v0.10.0-informational?style=flat-square)
+Current chart version is `0.2.0`
 
-A Helm chart for Kubernetes
-
-## Values
+## Chart Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| env.JMXPORT | int | `1099` |  |
-| exporters.jmx.enabled | bool | `false` |  |
-| extraEnvs | list | `[]` |  |
-| extraInitContainers | list | `[]` |  |
-| extraLabels | object | `{}` |  |
-| extraVolumeMounts | list | `[]` |  |
-| extraVolumes | list | `[]` |  |
+| exporters.jmx.enabled | boolean | false |  |
+| extraLabels | object | `{}` | Extra labels for deployment configuration |
+| extraEnvs | Extra [environment variables][] which will be appended to the `env:` definition for the container | `[]` |
+| extraVolumes | Templatable string of additional `volumes` to be passed to the `tpl` function | "" |
+| extraVolumeMounts | Templatable string of additional `volumeMounts` to be passed to the `tpl` function | "" |
 | fullnameOverride | string | `""` |  |
+| global.kafka.bootstrap.server | string | `"broker:9092"` |  |
+| global.kafka.schemaregistry.url | string | `"http://schema-registry:8081"` |  |
 | global.datahub.gms.port | string | `"8080"` |  |
-| global.datahub.metadata_service_authentication.enabled | bool | `false` |  |
-| global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` |  |
-| global.datahub.monitoring.enablePrometheus | bool | `false` |  |
-| global.datahub.systemUpdate.enabled | bool | `true` |  |
-| global.datahub.version | string | `"head"` |  |
 | global.hostAliases[0].hostnames[0] | string | `"broker"` |  |
 | global.hostAliases[0].hostnames[1] | string | `"mysql"` |  |
 | global.hostAliases[0].hostnames[2] | string | `"elasticsearch"` |  |
 | global.hostAliases[0].hostnames[3] | string | `"neo4j"` |  |
 | global.hostAliases[0].ip | string | `"192.168.0.104"` |  |
-| global.kafka.bootstrap.server | string | `"broker:9092"` |  |
-| global.kafka.schemaregistry.url | string | `"http://schema-registry:8081"` |  |
-| global.sql.alwaysEmitChangeLog | bool | `true` |  |
-| global.sql.datasource.driver | string | `"com.mysql.cj.jdbc.Driver"` |  |
-| global.sql.datasource.host | string | `"mysql:3306"` |  |
-| global.sql.datasource.password.secretKey | string | `"mysql-password"` |  |
-| global.sql.datasource.password.secretRef | string | `"mysql-secrets"` |  |
-| global.sql.datasource.url | string | `"jdbc:mysql://mysql:3306/datahub?verifyServerCertificate=false&useSSL=true"` |  |
-| global.sql.datasource.username | string | `"datahub"` |  |
-| global.sql.enableGraphDiffMode | bool | `true` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"linkedin/datahub-mce-consumer"` |  |
-| image.tag | string | `nil` |  |
+| image.tag | string | `"head"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0].host | string | `"chart-example.local"` |  |
 | ingress.hosts[0].paths | list | `[]` |  |
 | ingress.tls | list | `[]` |  |
-| livenessProbe.failureThreshold | int | `4` |  |
 | livenessProbe.initialDelaySeconds | int | `60` |  |
 | livenessProbe.periodSeconds | int | `30` |  |
+| livenessProbe.failureThreshold | int | `4` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| readinessProbe.failureThreshold | int | `4` |  |
 | readinessProbe.initialDelaySeconds | int | `60` |  |
 | readinessProbe.periodSeconds | int | `30` |  |
+| readinessProbe.failureThreshold | int | `4` |  |
 | replicaCount | int | `1` |  |
-| resources | object | `{}` |  |
 | revisionHistoryLimit | int | `10` |  |
+| resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.name | string | `"http"` |  |
-| service.port | string | `"9090"` |  |
-| service.protocol | string | `"TCP"` |  |
-| service.targetPort | string | `"http"` |  |
+| service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.create | bool | `false` |  |
+| serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `nil` |  |
-| serviceMonitor.create | bool | `false` |  |
+| serviceMonitor.create | bool | `false` | If set true and `global.datahub.monitoring.enablePrometheus` is set `true` it will create a ServiceMonitor resource |
 | tolerations | list | `[]` |  |
-
-----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
+| datahub.metadata_service_authentication.enabled | bool | `false` | Whether Metadata Service Authentication is enabled. |
+| global.datahub.metadata_service_authentication.systemClientId | string | `"__datahub_system"` | The internal system id that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.systemClientSecret.secretRef | string | `nil` | The reference to a secret containing the internal system secret that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |
+| global.datahub.metadata_service_authentication.systemClientSecret.secretKey | string | `nil` | The key of a secret containing the internal system secret that is used to communicate with DataHub GMS. Required if metadata_service_authentication is 'true'. |

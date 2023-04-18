@@ -180,10 +180,8 @@ spec:
             - name: UI_INGESTION_ENABLED
               value: "false"
             {{- end }}
-            {{- if .Values.global.datahub.managed_ingestion.defaultCliVersion }}
             - name: UI_INGESTION_DEFAULT_CLI_VERSION
-              value: "{{ .Values.global.datahub.managed_ingestion.defaultCliVersion }}"
-            {{- end }}
+              value: {{ trimPrefix "v" .Values.global.datahub.version }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}

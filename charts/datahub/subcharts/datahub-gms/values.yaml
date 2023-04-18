@@ -171,7 +171,6 @@ global:
 
     managed_ingestion:
       enabled: true
-      # defaultCliVersion: "X.X.X" --> Optional: Controls the acryl-datahub package version downloaded from PyPI.
 
     metadata_service_authentication:
       enabled: false

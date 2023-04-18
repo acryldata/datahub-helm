@@ -110,4 +110,3 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.0"

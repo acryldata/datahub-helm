@@ -123,6 +123,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.kafkaSetupJob.resources | nindent 12 }}
+        {{- with .Values.kafkaSetupJob.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.kafkaSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

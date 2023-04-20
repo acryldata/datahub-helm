@@ -124,6 +124,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.datahubSystemUpdate.resources | nindent 12 }}
+        {{- with .Values.datahubSystemUpdate.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.datahubSystemUpdate.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 12 }}

@@ -39,6 +39,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
 | datahubUpgrade.podAnnotations | object | `{}` | Pod annotations for datahubUpgrade jobs |
 | datahubUpgrade.restoreIndices.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'restore indices' |
+| datahubUpgrade.restoreIndices.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
 | elasticsearchSetupJob.image.repository | string | `"linkedin/datahub-elasticsearch-setup"` | Image repository for elasticsearchSetupJob |
 | elasticsearchSetupJob.image.tag | string | `"v0.10.0"` | Image repository for elasticsearchSetupJob |
@@ -47,6 +48,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | elasticsearchSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for elasticsearchSetupJob |
 | elasticsearchSetupJob.podAnnotations | object | `{}` | Pod annotations for elasticsearchSetupJob |
+| elasticsearchSetupJob.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | kafkaSetupJob.enabled | bool | `true` | Enable setup job for kafka |
 | kafkaSetupJob.image.repository | string | `"linkedin/datahub-kafka-setup"` | Image repository for kafkaSetupJob |
 | kafkaSetupJob.image.tag | string | `"v0.10.0"` | Image repository for kafkaSetupJob |
@@ -55,6 +57,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | kafkaSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for kafkaSetupJob |
 | kafkaSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for kafkaSetupJob |
 | kafkaSetupJob.podAnnotations | object | `{}` | Pod annotations for kafkaSetupJob |
+| kafkaSetupJob.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | mysqlSetupJob.enabled | bool | `false` | Enable setup job for mysql |
 | mysqlSetupJob.image.repository | string | `"acryldata/datahub-mysql-setup"` | Image repository for mysqlSetupJob |
 | mysqlSetupJob.image.tag | string | `"v0.10.0"` | Image repository for mysqlSetupJob |
@@ -63,6 +66,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | mysqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | mysqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | mysqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
+| mysqlSetupJob.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | postgresqlSetupJob.enabled | bool | `false` | Enable setup job for postgresql |
 | postgresqlSetupJob.image.repository | string | `"acryldata/datahub-postgres-setup"` | Image repository for postgresqlSetupJob |
 | postgresqlSetupJob.image.tag | string | `"v0.10.0"` | Image repository for postgresqlSetupJob |
@@ -71,6 +75,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | postgresqlSetupJob.podSecurityContext | object | `{"fsGroup": 1000}` | Pod security context for mysqlSetupJob |
 | postgresqlSetupJob.securityContext | object | `{"runAsUser": 1000}` | Container security context for mysqlSetupJob |
 | postgresqlSetupJob.podAnnotations | object | `{}` | Pod annotations for mysqlSetupJob |
+| postgresqlSetupJob.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
+| datahubSystemUpdate.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | global.strict_mode | boolean | true | Enables validations in helm charts to ensure features work as expected. Recommended NOT TO CHANGE. |
 | global.datahub_standalone_consumers_enabled | boolean | true | Enable standalone consumers for kafka |
 | global.datahub_analytics_enabled | boolean | true | Enable datahub usage analytics |

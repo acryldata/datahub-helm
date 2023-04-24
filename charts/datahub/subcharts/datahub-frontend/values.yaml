@@ -216,6 +216,8 @@ global:
     version: head
     gms:
       port: "8080"
+    monitoring:
+      enablePrometheus: true
     appVersion: "1.0"
     metadata_service_authentication:
       enabled: false

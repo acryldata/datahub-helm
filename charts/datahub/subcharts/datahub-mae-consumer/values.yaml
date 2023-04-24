@@ -188,6 +188,8 @@ global:
 
   datahub:
     version: head
+    gms:
+      port: "8080"
     monitoring:
       enablePrometheus: false
 
@@ -198,6 +200,9 @@ global:
 
     mae_consumer:
       port: "9091"
+
+    managed_ingestion:
+      enabled: true
 
     metadata_service_authentication:
       enabled: false

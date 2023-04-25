@@ -81,7 +81,7 @@ datahub-ingestion-cron:
 elasticsearchSetupJob:
   enabled: true
   image:
-    repository: linkedin/datahub-elasticsearch-setup
+    repository: acryldata/datahub-elasticsearch-setup
     # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:
@@ -104,7 +104,7 @@ elasticsearchSetupJob:
 kafkaSetupJob:
   enabled: true
   image:
-    repository: linkedin/datahub-kafka-setup
+    repository: acryldata/datahub-kafka-setup
     # tag: "v0.10.0" # defaults to .global.datahub.version
   resources:
     limits:

@@ -77,6 +77,9 @@ spec:
                 requests:
                   cpu: 300m
                   memory: 256Mi
+            {{- with .Values.datahubUpgrade.cleanupJob.extraSidecars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.datahubUpgrade.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

@@ -51,6 +51,13 @@ crons: {}
     ##
     #extraInitContainers: {}
 
+    ## Add extra sidecar containers to job pod
+    ##
+    # extraSidecars: []
+    # - name: my-image-name
+    #  image: my-image
+    #  imagePullPolicy: Always
+
     ## If you want to specify your own service account, set its name like so.
     ##
     #serviceAccountName: "my-cron-service"
@@ -58,6 +65,13 @@ crons: {}
     ## Add your own pod annotations.
     ##
     #podAnnotations: {}
+
+# Add extra sidecar containers to deployment pod
+extraSidecars: []
+  # - name: my-image-name
+  #   image: my-image
+  #   imagePullPolicy: Always
+
 global:
   datahub:
     version: head

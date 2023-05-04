@@ -41,7 +41,7 @@ spec:
       {{- with .Values.ingestionSecretFiles }}
         - name: ingestion-secret-files
           secret:
-            defaultMode: 0444
+            defaultMode: {{ .defaultMode }}
             secretName: {{ .name }}
       {{- end }}
       {{- if .Values.extraVolumes }}
@@ -121,7 +121,7 @@ spec:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
             {{- end }}
-           {{- if .Values.extraEnvs }}
+          {{- if .Values.extraEnvs }}
             {{ toYaml .Values.extraEnvs | nindent 12 }}
           {{- end }}
           volumeMounts:
@@ -139,7 +139,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
+        {{- with .Values.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

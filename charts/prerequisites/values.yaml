@@ -2,14 +2,17 @@
 # Copy this file and update to the configuration of choice
 elasticsearch:
   enabled: true   # set this to false, if you want to provide your own ES instance.
-  replicas: 3
+
+  # If you're running in production, set this to 3 and comment out antiAffinity below
+  # Or alternatively if you're running production, bring your own ElasticSearch
+  replicas: 1
   minimumMasterNodes: 1
   # Set replicas to 1 and uncomment this to allow the instance to be scheduled on
   # a master node when deploying on a single node Minikube / Kind / etc cluster.
-  # antiAffinity: "soft"
+  antiAffinity: "soft"
 
-  # # If your running a single replica cluster add the following helm value
-  # clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  # # If you are running a multi-replica cluster, comment this out
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
   # # Shrink default JVM heap.
   esJavaOpts: "-Xmx384m -Xms384m"

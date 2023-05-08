@@ -39,6 +39,10 @@ acryl-datahub-actions:
   image:
     repository: acryldata/datahub-actions
     tag: "v0.0.11"
+  # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
+  # ingestionSecretFiles:
+  #   name: ${K8S_SECRET_NAME}
+  #   defaultMode: "0444"
   resources:
     limits:
       memory: 512Mi
@@ -91,6 +95,11 @@ elasticsearchSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 kafkaSetupJob:
   enabled: true
@@ -109,6 +118,11 @@ kafkaSetupJob:
   securityContext:
     runAsUser: 1000
   podAnnotations: {}
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 mysqlSetupJob:
   enabled: true
@@ -132,6 +146,11 @@ mysqlSetupJob:
   # password:
   #   secretRef: mysqlSetupJob-secret
   #   secretKey: mysqlSetupJob-password
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 postgresqlSetupJob:
   enabled: false
@@ -155,6 +174,11 @@ postgresqlSetupJob:
   # password:
   #   secretRef: postgresqlSetupJob-secret
   #   secretKey: postgresqlSetupJob-password
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 ## No code data migration
 datahubUpgrade:
@@ -172,6 +196,17 @@ datahubUpgrade:
   securityContext: {}
     # runAsUser: 1000
   podAnnotations: {}
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
+  cleanupJob:
+    # Add extra sidecar containers to job pod
+    extraSidecars: []
+      # - name: my-image-name
+      #   image: my-image
+      #   imagePullPolicy: Always
   restoreIndices:
     resources:
       limits:
@@ -180,6 +215,11 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+    # Add extra sidecar containers to job pod
+    extraSidecars: []
+      # - name: my-image-name
+      #   image: my-image
+      #   imagePullPolicy: Always
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -199,6 +239,11 @@ datahubSystemUpdate:
     requests:
       cpu: 300m
       memory: 256Mi
+  # Add extra sidecar containers to job pod
+  extraSidecars: []
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
 
 global:
   strict_mode: true
@@ -248,6 +293,35 @@ global:
         ## This setting allows continuing if and only if the cloneIndices setting is also enabled which
         ## ensures a complete backup of the original index is preserved.
         allowDocCountMismatch: false
+
+    ## Search related configuration
+    search:
+      ## Maximum terms in aggregations
+      maxTermBucketSize: 20
+
+      ## Configuration around exact matching for search
+      exactMatch:
+        ## if false will only apply weights, if true will exclude non-exact
+        exclusive: false
+        ## include prefix exact matches
+        withPrefix: true
+        ## boost multiplier when exact with case
+        exactFactor: 2.0
+        ## boost multiplier when exact prefix
+        prefixFactor: 1.6
+        ## stacked boost multiplier when case mismatch
+        caseSensitivityFactor: 0.7
+        ## enable exact match on structured search
+        enableStructured: true
+
+      ## Configuration for graph service dao
+      graph:
+        ## graph dao timeout seconds
+        timeoutSeconds: 50
+        ## graph dao batch size
+        batchSize: 1000
+        ## graph dao max result size
+        maxResult: 10000
 
   kafka:
     bootstrap:
@@ -315,7 +389,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.10.0
+    version: v0.10.2
     gms:
       port: "8080"
       nodePort: "30001"
@@ -353,7 +427,7 @@ global:
       systemClientId: "__datahub_system"
       systemClientSecret:
         secretRef: "datahub-auth-secrets"
-        secretKey: "token_service_signing_key"
+        secretKey: "system_client_secret"
       tokenService:
         signingKey:
           secretRef: "datahub-auth-secrets"
@@ -373,6 +447,9 @@ global:
 
     ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
     alwaysEmitChangeLog: true
+
+    ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
+    enableGraphDiffMode: true
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

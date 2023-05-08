@@ -273,8 +273,44 @@ spec:
             - name: ENTITY_SERVICE_ENABLE_RETENTION
               value: "true"
             {{- end }}
+            - name: ELASTICSEARCH_QUERY_MAX_TERM_BUCKET_SIZE
+              value: {{ .Values.global.elasticsearch.search.maxTermBucketSize | quote }}
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_EXCLUSIVE
+              value: {{ .Values.global.elasticsearch.search.exactMatch.exclusive | quote }}
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_WITH_PREFIX
+              value: {{ .Values.global.elasticsearch.search.exactMatch.withPrefix | quote }}
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_FACTOR
+              value: {{ .Values.global.elasticsearch.search.exactMatch.exactFactor | quote }}
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_PREFIX_FACTOR
+              value: {{ .Values.global.elasticsearch.search.exactMatch.prefixFactor | quote }}
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_CASE_FACTOR
+              value: {{ .Values.global.elasticsearch.search.exactMatch.caseSensitivityFactor | quote }}
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_ENABLE_STRUCTURED
+              value: {{ .Values.global.elasticsearch.search.exactMatch.enableStructured | quote }}
+            - name: ELASTICSEARCH_SEARCH_GRAPH_TIMEOUT_SECONDS
+              value: {{ .Values.global.elasticsearch.search.graph.timeoutSeconds | quote }}
+            - name: ELASTICSEARCH_SEARCH_GRAPH_BATCH_SIZE
+              value: {{ .Values.global.elasticsearch.search.graph.batchSize | quote }}
+            - name: ELASTICSEARCH_SEARCH_GRAPH_MAX_RESULT
+              value: {{ .Values.global.elasticsearch.search.graph.maxResult | quote }}
             - name: SEARCH_SERVICE_ENABLE_CACHE
-              value: {{ .Values.global.datahub.enable_search_cache | quote }}
+              value: {{ .Values.global.datahub.cache.search.enabled | quote }}
+            {{- if .Values.global.datahub.cache.search.enabled }}
+            - name: CACHE_TTL_SECONDS
+              value: {{ .Values.global.datahub.cache.search.primary.ttlSeconds | quote }}
+            - name: CACHE_MAX_SIZE
+              value: {{ .Values.global.datahub.cache.search.primary.maxSize | quote }}
+            - name: CACHE_ENTITY_COUNTS_TTL_SECONDS
+              value: {{ .Values.global.datahub.cache.search.homepage.entityCounts.ttlSeconds | quote }}
+            {{- end }}
+            - name: LINEAGE_SEARCH_CACHE_ENABLED
+              value: {{ .Values.global.datahub.cache.search.lineage.enabled | quote }}
+            {{- if .Values.global.datahub.cache.search.lineage.enabled }}
+            - name: CACHE_SEARCH_LINEAGE_TTL_SECONDS
+              value: {{ .Values.global.datahub.cache.search.lineage.ttlSeconds | quote }}
+            - name: CACHE_SEARCH_LINEAGE_LIGHTNING_THRESHOLD
+              value: {{ .Values.global.datahub.cache.search.lineage.lightningThreshold | quote }}
+            {{- end }}
             {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
             - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
               value: {{ . | quote }}
@@ -285,6 +321,8 @@ spec:
             {{- end }}
             - name: ALWAYS_EMIT_CHANGE_LOG
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
+            - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
+              value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -298,7 +336,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
+        {{- with .Values.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

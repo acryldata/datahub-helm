@@ -50,6 +50,12 @@ extraVolumeMounts: []
 
 extraInitContainers: []
 
+# Add extra sidecar containers to deployment pod
+extraSidecars: []
+  # - name: my-image-name
+  #   image: my-image
+  #   imagePullPolicy: Always
+
 resources: {}
 
 nodeSelector: {}
@@ -60,6 +66,11 @@ affinity: {}
 
 actions:
   kafkaAutoOffsetPolicy: "latest"
+
+# mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
+# ingestionSecretFiles:
+#   name: ${K8S_SECRET_NAME}
+#   defaultMode: "0444"
 
 global:
 

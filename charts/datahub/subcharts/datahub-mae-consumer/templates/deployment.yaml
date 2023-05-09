@@ -7,6 +7,10 @@ metadata:
     {{- range $key, $val := .Values.extraLabels }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
+  annotations:
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}

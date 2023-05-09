@@ -9,6 +9,9 @@ image:
 
 imagePullSecrets: []
 
+annotations: {}
+  # sync-wave: 5
+
 crons: {}
   #### Example data
   #hive:

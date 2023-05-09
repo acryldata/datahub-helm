@@ -7,6 +7,10 @@ metadata:
     {{- range $key, $val := .Values.extraLabels }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
+  annotations:
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   {{- if and (.Values.global.strict_mode) (gt .Values.replicaCount 1.0) (.Values.global.datahub.managed_ingestion.enabled) (.Values.global.datahub_standalone_consumers_enabled)}}
   {{- fail "\nManaged ingestion can not be used with multiple MCE Processor instances. If you wish to use standalone mode & managed ingestion, please use only 1 MCE replica."}}

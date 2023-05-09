@@ -91,6 +91,8 @@ oidcAuthentication:
 extraLabels: {}
   # owner: myteam
   # environment: test
+annotations: {}
+  # sync-wave: 5
 
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env

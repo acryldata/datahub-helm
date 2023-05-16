@@ -179,6 +179,10 @@ postgresqlSetupJob:
     # - name: my-image-name
     #   image: my-image
     #   imagePullPolicy: Always
+  # Optionally set a specific database using extraEnvs
+  # extraEnvs: []
+    # - name: "DATAHUB_DB_NAME"
+    #  value: "dh"
 
 ## No code data migration
 datahubUpgrade:
@@ -220,6 +224,10 @@ datahubUpgrade:
       # - name: my-image-name
       #   image: my-image
       #   imagePullPolicy: Always
+    # Optionally set a specific PostgreSQL database name using extraEnvs
+    # extraEnvs:
+    #   - name: "DATAHUB_DB_NAME"
+    #    value: "dh"
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -257,6 +265,8 @@ global:
     skipcheck: "false"
     insecure: "false"
     useSSL: "false"
+    # If you want to specify index prefixes use indexPrefix
+    # indexPrefix: "dh"
 
     ## The following section controls when and how reindexing of elasticsearch indices are performed
     index:
@@ -387,6 +397,12 @@ global:
       #   secretKey: postgres-password
       # --------------OR----------------
       #   value: password
+      
+      # If you want to use specific PostgreSQL database use extraEnvs
+      # extraEnvs:
+      #  - name: "DATAHUB_DB_NAME"
+      #    value: "dh"    
+
 
   datahub:
     version: v0.10.2

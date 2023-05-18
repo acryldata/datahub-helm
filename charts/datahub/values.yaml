@@ -181,8 +181,8 @@ postgresqlSetupJob:
     #   imagePullPolicy: Always
   # Optionally set a specific database using extraEnvs
   # extraEnvs: []
-    # - name: "DATAHUB_DB_NAME"
-    #  value: "dh"
+  #   - name: "DATAHUB_DB_NAME"
+  #     value: "dh"
 
 ## No code data migration
 datahubUpgrade:

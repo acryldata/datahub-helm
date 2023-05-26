@@ -333,6 +333,81 @@ global:
         ## graph dao max result size
         maxResult: 10000
 
+      custom:
+        enabled: false
+        # See documentation: https://datahubproject.io/docs/how/search/#customizing-search
+        config:
+          # Notes:
+          #
+          # First match wins
+          #
+          # queryRegex = Java regex syntax
+          #
+          # functionScores - See the following for function score syntax
+          # https://www.elastic.co/guide/en/elasticsearch/reference/7.17/query-dsl-function-score-query.html
+
+          queryConfigurations:
+            # Select *
+            - queryRegex: '[*]|'
+              simpleQuery: false
+              prefixMatchQuery: false
+              exactMatchQuery: false
+              boolQuery:
+                must_not:
+                  term:
+                    deprecated:
+                      value: true
+              functionScore:
+                functions:
+                  - filter:
+                      term:
+                        materialized:
+                          value: true
+                    weight: 0.8
+                score_mode: multiply
+                boost_mode: multiply
+
+            # Criteria for exact-match only
+            # Contains quoted or contains underscore then use exact match query
+            - queryRegex: >-
+                ["'].+["']|\S+_\S+
+              simpleQuery: false
+              prefixMatchQuery: true
+              exactMatchQuery: true
+              functionScore:
+                functions:
+                  - filter:
+                      term:
+                        materialized:
+                          value: true
+                    weight: 0.8
+                  - filter:
+                      term:
+                        deprecated:
+                          value: true
+                    weight: 0
+                score_mode: multiply
+                boost_mode: multiply
+            # default
+            - queryRegex: .*
+              simpleQuery: true
+              prefixMatchQuery: true
+              exactMatchQuery: true
+              boolQuery:
+                must_not:
+                  term:
+                    deprecated:
+                      value: true
+              functionScore:
+                functions:
+                  - filter:
+                      term:
+                        materialized:
+                          value: true
+                    weight: 0.8
+                score_mode: multiply
+                boost_mode: multiply
+
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"
@@ -355,8 +430,14 @@ global:
     # partitions: 3
     # replicationFactor: 3
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
-      type: KAFKA
+      # GMS Implementation - `url` configured based on component context
+      type: INTERNAL
+      # Confluent Kafka Implementation
+      # type: KAFKA
+      # url: "http://prerequisites-cp-schema-registry:8081"
+
+      # Glue Implementation - `url` not applicable
+      # type: AWS_GLUE
       # glue:
       #   region: us-east-1
       #   registry: datahub
@@ -397,15 +478,15 @@ global:
       #   secretKey: postgres-password
       # --------------OR----------------
       #   value: password
-      
+
       # If you want to use specific PostgreSQL database use extraEnvs
       # extraEnvs:
       #  - name: "DATAHUB_DB_NAME"
-      #    value: "dh"    
+      #    value: "dh"
 
 
   datahub:
-    version: v0.10.2
+    version: v0.10.3
     gms:
       port: "8080"
       nodePort: "30001"
@@ -436,7 +517,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.0"
+      defaultCliVersion: "0.10.3"
 
     metadata_service_authentication:
       enabled: false
@@ -462,7 +543,7 @@ global:
       #    salt: <salt value>
 
     ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
-    alwaysEmitChangeLog: true
+    alwaysEmitChangeLog: false
 
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true

@@ -200,7 +200,7 @@ global:
     enable_retention: false ## Set to true to enable retention on local DB
 
     ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
-    alwaysEmitChangeLog: true
+    alwaysEmitChangeLog: false
 
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true

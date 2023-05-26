@@ -66,9 +66,10 @@ postgresql:
     existingSecret: postgresql-secrets
 
 cp-helm-charts:
+  enabled: false
   # Schema registry is under the community license
   cp-schema-registry:
-    enabled: true
+    enabled: false
     kafka:
       bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
   cp-kafka:

@@ -434,7 +434,7 @@ global:
       type: INTERNAL
       # Confluent Kafka Implementation
       # type: KAFKA
-      url: "http://prerequisites-cp-schema-registry:8081"
+      # url: "http://prerequisites-cp-schema-registry:8081"
 
       # Glue Implementation - `url` not applicable
       # type: AWS_GLUE

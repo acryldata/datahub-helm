@@ -151,7 +151,7 @@ spec:
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: {{ printf "http://localhost:%s/schema-registry/api/" .Values.global.datahub.gms.port }}
-            {{- else }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"
             {{- end }}

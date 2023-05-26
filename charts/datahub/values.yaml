@@ -478,11 +478,11 @@ global:
       #   secretKey: postgres-password
       # --------------OR----------------
       #   value: password
-      
+
       # If you want to use specific PostgreSQL database use extraEnvs
       # extraEnvs:
       #  - name: "DATAHUB_DB_NAME"
-      #    value: "dh"    
+      #    value: "dh"
 
 
   datahub:

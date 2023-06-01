@@ -6234,6 +6234,47 @@ entries:
     version: 0.1.2
   datahub-prerequisites:
   - apiVersion: v2
+    created: "2023-06-01T21:34:01.093910327Z"
+    dependencies:
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: 7.17.3
+    - condition: neo4j.enabled
+      name: neo4j
+      repository: https://neo4j-contrib.github.io/neo4j-helm/
+      version: 4.2.2-1
+    - condition: neo4j-community.enabled
+      name: neo4j-community
+      repository: https://equinor.github.io/helm-charts/charts/
+      version: 1.2.5
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 9.1.8
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 11.2.6
+    - condition: cp-helm-charts.enabled
+      name: cp-helm-charts
+      repository: https://confluentinc.github.io/cp-helm-charts/
+      version: 0.6.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 22.1.3
+    description: A Helm chart for packages that Datahub depends on
+    digest: 10a5b31a7ec4f67a10db2307e484a0b40e6d01db08cca0a3b4de34232378bd82
+    maintainers:
+    - email: datahub@acryl.io
+      name: DataHub
+    name: datahub-prerequisites
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.17/datahub-prerequisites-0.0.17.tgz
+    version: 0.0.17
+  - apiVersion: v2
     created: "2023-05-26T16:50:52.096197819Z"
     dependencies:
     - condition: elasticsearch.enabled
@@ -6769,4 +6810,4 @@ entries:
     urls:
     - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.1/datahub-prerequisites-0.0.1.tgz
     version: 0.0.1
-generated: "2023-05-26T16:50:52.098397419Z"
+generated: "2023-06-01T21:34:01.095472237Z"

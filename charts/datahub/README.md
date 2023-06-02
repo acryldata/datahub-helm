@@ -95,7 +95,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.kafka.topics.metadata_change_log_versioned_topic_name | string | `"MetadataChangeLog_Versioned_v1"` | Kafka topic name for Versioned Metadata Change Log events |
 | global.kafka.topics.metadata_change_log_timeseries_topic_name | string | `"MetadataChangeLog_Timeseries_v1"` | Kafka topic name for Timeseries Metadata Change Log events |
 | global.kafka.topics.platform_event_topic_name | string | `"PlatformEvent_v1"` | Kafka topic name for Platform events |
-| global.kafka.schemaregistry.url | string | `"http://prerequisites-cp-schema-registry:8081"` | URL to kafka schema registry |
+| global.kafka.schemaregistry.url | string | `` | URL to kafka schema registry if using `KAFKA` type |
 | global.neo4j.host | string | `"prerequisites-neo4j:7474"` | Neo4j host address (with port) |
 | global.neo4j.uri | string | `"bolt://prerequisites-neo4j"` | Neo4j URI |
 | global.neo4j.username | string | `"neo4j"` | Neo4j user name |
@@ -139,7 +139,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.elasticsearch.auth.password.secretRef | string | `""` | Secret that contains the elasticsearch password |
 | global.elasticsearch.auth.password.secretKey | string | `""` | Secret key that contains the elasticsearch password |
 | global.elasticsearch.auth.password.value | string | `""` | Alternative to using the secret above, uses raw string value instead |
-| global.kafka.schemaregistry.type | string | `"KAFKA"` | Type of schema registry (KAFKA or AWS_GLUE) |
+| global.kafka.schemaregistry.type | string | `"INTERNAL"` | Type of schema registry (INTERNAL, KAFKA, or AWS_GLUE) |
 | global.kafka.schemaregistry.glue.region | string | `""` | Region of the AWS Glue schema registry |
 | global.kafka.schemaregistry.glue.registry | string | `""` | Name of the AWS Glue schema registry |
 | datahub.metadata_service_authentication.enabled | bool | `false` | Whether Metadata Service Authentication is enabled. |

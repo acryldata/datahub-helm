@@ -42,8 +42,13 @@ Return the env variables for upgrade jobs
 {{- end }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
+{{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+- name: KAFKA_SCHEMAREGISTRY_URL
+  value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+{{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: "{{ .Values.global.kafka.schemaregistry.url }}"
+{{- end }}
 - name: ELASTICSEARCH_HOST
   value: {{ .Values.global.elasticsearch.host | quote }}
 - name: ELASTICSEARCH_PORT

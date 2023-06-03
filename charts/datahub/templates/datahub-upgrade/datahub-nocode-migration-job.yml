@@ -62,6 +62,20 @@ spec:
         - name: datahub-upgrade-job
           image: "{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" ($.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubUpgrade.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.global.istio -}}
+          - command:
+            - /bin/sh
+            - -c
+            - |
+              until curl -fsI http://localhost:15021/healthz/ready; do echo \"Waiting for Sidecar...\"; sleep 3; done;
+              echo \"Sidecar available. Running the command...\";
+              java -jar /datahub/datahub-upgrade/bin/datahub-upgrade.jar \
+                -u NoCodeDataMigration \
+                -a batchSize={{ .Values.datahubUpgrade.batchSize }} \
+                -a batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }} \
+                -a dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }};
+              x=$(echo $?); curl -fsI -X POST http://localhost:15020/quitquitquit && exit $x
+          {{- else -}}
           args:
             - "-u"
             - "NoCodeDataMigration"
@@ -71,6 +85,8 @@ spec:
             - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
             - "-a"
             - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
+          {{- end -}}
+              
           env:
             {{- include "datahub.upgrade.env" . | nindent 12}}
           {{- with .Values.datahubUpgrade.extraEnvs }}

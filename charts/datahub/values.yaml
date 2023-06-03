@@ -258,6 +258,8 @@ global:
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
+  # Set to 'true' if you are using istio sidecar in your kubernetes cluster and you need to kill istio sidecar on job finish
+  istio: false
 
   elasticsearch:
     host: "elasticsearch-master"

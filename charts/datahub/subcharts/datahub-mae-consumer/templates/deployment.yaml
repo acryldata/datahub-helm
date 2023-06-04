@@ -97,7 +97,7 @@ spec:
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-mae-consumer/resources/entity-registry.yml
             - name: DATAHUB_GMS_HOST
-              value: {{ .Values.global.datahub.gms.host | default .Release.Name "-datahub-gms" }}
+              value: {{ .Values.global.datahub.gms.host | default (printf "%s-%s" .Release.Name "datahub-gms") }}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: KAFKA_BOOTSTRAP_SERVER

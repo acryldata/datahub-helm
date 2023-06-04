@@ -83,7 +83,7 @@ spec:
               value: "true"
             {{- end }}
             - name: DATAHUB_GMS_HOST
-              value: {{ .Values.global.datahub.gms.host | default .Release.Name "-datahub-gms" }}
+              value: {{ .Values.global.datahub.gms.host | default (printf "%s-%s" .Release.Name "datahub-gms") }}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: DATAHUB_SECRET

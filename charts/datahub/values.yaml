@@ -502,7 +502,7 @@ global:
       port: "9091"
       nodePort: "30002"
       # can override default MAE consumer host value for services connectivity
-      # host: datahub-gms
+      # host: datahub-mae-consumer
 
     appVersion: "1.0"
     systemUpdate:

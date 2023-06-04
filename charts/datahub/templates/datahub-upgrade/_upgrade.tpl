@@ -6,11 +6,11 @@ Return the env variables for upgrade jobs
 - name: ENTITY_REGISTRY_CONFIG_PATH
   value: /datahub/datahub-gms/resources/entity-registry.yml
 - name: DATAHUB_GMS_HOST
-  value: {{ .Values.global.datahub.gms.host | default printf "%s-%s" .Release.Name "datahub-gms" }}
+  value: {{ .Values.global.datahub.gms.host | default .Release.Name "-datahub-gms" }}
 - name: DATAHUB_GMS_PORT
   value: "{{ .Values.global.datahub.gms.port }}"
 - name: DATAHUB_MAE_CONSUMER_HOST
-  value: {{ .Values.global.datahub.mae_consumer.host | default printf "%s-%s" .Release.Name "datahub-mae-consumer" }}
+  value: {{ .Values.global.datahub.mae_consumer.host | default .Release.Name "-datahub-mae-consumer" }}
 - name: DATAHUB_MAE_CONSUMER_PORT
   value: "{{ .Values.global.datahub.mae_consumer.port }}"
 - name: EBEAN_DATASOURCE_USERNAME

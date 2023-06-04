@@ -63,12 +63,12 @@ spec:
               protocol: TCP
           env:
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ .Values.global.datahub.gms.host | default printf "%s-%s" .Release.Name "datahub-gms" }}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             # Deprecated in favour of DATAHUB_* variables
             - name: GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ .Values.global.datahub.gms.host | default printf "%s-%s" .Release.Name "datahub-gms" }}
             - name: GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: KAFKA_BOOTSTRAP_SERVER

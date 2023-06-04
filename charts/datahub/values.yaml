@@ -492,6 +492,8 @@ global:
     gms:
       port: "8080"
       nodePort: "30001"
+      # can override default GMS host value for services connectivity
+      # host: datahub-gms
 
     monitoring:
       enablePrometheus: true
@@ -499,6 +501,8 @@ global:
     mae_consumer:
       port: "9091"
       nodePort: "30002"
+      # can override default MAE consumer host value for services connectivity
+      # host: datahub-gms
 
     appVersion: "1.0"
     systemUpdate:

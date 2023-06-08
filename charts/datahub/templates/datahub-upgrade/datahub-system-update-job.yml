@@ -71,6 +71,14 @@ spec:
             {{- include "datahub.upgrade.env" . | nindent 12}}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: SCHEMA_REGISTRY_SYSTEM_UPDATE
+              value: "true"
+            - name: SPRING_KAFKA_PROPERTIES_AUTO_REGISTER_SCHEMAS
+              value: "false"
+            - name: SPRING_KAFKA_PROPERTIES_USE_LATEST_VERSION
+              value: "true"
+            {{- end }}
             {{- with .Values.global.kafka.schemaregistry.type }}
             - name: SCHEMA_REGISTRY_TYPE
               value: "{{ . }}"

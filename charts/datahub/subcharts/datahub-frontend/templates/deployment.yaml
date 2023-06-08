@@ -39,7 +39,7 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
-        {{- if .Values.defaultUserCredential }}
+        {{- if .Values.defaultUserCredentials }}
         - name: datahub-default-users
           secret:
             defaultMode: 0444
@@ -220,7 +220,7 @@ spec:
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
-          {{- if .Values.defaultUserCredential }}
+          {{- if .Values.defaultUserCredentials }}
             - name: datahub-users
               mountPath: /datahub-frontend/conf/user.props
               subPath: user.props

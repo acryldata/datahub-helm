@@ -33,7 +33,7 @@ datahub-frontend:
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
-  defaultUserCredential: |
+  defaultUserCredentials: |
     datahub:newpassword
 
 acryl-datahub-actions:

@@ -24,6 +24,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahub-frontend.image.repository | string | `"linkedin/datahub-frontend-react"` | Image repository for datahub-frontend |
 | datahub-frontend.image.tag | string | `"v0.10.0"` | Image tag for datahub-frontend |
 | datahub-frontend.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-frontend |
+| datahub-frontend.image.defaultUserCredentials | string | `"datahub:newpassword"` | Default user credentials |
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |
 | datahub-gms.image.tag | string | `"v0.10.0"` | Image tag for datahub-gms |

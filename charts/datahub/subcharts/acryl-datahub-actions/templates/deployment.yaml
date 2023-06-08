@@ -23,6 +23,9 @@ spec:
         {{- range $key, $value := .Values.global.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+        {{- range $key, $value := .Values.extraPodLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -73,8 +76,13 @@ spec:
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: SCHEMA_REGISTRY_URL
+              value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: SCHEMA_REGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"
+            {{- end }}
             - name: KAFKA_AUTO_OFFSET_POLICY
               value: "{{ .Values.actions.kafkaAutoOffsetPolicy }}"
             {{- if .Values.global.springKafkaConfigurationOverrides }}

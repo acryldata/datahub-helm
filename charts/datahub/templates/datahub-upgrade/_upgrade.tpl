@@ -14,7 +14,15 @@ Return the env variables for upgrade jobs
 - name: DATAHUB_MAE_CONSUMER_PORT
   value: "{{ .Values.global.datahub.mae_consumer.port }}"
 - name: EBEAN_DATASOURCE_USERNAME
-  value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
+  {{- $usernameValue := (.Values.sql).datasource.username | default .Values.global.sql.datasource.username }}
+  {{- if and (kindIs "string" $usernameValue) $usernameValue }}
+  value: {{ $usernameValue | quote }}
+  {{- else }}
+  valueFrom:
+    secretKeyRef:
+      name: "{{ (.Values.sql).datasource.username.secretRef | default .Values.global.sql.datasource.username.secretRef }}"
+      key: "{{ (.Values.sql).datasource.username.secretKey | default .Values.global.sql.datasource.username.secretKey }}"
+  {{- end }}
 - name: EBEAN_DATASOURCE_PASSWORD
   {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
   {{- if $passwordValue }}
@@ -42,8 +50,13 @@ Return the env variables for upgrade jobs
 {{- end }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
+{{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+- name: KAFKA_SCHEMAREGISTRY_URL
+  value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+{{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: "{{ .Values.global.kafka.schemaregistry.url }}"
+{{- end }}
 - name: ELASTICSEARCH_HOST
   value: {{ .Values.global.elasticsearch.host | quote }}
 - name: ELASTICSEARCH_PORT

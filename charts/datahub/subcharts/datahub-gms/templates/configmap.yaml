@@ -1,0 +1,14 @@
+{{- if .Values.global.elasticsearch.search.custom.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "search-custom" }}
+  labels:
+    {{- include "datahub-gms.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+data:
+  search_config.yml: |
+    {{- toYaml .Values.global.elasticsearch.search.custom.config | nindent 4 }}
+{{- end }}

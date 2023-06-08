@@ -24,7 +24,6 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahub-frontend.image.repository | string | `"linkedin/datahub-frontend-react"` | Image repository for datahub-frontend |
 | datahub-frontend.image.tag | string | `"v0.10.0"` | Image tag for datahub-frontend |
 | datahub-frontend.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for datahub-frontend |
-| datahub-frontend.image.defaultUserCredentials | string | `"datahub:newpassword"` | Default user credentials |
 | datahub-gms.enabled | bool | `true` | Enable GMS |
 | datahub-gms.image.repository | string | `"linkedin/datahub-gms"` | Image repository for datahub-gms |
 | datahub-gms.image.tag | string | `"v0.10.0"` | Image tag for datahub-gms |
@@ -117,6 +116,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| datahub-frontend.defaultUserCredentials | string | `"datahub:newpassword"` | Default user credentials |
 | datahub-gms.sql.datasource.username | string | `root` | SQL username for GMS (overrides global value) |
 | datahub-gms.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL password (overrides global value) |
 | datahub-gms.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the GMS SQL password (overrides global value) |

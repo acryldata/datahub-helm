@@ -38,6 +38,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
 | datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
 | datahubUpgrade.podAnnotations | object | `{}` | Pod annotations for datahubUpgrade jobs |
+| datahubUpgrade.cleanupJob.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'cleanupJob' |
+| datahubUpgrade.cleanupJob.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | datahubUpgrade.restoreIndices.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'restore indices' |
 | datahubUpgrade.restoreIndices.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |

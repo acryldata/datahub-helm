@@ -109,6 +109,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.sql.datasource.port | string | `"3306"` | SQL database port |
 | global.sql.datasource.url | string | `"jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` | URL to access SQL database |
 | global.sql.datasource.username | string | `"root"` | SQL user name |
+| global.sql.datasource.username.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL username |
+| global.sql.datasource.username.secretKey | string | `"mysql-username"` | Secret key that contains the MySQL username |
 | global.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL password |
 | global.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the MySQL password |
 | global.sql.datasource.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value instead |
@@ -119,6 +121,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | datahub-gms.sql.datasource.username | string | `root` | SQL username for GMS (overrides global value) |
+| datahub-gms.sql.datasource.username.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL username (overrides global value) |
+| datahub-gms.sql.datasource.username.secretKey | string | `"mysql-username"` | Secret key that contains the GMS SQL username (overrides global value) |
 | datahub-gms.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL password (overrides global value) |
 | datahub-gms.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the GMS SQL password (overrides global value) |
 | datahub-gms.sql.datasource.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value for GMS SQL login (overrides global value) |

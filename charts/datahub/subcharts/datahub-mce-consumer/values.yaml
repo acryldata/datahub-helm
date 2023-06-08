@@ -168,6 +168,9 @@ readinessProbe:
   failureThreshold: 4
 
 global:
+  elasticsearch:
+    host: "elasticsearch-master"
+
   kafka:
     bootstrap:
       server: "broker:9092"

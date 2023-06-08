@@ -60,6 +60,13 @@ spec:
               value: {{ .Values.global.kafka.zookeeper.server | quote }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: {{ .Values.global.kafka.bootstrap.server | quote }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: USE_CONFLUENT_SCHEMA_REGISTRY
+              value: "false"
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: USE_CONFLUENT_SCHEMA_REGISTRY
+              value: "true"
+            {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}

@@ -4,10 +4,10 @@ description: A Helm chart for LinkedIn DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.2.165
+version: 0.2.169
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: 0.10.2
+appVersion: 0.10.3
 dependencies:
   - name: datahub-gms
     version: 0.2.148
@@ -30,7 +30,7 @@ dependencies:
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
   - name: acryl-datahub-actions
-    version: 0.2.136
+    version: 0.2.137
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
 maintainers:

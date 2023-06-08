@@ -116,7 +116,6 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| datahub-frontend.defaultUserCredentials | string | `"datahub:newpassword"` | Default user credentials |
 | datahub-gms.sql.datasource.username | string | `root` | SQL username for GMS (overrides global value) |
 | datahub-gms.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL password (overrides global value) |
 | datahub-gms.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the GMS SQL password (overrides global value) |

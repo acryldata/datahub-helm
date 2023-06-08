@@ -221,7 +221,7 @@ spec:
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
           {{- if .Values.defaultUserCredentials }}
-            - name: datahub-users
+            - name: datahub-default-users
               mountPath: /datahub-frontend/conf/user.props
               subPath: user.props
           {{- end }}

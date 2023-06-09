@@ -19,7 +19,7 @@ datahub-frontend:
   defaultUserCredentials:
     randomAdminPassword: true
   # You can also set specific passwords for default users
-  # manualUserCredentials: |
+  # manualValue: |
   #  datahub:manualPassword
   #  initialViewer:manualPassword
 

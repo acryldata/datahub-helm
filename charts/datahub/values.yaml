@@ -35,10 +35,10 @@ datahub-frontend:
     enabled: false
   defaultUserCredentials:
     randomAdminPassword: true
-  # You can also set specific passwords for default users
-  # manualValue: |
-  #  datahub:manualPassword
-  #  initialViewer:manualPassword
+    # You can also set specific passwords for default users
+    # manualValues: |
+    #   datahub:manualPassword
+    #   initialViewer:manualPassword
 
 acryl-datahub-actions:
   enabled: true

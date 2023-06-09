@@ -33,8 +33,12 @@ datahub-frontend:
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
-  defaultUserCredentials: |
-    datahub:newpassword
+  defaultUserCredentials:
+    randomAdminPassword: true
+  # You can also set specific passwords for default users
+  # manualUserCredentials: |
+  #  datahub:manualPassword
+  #  initialViewer:manualPassword
 
 acryl-datahub-actions:
   enabled: true

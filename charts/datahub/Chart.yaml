@@ -10,7 +10,7 @@ version: 0.2.171
 appVersion: 0.10.3
 dependencies:
   - name: datahub-gms
-    version: 0.2.148
+    version: 0.2.149
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend

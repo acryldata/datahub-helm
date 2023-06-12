@@ -84,7 +84,7 @@ spec:
           {{- end}}
           livenessProbe:
             httpGet:
-              path: /health/check/ready
+              path: /health
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}

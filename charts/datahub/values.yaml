@@ -212,6 +212,13 @@ datahubUpgrade:
     #   image: my-image
     #   imagePullPolicy: Always
   cleanupJob:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 300m
+        memory: 256Mi
     # Add extra sidecar containers to job pod
     extraSidecars: []
       # - name: my-image-name

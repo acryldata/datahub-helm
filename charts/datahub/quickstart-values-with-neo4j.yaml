@@ -101,7 +101,7 @@ global:
         secretKey: mysql-root-password
 
   datahub:
-    version: v0.10.0
+    version: v0.10.4
     gms:
       port: "8080"
     mae_consumer:

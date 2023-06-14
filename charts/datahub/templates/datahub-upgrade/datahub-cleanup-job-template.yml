@@ -68,7 +68,7 @@ spec:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               resources:
-                {{- toYaml .Values.datahubUpgrade.cleanupJob.resources | nindent 12 }}
+                {{- toYaml .Values.datahubUpgrade.cleanupJob.resources | nindent 16 }}
             {{- with .Values.datahubUpgrade.cleanupJob.extraSidecars }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

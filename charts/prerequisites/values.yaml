@@ -70,7 +70,7 @@ postgresql:
 gcloud-sqlproxy:
   enabled: false
   # Specify an existing secret holding the cloud-sql service account credentials, if not specify, 
-  # the default compute service account will be used and it needs to have Cloud SQL Client role
+  # the default compute engine service account will be used and it needs to have Cloud SQL Client role
   existingSecret: ""
   # The key in the existing secret that stores the credentials
   existingSecretKey: ""

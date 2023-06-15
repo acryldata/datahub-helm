@@ -4,10 +4,7 @@ kind: Job
 metadata:
   name: {{ .Release.Name }}-postgresql-setup-job
   labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-    app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- include "datahub.labels" . | nindent 4 }}
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
@@ -80,6 +77,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.postgresqlSetupJob.resources | nindent 12 }}
+        {{- with .Values.postgresqlSetupJob.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.postgresqlSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

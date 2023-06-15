@@ -491,7 +491,8 @@ global:
       #  - name: "DATAHUB_DB_NAME"
       #    value: "dh"
 
-      ## Use below for usage of Google Cloud SQL MySQL instance instead of the self hosted MySQL
+      ## Use below for usage of Google Cloud SQL MySQL instance instead of the self hosted MySQL, 
+      ## make sure you have deployed gcloud-sqlproxy as prerequisite
       # host: "prerequisites-gcloud-sqlproxy:3306"
       # hostForMysqlClient: "prerequisites-gcloud-sqlproxy"
       # port: "3306"

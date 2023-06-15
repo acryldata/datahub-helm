@@ -4,10 +4,7 @@ kind: Job
 metadata:
   name: {{ .Release.Name }}-elasticsearch-setup-job
   labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-    app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- include "datahub.labels" . | nindent 4 }}
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
@@ -95,6 +92,9 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.elasticsearchSetupJob.resources | nindent 12 }}
+        {{- with .Values.elasticsearchSetupJob.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.elasticsearchSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

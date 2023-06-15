@@ -92,6 +92,9 @@ extraLabels: {}
   # owner: myteam
   # environment: test
 
+# Extra labels for the Pods
+extraPodLabels: {}
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
@@ -109,6 +112,12 @@ extraVolumeMounts: []
   #   readOnly: true
 
 extraInitContainers: []
+
+# Add extra sidecar containers to deployment pod
+extraSidecars: []
+  # - name: my-image-name
+  #   image: my-image
+  #   imagePullPolicy: Always
 
 lifecycle: {}
   # To add a new user to datahub in JAAS config without mounting the user.props file
@@ -210,6 +219,8 @@ global:
     version: head
     gms:
       port: "8080"
+    monitoring:
+      enablePrometheus: true
     appVersion: "1.0"
     metadata_service_authentication:
       enabled: false

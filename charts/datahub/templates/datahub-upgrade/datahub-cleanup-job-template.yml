@@ -8,10 +8,7 @@ kind: CronJob
 metadata:
   name: {{ .Release.Name }}-datahub-cleanup-job-template
   labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-    app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- include "datahub.labels" . | nindent 4 }}
 spec:
   schedule: "* * * * *"
   suspend: true
@@ -71,12 +68,10 @@ spec:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               resources:
-                limits:
-                  cpu: 500m
-                  memory: 512Mi
-                requests:
-                  cpu: 300m
-                  memory: 256Mi
+                {{- toYaml .Values.datahubUpgrade.cleanupJob.resources | nindent 16 }}
+            {{- with .Values.datahubUpgrade.cleanupJob.extraSidecars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.datahubUpgrade.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

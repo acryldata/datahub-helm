@@ -11,11 +11,11 @@ spec:
   schedule: {{ default "0 0 * * *" .schedule | quote}}
   jobTemplate:
     spec:
-      template:        
+      template:
         {{- with $val.podAnnotations }}
         metadata:
           annotations:
-            {{- toYaml . | nindent 12 }}    
+            {{- toYaml . | nindent 12 }}
         {{- end }}
         spec:
         {{- with $.Values.imagePullSecrets }}
@@ -68,5 +68,8 @@ spec:
           {{- if .extraVolumes }}
             {{- toYaml .extraVolumes | nindent 12 }}
           {{- end }}
+        {{- if .extraSidecars }}
+          {{- toYaml .extraSidecars | nindent 10 }}
+        {{- end }}
 ---
 {{- end }}

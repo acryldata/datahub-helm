@@ -67,6 +67,9 @@ extraLabels: {}
   # owner: myteam
   # environment: test
 
+# Extra labels for the Pods
+extraPodLabels: {}
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
@@ -84,6 +87,12 @@ extraVolumeMounts: []
   #   readOnly: true
 
 extraInitContainers: []
+
+# Add extra sidecar containers to deployment pod
+extraSidecars: []
+  # - name: my-image-name
+  #   image: my-image
+  #   imagePullPolicy: Always
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -159,6 +168,9 @@ readinessProbe:
   failureThreshold: 4
 
 global:
+  elasticsearch:
+    host: "elasticsearch-master"
+
   kafka:
     bootstrap:
       server: "broker:9092"
@@ -194,7 +206,7 @@ global:
         secretKey: "mysql-password"
 
     ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
-    alwaysEmitChangeLog: true
+    alwaysEmitChangeLog: false
 
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true

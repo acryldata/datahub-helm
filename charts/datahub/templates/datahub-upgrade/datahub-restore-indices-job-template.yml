@@ -8,10 +8,7 @@ kind: CronJob
 metadata:
   name: {{ .Release.Name }}-datahub-restore-indices-job-template
   labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-    app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- include "datahub.labels" . | nindent 4 }}
 spec:
   schedule: "* * * * *"
   suspend: true
@@ -88,6 +85,9 @@ spec:
               {{- end }}
               resources:
                 {{- toYaml .Values.datahubUpgrade.restoreIndices.resources | nindent 16}}
+            {{- with .Values.datahubUpgrade.restoreIndices.extraSidecars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.datahubUpgrade.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

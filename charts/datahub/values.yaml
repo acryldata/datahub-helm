@@ -493,7 +493,7 @@ global:
 
 
   datahub:
-    version: v0.10.3
+    version: v0.10.4
     gms:
       port: "8080"
       nodePort: "30001"
@@ -524,7 +524,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.3"
+      defaultCliVersion: "0.10.4"
 
     metadata_service_authentication:
       enabled: false

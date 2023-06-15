@@ -65,11 +65,11 @@ postgresql:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
 
-# Using gcloud-proxy requires the node in a GKE cluster to have Cloud SQL Admin scope, 
+# Using gcloud-proxy requires the node in a GKE cluster to have Cloud SQL Admin scope,
 # you will need to create a new node and migrate the workload if your current node does not have this scope
 gcloud-sqlproxy:
   enabled: false
-  # Specify an existing secret holding the cloud-sql service account credentials, if not specify, 
+  # Specify an existing secret holding the cloud-sql service account credentials, if not specify,
   # the default compute engine service account will be used and it needs to have Cloud SQL Client role
   existingSecret: ""
   # The key in the existing secret that stores the credentials

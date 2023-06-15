@@ -42,6 +42,12 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
+        {{- if .Values.defaultUserCredentials }}
+        - name: datahub-default-users
+          secret:
+            defaultMode: 0444
+            secretName: {{ printf "%s-user-secret" .Release.Name }}
+        {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -216,6 +222,11 @@ spec:
           {{- with .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- if .Values.defaultUserCredentials }}
+            - name: datahub-default-users
+              mountPath: /datahub-frontend/conf/user.props
+              subPath: user.props
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

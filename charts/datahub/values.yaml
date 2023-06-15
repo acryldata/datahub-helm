@@ -497,6 +497,19 @@ global:
       #  - name: "DATAHUB_DB_NAME"
       #    value: "dh"
 
+      ## Use below for usage of Google Cloud SQL MySQL instance instead of the self hosted MySQL,
+      ## make sure you have deployed gcloud-sqlproxy as prerequisite
+      # host: "prerequisites-gcloud-sqlproxy:3306"
+      # hostForMysqlClient: "prerequisites-gcloud-sqlproxy"
+      # port: "3306"
+      # url: "jdbc:mysql://prerequisites-gcloud-sqlproxy:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      # driver: "com.mysql.cj.jdbc.Driver"
+      # username: "root"
+      # password:
+      #   secretRef: mysql-secrets
+      #   secretKey: mysql-root-password
+      # --------------OR----------------
+      #   value: password
 
   datahub:
     version: v0.10.4

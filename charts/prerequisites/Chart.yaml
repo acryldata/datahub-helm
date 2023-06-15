@@ -4,7 +4,7 @@ description: A Helm chart for packages that Datahub depends on
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.0.15
+version: 0.0.16
 dependencies:
   - name: elasticsearch
     version: 7.17.3
@@ -28,6 +28,10 @@ dependencies:
     version: 11.2.6
     repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: postgresql.enabled
+  - name: gcloud-sqlproxy
+    version: 0.24.1
+    repository: https://charts.rimusz.net
+    condition: gcloud-sqlproxy.enabled
   # This chart deploys an enterprise version of kafka that requires commercial license
   # Note, Schema registry and kafka rest proxy do not require the commercial license
   - name: cp-helm-charts

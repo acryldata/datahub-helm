@@ -65,33 +65,27 @@ postgresql:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
 
+# Using gcloud-proxy requires the node in a GKE cluster to have Cloud SQL Admin scope, you will need to create a new node and migrate the workload if your current node does not have this scope
 gcloud-sqlproxy:
   enabled: false
-  ## Specify an existing secret holding the cloud-sql service account credentials
+  ## Specify an existing secret holding the cloud-sql service account credentials, if not specify, the default compute service account will be used and it needs to have Cloud SQL Client role
   existingSecret: ""
   ## The key in the existing secret that stores the credentials
   existingSecretKey: ""
   ## SQL connection settings
-  ##
   cloudsql:
-    ## PostgreSQL/MySQL instances:
-    ## update with your GCP project, the region of your Cloud SQL instance
-    ## and the name of your Cloud SQL instance
-    ## PostgreSQL port 5432 or MySQL port 3306, or other port you set for your SQL instance.
-    ## Use different ports for different instances.
+    ## MySQL instances:
+    ## update with your GCP project, the region of your Cloud SQL instance and the id of your Cloud SQL instance
+    ## use port 3306 for MySQL, or other port you set for your SQL instance.
     instances:
-      # GCP instance name.
-    - instance: "instance"
-      # Optional abbreviation used to override the truncated instance name if the
-      # 15 character instance name prefix is not unique for use as a port
-      # identifier.
-      instanceShortName: ""
+      # GCP Cloud SQL instance id
+    - instance: ""
       # GCP project where the instance exists.
-      project: "project"
+      project: ""
       # GCP region where the instance exists.
-      region: "region"
+      region: ""
       # Port number for the proxy to expose for this instance.
-      port: 5432
+      port: 3306
 
 cp-helm-charts:
   enabled: false

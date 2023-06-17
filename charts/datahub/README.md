@@ -38,6 +38,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | datahubUpgrade.podSecurityContext | object | `{}` | Pod security context for datahubUpgrade jobs |
 | datahubUpgrade.securityContext | object | `{}` | Container security context for datahubUpgrade jobs |
 | datahubUpgrade.podAnnotations | object | `{}` | Pod annotations for datahubUpgrade jobs |
+| datahubUpgrade.cleanupJob.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'cleanupJob' |
+| datahubUpgrade.cleanupJob.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | datahubUpgrade.restoreIndices.resources | object | '{}' | Kube Resource definitions for the datahub upgrade job 'restore indices' |
 | datahubUpgrade.restoreIndices.extraSidecars | list | `[]` | Add additional sidecar containers to the job pod |
 | elasticsearchSetupJob.enabled | bool | `true` | Enable setup job for elasicsearch |
@@ -95,7 +97,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.kafka.topics.metadata_change_log_versioned_topic_name | string | `"MetadataChangeLog_Versioned_v1"` | Kafka topic name for Versioned Metadata Change Log events |
 | global.kafka.topics.metadata_change_log_timeseries_topic_name | string | `"MetadataChangeLog_Timeseries_v1"` | Kafka topic name for Timeseries Metadata Change Log events |
 | global.kafka.topics.platform_event_topic_name | string | `"PlatformEvent_v1"` | Kafka topic name for Platform events |
-| global.kafka.schemaregistry.url | string | `"http://prerequisites-cp-schema-registry:8081"` | URL to kafka schema registry |
+| global.kafka.schemaregistry.url | string | `` | URL to kafka schema registry if using `KAFKA` type |
 | global.neo4j.host | string | `"prerequisites-neo4j:7474"` | Neo4j host address (with port) |
 | global.neo4j.uri | string | `"bolt://prerequisites-neo4j"` | Neo4j URI |
 | global.neo4j.username | string | `"neo4j"` | Neo4j user name |
@@ -107,6 +109,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.sql.datasource.port | string | `"3306"` | SQL database port |
 | global.sql.datasource.url | string | `"jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false\u0026useSSL=true"` | URL to access SQL database |
 | global.sql.datasource.username | string | `"root"` | SQL user name |
+| global.sql.datasource.username.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL username |
+| global.sql.datasource.username.secretKey | string | `"mysql-username"` | Secret key that contains the MySQL username |
 | global.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the MySQL password |
 | global.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the MySQL password |
 | global.sql.datasource.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value instead |
@@ -117,6 +121,8 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | datahub-gms.sql.datasource.username | string | `root` | SQL username for GMS (overrides global value) |
+| datahub-gms.sql.datasource.username.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL username (overrides global value) |
+| datahub-gms.sql.datasource.username.secretKey | string | `"mysql-username"` | Secret key that contains the GMS SQL username (overrides global value) |
 | datahub-gms.sql.datasource.password.secretRef | string | `"mysql-secrets"` | Secret that contains the GMS SQL password (overrides global value) |
 | datahub-gms.sql.datasource.password.secretKey | string | `"mysql-password"` | Secret key that contains the GMS SQL password (overrides global value) |
 | datahub-gms.sql.datasource.password.value | string | `"mysql-password"` | Alternative to using the secret above, uses raw string value for GMS SQL login (overrides global value) |
@@ -139,7 +145,7 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.elasticsearch.auth.password.secretRef | string | `""` | Secret that contains the elasticsearch password |
 | global.elasticsearch.auth.password.secretKey | string | `""` | Secret key that contains the elasticsearch password |
 | global.elasticsearch.auth.password.value | string | `""` | Alternative to using the secret above, uses raw string value instead |
-| global.kafka.schemaregistry.type | string | `"KAFKA"` | Type of schema registry (KAFKA or AWS_GLUE) |
+| global.kafka.schemaregistry.type | string | `"INTERNAL"` | Type of schema registry (INTERNAL, KAFKA, or AWS_GLUE) |
 | global.kafka.schemaregistry.glue.region | string | `""` | Region of the AWS Glue schema registry |
 | global.kafka.schemaregistry.glue.registry | string | `""` | Name of the AWS Glue schema registry |
 | datahub.metadata_service_authentication.enabled | bool | `false` | Whether Metadata Service Authentication is enabled. |

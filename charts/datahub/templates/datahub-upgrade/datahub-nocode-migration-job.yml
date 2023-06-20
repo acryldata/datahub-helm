@@ -49,9 +49,9 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.datahubUpgrade.podSecurityContext | nindent 8 }}
-      initContainers:
       {{- with .Values.datahubUpgrade.extraInitContainers }}
-        {{- toYaml . | nindent 12 }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: datahub-upgrade-job

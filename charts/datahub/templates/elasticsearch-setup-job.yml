@@ -43,6 +43,10 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.elasticsearchSetupJob.podSecurityContext | nindent 8 }}
+      {{- with .Values.elasticsearchSetupJob.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: elasticsearch-setup-job
           image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) }}"

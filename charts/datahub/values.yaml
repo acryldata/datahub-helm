@@ -96,10 +96,17 @@ elasticsearchSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Add extra sidecar containers to job pod
   extraSidecars: []
@@ -119,10 +126,17 @@ kafkaSetupJob:
     requests:
       cpu: 300m
       memory: 768Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Add extra sidecar containers to job pod
   extraSidecars: []
@@ -142,10 +156,17 @@ mysqlSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Optionally set a set-up job specific login (defaults to global login)
   # username: "mysqlSetupJob-login"
@@ -170,10 +191,17 @@ postgresqlSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Optionally set a set-up job specific login (defaults to global login)
   # username: "postgresqlSetupJob-login"
@@ -205,6 +233,12 @@ datahubUpgrade:
     # fsGroup: 1000
   securityContext: {}
     # runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-2"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Add extra sidecar containers to job pod
   extraSidecars: []
@@ -241,6 +275,7 @@ datahubUpgrade:
     # extraEnvs:
     #   - name: "DATAHUB_DB_NAME"
     #    value: "dh"
+  extraInitContainers: []
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -252,6 +287,12 @@ datahubSystemUpdate:
     # fsGroup: 1000
   securityContext: {}
     # runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-4"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   resources:
     limits:
@@ -265,6 +306,7 @@ datahubSystemUpdate:
     # - name: my-image-name
     #   image: my-image
     #   imagePullPolicy: Always
+  extraInitContainers: []
 
 global:
   strict_mode: true
@@ -537,6 +579,7 @@ global:
       provisionSecret:
         enabled: true
         autoGenerate: true
+        annotations: {}
       # Only specify if autoGenerate set to false
       #  secretValues:
       #    encryptionKey: <encryption key value>
@@ -562,6 +605,7 @@ global:
       provisionSecrets:
         enabled: true
         autoGenerate: true
+        annotations: {}
       # Only specify if autoGenerate set to false
       #  secretValues:
       #    secret: <secret value>

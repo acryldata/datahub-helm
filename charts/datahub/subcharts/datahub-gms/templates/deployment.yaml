@@ -97,6 +97,12 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: SHOW_SEARCH_FILTERS_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_search_v2 | quote }}
+            - name: SHOW_BROWSE_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_browse_v2 | quote }}
+            - name: BACKFILL_BROWSE_PATHS_V2
+              value: {{ .Values.global.datahub.search_and_browse.backfill_browse_v2 | quote }}
             {{- if .Values.global.elasticsearch.search.custom.enabled }}
             - name: ELASTICSEARCH_QUERY_CUSTOM_CONFIG_ENABLED
               value: "true"

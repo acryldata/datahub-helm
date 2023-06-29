@@ -618,6 +618,12 @@ global:
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true
 
+    ## Values specific to the unified search and browse feature.
+    search_and_browse:
+      show_search_v2: true # If on, show the new search filters experience as of v0.10.5
+      show_browse_v2: true # If on, show the new browse experience as of v0.10.5
+      backfill_browse_v2: true # If on, run the backfill upgrade job that generates default browse paths for relevant entities
+
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

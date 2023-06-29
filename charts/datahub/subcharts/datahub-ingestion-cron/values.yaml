@@ -66,6 +66,26 @@ crons: {}
     ##
     #podAnnotations: {}
 
+    ## Add your own restartPolicy
+    ##
+    #restartPolicy:
+
+    ## Add your own concurrencyPolicy
+    ##
+    #concurrencyPolicy:
+
+    ## Add your own failedJobsHistoryLimit
+    ##
+    #failedJobsHistoryLimit:
+
+    ## Add your own successfulJobsHistoryLimit
+    ##
+    #successfulJobsHistoryLimit:
+
+    ## Add your own backoffLimit
+    ##
+    #backoffLimit:
+
 # Add extra sidecar containers to deployment pod
 extraSidecars: []
   # - name: my-image-name

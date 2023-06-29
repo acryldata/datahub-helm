@@ -9,8 +9,12 @@ metadata:
   labels: {{- $labels | nindent 4 }}
 spec:
   schedule: {{ default "0 0 * * *" .schedule | quote}}
+  concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ default 3 .successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
   jobTemplate:
     spec:
+      backoffLimit: {{ default 6 $val.backoffLimit }}
       template:
         {{- with $val.podAnnotations }}
         metadata:
@@ -60,7 +64,7 @@ spec:
                     key: {{ $value.key | quote}}
               {{- end }}
               {{- end }}
-          restartPolicy: OnFailure
+          restartPolicy: {{ default "OnFailure" .restartPolicy }}
           volumes:
             - name: recipe
               configMap:

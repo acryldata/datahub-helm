@@ -11,6 +11,14 @@ datahub-gms:
     requests:
       cpu: 100m
       memory: 1Gi
+  livenessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 8
+  readinessProbe:
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    failureThreshold: 8
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:

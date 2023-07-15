@@ -65,6 +65,10 @@ spec:
               {{- end }}
               {{- end }}
           restartPolicy: {{ default "OnFailure" .restartPolicy }}
+          {{- if .nodeSelector }}
+          nodeSelector:
+            {{- toYaml .nodeSelector | nindent 12 }}
+          {{- end }}
           volumes:
             - name: recipe
               configMap:

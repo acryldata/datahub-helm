@@ -86,6 +86,11 @@ crons: {}
     ##
     #backoffLimit:
 
+    ## Node Selector parameters for job pod.
+    #nodeSelector: {}
+    #  region: us-west-1
+    #  disk: ssd
+
 # Add extra sidecar containers to deployment pod
 extraSidecars: []
   # - name: my-image-name

@@ -86,13 +86,19 @@ crons: {}
     ##
     #backoffLimit:
 
-    ## Node Selector parameters for job pod.
+    ## Node Selector parameters for job pod
+    ##
     #nodeSelector: {}
     #  region: us-west-1
     #  disk: ssd
 
     ## Affinity settings for job pod
+    ##
     #affinity : {}
+
+    ## Toleration settings  for job pod
+    ##
+    #tolerations: []
 
 # Add extra sidecar containers to deployment pod
 extraSidecars: []

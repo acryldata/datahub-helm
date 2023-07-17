@@ -73,6 +73,10 @@ spec:
           affinity:
             {{- toYaml .affinity | nindent 12 }}
           {{- end }}
+          {{- if .tolerations }}
+          tolerations:
+            {{- toYaml .tolerations | nindent 12 }}
+          {{- end }}
           volumes:
             - name: recipe
               configMap:

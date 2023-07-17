@@ -91,6 +91,9 @@ crons: {}
     #  region: us-west-1
     #  disk: ssd
 
+    ## Affinity settings for job pod
+    #affinity : {}
+
 # Add extra sidecar containers to deployment pod
 extraSidecars: []
   # - name: my-image-name

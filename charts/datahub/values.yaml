@@ -486,10 +486,10 @@ global:
     # replicationFactor: 3
     schemaregistry:
       # GMS Implementation - `url` configured based on component context
-      type: INTERNAL
+      # type: INTERNAL
       # Confluent Kafka Implementation
-      # type: KAFKA
-      # url: "http://prerequisites-cp-schema-registry:8081"
+      type: KAFKA
+        url: "http://prerequisites-cp-schema-registry:8081"
 
       # Glue Implementation - `url` not applicable
       # type: AWS_GLUE

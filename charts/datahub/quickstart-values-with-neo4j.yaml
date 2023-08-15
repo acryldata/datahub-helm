@@ -16,6 +16,12 @@ datahub-frontend:
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
+  defaultUserCredentials: {}
+  #  randomAdminPassword: true
+  #  # You can also set specific passwords for default users
+  #  # manualValues: |
+  #  #   datahub:manualPassword
+  #  #   initialViewer:manualPassword
 
 acryl-datahub-actions:
   enabled: true
@@ -101,7 +107,7 @@ global:
         secretKey: mysql-root-password
 
   datahub:
-    version: v0.10.0
+    version: v0.10.5
     gms:
       port: "8080"
     mae_consumer:
@@ -110,4 +116,4 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.0"
+      defaultCliVersion: "0.10.5.4"

@@ -11,6 +11,10 @@ datahub-gms:
     requests:
       cpu: 100m
       memory: 1Gi
+  # Service for datahub-gms 
+  service:
+    type: ClusterIP # NodePort or LoadBalancer
+    port: 8080
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:
@@ -30,6 +34,10 @@ datahub-frontend:
     requests:
       cpu: 100m
       memory: 512Mi
+  # Service for the react front-end 
+  service:
+    type: ClusterIP # NodePort or LoadBalancer
+    port: 9002
   # Set up ingress to expose react front-end
   ingress:
     enabled: false

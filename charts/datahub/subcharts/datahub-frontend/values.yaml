@@ -39,8 +39,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer # ClusterIP or NodePort
-  port: 9002
+  type: ClusterIP # NodePort or LoadBalancer
+  port: "9002"
   targetPort: http
   protocol: TCP
   name: http

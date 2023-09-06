@@ -70,7 +70,7 @@ spec:
             - name: SCHEMA_REGISTRY_SYSTEM_UPDATE
               value: "true"
             - name: SPRING_KAFKA_PROPERTIES_AUTO_REGISTER_SCHEMAS
-              value: "false"
+              value: "true"
             - name: SPRING_KAFKA_PROPERTIES_USE_LATEST_VERSION
               value: "true"
             {{- end }}

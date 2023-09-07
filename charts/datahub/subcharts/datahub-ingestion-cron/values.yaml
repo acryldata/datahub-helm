@@ -100,6 +100,12 @@ crons: {}
     ##
     #tolerations: []
 
+    ## Add extra sidecar containers to deployment pod
+    #extraSidecars:
+    # - name: my-image-name
+    #   image: my-image
+    #   imagePullPolicy: Always
+
 global:
   datahub:
     version: head

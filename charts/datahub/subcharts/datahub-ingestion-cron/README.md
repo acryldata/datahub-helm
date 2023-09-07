@@ -35,4 +35,4 @@ A Helm chart for datahub's metadata-ingestion framework with kerberos authentica
 | crons.nodeSelector | object | `{}` | Node labels for pod assignment |
 | crons.affinity | object | `{}` | Affinity for pod assignment |
 | crons.tolerations | list | `[]` | Tolerations for pod assignment |
-| extraSidecars | list | `[]` | Add additional sidecar containers to the deployment pod(s) |
+| crons.extraSidecars | list | `[]` | Add sidecar containers to the pod |

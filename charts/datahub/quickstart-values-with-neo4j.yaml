@@ -107,7 +107,7 @@ global:
         secretKey: mysql-root-password
 
   datahub:
-    version: v0.10.5
+    version: v0.11.0
     gms:
       port: "8080"
     mae_consumer:
@@ -116,4 +116,4 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.5.4"
+      defaultCliVersion: "0.11.0"

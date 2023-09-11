@@ -34,24 +34,40 @@ elasticsearch:
   #     requests:
   #       storage: 100M
 
-# Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
+# Official neo4j chart, supports both community and enterprise editions
+# see https://neo4j.com/docs/operations-manual/current/kubernetes/ for more information
+# source: https://github.com/neo4j/helm-charts
 neo4j:
-  enabled: false  # set this to true, if you have a license for the enterprise edition
-  acceptLicenseAgreement: "yes"
-  defaultDatabase: "graph.db"
-  neo4jPassword: "datahub"
-  # For better security, add password to neo4j-secrets k8s secret and uncomment below
-  # existingPasswordSecret: neo4j-secrets
-  core:
-    standalone: true
+  enabled: true 
+  nameOverride: neo4j
+  neo4j:
+    name: neo4j
+    edition: "community"
+    acceptLicenseAgreement: "yes"
+    defaultDatabase: "graph.db"
+    password: "datahub"
+    # For better security, add password to neo4j-secrets k8s secret with  neo4j-username neo4j-passwordn and NEO4J_AUTH and uncomment below
+    # NEO4J_AUTH: should be composed like so: {Username}/{Password}
+    # passwordFromSecret: neo4j-secrets
 
-# Deploys neo4j community version. Only supports single node
-neo4j-community:
-  enabled: false   # set this to true, if you want to run neo4j community edition
-  acceptLicenseAgreement: "yes"
-  defaultDatabase: "graph.db"
-  # For better security, add neo4j-secrets k8s secret with neo4j-password and uncomment below
-  existingPasswordSecret: neo4j-secrets
+  # Set security context for pod
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 7474
+    runAsGroup: 7474
+    fsGroup: 7474
+    fsGroupChangePolicy: "Always"
+
+  # Disallow privilegeEscalation on container level
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+
+  # Create a volume for neo4j, SSD storage is recommended
+  volumes: {}
+    # data:
+    #   mode: "dynamic"
+    #   dynamic:
+    #     storageClassName: managed-csi-premium
 
 mysql:
   enabled: true

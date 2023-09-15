@@ -28,6 +28,9 @@ spec:
         {{- range $key, $value := .Values.global.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+        {{- range $key, $value := .Values.extraPodLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}
       hostAliases:
@@ -46,6 +49,11 @@ spec:
           secret:
             defaultMode: 0444
             secretName: {{ .name }}
+        {{- end }}
+        {{- if .Values.global.elasticsearch.search.custom.enabled }}
+        - configMap:
+            name: {{ printf "%s-%s" .Release.Name "search-custom" }}
+          name: search-config
         {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
@@ -83,17 +91,29 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health/check/ready
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: SHOW_SEARCH_FILTERS_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_search_v2 | quote }}
+            - name: SHOW_BROWSE_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_browse_v2 | quote }}
+            - name: BACKFILL_BROWSE_PATHS_V2
+              value: {{ .Values.global.datahub.search_and_browse.backfill_browse_v2 | quote }}
+            {{- if .Values.global.elasticsearch.search.custom.enabled }}
+            - name: ELASTICSEARCH_QUERY_CUSTOM_CONFIG_ENABLED
+              value: "true"
+            - name: ELASTICSEARCH_QUERY_CUSTOM_CONFIG_FILE
+              value: "/datahub/datahub-gms/resources/search/search_config.yml"
+            {{- end}}
             {{- if gt .Values.replicaCount 1.0}}
             - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
               value: "hazelcast"
             - name: SEARCH_SERVICE_HAZELCAST_SERVICE_NAME
-              value: {{ printf "%s-%s" .Release.Name "hazelcast-service" }}
+              value: {{ printf "%s-%s-%s" .Release.Name (regexReplaceAll "\\W+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" }}
             {{- end}}
             {{- if .Values.global.datahub.systemUpdate.enabled }}
             - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
@@ -118,7 +138,15 @@ spec:
             - name: DATAHUB_ANALYTICS_ENABLED
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: EBEAN_DATASOURCE_USERNAME
-              value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
+              {{- $usernameValue := (.Values.sql).datasource.username | default .Values.global.sql.datasource.username }}
+              {{- if and (kindIs "string" $usernameValue) $usernameValue }}
+              value: {{ $usernameValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ (.Values.sql).datasource.username.secretRef | default .Values.global.sql.datasource.username.secretRef }}"
+                  key: "{{ (.Values.sql).datasource.username.secretKey | default .Values.global.sql.datasource.username.secretKey }}"
+              {{- end }}
             - name: EBEAN_DATASOURCE_PASSWORD
               {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
               {{- if $passwordValue }}
@@ -137,9 +165,12 @@ spec:
               value: "{{ .Values.global.sql.datasource.driver }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
-            {{- with .Values.global.kafka.schemaregistry.url }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
-              value: "{{ . }}"
+              value: {{ printf "http://localhost:%s/schema-registry/api/" .Values.global.datahub.gms.port }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ .Values.global.kafka.schemaregistry.url }}"
             {{- end }}
             {{- with .Values.global.kafka.schemaregistry.type }}
             - name: SCHEMA_REGISTRY_TYPE
@@ -330,6 +361,10 @@ spec:
           {{- with .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- if .Values.global.elasticsearch.search.custom.enabled }}
+            - name: search-config
+              mountPath: "/datahub/datahub-gms/resources/search"
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

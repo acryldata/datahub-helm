@@ -28,6 +28,9 @@ spec:
         {{- range $key, $value := .Values.global.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+        {{- range $key, $value := .Values.extraPodLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.global.hostAliases }}
       hostAliases:
@@ -84,6 +87,12 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: SHOW_SEARCH_FILTERS_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_search_v2 | quote }}
+            - name: SHOW_BROWSE_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_browse_v2 | quote }}
+            - name: BACKFILL_BROWSE_PATHS_V2
+              value: {{ .Values.global.datahub.search_and_browse.backfill_browse_v2 | quote }}
             {{- if .Values.global.datahub.systemUpdate.enabled }}
             - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
               value: {{ printf "%s-%s" .Release.Name "duhe-consumer-job-client-mcp" }}
@@ -98,9 +107,12 @@ spec:
               value: "true"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
-            {{- with .Values.global.kafka.schemaregistry.url }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
-              value: "{{ . }}"
+              value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ .Values.global.kafka.schemaregistry.url }}"
             {{- end }}
             {{- with .Values.global.kafka.schemaregistry.type }}
             - name: SCHEMA_REGISTRY_TYPE
@@ -117,7 +129,15 @@ spec:
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-mce-consumer/resources/entity-registry.yml
             - name: EBEAN_DATASOURCE_USERNAME
-              value: {{ (.Values.sql).datasource.username | default .Values.global.sql.datasource.username | quote }}
+              {{- $usernameValue := (.Values.sql).datasource.username | default .Values.global.sql.datasource.username }}
+              {{- if and (kindIs "string" $usernameValue) $usernameValue }}
+              value: {{ $usernameValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ (.Values.sql).datasource.username.secretRef | default .Values.global.sql.datasource.username.secretRef }}"
+                  key: "{{ (.Values.sql).datasource.username.secretKey | default .Values.global.sql.datasource.username.secretKey }}"
+              {{- end }}
             - name: EBEAN_DATASOURCE_PASSWORD
               {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
               {{- if $passwordValue }}

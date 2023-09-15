@@ -68,6 +68,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+auth:
+  sessionTTLHours: "24"
 # OIDC auth based on https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react
 oidcAuthentication:
   enabled: false
@@ -91,6 +93,9 @@ oidcAuthentication:
 extraLabels: {}
   # owner: myteam
   # environment: test
+
+# Extra labels for the Pods
+extraPodLabels: {}
 
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
@@ -216,6 +221,8 @@ global:
     version: head
     gms:
       port: "8080"
+    monitoring:
+      enablePrometheus: true
     appVersion: "1.0"
     metadata_service_authentication:
       enabled: false

@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
   resources:
     limits:
       memory: 2Gi
@@ -23,7 +23,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.10.0" # # defaults to .global.datahub.version
+    # tag: "v0.11.0" # # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1400Mi
@@ -33,6 +33,12 @@ datahub-frontend:
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
+  defaultUserCredentials: {}
+  #  randomAdminPassword: true
+  #  # You can also set specific passwords for default users
+  #  # manualValues: |
+  #  #   datahub:manualPassword
+  #  #   initialViewer:manualPassword
 
 acryl-datahub-actions:
   enabled: true
@@ -53,7 +59,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -64,7 +70,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -76,13 +82,13 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -90,10 +96,17 @@ elasticsearchSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Add extra sidecar containers to job pod
   extraSidecars: []
@@ -105,7 +118,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -113,10 +126,17 @@ kafkaSetupJob:
     requests:
       cpu: 300m
       memory: 768Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Add extra sidecar containers to job pod
   extraSidecars: []
@@ -128,7 +148,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -136,10 +156,17 @@ mysqlSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Optionally set a set-up job specific login (defaults to global login)
   # username: "mysqlSetupJob-login"
@@ -156,7 +183,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -164,10 +191,17 @@ postgresqlSetupJob:
     requests:
       cpu: 300m
       memory: 256Mi
+  extraInitContainers: []
   podSecurityContext:
     fsGroup: 1000
   securityContext:
     runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Optionally set a set-up job specific login (defaults to global login)
   # username: "postgresqlSetupJob-login"
@@ -179,13 +213,17 @@ postgresqlSetupJob:
     # - name: my-image-name
     #   image: my-image
     #   imagePullPolicy: Always
+  # Optionally set a specific database using extraEnvs
+  # extraEnvs: []
+  #   - name: "DATAHUB_DB_NAME"
+  #     value: "dh"
 
 ## No code data migration
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.10.0"  # defaults to .global.datahub.version
+    # tag: "v0.11.0"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
@@ -195,6 +233,12 @@ datahubUpgrade:
     # fsGroup: 1000
   securityContext: {}
     # runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-2"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   # Add extra sidecar containers to job pod
   extraSidecars: []
@@ -202,6 +246,13 @@ datahubUpgrade:
     #   image: my-image
     #   imagePullPolicy: Always
   cleanupJob:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 300m
+        memory: 256Mi
     # Add extra sidecar containers to job pod
     extraSidecars: []
       # - name: my-image-name
@@ -220,6 +271,11 @@ datahubUpgrade:
       # - name: my-image-name
       #   image: my-image
       #   imagePullPolicy: Always
+    # Optionally set a specific PostgreSQL database name using extraEnvs
+    # extraEnvs:
+    #   - name: "DATAHUB_DB_NAME"
+    #    value: "dh"
+  extraInitContainers: []
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
@@ -231,6 +287,12 @@ datahubSystemUpdate:
     # fsGroup: 1000
   securityContext: {}
     # runAsUser: 1000
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-4"
+    helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
   resources:
     limits:
@@ -244,6 +306,7 @@ datahubSystemUpdate:
     # - name: my-image-name
     #   image: my-image
     #   imagePullPolicy: Always
+  extraInitContainers: []
 
 global:
   strict_mode: true
@@ -257,6 +320,8 @@ global:
     skipcheck: "false"
     insecure: "false"
     useSSL: "false"
+    # If you want to specify index prefixes use indexPrefix
+    # indexPrefix: "dh"
 
     ## The following section controls when and how reindexing of elasticsearch indices are performed
     index:
@@ -323,6 +388,81 @@ global:
         ## graph dao max result size
         maxResult: 10000
 
+      custom:
+        enabled: false
+        # See documentation: https://datahubproject.io/docs/how/search/#customizing-search
+        config:
+          # Notes:
+          #
+          # First match wins
+          #
+          # queryRegex = Java regex syntax
+          #
+          # functionScores - See the following for function score syntax
+          # https://www.elastic.co/guide/en/elasticsearch/reference/7.17/query-dsl-function-score-query.html
+
+          queryConfigurations:
+            # Select *
+            - queryRegex: '[*]|'
+              simpleQuery: false
+              prefixMatchQuery: false
+              exactMatchQuery: false
+              boolQuery:
+                must_not:
+                  term:
+                    deprecated:
+                      value: true
+              functionScore:
+                functions:
+                  - filter:
+                      term:
+                        materialized:
+                          value: true
+                    weight: 0.8
+                score_mode: multiply
+                boost_mode: multiply
+
+            # Criteria for exact-match only
+            # Contains quoted or contains underscore then use exact match query
+            - queryRegex: >-
+                ["'].+["']|\S+_\S+
+              simpleQuery: false
+              prefixMatchQuery: true
+              exactMatchQuery: true
+              functionScore:
+                functions:
+                  - filter:
+                      term:
+                        materialized:
+                          value: true
+                    weight: 0.8
+                  - filter:
+                      term:
+                        deprecated:
+                          value: true
+                    weight: 0
+                score_mode: multiply
+                boost_mode: multiply
+            # default
+            - queryRegex: .*
+              simpleQuery: true
+              prefixMatchQuery: true
+              exactMatchQuery: true
+              boolQuery:
+                must_not:
+                  term:
+                    deprecated:
+                      value: true
+              functionScore:
+                functions:
+                  - filter:
+                      term:
+                        materialized:
+                          value: true
+                    weight: 0.8
+                score_mode: multiply
+                boost_mode: multiply
+
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"
@@ -345,8 +485,14 @@ global:
     # partitions: 3
     # replicationFactor: 3
     schemaregistry:
-      url: "http://prerequisites-cp-schema-registry:8081"
-      type: KAFKA
+      # GMS Implementation - `url` configured based on component context
+      type: INTERNAL
+      # Confluent Kafka Implementation
+      # type: KAFKA
+      # url: "http://prerequisites-cp-schema-registry:8081"
+
+      # Glue Implementation - `url` not applicable
+      # type: AWS_GLUE
       # glue:
       #   region: us-east-1
       #   registry: datahub
@@ -388,8 +534,27 @@ global:
       # --------------OR----------------
       #   value: password
 
+      # If you want to use specific PostgreSQL database use extraEnvs
+      # extraEnvs:
+      #  - name: "DATAHUB_DB_NAME"
+      #    value: "dh"
+
+      ## Use below for usage of Google Cloud SQL MySQL instance instead of the self hosted MySQL,
+      ## make sure you have deployed gcloud-sqlproxy as prerequisite
+      # host: "prerequisites-gcloud-sqlproxy:3306"
+      # hostForMysqlClient: "prerequisites-gcloud-sqlproxy"
+      # port: "3306"
+      # url: "jdbc:mysql://prerequisites-gcloud-sqlproxy:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      # driver: "com.mysql.cj.jdbc.Driver"
+      # username: "root"
+      # password:
+      #   secretRef: mysql-secrets
+      #   secretKey: mysql-root-password
+      # --------------OR----------------
+      #   value: password
+
   datahub:
-    version: v0.10.2
+    version: v0.11.0
     gms:
       port: "8080"
       nodePort: "30001"
@@ -414,13 +579,14 @@ global:
       provisionSecret:
         enabled: true
         autoGenerate: true
+        annotations: {}
       # Only specify if autoGenerate set to false
       #  secretValues:
       #    encryptionKey: <encryption key value>
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.0"
+      defaultCliVersion: "0.11.0"
 
     metadata_service_authentication:
       enabled: false
@@ -439,6 +605,7 @@ global:
       provisionSecrets:
         enabled: true
         autoGenerate: true
+        annotations: {}
       # Only specify if autoGenerate set to false
       #  secretValues:
       #    secret: <secret value>
@@ -446,10 +613,16 @@ global:
       #    salt: <salt value>
 
     ## Enables always emitting a MCL even when no changes are detected. Used for Time Based Lineage when no changes occur.
-    alwaysEmitChangeLog: true
+    alwaysEmitChangeLog: false
 
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true
+
+    ## Values specific to the unified search and browse feature.
+    search_and_browse:
+      show_search_v2: true  # If on, show the new search filters experience as of v0.10.5
+      show_browse_v2: true  # If on, show the new browse experience as of v0.10.5
+      backfill_browse_v2: true  # If on, run the backfill upgrade job that generates default browse paths for relevant entities
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

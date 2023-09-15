@@ -9,8 +9,12 @@ metadata:
   labels: {{- $labels | nindent 4 }}
 spec:
   schedule: {{ default "0 0 * * *" .schedule | quote}}
+  concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ default 3 .successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
   jobTemplate:
     spec:
+      backoffLimit: {{ default 6 $val.backoffLimit }}
       template:
         {{- with $val.podAnnotations }}
         metadata:
@@ -60,7 +64,22 @@ spec:
                     key: {{ $value.key | quote}}
               {{- end }}
               {{- end }}
-          restartPolicy: OnFailure
+            {{- if .extraSidecars }}
+              {{- toYaml .extraSidecars | nindent 10 }}
+            {{- end }}
+          restartPolicy: {{ default "OnFailure" .restartPolicy }}
+          {{- if .nodeSelector }}
+          nodeSelector:
+            {{- toYaml .nodeSelector | nindent 12 }}
+          {{- end }}
+          {{- if .affinity }}
+          affinity:
+            {{- toYaml .affinity | nindent 12 }}
+          {{- end }}
+          {{- if .tolerations }}
+          tolerations:
+            {{- toYaml .tolerations | nindent 12 }}
+          {{- end }}
           volumes:
             - name: recipe
               configMap:
@@ -68,8 +87,5 @@ spec:
           {{- if .extraVolumes }}
             {{- toYaml .extraVolumes | nindent 12 }}
           {{- end }}
-        {{- if .extraSidecars }}
-          {{- toYaml .extraSidecars | nindent 10 }}
-        {{- end }}
 ---
 {{- end }}

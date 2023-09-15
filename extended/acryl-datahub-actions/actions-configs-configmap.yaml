@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datahub-actions-configs
+  namespace: datahub
+data:
+  exector.yaml: |
+    name: "ingestion_executor"
+    source:
+      type: "kafka"
+      config:
+        connection:
+          bootstrap: 'public-kafka-01-leo-dev-aiven.aivencloud.com:29659'
+          schema_registry_url: 'https://FIXME:FIXME@public-kafka-01-leo-dev-aiven.aivencloud.com:29650'
+          consumer_config:
+            security.protocol: SASL_SSL
+            sasl.mechanism: SCRAM-SHA-512
+            sasl.username: FIXME
+            sasl.password: FIXME
+            ssl.ca.location: /mnt/datahub/certs/ca.pem
+        topic_routes:
+          mcl: ${METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME:-MetadataChangeLog_Versioned_v1}
+          pe: ${PLATFORM_EVENT_TOPIC_NAME:-PlatformEvent_v1}
+    filter:
+      event_type: "MetadataChangeLogEvent_v1"
+      event:
+        entityType: "dataHubExecutionRequest"
+        changeType: "UPSERT"
+        aspectName:
+          - "dataHubExecutionRequestInput"
+          - "dataHubExecutionRequestSignal"
+        aspect:
+          value:
+            executorId: "${EXECUTOR_ID:-default}"
+    action:
+      type: "executor"
+      config:
+        executor_id: "${EXECUTOR_ID:-default}"
+    datahub:
+      server: "${DATAHUB_GMS_PROTOCOL:-http}://${DATAHUB_GMS_HOST:-localhost}:${DATAHUB_GMS_PORT:-8080}"
+      extra_headers:
+        Authorization: "Basic ${DATAHUB_SYSTEM_CLIENT_ID:-__datahub_system}:${DATAHUB_SYSTEM_CLIENT_SECRET:-JohnSnowKnowsNothing}"
+        Authorization: "Bearer ${FIXME}"

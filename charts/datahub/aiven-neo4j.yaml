@@ -1,0 +1,190 @@
+# Values to start up datahub after starting up the datahub-prerequisites chart with "prerequisites" release name
+# Copy this chart and change configuration as needed.
+datahub-gms:
+  enabled: true
+  image:
+    repository: linkedin/datahub-gms
+    # tag: "v0.10.0 # defaults to .global.datahub.version
+  extraEnvs:
+    - name: METADATA_SERVICE_AUTH_ENABLED
+      value: "true"
+    #- name: UI_INGESTION_DEFAULT_CLI_VERSION
+    #  value: "0.10.2.2"
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "Internal"
+      external-dns.alpha.kubernetes.io/hostname: "datahub-gms.leo-dev-common.lvg-tech.net."
+
+datahub-frontend:
+  enabled: true
+  image:
+    repository: linkedin/datahub-frontend-react
+    # tag: "v0.10.0 # defaults to .global.datahub.version
+  extraEnvs:
+    - name: METADATA_SERVICE_AUTH_ENABLED
+      value: "true"
+  # Set up ingress to expose react front-end
+  ingress:
+    enabled: false
+  service:
+    annotations:
+      networking.gke.io/load-balancer-type: "Internal"
+      external-dns.alpha.kubernetes.io/hostname: "datahub.leo-dev-common.lvg-tech.net."
+
+acryl-datahub-actions:
+  enabled: true
+  image:
+    repository: acryldata/datahub-actions
+    tag: "v0.0.7"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  extraEnvs:
+    - name: DATAHUB_ACTIONS_SYSTEM_CONFIGS_PATH
+      value: /etc/datahub/actions/system/conf
+    - name: DATAHUB_SYSTEM_CLIENT_ID
+      value: "__datahub_system"
+    - name: DATAHUB_SYSTEM_CLIENT_SECRET
+      value: "JohnSnowKnowsNothing"
+  extraVolumes:
+    - name: actions-configs
+      configMap:
+        name: datahub-actions-configs
+        items:
+          - key: "exector.yaml"
+            path: "exector.yaml"
+  extraVolumeMounts:
+    - name: actions-configs
+      mountPath: /etc/datahub/actions/system/conf
+  serviceAccount:
+    create: true
+    annotations: {
+      iam.gke.io/gcp-service-account: dev-common-datahub@leo-dev-common.iam.gserviceaccount.com
+    }
+    name: "datahub"
+
+elasticsearchSetupJob:
+  enabled: false
+  image:
+    repository: linkedin/datahub-elasticsearch-setup
+    #repository: ericnoamleo/datahub-elasticsearch-setup
+    #tag: latest
+  extraEnvs:
+    - name: USE_AWS_ELASTICSEARCH
+      value: "true"
+
+kafkaSetupJob:
+  enabled: false
+  image:
+    repository: linkedin/datahub-kafka-setup
+    # tag: "v0.11.0 # defaults to .global.datahub.version
+
+
+mysqlSetupJob:
+  enabled: false
+  image:
+    repository: acryldata/datahub-mysql-setup
+    # tag: "v0.11.0 # defaults to .global.datahub.version
+
+
+datahubUpgrade:
+  enabled: false
+  image:
+    repository: acryldata/datahub-upgrade
+    # tag: "v0.11.0 # defaults to .global.datahub.version
+
+
+datahub-ingestion-cron:
+  enabled: false
+  image:
+    repository: acryldata/datahub-ingestion
+    # tag: "v0.11.0 # defaults to .global.datahub.version
+
+
+global:
+  graph_service_impl: neo4j
+  #datahub_standalone_consumers_enabled: true
+
+  elasticsearch:
+    #host: "elasticsearch-master"
+    #port: "9200"
+    host: "elastic-01-leo-dev-aiven.aivencloud.com"
+    port: "29645"
+    useSSL: true
+    auth:
+      username: FIXME
+      password:
+        secretRef: es-secrets
+        secretKey: es-password
+
+  credentialsAndCertsSecrets:
+      name: datahub-certs
+      path: /mnt/datahub/certs
+      secureEnv:
+        basic.auth.user.info: sasl-auth
+        sasl.username: sasl-username
+        sasl.password: sasl-password
+        ssl.ca.location: ca.pem
+        ssl.truststore.password: aiven-trust-password
+        kafkastore.ssl.truststore.password: aiven-trust-password
+  springKafkaConfigurationOverrides:
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username=FIXME password=FIXME;
+      security.protocol: SASL_SSL
+      ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      #ssl.truststore.location: truststore.jks
+      kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      #sasl.mechanism: PLAIN
+      sasl.mechanism: SCRAM-SHA-512
+      ssl.protocol: TLS
+      ssl.endpoint.identification.algorith:
+      client.dns.lookup: use_all_dns_ips
+      basic.auth.credentials.source: USER_INFO
+
+  kafka:
+    bootstrap:
+      server: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+    #zookeeper:
+    #  server: "prerequisites-zookeeper:2181"
+    schemaregistry:
+      url: "https://kafka-01-leo-dev-aiven.aivencloud.com:29650"
+
+  neo4j:
+    host: "prerequisites-neo4j-community:7474"
+    uri: "bolt://prerequisites-neo4j-community"
+    username: "neo4j"
+    password:
+      secretRef: neo4j-secrets
+      secretKey: neo4j-password
+
+  sql:
+    datasource:
+      host: "192.168.250.9:3306"
+      hostForMysqlClient: "192.168.250.9"
+      url: "jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      username: "datahubservice"
+      #hostForMysqlClient: "prerequisites-mysql"
+      #host: "prerequisites-mysql:3306"
+      #url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+      #username: "root"
+      port: "3306"
+      driver: "com.mysql.cj.jdbc.Driver"
+      password:
+        secretRef: mysql-secrets
+        secretKey: mysql-root-password
+
+  datahub:
+    version: v0.10.5
+    gms:
+      port: "8080"
+    mae_consumer:
+      port: "9091"
+    appVersion: "1.0"
+    metadata_service_authentication.enabled: true
+
+    managed_ingestion:
+      enabled: true
+      defaultCliVersion: "0.10.5"

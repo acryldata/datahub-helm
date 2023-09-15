@@ -1,0 +1,2787 @@
+NAME: datahub
+LAST DEPLOYED: Fri May 26 10:36:24 2023
+NAMESPACE: datahub
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+USER-SUPPLIED VALUES:
+acryl-datahub-actions:
+  enabled: true
+  extraEnvs:
+  - name: DATAHUB_ACTIONS_SYSTEM_CONFIGS_PATH
+    value: /etc/datahub/actions/system/conf
+  - name: DATAHUB_SYSTEM_CLIENT_ID
+    value: __datahub_system
+  - name: DATAHUB_SYSTEM_CLIENT_SECRET
+    value: JohnSnowKnowsNothing
+  extraVolumeMounts:
+  - mountPath: /etc/datahub/actions/system/conf
+    name: actions-configs
+  extraVolumes:
+  - configMap:
+      items:
+      - key: exector.yaml
+        path: exector.yaml
+      name: datahub-actions-configs
+    name: actions-configs
+  image:
+    repository: acryldata/datahub-actions
+    tag: v0.0.7
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+datahub-frontend:
+  enabled: true
+  extraEnvs:
+  - name: METADATA_SERVICE_AUTH_ENABLED
+    value: "true"
+  image:
+    repository: linkedin/datahub-frontend-react
+  ingress:
+    enabled: false
+datahub-gms:
+  enabled: true
+  extraEnvs:
+  - name: METADATA_SERVICE_AUTH_ENABLED
+    value: "true"
+  - name: UI_INGESTION_DEFAULT_CLI_VERSION
+    value: 0.10.2.2
+  image:
+    repository: linkedin/datahub-gms
+datahub-ingestion-cron:
+  enabled: false
+  image:
+    repository: acryldata/datahub-ingestion
+datahubUpgrade:
+  enabled: false
+  image:
+    repository: acryldata/datahub-upgrade
+elasticsearchSetupJob:
+  enabled: true
+  extraEnvs:
+  - name: USE_AWS_ELASTICSEARCH
+    value: true
+  image:
+    repository: linkedin/datahub-elasticsearch-setup
+global:
+  credentialsAndCertsSecrets:
+    name: datahub-certs
+    path: /mnt/datahub/certs
+    secureEnv:
+      basic.auth.user.info: sasl-auth
+      kafkastore.ssl.truststore.password: aiven-trust-password
+      sasl.password: sasl-password
+      sasl.username: sasl-username
+      ssl.ca.location: ca.pem
+      ssl.truststore.password: aiven-trust-password
+  datahub:
+    appVersion: "1.0"
+    gms:
+      port: "8080"
+    mae_consumer:
+      port: "9091"
+    managed_ingestion:
+      defaultCliVersion: 0.10.2
+      enabled: true
+    metadata_service_authentication.enabled: true
+    version: v0.10.2
+  datahub_standalone_consumers_enabled: true
+  elasticsearch:
+    auth:
+      password:
+        secretKey: es-password
+        secretRef: es-secrets
+      username: datahub
+    host: elastic-01-leo-dev-aiven.aivencloud.com
+    port: "29645"
+    useSSL: true
+  graph_service_impl: neo4j
+  kafka:
+    bootstrap:
+      server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+    schemaregistry:
+      url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+  neo4j:
+    host: prerequisites-neo4j-community:7474
+    password:
+      secretKey: neo4j-password
+      secretRef: neo4j-secrets
+    uri: bolt://prerequisites-neo4j-community
+    username: neo4j
+  springKafkaConfigurationOverrides:
+    basic.auth.credentials.source: USER_INFO
+    client.dns.lookup: use_all_dns_ips
+    kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+      username=avnadmin password=ms6ufdzvaky27ijw;
+    sasl.mechanism: SCRAM-SHA-512
+    security.protocol: SASL_SSL
+    ssl.endpoint.identification.algorith: null
+    ssl.protocol: TLS
+    ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+  sql:
+    datasource:
+      driver: com.mysql.cj.jdbc.Driver
+      host: 192.168.250.9:3306
+      hostForMysqlClient: 192.168.250.9
+      password:
+        secretKey: mysql-root-password
+        secretRef: mysql-secrets
+      port: "3306"
+      url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+      username: datahubservice
+kafkaSetupJob:
+  enabled: false
+  image:
+    repository: linkedin/datahub-kafka-setup
+mysqlSetupJob:
+  enabled: false
+  image:
+    repository: acryldata/datahub-mysql-setup
+
+COMPUTED VALUES:
+acryl-datahub-actions:
+  actions:
+    kafkaAutoOffsetPolicy: latest
+  affinity: {}
+  enabled: true
+  extraEnvs:
+  - name: DATAHUB_ACTIONS_SYSTEM_CONFIGS_PATH
+    value: /etc/datahub/actions/system/conf
+  - name: DATAHUB_SYSTEM_CLIENT_ID
+    value: __datahub_system
+  - name: DATAHUB_SYSTEM_CLIENT_SECRET
+    value: JohnSnowKnowsNothing
+  extraInitContainers: []
+  extraLabels: {}
+  extraSidecars: []
+  extraVolumeMounts:
+  - mountPath: /etc/datahub/actions/system/conf
+    name: actions-configs
+  extraVolumes:
+  - configMap:
+      items:
+      - key: exector.yaml
+        path: exector.yaml
+      name: datahub-actions-configs
+    name: actions-configs
+  fullnameOverride: ""
+  global:
+    credentialsAndCertsSecrets:
+      name: datahub-certs
+      path: /mnt/datahub/certs
+      secureEnv:
+        basic.auth.user.info: sasl-auth
+        kafkastore.ssl.truststore.password: aiven-trust-password
+        sasl.password: sasl-password
+        sasl.username: sasl-username
+        ssl.ca.location: ca.pem
+        ssl.truststore.password: aiven-trust-password
+    datahub:
+      alwaysEmitChangeLog: true
+      appVersion: "1.0"
+      enableGraphDiffMode: true
+      encryptionKey:
+        provisionSecret:
+          autoGenerate: true
+          enabled: true
+        secretKey: encryption_key_secret
+        secretRef: datahub-encryption-secrets
+      gms:
+        nodePort: "30001"
+        port: "8080"
+      mae_consumer:
+        nodePort: "30002"
+        port: "9091"
+      managed_ingestion:
+        defaultCliVersion: 0.10.2
+        enabled: true
+      metadata_service_authentication:
+        enabled: false
+        provisionSecrets:
+          autoGenerate: true
+          enabled: true
+        systemClientId: __datahub_system
+        systemClientSecret:
+          secretKey: system_client_secret
+          secretRef: datahub-auth-secrets
+        tokenService:
+          salt:
+            secretKey: token_service_salt
+            secretRef: datahub-auth-secrets
+          signingKey:
+            secretKey: token_service_signing_key
+            secretRef: datahub-auth-secrets
+      metadata_service_authentication.enabled: true
+      monitoring:
+        enableJMXPort: false
+        enablePrometheus: true
+      systemUpdate:
+        enabled: true
+      version: v0.10.2
+    datahub_analytics_enabled: true
+    datahub_standalone_consumers_enabled: true
+    elasticsearch:
+      auth:
+        password:
+          secretKey: es-password
+          secretRef: es-secrets
+        username: datahub
+      host: elastic-01-leo-dev-aiven.aivencloud.com
+      index:
+        enableMappingsReindex: true
+        enableSettingsReindex: true
+        upgrade:
+          allowDocCountMismatch: false
+          cloneIndices: true
+      insecure: "false"
+      port: "29645"
+      search:
+        exactMatch:
+          caseSensitivityFactor: 0.7
+          enableStructured: true
+          exactFactor: 2
+          exclusive: false
+          prefixFactor: 1.6
+          withPrefix: true
+        graph:
+          batchSize: 1000
+          maxResult: 10000
+          timeoutSeconds: 50
+        maxTermBucketSize: 20
+      skipcheck: "false"
+      useSSL: true
+    graph_service_impl: neo4j
+    kafka:
+      bootstrap:
+        server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+      schemaregistry:
+        type: KAFKA
+        url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+      topics:
+        datahub_upgrade_history_topic_name: DataHubUpgradeHistory_v1
+        datahub_usage_event_name: DataHubUsageEvent_v1
+        failed_metadata_change_event_name: FailedMetadataChangeEvent_v4
+        failed_metadata_change_proposal_topic_name: FailedMetadataChangeProposal_v1
+        metadata_audit_event_name: MetadataAuditEvent_v4
+        metadata_change_event_name: MetadataChangeEvent_v4
+        metadata_change_log_timeseries_topic_name: MetadataChangeLog_Timeseries_v1
+        metadata_change_log_versioned_topic_name: MetadataChangeLog_Versioned_v1
+        metadata_change_proposal_topic_name: MetadataChangeProposal_v1
+        platform_event_topic_name: PlatformEvent_v1
+      zookeeper:
+        server: prerequisites-zookeeper:2181
+    neo4j:
+      host: prerequisites-neo4j-community:7474
+      password:
+        secretKey: neo4j-password
+        secretRef: neo4j-secrets
+      uri: bolt://prerequisites-neo4j-community
+      username: neo4j
+    springKafkaConfigurationOverrides:
+      basic.auth.credentials.source: USER_INFO
+      client.dns.lookup: use_all_dns_ips
+      kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+        username=avnadmin password=ms6ufdzvaky27ijw;
+      sasl.mechanism: SCRAM-SHA-512
+      security.protocol: SASL_SSL
+      ssl.protocol: TLS
+      ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sql:
+      datasource:
+        driver: com.mysql.cj.jdbc.Driver
+        host: 192.168.250.9:3306
+        hostForMysqlClient: 192.168.250.9
+        password:
+          secretKey: mysql-root-password
+          secretRef: mysql-secrets
+        port: "3306"
+        url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+        username: datahubservice
+    strict_mode: true
+  image:
+    pullPolicy: IfNotPresent
+    repository: acryldata/datahub-actions
+    tag: v0.0.7
+  imagePullSecrets: []
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  securityContext: {}
+  service:
+    port: 9093
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    create: false
+  serviceMonitor:
+    create: false
+  tolerations: []
+datahub-frontend:
+  affinity: {}
+  datahub:
+    play:
+      mem:
+        buffer:
+          size: 10MB
+  enabled: true
+  env:
+    JMXPORT: 1099
+  exporters:
+    jmx:
+      enabled: false
+  extraEnvs:
+  - name: METADATA_SERVICE_AUTH_ENABLED
+    value: "true"
+  extraInitContainers: []
+  extraLabels: {}
+  extraSidecars: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  fullnameOverride: ""
+  global:
+    credentialsAndCertsSecrets:
+      name: datahub-certs
+      path: /mnt/datahub/certs
+      secureEnv:
+        basic.auth.user.info: sasl-auth
+        kafkastore.ssl.truststore.password: aiven-trust-password
+        sasl.password: sasl-password
+        sasl.username: sasl-username
+        ssl.ca.location: ca.pem
+        ssl.truststore.password: aiven-trust-password
+    datahub:
+      alwaysEmitChangeLog: true
+      appVersion: "1.0"
+      enableGraphDiffMode: true
+      encryptionKey:
+        provisionSecret:
+          autoGenerate: true
+          enabled: true
+        secretKey: encryption_key_secret
+        secretRef: datahub-encryption-secrets
+      gms:
+        nodePort: "30001"
+        port: "8080"
+      mae_consumer:
+        nodePort: "30002"
+        port: "9091"
+      managed_ingestion:
+        defaultCliVersion: 0.10.2
+        enabled: true
+      metadata_service_authentication:
+        enabled: false
+        provisionSecrets:
+          autoGenerate: true
+          enabled: true
+        systemClientId: __datahub_system
+        systemClientSecret:
+          secretKey: system_client_secret
+          secretRef: datahub-auth-secrets
+        tokenService:
+          salt:
+            secretKey: token_service_salt
+            secretRef: datahub-auth-secrets
+          signingKey:
+            secretKey: token_service_signing_key
+            secretRef: datahub-auth-secrets
+      metadata_service_authentication.enabled: true
+      monitoring:
+        enableJMXPort: false
+        enablePrometheus: true
+      systemUpdate:
+        enabled: true
+      version: v0.10.2
+    datahub_analytics_enabled: true
+    datahub_standalone_consumers_enabled: true
+    elasticsearch:
+      auth:
+        password:
+          secretKey: es-password
+          secretRef: es-secrets
+        username: datahub
+      host: elastic-01-leo-dev-aiven.aivencloud.com
+      index:
+        enableMappingsReindex: true
+        enableSettingsReindex: true
+        upgrade:
+          allowDocCountMismatch: false
+          cloneIndices: true
+      insecure: "false"
+      port: "29645"
+      search:
+        exactMatch:
+          caseSensitivityFactor: 0.7
+          enableStructured: true
+          exactFactor: 2
+          exclusive: false
+          prefixFactor: 1.6
+          withPrefix: true
+        graph:
+          batchSize: 1000
+          maxResult: 10000
+          timeoutSeconds: 50
+        maxTermBucketSize: 20
+      skipcheck: "false"
+      useSSL: true
+    graph_service_impl: neo4j
+    kafka:
+      bootstrap:
+        server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+      schemaregistry:
+        type: KAFKA
+        url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+      topics:
+        datahub_upgrade_history_topic_name: DataHubUpgradeHistory_v1
+        datahub_usage_event_name: DataHubUsageEvent_v1
+        failed_metadata_change_event_name: FailedMetadataChangeEvent_v4
+        failed_metadata_change_proposal_topic_name: FailedMetadataChangeProposal_v1
+        metadata_audit_event_name: MetadataAuditEvent_v4
+        metadata_change_event_name: MetadataChangeEvent_v4
+        metadata_change_log_timeseries_topic_name: MetadataChangeLog_Timeseries_v1
+        metadata_change_log_versioned_topic_name: MetadataChangeLog_Versioned_v1
+        metadata_change_proposal_topic_name: MetadataChangeProposal_v1
+        platform_event_topic_name: PlatformEvent_v1
+      zookeeper:
+        server: prerequisites-zookeeper:2181
+    neo4j:
+      host: prerequisites-neo4j-community:7474
+      password:
+        secretKey: neo4j-password
+        secretRef: neo4j-secrets
+      uri: bolt://prerequisites-neo4j-community
+      username: neo4j
+    springKafkaConfigurationOverrides:
+      basic.auth.credentials.source: USER_INFO
+      client.dns.lookup: use_all_dns_ips
+      kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+        username=avnadmin password=ms6ufdzvaky27ijw;
+      sasl.mechanism: SCRAM-SHA-512
+      security.protocol: SASL_SSL
+      ssl.protocol: TLS
+      ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sql:
+      datasource:
+        driver: com.mysql.cj.jdbc.Driver
+        host: 192.168.250.9:3306
+        hostForMysqlClient: 192.168.250.9
+        password:
+          secretKey: mysql-root-password
+          secretRef: mysql-secrets
+        port: "3306"
+        url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+        username: datahubservice
+    strict_mode: true
+  image:
+    pullPolicy: IfNotPresent
+    repository: linkedin/datahub-frontend-react
+  imagePullSecrets: []
+  ingress:
+    annotations: {}
+    enabled: false
+    extraLabels: {}
+    hosts:
+    - host: chart-example.local
+      paths: []
+      redirectPaths: []
+    tls: []
+  lifecycle: {}
+  livenessProbe:
+    failureThreshold: 4
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  nameOverride: ""
+  nodeSelector: {}
+  oidcAuthentication:
+    enabled: false
+  podAnnotations: {}
+  podSecurityContext: {}
+  readinessProbe:
+    failureThreshold: 4
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1400Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  revisionHistoryLimit: 10
+  securityContext: {}
+  service:
+    annotations: {}
+    name: http
+    port: 9002
+    protocol: TCP
+    targetPort: http
+    type: LoadBalancer
+  serviceAccount:
+    annotations: {}
+    create: true
+  serviceMonitor:
+    create: false
+  tolerations: []
+datahub-gms:
+  affinity: {}
+  enabled: true
+  extraEnvs:
+  - name: METADATA_SERVICE_AUTH_ENABLED
+    value: "true"
+  - name: UI_INGESTION_DEFAULT_CLI_VERSION
+    value: 0.10.2.2
+  extraInitContainers: []
+  extraLabels: {}
+  extraSidecars: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  fullnameOverride: ""
+  global:
+    credentialsAndCertsSecrets:
+      name: datahub-certs
+      path: /mnt/datahub/certs
+      secureEnv:
+        basic.auth.user.info: sasl-auth
+        kafkastore.ssl.truststore.password: aiven-trust-password
+        sasl.password: sasl-password
+        sasl.username: sasl-username
+        ssl.ca.location: ca.pem
+        ssl.truststore.password: aiven-trust-password
+    datahub:
+      alwaysEmitChangeLog: true
+      appVersion: "1.0"
+      cache:
+        search:
+          enabled: false
+          homepage:
+            entityCounts:
+              ttlSeconds: 600
+          lineage:
+            enabled: false
+            lightningThreshold: 300
+            ttlSeconds: 86400
+          primary:
+            maxSize: 10000
+            ttlSeconds: 600
+      enable_retention: false
+      enableGraphDiffMode: true
+      encryptionKey:
+        provisionSecret:
+          autoGenerate: true
+          enabled: true
+        secretKey: encryption_key_secret
+        secretRef: datahub-encryption-secrets
+      gms:
+        nodePort: "30001"
+        port: "8080"
+      mae_consumer:
+        nodePort: "30002"
+        port: "9091"
+      managed_ingestion:
+        defaultCliVersion: 0.10.2
+        enabled: true
+      metadata_service_authentication:
+        enabled: false
+        provisionSecrets:
+          autoGenerate: true
+          enabled: true
+        systemClientId: __datahub_system
+        systemClientSecret:
+          secretKey: system_client_secret
+          secretRef: datahub-auth-secrets
+        tokenService:
+          salt:
+            secretKey: token_service_salt
+            secretRef: datahub-auth-secrets
+          signingKey:
+            secretKey: token_service_signing_key
+            secretRef: datahub-auth-secrets
+      metadata_service_authentication.enabled: true
+      monitoring:
+        enableJMXPort: false
+        enablePrometheus: true
+      systemUpdate:
+        enabled: true
+      version: v0.10.2
+    datahub_analytics_enabled: true
+    datahub_standalone_consumers_enabled: true
+    elasticsearch:
+      auth:
+        password:
+          secretKey: es-password
+          secretRef: es-secrets
+        username: datahub
+      host: elastic-01-leo-dev-aiven.aivencloud.com
+      index:
+        enableMappingsReindex: true
+        enableSettingsReindex: true
+        upgrade:
+          allowDocCountMismatch: false
+          cloneIndices: true
+      insecure: "false"
+      port: "29645"
+      search:
+        exactMatch:
+          caseSensitivityFactor: 0.7
+          enableStructured: true
+          exactFactor: 2
+          exclusive: false
+          prefixFactor: 1.6
+          withPrefix: true
+        graph:
+          batchSize: 1000
+          maxResult: 10000
+          timeoutSeconds: 50
+        maxTermBucketSize: 20
+      skipcheck: "false"
+      useSSL: true
+    graph_service_impl: neo4j
+    hostAliases:
+    - hostnames:
+      - broker
+      - mysql
+      - elasticsearch
+      - neo4j
+      ip: 192.168.0.104
+    kafka:
+      bootstrap:
+        server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+      schemaregistry:
+        type: KAFKA
+        url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+      topics:
+        datahub_upgrade_history_topic_name: DataHubUpgradeHistory_v1
+        datahub_usage_event_name: DataHubUsageEvent_v1
+        failed_metadata_change_event_name: FailedMetadataChangeEvent_v4
+        failed_metadata_change_proposal_topic_name: FailedMetadataChangeProposal_v1
+        metadata_audit_event_name: MetadataAuditEvent_v4
+        metadata_change_event_name: MetadataChangeEvent_v4
+        metadata_change_log_timeseries_topic_name: MetadataChangeLog_Timeseries_v1
+        metadata_change_log_versioned_topic_name: MetadataChangeLog_Versioned_v1
+        metadata_change_proposal_topic_name: MetadataChangeProposal_v1
+        platform_event_topic_name: PlatformEvent_v1
+      zookeeper:
+        server: prerequisites-zookeeper:2181
+    neo4j:
+      host: prerequisites-neo4j-community:7474
+      password:
+        secretKey: neo4j-password
+        secretRef: neo4j-secrets
+      uri: bolt://prerequisites-neo4j-community
+      username: neo4j
+    springKafkaConfigurationOverrides:
+      basic.auth.credentials.source: USER_INFO
+      client.dns.lookup: use_all_dns_ips
+      kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+        username=avnadmin password=ms6ufdzvaky27ijw;
+      sasl.mechanism: SCRAM-SHA-512
+      security.protocol: SASL_SSL
+      ssl.protocol: TLS
+      ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sql:
+      datasource:
+        driver: com.mysql.cj.jdbc.Driver
+        host: 192.168.250.9:3306
+        hostForMysqlClient: 192.168.250.9
+        password:
+          secretKey: mysql-root-password
+          secretRef: mysql-secrets
+        port: "3306"
+        url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+        username: datahubservice
+    strict_mode: true
+  image:
+    pullPolicy: IfNotPresent
+    repository: linkedin/datahub-gms
+  imagePullSecrets: []
+  ingress:
+    annotations: {}
+    enabled: false
+    extraLabels: {}
+    hosts:
+    - host: chart-example.local
+      paths: []
+      redirectPaths: []
+    tls: []
+  livenessProbe:
+    failureThreshold: 8
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  readinessProbe:
+    failureThreshold: 8
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
+  revisionHistoryLimit: 10
+  securityContext: {}
+  service:
+    annotations: {}
+    name: http
+    port: "8080"
+    protocol: TCP
+    targetPort: http
+    type: LoadBalancer
+  serviceAccount:
+    annotations: {}
+    create: true
+  serviceMonitor:
+    create: false
+  tolerations: []
+datahub-ingestion-cron:
+  enabled: false
+  image:
+    repository: acryldata/datahub-ingestion
+datahub-mae-consumer:
+  affinity: {}
+  env:
+    JMXPORT: 1099
+  exporters:
+    jmx:
+      enabled: false
+  extraEnvs: []
+  extraInitContainers: []
+  extraLabels: {}
+  extraSidecars: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  fullnameOverride: ""
+  global:
+    credentialsAndCertsSecrets:
+      name: datahub-certs
+      path: /mnt/datahub/certs
+      secureEnv:
+        basic.auth.user.info: sasl-auth
+        kafkastore.ssl.truststore.password: aiven-trust-password
+        sasl.password: sasl-password
+        sasl.username: sasl-username
+        ssl.ca.location: ca.pem
+        ssl.truststore.password: aiven-trust-password
+    datahub:
+      alwaysEmitChangeLog: true
+      appVersion: "1.0"
+      enableGraphDiffMode: true
+      encryptionKey:
+        provisionSecret:
+          autoGenerate: true
+          enabled: true
+        secretKey: encryption_key_secret
+        secretRef: datahub-encryption-secrets
+      gms:
+        nodePort: "30001"
+        port: "8080"
+      mae_consumer:
+        nodePort: "30002"
+        port: "9091"
+      managed_ingestion:
+        defaultCliVersion: 0.10.2
+        enabled: true
+      metadata_service_authentication:
+        enabled: false
+        provisionSecrets:
+          autoGenerate: true
+          enabled: true
+        systemClientId: __datahub_system
+        systemClientSecret:
+          secretKey: system_client_secret
+          secretRef: datahub-auth-secrets
+        tokenService:
+          salt:
+            secretKey: token_service_salt
+            secretRef: datahub-auth-secrets
+          signingKey:
+            secretKey: token_service_signing_key
+            secretRef: datahub-auth-secrets
+      metadata_service_authentication.enabled: true
+      monitoring:
+        enableJMXPort: false
+        enablePrometheus: true
+      systemUpdate:
+        enabled: true
+      version: v0.10.2
+    datahub_analytics_enabled: true
+    datahub_standalone_consumers_enabled: true
+    elasticsearch:
+      auth:
+        password:
+          secretKey: es-password
+          secretRef: es-secrets
+        username: datahub
+      host: elastic-01-leo-dev-aiven.aivencloud.com
+      index:
+        enableMappingsReindex: true
+        enableSettingsReindex: true
+        upgrade:
+          allowDocCountMismatch: false
+          cloneIndices: true
+      insecure: "false"
+      port: "29645"
+      search:
+        exactMatch:
+          caseSensitivityFactor: 0.7
+          enableStructured: true
+          exactFactor: 2
+          exclusive: false
+          prefixFactor: 1.6
+          withPrefix: true
+        graph:
+          batchSize: 1000
+          maxResult: 10000
+          timeoutSeconds: 50
+        maxTermBucketSize: 20
+      skipcheck: "false"
+      useSSL: true
+    graph_service_impl: neo4j
+    hostAliases:
+    - hostnames:
+      - broker
+      - mysql
+      - elasticsearch
+      - neo4j
+      ip: 192.168.0.104
+    kafka:
+      bootstrap:
+        server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+      schemaregistry:
+        type: KAFKA
+        url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+      topics:
+        datahub_upgrade_history_topic_name: DataHubUpgradeHistory_v1
+        datahub_usage_event_name: DataHubUsageEvent_v1
+        failed_metadata_change_event_name: FailedMetadataChangeEvent_v4
+        failed_metadata_change_proposal_topic_name: FailedMetadataChangeProposal_v1
+        metadata_audit_event_name: MetadataAuditEvent_v4
+        metadata_change_event_name: MetadataChangeEvent_v4
+        metadata_change_log_timeseries_topic_name: MetadataChangeLog_Timeseries_v1
+        metadata_change_log_versioned_topic_name: MetadataChangeLog_Versioned_v1
+        metadata_change_proposal_topic_name: MetadataChangeProposal_v1
+        platform_event_topic_name: PlatformEvent_v1
+      zookeeper:
+        server: prerequisites-zookeeper:2181
+    neo4j:
+      host: prerequisites-neo4j-community:7474
+      password:
+        secretKey: neo4j-password
+        secretRef: neo4j-secrets
+      uri: bolt://prerequisites-neo4j-community
+      username: neo4j
+    springKafkaConfigurationOverrides:
+      basic.auth.credentials.source: USER_INFO
+      client.dns.lookup: use_all_dns_ips
+      kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+        username=avnadmin password=ms6ufdzvaky27ijw;
+      sasl.mechanism: SCRAM-SHA-512
+      security.protocol: SASL_SSL
+      ssl.endpoint.identification.algorith: null
+      ssl.protocol: TLS
+      ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sql:
+      datasource:
+        driver: com.mysql.cj.jdbc.Driver
+        host: 192.168.250.9:3306
+        hostForMysqlClient: 192.168.250.9
+        password:
+          secretKey: mysql-root-password
+          secretRef: mysql-secrets
+        port: "3306"
+        url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+        username: datahubservice
+    strict_mode: true
+  image:
+    pullPolicy: IfNotPresent
+    repository: linkedin/datahub-mae-consumer
+  imagePullSecrets: []
+  ingress:
+    annotations: {}
+    enabled: false
+    hosts:
+    - host: chart-example.local
+      paths: []
+    tls: []
+  livenessProbe:
+    failureThreshold: 8
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  readinessProbe:
+    failureThreshold: 8
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1536Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  revisionHistoryLimit: 10
+  securityContext: {}
+  service:
+    name: http
+    port: "9091"
+    protocol: TCP
+    targetPort: http
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    create: true
+  serviceMonitor:
+    create: false
+  tolerations: []
+datahub-mce-consumer:
+  affinity: {}
+  env:
+    JMXPORT: 1099
+  exporters:
+    jmx:
+      enabled: false
+  extraEnvs: []
+  extraInitContainers: []
+  extraLabels: {}
+  extraSidecars: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  fullnameOverride: ""
+  global:
+    credentialsAndCertsSecrets:
+      name: datahub-certs
+      path: /mnt/datahub/certs
+      secureEnv:
+        basic.auth.user.info: sasl-auth
+        kafkastore.ssl.truststore.password: aiven-trust-password
+        sasl.password: sasl-password
+        sasl.username: sasl-username
+        ssl.ca.location: ca.pem
+        ssl.truststore.password: aiven-trust-password
+    datahub:
+      alwaysEmitChangeLog: true
+      appVersion: "1.0"
+      enableGraphDiffMode: true
+      encryptionKey:
+        provisionSecret:
+          autoGenerate: true
+          enabled: true
+        secretKey: encryption_key_secret
+        secretRef: datahub-encryption-secrets
+      gms:
+        nodePort: "30001"
+        port: "8080"
+      mae_consumer:
+        nodePort: "30002"
+        port: "9091"
+      managed_ingestion:
+        defaultCliVersion: 0.10.2
+        enabled: true
+      metadata_service_authentication:
+        enabled: false
+        provisionSecrets:
+          autoGenerate: true
+          enabled: true
+        systemClientId: __datahub_system
+        systemClientSecret:
+          secretKey: system_client_secret
+          secretRef: datahub-auth-secrets
+        tokenService:
+          salt:
+            secretKey: token_service_salt
+            secretRef: datahub-auth-secrets
+          signingKey:
+            secretKey: token_service_signing_key
+            secretRef: datahub-auth-secrets
+      metadata_service_authentication.enabled: true
+      monitoring:
+        enableJMXPort: false
+        enablePrometheus: true
+      systemUpdate:
+        enabled: true
+      version: v0.10.2
+    datahub_analytics_enabled: true
+    datahub_standalone_consumers_enabled: true
+    elasticsearch:
+      auth:
+        password:
+          secretKey: es-password
+          secretRef: es-secrets
+        username: datahub
+      host: elastic-01-leo-dev-aiven.aivencloud.com
+      index:
+        enableMappingsReindex: true
+        enableSettingsReindex: true
+        upgrade:
+          allowDocCountMismatch: false
+          cloneIndices: true
+      insecure: "false"
+      port: "29645"
+      search:
+        exactMatch:
+          caseSensitivityFactor: 0.7
+          enableStructured: true
+          exactFactor: 2
+          exclusive: false
+          prefixFactor: 1.6
+          withPrefix: true
+        graph:
+          batchSize: 1000
+          maxResult: 10000
+          timeoutSeconds: 50
+        maxTermBucketSize: 20
+      skipcheck: "false"
+      useSSL: true
+    graph_service_impl: neo4j
+    hostAliases:
+    - hostnames:
+      - broker
+      - mysql
+      - elasticsearch
+      - neo4j
+      ip: 192.168.0.104
+    kafka:
+      bootstrap:
+        server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+      schemaregistry:
+        type: KAFKA
+        url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+      topics:
+        datahub_upgrade_history_topic_name: DataHubUpgradeHistory_v1
+        datahub_usage_event_name: DataHubUsageEvent_v1
+        failed_metadata_change_event_name: FailedMetadataChangeEvent_v4
+        failed_metadata_change_proposal_topic_name: FailedMetadataChangeProposal_v1
+        metadata_audit_event_name: MetadataAuditEvent_v4
+        metadata_change_event_name: MetadataChangeEvent_v4
+        metadata_change_log_timeseries_topic_name: MetadataChangeLog_Timeseries_v1
+        metadata_change_log_versioned_topic_name: MetadataChangeLog_Versioned_v1
+        metadata_change_proposal_topic_name: MetadataChangeProposal_v1
+        platform_event_topic_name: PlatformEvent_v1
+      zookeeper:
+        server: prerequisites-zookeeper:2181
+    neo4j:
+      host: prerequisites-neo4j-community:7474
+      password:
+        secretKey: neo4j-password
+        secretRef: neo4j-secrets
+      uri: bolt://prerequisites-neo4j-community
+      username: neo4j
+    springKafkaConfigurationOverrides:
+      basic.auth.credentials.source: USER_INFO
+      client.dns.lookup: use_all_dns_ips
+      kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+        username=avnadmin password=ms6ufdzvaky27ijw;
+      sasl.mechanism: SCRAM-SHA-512
+      security.protocol: SASL_SSL
+      ssl.endpoint.identification.algorith: null
+      ssl.protocol: TLS
+      ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sql:
+      alwaysEmitChangeLog: true
+      datasource:
+        driver: com.mysql.cj.jdbc.Driver
+        host: 192.168.250.9:3306
+        hostForMysqlClient: 192.168.250.9
+        password:
+          secretKey: mysql-root-password
+          secretRef: mysql-secrets
+        port: "3306"
+        url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+        username: datahubservice
+      enableGraphDiffMode: true
+    strict_mode: true
+  image:
+    pullPolicy: IfNotPresent
+    repository: linkedin/datahub-mce-consumer
+  imagePullSecrets: []
+  ingress:
+    annotations: {}
+    enabled: false
+    hosts:
+    - host: chart-example.local
+      paths: []
+    tls: []
+  livenessProbe:
+    failureThreshold: 4
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  readinessProbe:
+    failureThreshold: 4
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1536Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  revisionHistoryLimit: 10
+  securityContext: {}
+  service:
+    name: http
+    port: "9090"
+    protocol: TCP
+    targetPort: http
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    create: false
+  serviceMonitor:
+    create: false
+  tolerations: []
+datahubSystemUpdate:
+  extraSidecars: []
+  image:
+    repository: acryldata/datahub-upgrade
+  podAnnotations: {}
+  podSecurityContext: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  securityContext: {}
+datahubUpgrade:
+  batchDelayMs: 100
+  batchSize: 1000
+  cleanupJob:
+    extraSidecars: []
+  enabled: false
+  extraSidecars: []
+  image:
+    repository: acryldata/datahub-upgrade
+  noCodeDataMigration:
+    sqlDbType: MYSQL
+  podAnnotations: {}
+  podSecurityContext: {}
+  restoreIndices:
+    extraSidecars: []
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 300m
+        memory: 256Mi
+  securityContext: {}
+elasticsearchSetupJob:
+  enabled: true
+  extraEnvs:
+  - name: USE_AWS_ELASTICSEARCH
+    value: true
+  extraSidecars: []
+  image:
+    repository: linkedin/datahub-elasticsearch-setup
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 1000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  securityContext:
+    runAsUser: 1000
+global:
+  credentialsAndCertsSecrets:
+    name: datahub-certs
+    path: /mnt/datahub/certs
+    secureEnv:
+      basic.auth.user.info: sasl-auth
+      kafkastore.ssl.truststore.password: aiven-trust-password
+      sasl.password: sasl-password
+      sasl.username: sasl-username
+      ssl.ca.location: ca.pem
+      ssl.truststore.password: aiven-trust-password
+  datahub:
+    alwaysEmitChangeLog: true
+    appVersion: "1.0"
+    enableGraphDiffMode: true
+    encryptionKey:
+      provisionSecret:
+        autoGenerate: true
+        enabled: true
+      secretKey: encryption_key_secret
+      secretRef: datahub-encryption-secrets
+    gms:
+      nodePort: "30001"
+      port: "8080"
+    mae_consumer:
+      nodePort: "30002"
+      port: "9091"
+    managed_ingestion:
+      defaultCliVersion: 0.10.2
+      enabled: true
+    metadata_service_authentication:
+      enabled: false
+      provisionSecrets:
+        autoGenerate: true
+        enabled: true
+      systemClientId: __datahub_system
+      systemClientSecret:
+        secretKey: system_client_secret
+        secretRef: datahub-auth-secrets
+      tokenService:
+        salt:
+          secretKey: token_service_salt
+          secretRef: datahub-auth-secrets
+        signingKey:
+          secretKey: token_service_signing_key
+          secretRef: datahub-auth-secrets
+    metadata_service_authentication.enabled: true
+    monitoring:
+      enableJMXPort: false
+      enablePrometheus: true
+    systemUpdate:
+      enabled: true
+    version: v0.10.2
+  datahub_analytics_enabled: true
+  datahub_standalone_consumers_enabled: true
+  elasticsearch:
+    auth:
+      password:
+        secretKey: es-password
+        secretRef: es-secrets
+      username: datahub
+    host: elastic-01-leo-dev-aiven.aivencloud.com
+    index:
+      enableMappingsReindex: true
+      enableSettingsReindex: true
+      upgrade:
+        allowDocCountMismatch: false
+        cloneIndices: true
+    insecure: "false"
+    port: "29645"
+    search:
+      exactMatch:
+        caseSensitivityFactor: 0.7
+        enableStructured: true
+        exactFactor: 2
+        exclusive: false
+        prefixFactor: 1.6
+        withPrefix: true
+      graph:
+        batchSize: 1000
+        maxResult: 10000
+        timeoutSeconds: 50
+      maxTermBucketSize: 20
+    skipcheck: "false"
+    useSSL: true
+  graph_service_impl: neo4j
+  kafka:
+    bootstrap:
+      server: kafka-01-leo-dev-aiven.aivencloud.com:29658
+    schemaregistry:
+      type: KAFKA
+      url: https://kafka-01-leo-dev-aiven.aivencloud.com:29650
+    topics:
+      datahub_upgrade_history_topic_name: DataHubUpgradeHistory_v1
+      datahub_usage_event_name: DataHubUsageEvent_v1
+      failed_metadata_change_event_name: FailedMetadataChangeEvent_v4
+      failed_metadata_change_proposal_topic_name: FailedMetadataChangeProposal_v1
+      metadata_audit_event_name: MetadataAuditEvent_v4
+      metadata_change_event_name: MetadataChangeEvent_v4
+      metadata_change_log_timeseries_topic_name: MetadataChangeLog_Timeseries_v1
+      metadata_change_log_versioned_topic_name: MetadataChangeLog_Versioned_v1
+      metadata_change_proposal_topic_name: MetadataChangeProposal_v1
+      platform_event_topic_name: PlatformEvent_v1
+    zookeeper:
+      server: prerequisites-zookeeper:2181
+  neo4j:
+    host: prerequisites-neo4j-community:7474
+    password:
+      secretKey: neo4j-password
+      secretRef: neo4j-secrets
+    uri: bolt://prerequisites-neo4j-community
+    username: neo4j
+  springKafkaConfigurationOverrides:
+    basic.auth.credentials.source: USER_INFO
+    client.dns.lookup: use_all_dns_ips
+    kafkastore.ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+    sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required
+      username=avnadmin password=ms6ufdzvaky27ijw;
+    sasl.mechanism: SCRAM-SHA-512
+    security.protocol: SASL_SSL
+    ssl.endpoint.identification.algorith: null
+    ssl.protocol: TLS
+    ssl.truststore.location: /mnt/datahub/certs/truststore.jks
+  sql:
+    datasource:
+      driver: com.mysql.cj.jdbc.Driver
+      host: 192.168.250.9:3306
+      hostForMysqlClient: 192.168.250.9
+      password:
+        secretKey: mysql-root-password
+        secretRef: mysql-secrets
+      port: "3306"
+      url: jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2
+      username: datahubservice
+  strict_mode: true
+kafkaSetupJob:
+  enabled: false
+  extraSidecars: []
+  image:
+    repository: linkedin/datahub-kafka-setup
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 1000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 300m
+      memory: 768Mi
+  securityContext:
+    runAsUser: 1000
+mysqlSetupJob:
+  enabled: false
+  extraSidecars: []
+  image:
+    repository: acryldata/datahub-mysql-setup
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 1000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  securityContext:
+    runAsUser: 1000
+postgresqlSetupJob:
+  enabled: false
+  extraSidecars: []
+  image:
+    repository: acryldata/datahub-postgres-setup
+  podAnnotations: {}
+  podSecurityContext:
+    fsGroup: 1000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  securityContext:
+    runAsUser: 1000
+
+HOOKS:
+---
+# Source: datahub/templates/datahub-upgrade/datahub-system-update-job.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datahub-datahub-system-update-job
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datahub"
+    app.kubernetes.io/version: 0.10.2
+    helm.sh/chart: "datahub-0.2.164"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      volumes:
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: datahub-certs
+      restartPolicy: Never
+      securityContext:
+        {}
+      initContainers:
+      containers:
+        - name: datahub-system-update-job
+          image: "acryldata/datahub-upgrade:v0.10.2"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-u"
+            - "SystemUpdate"
+          env:
+            - name: DATAHUB_REVISION
+              value: "1"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: DATAHUB_GMS_HOST
+              value: datahub-datahub-gms
+            - name: DATAHUB_GMS_PORT
+              value: "8080"
+            - name: DATAHUB_MAE_CONSUMER_HOST
+              value: datahub-datahub-mae-consumer
+            - name: DATAHUB_MAE_CONSUMER_PORT
+              value: "9091"
+            - name: EBEAN_DATASOURCE_USERNAME
+              value: "datahubservice"
+            - name: EBEAN_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "mysql-secrets"
+                  key: "mysql-root-password"
+            - name: EBEAN_DATASOURCE_HOST
+              value: "192.168.250.9:3306"
+            - name: EBEAN_DATASOURCE_URL
+              value: "jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "com.mysql.cj.jdbc.Driver"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "https://kafka-01-leo-dev-aiven.aivencloud.com:29650"
+            - name: ELASTICSEARCH_HOST
+              value: "elastic-01-leo-dev-aiven.aivencloud.com"
+            - name: ELASTICSEARCH_PORT
+              value: "29645"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "false"
+            - name: ELASTICSEARCH_INSECURE
+              value: "false"
+            - name: ELASTICSEARCH_USE_SSL
+              value: "true"
+            - name: ELASTICSEARCH_USERNAME
+              value: datahub
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "es-secrets"
+                  key: "es-password"
+            - name: GRAPH_SERVICE_IMPL
+              value: neo4j
+            - name: NEO4J_HOST
+              value: "prerequisites-neo4j-community:7474"
+            - name: NEO4J_URI
+              value: "bolt://prerequisites-neo4j-community"
+            - name: NEO4J_USERNAME
+              value: "neo4j"
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "neo4j-secrets"
+                  key: "neo4j-password"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: SPRING_KAFKA_PROPERTIES_CLIENT_DNS_LOOKUP
+              value: "use_all_dns_ips"
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=avnadmin password=ms6ufdzvaky27ijw;"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITH
+              value: 
+            - name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: "TLS"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-auth
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-username
+            - name: SPRING_KAFKA_PROPERTIES_SSL_CA_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: ca.pem
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: MetadataChangeEvent_v4
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: FailedMetadataChangeEvent_v4
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: MetadataAuditEvent_v4
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: MetadataChangeProposal_v1
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: FailedMetadataChangeProposal_v1
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: MetadataChangeLog_Versioned_v1
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: MetadataChangeLog_Timeseries_v1
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: DataHubUpgradeHistory_v1
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "KAFKA"
+            - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
+              value: "true"
+            - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
+              value: "true"
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
+              value: "true"
+          securityContext:
+            {}
+          volumeMounts:
+            - name: datahub-certs-dir
+              mountPath: /mnt/datahub/certs
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 300m
+              memory: 256Mi
+---
+# Source: datahub/templates/elasticsearch-setup-job.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datahub-elasticsearch-setup-job
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/instance: "datahub"
+    app.kubernetes.io/version: 0.10.2
+    helm.sh/chart: "datahub-0.2.164"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      volumes:
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: elasticsearch-setup-job
+          image: "linkedin/datahub-elasticsearch-setup:v0.10.2"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ELASTICSEARCH_HOST
+              value: "elastic-01-leo-dev-aiven.aivencloud.com"
+            - name: ELASTICSEARCH_PORT
+              value: "29645"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "false"
+            - name: ELASTICSEARCH_INSECURE
+              value: "false"
+            - name: ELASTICSEARCH_USE_SSL
+              value: "true"
+            - name: ELASTICSEARCH_USERNAME
+              value: datahub
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "es-secrets"
+                  key: "es-password"
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: USE_AWS_ELASTICSEARCH
+              value: true
+          securityContext:
+            runAsUser: 1000
+          volumeMounts:
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 300m
+              memory: 256Mi
+MANIFEST:
+---
+# Source: datahub/charts/datahub-frontend/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datahub-datahub-frontend
+  labels:
+    helm.sh/chart: datahub-frontend-0.2.137
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: datahub/charts/datahub-gms/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datahub-datahub-gms
+  labels:
+    helm.sh/chart: datahub-gms-0.2.147
+    app.kubernetes.io/name: datahub-gms
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: datahub/charts/datahub-mae-consumer/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datahub-datahub-mae-consumer
+  labels:
+    helm.sh/chart: datahub-mae-consumer-0.2.143
+    app.kubernetes.io/name: datahub-mae-consumer
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: datahub/charts/datahub-frontend/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: datahub-gms-secret
+  labels:
+    helm.sh/chart: datahub-frontend-0.2.137
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  datahub.gms.secret: "enFhbHZ6YVhqcg=="
+---
+# Source: datahub/templates/datahub-encryption-secrets.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "datahub-encryption-secrets"
+type: Opaque
+data:
+  encryption_key_secret: "d29ZZE5OZ29xQ3ZCd25lODNTMWc="
+---
+# Source: datahub/charts/acryl-datahub-actions/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-acryl-datahub-actions
+  labels:
+    helm.sh/chart: acryl-datahub-actions-0.2.136
+    app.kubernetes.io/name: acryl-datahub-actions
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "0.0.11"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9093
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: acryl-datahub-actions
+    app.kubernetes.io/instance: datahub
+---
+# Source: datahub/charts/datahub-frontend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-datahub-frontend
+  labels:
+    helm.sh/chart: datahub-frontend-0.2.137
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 9002
+      targetPort: http
+      protocol: TCP
+      name: http
+    - name: jmx
+      port: 4318
+      targetPort: jmx
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/instance: datahub
+---
+# Source: datahub/charts/datahub-gms/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-datahub-gms
+  labels:
+    helm.sh/chart: datahub-gms-0.2.147
+    app.kubernetes.io/name: datahub-gms
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+    - name: jmx
+      port: 4318
+      targetPort: jmx
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: datahub-gms
+    app.kubernetes.io/instance: datahub
+---
+# Source: datahub/charts/datahub-mae-consumer/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-datahub-mae-consumer
+  labels:
+    helm.sh/chart: datahub-mae-consumer-0.2.143
+    app.kubernetes.io/name: datahub-mae-consumer
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9091
+      targetPort: http
+      protocol: TCP
+      name: http
+    - name: jmx
+      port: 4318
+      targetPort: jmx
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: datahub-mae-consumer
+    app.kubernetes.io/instance: datahub
+---
+# Source: datahub/charts/datahub-mce-consumer/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub-datahub-mce-consumer
+  labels:
+    helm.sh/chart: datahub-mce-consumer-0.2.145
+    app.kubernetes.io/name: datahub-mce-consumer
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9090
+      targetPort: http
+      protocol: TCP
+      name: http
+    - name: jmx
+      port: 4318
+      targetPort: jmx
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: datahub-mce-consumer
+    app.kubernetes.io/instance: datahub
+---
+# Source: datahub/charts/acryl-datahub-actions/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-acryl-datahub-actions
+  labels:
+    helm.sh/chart: acryl-datahub-actions-0.2.136
+    app.kubernetes.io/name: acryl-datahub-actions
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "0.0.11"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: acryl-datahub-actions
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: acryl-datahub-actions
+        app.kubernetes.io/instance: datahub
+    spec:
+      serviceAccountName: default
+      securityContext:
+        {}
+      volumes:
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: datahub-certs
+        
+        - configMap:
+            items:
+            - key: exector.yaml
+              path: exector.yaml
+            name: datahub-actions-configs
+          name: actions-configs
+      initContainers:
+      containers:
+        - name: acryl-datahub-actions
+          securityContext:
+            {}
+          image: "acryldata/datahub-actions:v0.0.7"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9093
+              protocol: TCP
+          env:
+            - name: DATAHUB_GMS_HOST
+              value: datahub-datahub-gms
+            - name: DATAHUB_GMS_PORT
+              value: "8080"
+            # Deprecated in favour of DATAHUB_* variables
+            - name: GMS_HOST
+              value: datahub-datahub-gms
+            - name: GMS_PORT
+              value: "8080"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+            - name: SCHEMA_REGISTRY_URL
+              value: "https://kafka-01-leo-dev-aiven.aivencloud.com:29650"
+            - name: KAFKA_AUTO_OFFSET_POLICY
+              value: "latest"
+            - name: KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: KAFKA_PROPERTIES_CLIENT_DNS_LOOKUP
+              value: "use_all_dns_ips"
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=avnadmin password=ms6ufdzvaky27ijw;"
+            - name: KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: KAFKA_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITH
+              value: 
+            - name: KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: "TLS"
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-auth
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: KAFKA_PROPERTIES_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-password
+            - name: KAFKA_PROPERTIES_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-username
+            - name: KAFKA_PROPERTIES_SSL_CA_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: ca.pem
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: MetadataChangeEvent_v4
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: FailedMetadataChangeEvent_v4
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: MetadataAuditEvent_v4
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: DataHubUsageEvent_v1
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: MetadataChangeProposal_v1
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: FailedMetadataChangeProposal_v1
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: MetadataChangeLog_Versioned_v1
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: MetadataChangeLog_Timeseries_v1
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: PlatformEvent_v1
+            
+            - name: DATAHUB_ACTIONS_SYSTEM_CONFIGS_PATH
+              value: /etc/datahub/actions/system/conf
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: __datahub_system
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              value: JohnSnowKnowsNothing
+          volumeMounts:
+            - name: datahub-certs-dir
+              mountPath: /mnt/datahub/certs
+            - mountPath: /etc/datahub/actions/system/conf
+              name: actions-configs
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 300m
+              memory: 256Mi
+---
+# Source: datahub/charts/datahub-frontend/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-datahub-frontend
+  labels:
+    helm.sh/chart: datahub-frontend-0.2.137
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datahub-frontend
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: datahub-frontend
+        app.kubernetes.io/instance: datahub
+    spec:
+      serviceAccountName: datahub-datahub-frontend
+      securityContext:
+        {}
+      volumes:
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: datahub-certs
+      initContainers:
+      containers:
+        - name: datahub-frontend
+          securityContext:
+            {}
+          image: "linkedin/datahub-frontend-react:v0.10.2"
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            {}
+          ports:
+            - name: http
+              containerPort: 9002
+              protocol: TCP
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /admin
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          readinessProbe:
+            httpGet:
+              path: /admin
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          env:
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            - name: DATAHUB_GMS_HOST
+              value: datahub-datahub-gms
+            - name: DATAHUB_GMS_PORT
+              value: "8080"
+            - name: DATAHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-gms-secret
+                  key: datahub.gms.secret
+            - name: DATAHUB_APP_VERSION
+              value: "1.0"
+            - name: DATAHUB_PLAY_MEM_BUFFER_SIZE
+              value: "10MB"
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+            - name: KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: KAFKA_PROPERTIES_CLIENT_DNS_LOOKUP
+              value: "use_all_dns_ips"
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=avnadmin password=ms6ufdzvaky27ijw;"
+            - name: KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: KAFKA_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITH
+              value: 
+            - name: KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: "TLS"
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-auth
+            - name: KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: KAFKA_PROPERTIES_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-password
+            - name: KAFKA_PROPERTIES_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-username
+            - name: KAFKA_PROPERTIES_SSL_CA_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: ca.pem
+            - name: KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: ELASTIC_CLIENT_HOST
+              value: "elastic-01-leo-dev-aiven.aivencloud.com"
+            - name: ELASTIC_CLIENT_PORT
+              value: "29645"
+            - name: ELASTIC_CLIENT_USE_SSL
+              value: "true"
+            - name: ELASTIC_CLIENT_USERNAME
+              value: datahub
+            - name: ELASTIC_CLIENT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "es-secrets"
+                  key: "es-password"
+            - name: DATAHUB_TRACKING_TOPIC
+              value: DataHubUsageEvent_v1
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "true"
+          volumeMounts:
+            - name: datahub-certs-dir
+              mountPath: /mnt/datahub/certs
+          resources:
+            limits:
+              memory: 1400Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+---
+# Source: datahub/charts/datahub-gms/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-datahub-gms
+  labels:
+    helm.sh/chart: datahub-gms-0.2.147
+    app.kubernetes.io/name: datahub-gms
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas:  1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datahub-gms
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: datahub-gms
+        app.kubernetes.io/instance: datahub
+    spec:
+      hostAliases:
+        - hostnames:
+          - broker
+          - mysql
+          - elasticsearch
+          - neo4j
+          ip: 192.168.0.104
+      serviceAccountName: datahub-datahub-gms
+      securityContext:
+        {}
+      volumes:
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: datahub-certs
+      initContainers:
+      containers:
+        - name: datahub-gms
+          securityContext:
+            {}
+          image: "linkedin/datahub-gms:v0.10.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 8
+          env:
+            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: datahub-duhe-consumer-job-client-gms
+            - name: DATAHUB_REVISION
+              value: "1"
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: EBEAN_DATASOURCE_USERNAME
+              value: "datahubservice"
+            - name: EBEAN_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "mysql-secrets"
+                  key: "mysql-root-password"
+            - name: EBEAN_DATASOURCE_HOST
+              value: "192.168.250.9:3306"
+            - name: EBEAN_DATASOURCE_URL
+              value: "jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "com.mysql.cj.jdbc.Driver"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "https://kafka-01-leo-dev-aiven.aivencloud.com:29650"
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "KAFKA"
+            - name: ELASTICSEARCH_HOST
+              value: "elastic-01-leo-dev-aiven.aivencloud.com"
+            - name: ELASTICSEARCH_PORT
+              value: "29645"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "false"
+            - name: ELASTICSEARCH_USE_SSL
+              value: "true"
+            - name: ELASTICSEARCH_USERNAME
+              value: datahub
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "es-secrets"
+                  key: "es-password"
+            - name: GRAPH_SERVICE_IMPL
+              value: neo4j
+            - name: NEO4J_HOST
+              value: "prerequisites-neo4j-community:7474"
+            - name: NEO4J_URI
+              value: "bolt://prerequisites-neo4j-community"
+            - name: NEO4J_USERNAME
+              value: "neo4j"
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "neo4j-secrets"
+                  key: "neo4j-password"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: SPRING_KAFKA_PROPERTIES_CLIENT_DNS_LOOKUP
+              value: "use_all_dns_ips"
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=avnadmin password=ms6ufdzvaky27ijw;"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITH
+              value: 
+            - name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: "TLS"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-auth
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-username
+            - name: SPRING_KAFKA_PROPERTIES_SSL_CA_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: ca.pem
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: MetadataChangeEvent_v4
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: FailedMetadataChangeEvent_v4
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: MetadataAuditEvent_v4
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: DataHubUsageEvent_v1
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: MetadataChangeProposal_v1
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: FailedMetadataChangeProposal_v1
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: MetadataChangeLog_Versioned_v1
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: MetadataChangeLog_Timeseries_v1
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: PlatformEvent_v1
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: DataHubUpgradeHistory_v1
+            - name: UI_INGESTION_ENABLED
+              value: "true"
+            - name: SECRET_SERVICE_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "datahub-encryption-secrets"
+                  key: "encryption_key_secret"
+            - name: UI_INGESTION_DEFAULT_CLI_VERSION
+              value: "0.10.2"
+            - name: ELASTICSEARCH_QUERY_MAX_TERM_BUCKET_SIZE
+              value: "20"
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_EXCLUSIVE
+              value: "false"
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_WITH_PREFIX
+              value: "true"
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_FACTOR
+              value: "2"
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_PREFIX_FACTOR
+              value: "1.6"
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_CASE_FACTOR
+              value: "0.7"
+            - name: ELASTICSEARCH_QUERY_EXACT_MATCH_ENABLE_STRUCTURED
+              value: "true"
+            - name: ELASTICSEARCH_SEARCH_GRAPH_TIMEOUT_SECONDS
+              value: "50"
+            - name: ELASTICSEARCH_SEARCH_GRAPH_BATCH_SIZE
+              value: "1000"
+            - name: ELASTICSEARCH_SEARCH_GRAPH_MAX_RESULT
+              value: "10000"
+            - name: SEARCH_SERVICE_ENABLE_CACHE
+              value: "false"
+            - name: LINEAGE_SEARCH_CACHE_ENABLED
+              value: "false"
+            - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
+              value: "true"
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
+              value: "true"
+            - name: ALWAYS_EMIT_CHANGE_LOG
+              value: "true"
+            - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
+              value: "true"
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "true"
+            - name: UI_INGESTION_DEFAULT_CLI_VERSION
+              value: 0.10.2.2
+          volumeMounts:
+            - name: datahub-certs-dir
+              mountPath: /mnt/datahub/certs
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 1Gi
+---
+# Source: datahub/charts/datahub-mae-consumer/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-datahub-mae-consumer
+  labels:
+    helm.sh/chart: datahub-mae-consumer-0.2.143
+    app.kubernetes.io/name: datahub-mae-consumer
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datahub-mae-consumer
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: datahub-mae-consumer
+        app.kubernetes.io/instance: datahub
+    spec:
+      hostAliases:
+        - hostnames:
+          - broker
+          - mysql
+          - elasticsearch
+          - neo4j
+          ip: 192.168.0.104
+      serviceAccountName: datahub-datahub-mae-consumer
+      securityContext:
+        {}
+      volumes:
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: datahub-certs
+      initContainers:
+      containers:
+        - name: datahub-mae-consumer
+          securityContext:
+            {}
+          image: "linkedin/datahub-mae-consumer:v0.10.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9091
+              protocol: TCP
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 8
+          env:
+            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: datahub-duhe-consumer-job-client-mcl
+            - name: DATAHUB_REVISION
+              value: "1"
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            - name: MAE_CONSUMER_ENABLED
+              value: "true"
+            - name: PE_CONSUMER_ENABLED
+              value: "true"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-mae-consumer/resources/entity-registry.yml
+            - name: DATAHUB_GMS_HOST
+              value: datahub-datahub-gms
+            - name: DATAHUB_GMS_PORT
+              value: "8080"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "https://kafka-01-leo-dev-aiven.aivencloud.com:29650"
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "KAFKA"
+            - name: ELASTICSEARCH_HOST
+              value: "elastic-01-leo-dev-aiven.aivencloud.com"
+            - name: ELASTICSEARCH_PORT
+              value: "29645"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "false"
+            - name: ELASTICSEARCH_USE_SSL
+              value: "true"
+            - name: ELASTICSEARCH_USERNAME
+              value: datahub
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "es-secrets"
+                  key: "es-password"
+            - name: GRAPH_SERVICE_IMPL
+              value: neo4j
+            - name: NEO4J_HOST
+              value: "prerequisites-neo4j-community:7474"
+            - name: NEO4J_URI
+              value: "bolt://prerequisites-neo4j-community"
+            - name: NEO4J_USERNAME
+              value: "neo4j"
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "neo4j-secrets"
+                  key: "neo4j-password"
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: UI_INGESTION_ENABLED
+              value: "true"
+            - name: UI_INGESTION_DEFAULT_CLI_VERSION
+              value: "0.10.2"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: SPRING_KAFKA_PROPERTIES_CLIENT_DNS_LOOKUP
+              value: "use_all_dns_ips"
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=avnadmin password=ms6ufdzvaky27ijw;"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: "TLS"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-auth
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-username
+            - name: SPRING_KAFKA_PROPERTIES_SSL_CA_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: ca.pem
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: MetadataAuditEvent_v4
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: DataHubUsageEvent_v1
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: MetadataChangeLog_Versioned_v1
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: MetadataChangeLog_Timeseries_v1
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: PlatformEvent_v1
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: DataHubUpgradeHistory_v1
+            - name: ALWAYS_EMIT_CHANGE_LOG
+              value: "true"
+            - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
+              value: "true"
+          volumeMounts:
+            - name: datahub-certs-dir
+              mountPath: /mnt/datahub/certs
+          resources:
+            limits:
+              memory: 1536Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+---
+# Source: datahub/charts/datahub-mce-consumer/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datahub-datahub-mce-consumer
+  labels:
+    helm.sh/chart: datahub-mce-consumer-0.2.145
+    app.kubernetes.io/name: datahub-mce-consumer
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/version: "v0.10.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas:  1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datahub-mce-consumer
+      app.kubernetes.io/instance: datahub
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: datahub-mce-consumer
+        app.kubernetes.io/instance: datahub
+    spec:
+      hostAliases:
+        - hostnames:
+          - broker
+          - mysql
+          - elasticsearch
+          - neo4j
+          ip: 192.168.0.104
+      serviceAccountName: default
+      securityContext:
+        {}
+      volumes:
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: datahub-certs
+      initContainers:
+      containers:
+        - name: datahub-mce-consumer
+          securityContext:
+            {}
+          image: "linkedin/datahub-mce-consumer:v0.10.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+          env:
+            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: datahub-duhe-consumer-job-client-mcp
+            - name: DATAHUB_REVISION
+              value: "1"
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            - name: MCE_CONSUMER_ENABLED
+              value: "true"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "kafka-01-leo-dev-aiven.aivencloud.com:29658"
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "https://kafka-01-leo-dev-aiven.aivencloud.com:29650"
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "KAFKA"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-mce-consumer/resources/entity-registry.yml
+            - name: EBEAN_DATASOURCE_USERNAME
+              value: "datahubservice"
+            - name: EBEAN_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "mysql-secrets"
+                  key: "mysql-root-password"
+            - name: EBEAN_DATASOURCE_HOST
+              value: "192.168.250.9:3306"
+            - name: EBEAN_DATASOURCE_URL
+              value: "jdbc:mysql://192.168.250.9:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "com.mysql.cj.jdbc.Driver"
+            - name: ELASTICSEARCH_HOST
+              value: "elastic-01-leo-dev-aiven.aivencloud.com"
+            - name: ELASTICSEARCH_PORT
+              value: "29645"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "false"
+            - name: ELASTICSEARCH_USE_SSL
+              value: "true"
+            - name: ELASTICSEARCH_USERNAME
+              value: datahub
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "es-secrets"
+                  key: "es-password"
+            - name: GRAPH_SERVICE_IMPL
+              value: neo4j
+            - name: NEO4J_HOST
+              value: "prerequisites-neo4j-community:7474"
+            - name: NEO4J_URI
+              value: "bolt://prerequisites-neo4j-community"
+            - name: NEO4J_USERNAME
+              value: "neo4j"
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "neo4j-secrets"
+                  key: "neo4j-password"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: SPRING_KAFKA_PROPERTIES_CLIENT_DNS_LOOKUP
+              value: "use_all_dns_ips"
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username=avnadmin password=ms6ufdzvaky27ijw;"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+              value: "TLS"
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+              value: "/mnt/datahub/certs/truststore.jks"
+            - name: SPRING_KAFKA_PROPERTIES_BASIC_AUTH_USER_INFO
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-auth
+            - name: SPRING_KAFKA_PROPERTIES_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-password
+            - name: SPRING_KAFKA_PROPERTIES_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: sasl-username
+            - name: SPRING_KAFKA_PROPERTIES_SSL_CA_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: ca.pem
+            - name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-certs
+                  key: aiven-trust-password
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: MetadataChangeEvent_v4
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: FailedMetadataChangeEvent_v4
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: MetadataChangeProposal_v1
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: FailedMetadataChangeProposal_v1
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: MetadataChangeLog_Versioned_v1
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: MetadataChangeLog_Timeseries_v1
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: DataHubUpgradeHistory_v1
+            - name: ALWAYS_EMIT_CHANGE_LOG
+              value: "true"
+            - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
+              value: "true"
+          volumeMounts:
+            - name: datahub-certs-dir
+              mountPath: /mnt/datahub/certs
+          resources:
+            limits:
+              memory: 1536Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+

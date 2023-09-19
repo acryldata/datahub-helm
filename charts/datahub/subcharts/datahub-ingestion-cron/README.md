@@ -27,4 +27,12 @@ A Helm chart for datahub's metadata-ingestion framework with kerberos authentica
 | crons.extraInitContainers | object | `{}` | Init containers to add to the cronjob container |
 | crons.serviceAccountName | string | | Service account name used for the cronjob container |
 | crons.podAnnotations | object | `{}` | Annotations to add to the pods |
-| extraSidecars | list | `[]` | Add additional sidecar containers to the deployment pod(s) |
+| crons.restartPolicy | string | `"Always"` | Pod restart policy |
+| crons.concurrencyPolicy | string | `"Allow"` | Specifies how to treat concurrent executions of a job |
+| crons.failedJobsHistoryLimit | integer | `1` | Number of failed finished jobs to retain |
+| crons.successfulJobsHistoryLimit | integer | `3` | Number of successful finished jobs to retain |
+| crons.backoffLimit | integer | `6` | Number of retries before marking job failed |
+| crons.nodeSelector | object | `{}` | Node labels for pod assignment |
+| crons.affinity | object | `{}` | Affinity for pod assignment |
+| crons.tolerations | list | `[]` | Tolerations for pod assignment |
+| crons.extraSidecars | list | `[]` | Add sidecar containers to the pod |

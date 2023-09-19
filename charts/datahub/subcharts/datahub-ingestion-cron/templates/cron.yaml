@@ -64,6 +64,9 @@ spec:
                     key: {{ $value.key | quote}}
               {{- end }}
               {{- end }}
+            {{- if .extraSidecars }}
+              {{- toYaml .extraSidecars | nindent 10 }}
+            {{- end }}
           restartPolicy: {{ default "OnFailure" .restartPolicy }}
           {{- if .nodeSelector }}
           nodeSelector:
@@ -84,8 +87,5 @@ spec:
           {{- if .extraVolumes }}
             {{- toYaml .extraVolumes | nindent 12 }}
           {{- end }}
-        {{- if .extraSidecars }}
-          {{- toYaml .extraSidecars | nindent 10 }}
-        {{- end }}
 ---
 {{- end }}

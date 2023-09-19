@@ -123,7 +123,26 @@ kubectl port-forward <datahub-frontend pod name> 9002:9002
 You should be able to access the frontend via http://localhost:9002. 
 
 Once you confirm that the pods are running well, you can set up ingress for datahub-frontend 
-to expose the 9002 port to the public.  
+to expose the 9002 port to the public.
+
+## Default Credentials
+
+There are a few keys and credentials created as part of the deployment using randomized values. They can be overridden using various configuration parameters.
+
+Also consider changing the default credentials used by any of the underlying data stores pulled in by the companion helm chart for
+the prerequisites. Refer to the upstream helm charts or point to your own managed data stores for these components.
+
+### DataHub Login
+
+For controlling the default admin password, see the following [configuration](charts/datahub/values.yaml#L36).
+
+### Encryption Key
+
+Used by the Play framework and GMS to encrypt secrets at the application level, this can be configured [here](charts/datahub/values.yaml#L579).
+
+### Token Signing Key
+
+Used to sign tokens for authentication, see configuration [here](charts/datahub/values.yaml#L605).
 
 ## Contributing
 

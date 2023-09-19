@@ -4,14 +4,14 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
   # Set up ingress to expose react front-end
   ingress:
@@ -40,35 +40,35 @@ elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 global:
@@ -107,7 +107,7 @@ global:
         secretKey: mysql-root-password
 
   datahub:
-    version: v0.10.5
+    version: v0.11.0
     gms:
       port: "8080"
     mae_consumer:
@@ -116,4 +116,4 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.5.4"
+      defaultCliVersion: "0.11.0"

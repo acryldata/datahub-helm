@@ -368,7 +368,7 @@ spec:
           {{- end }}
           {{- with .Values.global.telemetry }}
             - name: DATAHUB_TELEMETRY_ENABLED
-              value: {{ or (eq .cli "true") (eq .ingestReporting "true") (eq .thirdParty "true") | quote }}
+              value: {{ or (eq .cli true) (eq .ingestReporting true) (eq .thirdParty true) | quote }}
             - name: CLI_TELEMETRY_ENABLED
               value: {{ .cli | quote }}
             - name: INGESTION_REPORTING_ENABLED

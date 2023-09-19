@@ -321,7 +321,10 @@ global:
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
-
+  telemetry:
+    cli: false
+    ingestReporting: true
+    thirdParty: true
   elasticsearch:
     host: "elasticsearch-master"
     port: "9200"

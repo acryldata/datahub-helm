@@ -366,6 +366,16 @@ spec:
             - name: search-config
               mountPath: "/datahub/datahub-gms/resources/search"
           {{- end }}
+          {{- with .Values.global.telemetry }}
+            - name: DATAHUB_TELEMETRY_ENABLED
+              value: {{ or (eq .cli "true") (eq .ingestReporting "true") (eq .thirdParty "true") | quote }}
+            - name: CLI_TELEMETRY_ENABLED
+              value: {{ .cli | quote }}
+            - name: INGESTION_REPORTING_ENABLED
+              value: {{ .ingestReporting | quote }}
+            - name: ENABLE_THIRD_PARTY_LOGGING
+              value: {{ .thirdParty | quote }}
+          {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

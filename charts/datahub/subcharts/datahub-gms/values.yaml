@@ -181,13 +181,16 @@ global:
 
   datahub:
     version: head
+    telemetry:
+      cli: false
+      ingestReporting: true
+      thirdParty: true
     monitoring:
       enablePrometheus: false
       enableJMXPort: false
     gms:
       port: "8080"
     appVersion: "1.0"
-
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work

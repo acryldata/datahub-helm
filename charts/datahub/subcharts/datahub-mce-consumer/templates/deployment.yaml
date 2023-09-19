@@ -242,6 +242,8 @@ spec:
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
             - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
               value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
+            - name: DATAHUB_TELEMETRY_ENABLED
+              value: "false"
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

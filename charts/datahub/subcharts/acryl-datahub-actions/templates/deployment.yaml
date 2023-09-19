@@ -120,6 +120,8 @@ spec:
             - name: PLATFORM_EVENT_TOPIC_NAME
               value: {{ .platform_event_topic_name }}
             {{- end }}
+            - name: DATAHUB_TELEMETRY_ENABLED
+              value: "false"
             {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
             - name: DATAHUB_SYSTEM_CLIENT_ID
               value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}

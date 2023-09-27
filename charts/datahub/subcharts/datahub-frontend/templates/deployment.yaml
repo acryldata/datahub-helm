@@ -191,8 +191,10 @@ spec:
             {{- else }}
               value: {{ .clientSecret }}
             {{- end }}
+            {{- if $.Values.ingress.enabled }}
             - name: AUTH_OIDC_BASE_URL
               value: https://{{ (first $.Values.ingress.hosts).host }}
+            {{- end }}
             {{- if eq .provider "google" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://accounts.google.com/.well-known/openid-configuration

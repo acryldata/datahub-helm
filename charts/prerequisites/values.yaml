@@ -70,8 +70,7 @@ neo4j:
     #     storageClassName: managed-csi-premium
 
   env:
-    - name: NEO4JLABS_PLUGINS
-      value: "[\"apoc\"]"
+    NEO4J_PLUGINS: '["apoc"]'
 
 mysql:
   enabled: true

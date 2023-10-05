@@ -4,13 +4,21 @@ datahub-gms:
   enabled: true
   image:
     repository: linkedin/datahub-gms
-    # tag: "v0.10.0 # defaults to .global.datahub.version
+    # tag: "v0.11.0 # defaults to .global.datahub.version
   resources:
     limits:
       memory: 2Gi
     requests:
       cpu: 100m
       memory: 1Gi
+  livenessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 8
+  readinessProbe:
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    failureThreshold: 8
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:
@@ -23,7 +31,7 @@ datahub-frontend:
   enabled: true
   image:
     repository: linkedin/datahub-frontend-react
-    # tag: "v0.10.0" # # defaults to .global.datahub.version
+    # tag: "v0.11.0" # # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1400Mi
@@ -59,7 +67,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: linkedin/datahub-mae-consumer
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -70,7 +78,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: linkedin/datahub-mce-consumer
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       memory: 1536Mi
@@ -82,13 +90,13 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-elasticsearch-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -118,7 +126,7 @@ kafkaSetupJob:
   enabled: true
   image:
     repository: linkedin/datahub-kafka-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -148,7 +156,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -183,7 +191,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.10.0" # defaults to .global.datahub.version
+    # tag: "v0.11.0" # defaults to .global.datahub.version
   resources:
     limits:
       cpu: 500m
@@ -223,7 +231,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.10.0"  # defaults to .global.datahub.version
+    # tag: "v0.11.0"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
@@ -498,8 +506,8 @@ global:
       #   registry: datahub
 
   neo4j:
-    host: "prerequisites-neo4j-community:7474"
-    uri: "bolt://prerequisites-neo4j-community"
+    host: "prerequisites-neo4j:7474"
+    uri: "bolt://prerequisites-neo4j"
     username: "neo4j"
     password:
       secretRef: neo4j-secrets
@@ -554,7 +562,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.10.5
+    version: v0.11.0
     gms:
       port: "8080"
       nodePort: "30001"
@@ -586,7 +594,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.10.5.4"
+      defaultCliVersion: "0.11.0"
 
     metadata_service_authentication:
       enabled: false
@@ -620,9 +628,9 @@ global:
 
     ## Values specific to the unified search and browse feature.
     search_and_browse:
-      show_search_v2: false  # If on, show the new search filters experience as of v0.10.5
-      show_browse_v2: false  # If on, show the new browse experience as of v0.10.5
-      backfill_browse_v2: false  # If on, run the backfill upgrade job that generates default browse paths for relevant entities
+      show_search_v2: true  # If on, show the new search filters experience as of v0.10.5
+      show_browse_v2: true  # If on, show the new browse experience as of v0.10.5
+      backfill_browse_v2: true  # If on, run the backfill upgrade job that generates default browse paths for relevant entities
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

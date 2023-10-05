@@ -47,7 +47,7 @@ Assuming kubectl context points to the correct kubernetes cluster, first create 
 
 ```(shell)
 kubectl create secret generic mysql-secrets --from-literal=mysql-root-password=datahub
-kubectl create secret generic neo4j-secrets --from-literal=neo4j-password=datahub
+kubectl create secret generic neo4j-secrets --from-literal=neo4j-password=datahub --from-literal=NEO4J_AUTH=neo4j/datahub
 ```
 
 The above commands sets the passwords to "datahub" as an example. Change to any password of choice. 
@@ -79,7 +79,7 @@ elasticsearch-master-0                             1/1     Running     0        
 prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          63m
 prerequisites-kafka-0                              1/1     Running     2          62m
 prerequisites-mysql-0                              1/1     Running     1          62m
-prerequisites-neo4j-community-0                    1/1     Running     0          52m
+prerequisites-neo4j-0                              1/1     Running     0          52m
 prerequisites-zookeeper-0                          1/1     Running     0          62m
 ```
 
@@ -109,7 +109,7 @@ elasticsearch-master-0                             1/1     Running     0        
 prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          99m
 prerequisites-kafka-0                              1/1     Running     2          97m
 prerequisites-mysql-0                              1/1     Running     1          97m
-prerequisites-neo4j-community-0                    1/1     Running     0          88m
+prerequisites-neo4j-0                              1/1     Running     0          88m
 prerequisites-zookeeper-0                          1/1     Running     0          97m
 ```
 

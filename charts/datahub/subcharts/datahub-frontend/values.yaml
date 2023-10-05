@@ -68,6 +68,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+auth:
+  sessionTTLHours: "24"
 # OIDC auth based on https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react
 oidcAuthentication:
   enabled: false

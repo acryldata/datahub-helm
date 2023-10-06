@@ -12,6 +12,7 @@ metadata:
 spec:
   schedule: "* * * * *"
   suspend: true
+  concurrencyPolicy: Allow
   jobTemplate:
     spec:
       template:

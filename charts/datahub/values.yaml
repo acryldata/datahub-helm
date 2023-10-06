@@ -261,6 +261,8 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+    # Add the concurrency Policy flexibility via values
+    concurrencyPolicy: Allow
     # Add extra sidecar containers to job pod
     extraSidecars: []
       # - name: my-image-name
@@ -274,6 +276,8 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+    # Add the concurrency Policy flexibility via values
+    concurrencyPolicy: Allow
     # Add extra sidecar containers to job pod
     extraSidecars: []
       # - name: my-image-name

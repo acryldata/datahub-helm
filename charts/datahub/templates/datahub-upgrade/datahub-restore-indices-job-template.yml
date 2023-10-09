@@ -12,7 +12,7 @@ metadata:
 spec:
   schedule: "* * * * *"
   suspend: true
-  concurrencyPolicy: {{ .Values.datahubUpgrade.cleanupJob.concurrencyPolicy | default "Allow" }}
+  concurrencyPolicy: {{ .Values.datahubUpgrade.restoreIndices.concurrencyPolicy | default "Allow" }}
   jobTemplate:
     spec:
       template:

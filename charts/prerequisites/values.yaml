@@ -69,6 +69,9 @@ neo4j:
     #   dynamic:
     #     storageClassName: managed-csi-premium
 
+  env:
+    NEO4J_PLUGINS: '["apoc"]'
+
 mysql:
   enabled: true
   auth:

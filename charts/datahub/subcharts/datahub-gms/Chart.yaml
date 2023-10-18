@@ -15,4 +15,4 @@ type: application
 version: 0.2.151
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: v0.10.0
+appVersion: v0.11.0

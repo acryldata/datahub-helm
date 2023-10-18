@@ -15,16 +15,16 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
   # # Shrink default JVM heap.
-  esJavaOpts: "-Xmx384m -Xms384m"
+  esJavaOpts: "-Xmx512m -Xms512m"
 
   # # Allocate smaller chunks of memory per pod.
   resources:
     requests:
       cpu: "100m"
-      memory: "768M"
+      memory: "1024M"
     limits:
       cpu: "1000m"
-      memory: "768M"
+      memory: "1024M"
 
   # # Request smaller persistent volumes.
   # volumeClaimTemplate:

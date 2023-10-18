@@ -176,6 +176,12 @@ global:
       server: "broker:9092"
     schemaregistry:
       url: "http://schema-registry:8081"
+    # Kafka producer and consumer settings
+    #producer:
+    #  compressionType: snappy
+    #  maxRequestSize: 5242880
+    #consumer:
+    #  maxPartitionFetchBytes: 5242880
 
   datahub:
     version: head

@@ -74,6 +74,9 @@ extraLabels: {}
   # owner: myteam
   # environment: test
 
+# Extra labels for the Pods
+extraPodLabels: {}
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
@@ -136,6 +139,21 @@ global:
     host: "elasticsearch"
     port: "9200"
     skipcheck: "false"
+    index:
+      enableMappingsReindex: true
+    search:
+      maxTermBucketSize: 20
+      exactMatch:
+        exclusive: false
+        withPrefix: true
+        exactFactor: 2.0
+        prefixFactor: 1.6
+        caseSensitivityFactor: 0.7
+        enableStructured: true
+      graph:
+        timeoutSeconds: 50
+        batchSize: 1000
+        maxResult: 10000
 
   kafka:
     bootstrap:

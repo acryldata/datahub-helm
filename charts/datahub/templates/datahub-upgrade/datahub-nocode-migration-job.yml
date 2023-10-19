@@ -4,16 +4,11 @@ kind: Job
 metadata:
   name: {{ .Release.Name }}-nocode-migration-job
   labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-    app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- include "datahub.labels" . | nindent 4 }}
+  {{- with .Values.datahubUpgrade.annotations }}
   annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "-2"
-    "helm.sh/hook-delete-policy": before-hook-creation
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   template:
     {{- if or .Values.global.podLabels .Values.datahubUpgrade.podAnnotations}}
@@ -54,9 +49,9 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.datahubUpgrade.podSecurityContext | nindent 8 }}
-      initContainers:
       {{- with .Values.datahubUpgrade.extraInitContainers }}
-        {{- toYaml . | nindent 12 }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: datahub-upgrade-job
@@ -73,6 +68,15 @@ spec:
             - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
           env:
             {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
           {{- with .Values.datahubUpgrade.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

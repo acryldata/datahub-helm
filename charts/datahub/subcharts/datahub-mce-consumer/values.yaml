@@ -67,6 +67,9 @@ extraLabels: {}
   # owner: myteam
   # environment: test
 
+# Extra labels for the Pods
+extraPodLabels: {}
+
 # Extra environment variables
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
@@ -165,6 +168,9 @@ readinessProbe:
   failureThreshold: 4
 
 global:
+  elasticsearch:
+    host: "elasticsearch-master"
+
   kafka:
     bootstrap:
       server: "broker:9092"

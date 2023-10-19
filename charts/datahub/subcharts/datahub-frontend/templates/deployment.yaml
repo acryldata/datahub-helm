@@ -24,6 +24,9 @@ spec:
         {{- range $key, $value := .Values.global.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
+        {{- range $key, $value := .Values.extraPodLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -38,6 +41,12 @@ spec:
           secret:
             defaultMode: 0444
             secretName: {{ .name }}
+        {{- end }}
+        {{- if .Values.defaultUserCredentials }}
+        - name: datahub-default-users
+          secret:
+            defaultMode: 0444
+            secretName: {{ printf "%s-user-secret" .Release.Name }}
         {{- end }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
@@ -165,6 +174,8 @@ spec:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
             {{- end }}
+            - name: AUTH_SESSION_TTL_HOURS
+              value: {{ .Values.auth.sessionTTLHours | quote }}
           {{- with .Values.oidcAuthentication }}
             {{- if .enabled }}
             - name: AUTH_OIDC_ENABLED
@@ -213,6 +224,11 @@ spec:
           {{- with .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- if .Values.defaultUserCredentials }}
+            - name: datahub-default-users
+              mountPath: /datahub-frontend/conf/user.props
+              subPath: user.props
           {{- end }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

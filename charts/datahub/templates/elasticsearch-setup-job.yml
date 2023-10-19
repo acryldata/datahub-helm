@@ -4,16 +4,11 @@ kind: Job
 metadata:
   name: {{ .Release.Name }}-elasticsearch-setup-job
   labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-    app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    {{- include "datahub.labels" . | nindent 4 }}
+  {{- with .Values.elasticsearchSetupJob.annotations }}
   annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": before-hook-creation
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   template:
     {{- if or .Values.global.podLabels .Values.elasticsearchSetupJob.podAnnotations }}
@@ -48,6 +43,10 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.elasticsearchSetupJob.podSecurityContext | nindent 8 }}
+      {{- with .Values.elasticsearchSetupJob.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: elasticsearch-setup-job
           image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) }}"

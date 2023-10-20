@@ -9,6 +9,9 @@ image:
 
 imagePullSecrets: []
 
+podSecurityContext: {}
+# fsGroup: 2000
+
 crons: {}
   #### Example data
   #hive:
@@ -61,6 +64,15 @@ crons: {}
     ## If you want to specify your own service account, set its name like so.
     ##
     #serviceAccountName: "my-cron-service"
+
+    ## If you want to specify container level security
+    #securityContext:
+    #  capabilities:
+    #    drop:
+    #      - ALL
+    #  readOnlyRootFilesystem: true
+    #  runAsNonRoot: true
+    #  runAsUser: 1000
 
     ## Add your own pod annotations.
     ##

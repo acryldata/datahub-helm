@@ -19,6 +19,9 @@ datahub-gms:
     initialDelaySeconds: 120
     periodSeconds: 30
     failureThreshold: 8
+  # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
+  # service:
+  #   type: ClusterIP
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:
@@ -42,6 +45,9 @@ datahub-frontend:
   ingress:
     enabled: false
   defaultUserCredentials: {}
+  # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
+  # service:
+  #   type: ClusterIP
   #  randomAdminPassword: true
   #  # You can also set specific passwords for default users
   #  # manualValues: |
@@ -52,7 +58,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.11"
+    tag: "v0.0.13"
   # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
   # ingestionSecretFiles:
   #   name: ${K8S_SECRET_NAME}

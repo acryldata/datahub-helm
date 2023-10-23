@@ -113,7 +113,7 @@ spec:
             - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
               value: "hazelcast"
             - name: SEARCH_SERVICE_HAZELCAST_SERVICE_NAME
-              value: {{ printf "%s-%s-%s" .Release.Name (regexReplaceAll "\\W+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" }}
+              value: {{ printf "%s-%s-%s" .Release.Name (regexReplaceAll "[^-a-z0-9]+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" }}
             {{- end}}
             {{- if .Values.global.datahub.systemUpdate.enabled }}
             - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID

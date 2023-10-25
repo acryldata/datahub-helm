@@ -199,9 +199,9 @@ spec:
             - name: AUTH_OIDC_SCOPE
               value: {{ .scope | default "openid profile email" }}
             - name: AUTH_OIDC_USER_NAME_CLAIM
-              value: email
+              value: {{ .user_name_claim | default "email" }}
             - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
-              value: ([^@]+)
+              value: {{ .user_name_claim_regex | default "([^@]+)" }}
             {{- else if eq .provider "okta" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://{{ .oktaDomain }}/.well-known/openid-configuration

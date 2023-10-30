@@ -64,7 +64,7 @@ spec:
               value: {{ .Values.global.kafka.bootstrap.server | quote }}
             {{- with .Values.global.kafka.maxMessageBytes }}
             - name: MAX_MESSAGE_BYTES
-              value: "{{ . }}"
+              value: {{ . | quote }}
             {{- end }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: USE_CONFLUENT_SCHEMA_REGISTRY

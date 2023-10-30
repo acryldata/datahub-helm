@@ -47,11 +47,11 @@ Return the env variables for upgrade jobs
 {{- end }}
 {{- with .Values.global.kafka.producer.maxRequestSize }}
 - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
-  value: "{{ . }}"
+  value: {{ . | quote }}
 {{- end }}
 {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
 - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
-  value: "{{ . }}"
+  value: {{ . | quote }}
 {{- end }}
 {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
 - name: KAFKA_SCHEMAREGISTRY_URL

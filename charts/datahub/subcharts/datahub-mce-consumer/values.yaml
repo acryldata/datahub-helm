@@ -179,9 +179,9 @@ global:
     # Kafka producer and consumer settings
     #producer:
     #  compressionType: snappy
-    #  maxRequestSize: 5242880
+    #  maxRequestSize: "5242880"
     #consumer:
-    #  maxPartitionFetchBytes: 5242880
+    #  maxPartitionFetchBytes: "5242880"
 
   datahub:
     version: head

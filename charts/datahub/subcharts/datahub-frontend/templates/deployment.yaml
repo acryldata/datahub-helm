@@ -120,11 +120,11 @@ spec:
             {{- end }}
             {{- with .Values.global.kafka.producer.maxRequestSize }}
             - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
-              value: "{{ . }}"
+              value: {{ . | quote }}
             {{- end }}
             {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
             - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
-              value: "{{ . }}"
+              value: {{ . | quote }}
             {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}

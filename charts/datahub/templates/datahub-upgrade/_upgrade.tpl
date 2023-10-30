@@ -41,6 +41,18 @@ Return the env variables for upgrade jobs
   value: "{{ .Values.global.sql.datasource.driver }}"
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
+{{- with .Values.global.kafka.producer.compressionType }}
+- name: KAFKA_PRODUCER_COMPRESSION_TYPE
+  value: "{{ . }}"
+{{- end }}
+{{- with .Values.global.kafka.producer.maxRequestSize }}
+- name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+  value: "{{ . }}"
+{{- end }}
+{{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+- name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+  value: "{{ . }}"
+{{- end }}
 {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}

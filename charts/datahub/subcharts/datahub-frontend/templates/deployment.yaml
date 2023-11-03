@@ -114,6 +114,18 @@ spec:
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- with .Values.global.kafka.producer.compressionType }}
+            - name: KAFKA_PRODUCER_COMPRESSION_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.producer.maxRequestSize }}
+            - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+            - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+              value: {{ . | quote }}
+            {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}

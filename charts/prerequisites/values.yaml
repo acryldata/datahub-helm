@@ -15,16 +15,16 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
   # # Shrink default JVM heap.
-  esJavaOpts: "-Xmx384m -Xms384m"
+  esJavaOpts: "-Xmx512m -Xms512m"
 
   # # Allocate smaller chunks of memory per pod.
   resources:
     requests:
       cpu: "100m"
-      memory: "768M"
+      memory: "1024M"
     limits:
       cpu: "1000m"
-      memory: "768M"
+      memory: "1024M"
 
   # # Request smaller persistent volumes.
   # volumeClaimTemplate:
@@ -131,6 +131,7 @@ cp-helm-charts:
 # Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
   enabled: true
+  maxMessageBytes: "5242880"
   kraft:
     enabled: false
   zookeeper:

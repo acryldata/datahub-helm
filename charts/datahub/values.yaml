@@ -501,7 +501,7 @@ global:
       datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
     maxMessageBytes: "5242880"  # 5MB
     producer:
-      compressionType: snappy
+      compressionType: none
       maxRequestSize: "5242880"  # 5MB
     consumer:
       maxPartitionFetchBytes: "5242880"  # 5MB

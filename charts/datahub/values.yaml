@@ -666,7 +666,7 @@ global:
 #      ssl.keystore.password: datahub.linkedin.com.KeyStorePass
 #      ssl.truststore.password: datahub.linkedin.com.TrustStorePass
 #      kafkastore.ssl.truststore.password: datahub.linkedin.com.TrustStorePass
-#
+# 
 #  springKafkaConfigurationOverrides:
 #    ssl.keystore.location: /mnt/datahub/certs/datahub.linkedin.com.keystore.jks
 #    ssl.truststore.location: /mnt/datahub/certs/datahub.linkedin.com.truststore.jks
@@ -677,4 +677,5 @@ global:
 #    ssl.truststore.type: JKS
 #    ssl.protocol: TLS
 #    ssl.endpoint.identification.algorithm:
+#    basic.auth.credentials.source: USER_INFO
 #    basic.auth.user.info:

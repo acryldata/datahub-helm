@@ -677,3 +677,4 @@ global:
 #    ssl.truststore.type: JKS
 #    ssl.protocol: TLS
 #    ssl.endpoint.identification.algorithm:
+#    basic.auth.user.info:

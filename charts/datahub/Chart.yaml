@@ -4,7 +4,7 @@ description: A Helm chart for LinkedIn DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.3.6
+version: 0.3.7
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 0.11.0
@@ -14,7 +14,7 @@ dependencies:
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
-    version: 0.2.143
+    version: 0.2.144
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer

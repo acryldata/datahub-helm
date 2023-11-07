@@ -65,7 +65,7 @@ spec:
             {{- toYaml .Values.lifecycle | nindent 12 }}
           ports:
             - name: http
-              containerPort: 9002
+              containerPort: {{ .Values.service.containerPort }}
               protocol: TCP
           {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
             - name: jmx

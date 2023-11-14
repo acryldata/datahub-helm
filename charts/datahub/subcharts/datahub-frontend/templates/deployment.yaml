@@ -115,7 +115,7 @@ spec:
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
             - name: ENFORCE_VALID_EMAIL
-              value: "{{ .Values.datahub.frontend.validateSignUpEmail }}"
+              value: "{{ .Values.global.datahub.frontend.validateSignUpEmail }}"
             {{- with .Values.global.kafka.producer.compressionType }}
             - name: KAFKA_PRODUCER_COMPRESSION_TYPE
               value: "{{ . }}"

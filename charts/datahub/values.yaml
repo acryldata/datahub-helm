@@ -613,7 +613,7 @@ global:
       defaultCliVersion: "0.12.0"
 
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       systemClientSecret:
         secretRef: "datahub-auth-secrets"

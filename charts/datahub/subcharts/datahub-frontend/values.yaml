@@ -226,7 +226,7 @@ global:
       enablePrometheus: true
     appVersion: "1.0"
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

@@ -63,11 +63,11 @@ neo4j:
     allowPrivilegeEscalation: false
 
   # Create a volume for neo4j, SSD storage is recommended
-  volumes: {}
-    # data:
-    #   mode: "dynamic"
-    #   dynamic:
-    #     storageClassName: managed-csi-premium
+  volumes:
+    data:
+      mode: "dynamic"
+      dynamic:
+        storageClassName: managed-csi-premium
 
   env:
     NEO4J_PLUGINS: '["apoc"]'
@@ -136,3 +136,4 @@ kafka:
     enabled: false
   zookeeper:
     enabled: true
+

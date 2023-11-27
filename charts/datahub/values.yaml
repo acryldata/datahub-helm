@@ -499,6 +499,12 @@ global:
       metadata_change_log_timeseries_topic_name: "MetadataChangeLog_Timeseries_v1"
       platform_event_topic_name: "PlatformEvent_v1"
       datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
+    maxMessageBytes: "5242880"  # 5MB
+    producer:
+      compressionType: none
+      maxRequestSize: "5242880"  # 5MB
+    consumer:
+      maxPartitionFetchBytes: "5242880"  # 5MB
     ## For AWS MSK set this to a number larger than 1
     # partitions: 3
     # replicationFactor: 3
@@ -572,10 +578,13 @@ global:
       #   value: password
 
   datahub:
-    version: v0.11.0
+    version: v0.12.0
     gms:
       port: "8080"
       nodePort: "30001"
+
+    frontend:
+      validateSignUpEmail: true
 
     monitoring:
       enablePrometheus: true
@@ -604,10 +613,10 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.11.0"
+      defaultCliVersion: "0.12.0"
 
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       systemClientSecret:
         secretRef: "datahub-auth-secrets"

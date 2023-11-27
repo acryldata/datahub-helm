@@ -23,7 +23,7 @@ crons: {}
     #  fileName:
 
     ## Command to be executed
-    #command: ["/bin/sh", "-c", "datahub ingest -c <recipe.fileName>"]
+    #command: "datahub ingest -c <recipe.fileName>"
 
     ## Deployment pod host aliases
     ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/

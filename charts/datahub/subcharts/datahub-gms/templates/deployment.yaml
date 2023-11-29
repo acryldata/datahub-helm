@@ -58,6 +58,9 @@ spec:
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
       initContainers:
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}

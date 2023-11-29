@@ -38,7 +38,7 @@ elasticsearch:
 # see https://neo4j.com/docs/operations-manual/current/kubernetes/ for more information
 # source: https://github.com/neo4j/helm-charts
 neo4j:
-  enabled: true
+  enabled: false
   nameOverride: neo4j
   neo4j:
     name: neo4j

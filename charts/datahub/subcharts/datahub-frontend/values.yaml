@@ -92,6 +92,11 @@ oidcAuthentication:
   # if needed, it should set meaningful defaults from provider
   # scope: "openid profile email"
 
+  # The attribute that will contain the username used on the DataHub platform.
+  # user_name_claim: "email"
+  # A regex string used for extracting the username from the userNameClaim attribute.
+  # user_name_claim_regex: "([^@]+)"
+
 # Extra labels for Deployment
 extraLabels: {}
   # owner: myteam
@@ -227,8 +232,10 @@ global:
     monitoring:
       enablePrometheus: true
     appVersion: "1.0"
+    frontend:
+      validateSignUpEmail: true
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

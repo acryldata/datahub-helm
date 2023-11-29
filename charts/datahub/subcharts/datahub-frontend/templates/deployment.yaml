@@ -15,10 +15,13 @@ spec:
       {{- include "datahub-frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      {{- if .Values.defaultUserCredentials }}
+        checksum/secret: {{ include (print $.Template.BasePath "/user-secrets.yaml") . | sha256sum }}
+      {{- end }}
       labels:
         {{- include "datahub-frontend.selectorLabels" . | nindent 8 }}
         {{- range $key, $value := .Values.global.podLabels }}
@@ -117,6 +120,8 @@ spec:
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            - name: ENFORCE_VALID_EMAIL
+              value: "{{ .Values.global.datahub.frontend.validateSignUpEmail }}"
             {{- with .Values.global.kafka.producer.compressionType }}
             - name: KAFKA_PRODUCER_COMPRESSION_TYPE
               value: "{{ . }}"
@@ -214,9 +219,9 @@ spec:
             - name: AUTH_OIDC_SCOPE
               value: {{ .scope | default "openid profile email" }}
             - name: AUTH_OIDC_USER_NAME_CLAIM
-              value: email
+              value: {{ .user_name_claim | default "email" }}
             - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
-              value: ([^@]+)
+              value: {{ .user_name_claim_regex | default "([^@]+)" }}
             {{- else if eq .provider "okta" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://{{ .oktaDomain }}/.well-known/openid-configuration

@@ -206,7 +206,7 @@ global:
       # defaultCliVersion: "X.X.X" --> Optional: Controls the acryl-datahub package version downloaded from PyPI.
 
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       # tokenService:
       #   signingKey:
       #    secretRef: <secret-ref>

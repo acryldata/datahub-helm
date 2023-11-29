@@ -192,7 +192,7 @@ global:
     gms:
       port: "8080"
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

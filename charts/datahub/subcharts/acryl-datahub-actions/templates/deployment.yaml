@@ -69,19 +69,19 @@ spec:
               protocol: TCP
           env:
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ .Values.global.datahub.gms.host }}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             # Deprecated in favour of DATAHUB_* variables
             - name: GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{.Values.global.datahub.gms.host }}
             - name: GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_URL
-              value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+              value: {{ printf "http://%s:%s/schema-registry/api/" .Values.global.datahub.gms.host .Values.global.datahub.gms.port }}
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: SCHEMA_REGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"

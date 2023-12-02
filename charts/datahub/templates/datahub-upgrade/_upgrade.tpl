@@ -6,7 +6,7 @@ Return the env variables for upgrade jobs
 - name: ENTITY_REGISTRY_CONFIG_PATH
   value: /datahub/datahub-gms/resources/entity-registry.yml
 - name: DATAHUB_GMS_HOST
-  value: {{ .Values.global.datahub.gms.host }}
+  value: {{ include "datahub.gms.host" $ }}
 - name: DATAHUB_GMS_PORT
   value: "{{ .Values.global.datahub.gms.port }}"
 - name: DATAHUB_MAE_CONSUMER_HOST

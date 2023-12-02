@@ -98,7 +98,7 @@ spec:
               value: "true"
             {{- end }}
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ include "datahub.gms.host" $}}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: DATAHUB_SECRET

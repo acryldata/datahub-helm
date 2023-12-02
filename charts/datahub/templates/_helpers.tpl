@@ -72,3 +72,9 @@ Return the appropriate apiVersion for cronjob.
 {{- print "batch/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+{{/*
+Return the appropriate apiVersion for cronjob.
+*/}}
+{{- define "datahub.gms.host" -}}
+{{- .Values.global.datahub.gms.host | default (printf "%s-%s" .Release.Name "datahub-gms") -}}
+{{- end -}}

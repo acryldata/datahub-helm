@@ -109,7 +109,7 @@ spec:
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-mae-consumer/resources/entity-registry.yml
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ include "datahub.gms.host" $}}
             - name: DATAHUB_GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
             - name: KAFKA_BOOTSTRAP_SERVER
@@ -128,7 +128,7 @@ spec:
             {{- end }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
-              value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+              value: {{ printf "http://%s:%s/schema-registry/api/" ( include "datahub.gms.host" $) .Values.global.datahub.gms.port }}
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"

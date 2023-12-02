@@ -6,7 +6,7 @@ Return the env variables for upgrade jobs
 - name: ENTITY_REGISTRY_CONFIG_PATH
   value: /datahub/datahub-gms/resources/entity-registry.yml
 - name: DATAHUB_GMS_HOST
-  value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+  value: {{ include "datahub.gms.host" $ }}
 - name: DATAHUB_GMS_PORT
   value: "{{ .Values.global.datahub.gms.port }}"
 - name: DATAHUB_MAE_CONSUMER_HOST
@@ -55,7 +55,7 @@ Return the env variables for upgrade jobs
 {{- end }}
 {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
-  value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+  value: {{ printf "http://%s:%s/schema-registry/api/" .Values.global.datahub.gms.host .Values.global.datahub.gms.port }}
 {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: "{{ .Values.global.kafka.schemaregistry.url }}"

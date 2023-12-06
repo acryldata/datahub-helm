@@ -45,14 +45,14 @@ datahub-frontend:
   ingress:
     enabled: false
   defaultUserCredentials: {}
+    # randomAdminPassword: true
+    # You can also set specific passwords for default users
+    # manualValues: |
+    #   datahub:manualPassword
+    #   initialViewer:manualPassword
   # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   # service:
   #   type: ClusterIP
-  #  randomAdminPassword: true
-  #  # You can also set specific passwords for default users
-  #  # manualValues: |
-  #  #   datahub:manualPassword
-  #  #   initialViewer:manualPassword
 
 acryl-datahub-actions:
   enabled: true

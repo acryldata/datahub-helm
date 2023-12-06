@@ -41,6 +41,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+priorityClassName:
+
 service:
   type: ClusterIP # NodePort
   port: "9091"
@@ -167,7 +169,7 @@ readinessProbe:
   failureThreshold: 8
 
 global:
-  graph_service_impl: neo4j
+  graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
 
   elasticsearch:

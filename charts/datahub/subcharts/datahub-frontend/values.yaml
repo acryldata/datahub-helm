@@ -38,6 +38,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+priorityClassName:
+
 service:
   type: LoadBalancer # ClusterIP or NodePort
   port: 9002
@@ -89,6 +91,11 @@ oidcAuthentication:
   # azureTenantId: your-azure-tenant-id
   # if needed, it should set meaningful defaults from provider
   # scope: "openid profile email"
+
+  # The attribute that will contain the username used on the DataHub platform.
+  # user_name_claim: "email"
+  # A regex string used for extracting the username from the userNameClaim attribute.
+  # user_name_claim_regex: "([^@]+)"
 
 # Extra labels for Deployment
 extraLabels: {}

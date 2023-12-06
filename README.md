@@ -32,15 +32,12 @@ The main components are powered by 4 external dependencies:
 - Kafka
 - Local DB (MySQL, Postgres, MariaDB)
 - Search Index (Elasticsearch)
-- Graph Index (Supports either Neo4j or Elasticsearch)
+- Graph Index (Supports either Elasticsearch or Neo4j)
 
 The dependencies must be deployed before deploying Datahub. We created a separate 
 [chart](https://github.com/acryldata/datahub-helm/tree/master/charts/prerequisites) 
 for deploying the dependencies with example configuration. They could also be deployed 
-separately on-prem or leveraged as managed services. To remove your dependency on Neo4j,
-set enabled to false in the `datahub-kubernetes/prerequisites/values.yaml` file.
-Then, override the `graph_service_impl` field in `datahub-kubernetes/datahub/values.yaml` to
-have the value `elasticsearch` instead of `neo4j`.
+separately on-prem or leveraged as managed services.
 
 ## Quickstart
 Assuming kubectl context points to the correct kubernetes cluster, first create kubernetes secrets that contain MySQL and Neo4j passwords. 

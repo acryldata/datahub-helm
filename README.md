@@ -32,22 +32,19 @@ The main components are powered by 4 external dependencies:
 - Kafka
 - Local DB (MySQL, Postgres, MariaDB)
 - Search Index (Elasticsearch)
-- Graph Index (Supports either Neo4j or Elasticsearch)
+- Graph Index (Supports either Elasticsearch or Neo4j)
 
 The dependencies must be deployed before deploying Datahub. We created a separate 
 [chart](https://github.com/acryldata/datahub-helm/tree/master/charts/prerequisites) 
 for deploying the dependencies with example configuration. They could also be deployed 
-separately on-prem or leveraged as managed services. To remove your dependency on Neo4j,
-set enabled to false in the `datahub-kubernetes/prerequisites/values.yaml` file.
-Then, override the `graph_service_impl` field in `datahub-kubernetes/datahub/values.yaml` to
-have the value `elasticsearch` instead of `neo4j`.
+separately on-prem or leveraged as managed services.
 
 ## Quickstart
 Assuming kubectl context points to the correct kubernetes cluster, first create kubernetes secrets that contain MySQL and Neo4j passwords. 
 
 ```(shell)
 kubectl create secret generic mysql-secrets --from-literal=mysql-root-password=datahub
-kubectl create secret generic neo4j-secrets --from-literal=neo4j-password=datahub
+kubectl create secret generic neo4j-secrets --from-literal=neo4j-password=datahub --from-literal=NEO4J_AUTH=neo4j/datahub
 ```
 
 The above commands sets the passwords to "datahub" as an example. Change to any password of choice. 
@@ -79,7 +76,7 @@ elasticsearch-master-0                             1/1     Running     0        
 prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          63m
 prerequisites-kafka-0                              1/1     Running     2          62m
 prerequisites-mysql-0                              1/1     Running     1          62m
-prerequisites-neo4j-community-0                    1/1     Running     0          52m
+prerequisites-neo4j-0                              1/1     Running     0          52m
 prerequisites-zookeeper-0                          1/1     Running     0          62m
 ```
 
@@ -109,7 +106,7 @@ elasticsearch-master-0                             1/1     Running     0        
 prerequisites-cp-schema-registry-cf79bfccf-kvjtv   2/2     Running     1          99m
 prerequisites-kafka-0                              1/1     Running     2          97m
 prerequisites-mysql-0                              1/1     Running     1          97m
-prerequisites-neo4j-community-0                    1/1     Running     0          88m
+prerequisites-neo4j-0                              1/1     Running     0          88m
 prerequisites-zookeeper-0                          1/1     Running     0          97m
 ```
 
@@ -123,7 +120,26 @@ kubectl port-forward <datahub-frontend pod name> 9002:9002
 You should be able to access the frontend via http://localhost:9002. 
 
 Once you confirm that the pods are running well, you can set up ingress for datahub-frontend 
-to expose the 9002 port to the public.  
+to expose the 9002 port to the public.
+
+## Default Credentials
+
+There are a few keys and credentials created as part of the deployment using randomized values. They can be overridden using various configuration parameters.
+
+Also consider changing the default credentials used by any of the underlying data stores pulled in by the companion helm chart for
+the prerequisites. Refer to the upstream helm charts or point to your own managed data stores for these components.
+
+### DataHub Login
+
+For controlling the default admin password, see the following [configuration](charts/datahub/values.yaml#L36).
+
+### Encryption Key
+
+Used by the Play framework and GMS to encrypt secrets at the application level, this can be configured [here](charts/datahub/values.yaml#L579).
+
+### Token Signing Key
+
+Used to sign tokens for authentication, see configuration [here](charts/datahub/values.yaml#L605).
 
 ## Contributing
 

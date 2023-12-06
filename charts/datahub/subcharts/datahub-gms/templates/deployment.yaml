@@ -58,6 +58,9 @@ spec:
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
       initContainers:
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
@@ -91,7 +94,7 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /health/check/ready
+              path: /health
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
@@ -113,7 +116,7 @@ spec:
             - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
               value: "hazelcast"
             - name: SEARCH_SERVICE_HAZELCAST_SERVICE_NAME
-              value: {{ printf "%s-%s" .Release.Name "hazelcast-service" }}
+              value: {{ printf "%s-%s-%s" .Release.Name (regexReplaceAll "[^-a-z0-9]+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" }}
             {{- end}}
             {{- if .Values.global.datahub.systemUpdate.enabled }}
             - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
@@ -165,6 +168,18 @@ spec:
               value: "{{ .Values.global.sql.datasource.driver }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- with .Values.global.kafka.producer.compressionType }}
+            - name: KAFKA_PRODUCER_COMPRESSION_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.producer.maxRequestSize }}
+            - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+            - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+              value: {{ . | quote }}
+            {{- end }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: {{ printf "http://localhost:%s/schema-registry/api/" .Values.global.datahub.gms.port }}

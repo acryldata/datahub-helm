@@ -39,6 +39,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+priorityClassName:
+
 service:
   type: ClusterIP # NodePort
   port: "9090"
@@ -176,6 +178,12 @@ global:
       server: "broker:9092"
     schemaregistry:
       url: "http://schema-registry:8081"
+    # Kafka producer and consumer settings
+    #producer:
+    #  compressionType: snappy
+    #  maxRequestSize: "5242880"
+    #consumer:
+    #  maxPartitionFetchBytes: "5242880"
 
   datahub:
     version: head
@@ -184,7 +192,7 @@ global:
     gms:
       port: "8080"
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

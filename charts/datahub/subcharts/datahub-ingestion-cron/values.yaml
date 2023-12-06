@@ -9,6 +9,9 @@ image:
 
 imagePullSecrets: []
 
+podSecurityContext: {}
+# fsGroup: 2000
+
 crons: {}
   #### Example data
   #hive:
@@ -20,7 +23,7 @@ crons: {}
     #  fileName:
 
     ## Command to be executed
-    #command: ["/bin/sh", "-c", "datahub ingest -c <recipe.fileName>"]
+    #command: "datahub ingest -c <recipe.fileName>"
 
     ## Deployment pod host aliases
     ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
@@ -62,6 +65,15 @@ crons: {}
     ##
     #serviceAccountName: "my-cron-service"
 
+    ## If you want to specify container level security
+    #securityContext:
+    #  capabilities:
+    #    drop:
+    #      - ALL
+    #  readOnlyRootFilesystem: true
+    #  runAsNonRoot: true
+    #  runAsUser: 1000
+
     ## Add your own pod annotations.
     ##
     #podAnnotations: {}
@@ -99,12 +111,6 @@ crons: {}
     ## Toleration settings  for job pod
     ##
     #tolerations: []
-
-# Add extra sidecar containers to deployment pod
-extraSidecars: []
-  # - name: my-image-name
-  #   image: my-image
-  #   imagePullPolicy: Always
 
 global:
   datahub:

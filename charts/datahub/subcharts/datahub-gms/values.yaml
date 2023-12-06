@@ -42,6 +42,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+priorityClassName:
+
 service:
   type: LoadBalancer # ClusterIP or NodePort
   port: "8080"
@@ -133,7 +135,7 @@ readinessProbe:
 # helm install datahub-gms datahub-gms/
 global:
   datahub_analytics_enabled: true
-  graph_service_impl: neo4j
+  graph_service_impl: elasticsearch
 
   elasticsearch:
     host: "elasticsearch"
@@ -160,6 +162,12 @@ global:
       server: "broker:9092"
     schemaregistry:
       url: "http://schema-registry:8081"
+    ## Kafka producer and consumer settings
+    #producer:
+    #  compressionType: snappy
+    #  maxRequestSize: "5242880"
+    #consumer:
+    #  maxPartitionFetchBytes: "5242880"
 
   neo4j:
     host: "neo4j:7474"
@@ -198,7 +206,7 @@ global:
       # defaultCliVersion: "X.X.X" --> Optional: Controls the acryl-datahub package version downloaded from PyPI.
 
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       # tokenService:
       #   signingKey:
       #    secretRef: <secret-ref>

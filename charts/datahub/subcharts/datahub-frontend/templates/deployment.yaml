@@ -31,6 +31,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -98,9 +99,9 @@ spec:
               value: "true"
             {{- end }}
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}
             - name: DATAHUB_GMS_PORT
-              value: "{{ .Values.global.datahub.gms.port }}"
+              value: "{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}"
             - name: DATAHUB_SECRET
               valueFrom:
                 {{- if .Values.existingGmsSecret }}

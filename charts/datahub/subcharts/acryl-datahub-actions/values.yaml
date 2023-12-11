@@ -7,6 +7,10 @@ image:
   repository: acryldata/datahub-actions
   tag: "v0.0.1"
   pullPolicy: IfNotPresent
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""

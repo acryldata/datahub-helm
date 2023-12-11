@@ -70,6 +70,12 @@ spec:
             - name: http
               containerPort: 9093
               protocol: TCP
+          {{- if .Values.image.command }}
+          command: {{ .Values.image.command | toJson }}
+          {{- end }}
+          {{- if .Values.image.args }}
+          args: {{ .Values.image.args | toJson }}
+          {{- end }}
           env:
             - name: DATAHUB_GMS_HOST
               value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}

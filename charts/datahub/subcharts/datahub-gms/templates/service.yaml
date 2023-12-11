@@ -21,9 +21,9 @@ spec:
       {{- end }}
       {{- end }}
     {{- if .Values.global.datahub.monitoring.enablePrometheus }}
-    - name: {{ .Values.global.datahub.monitoring.portName | default "jmx" }}
+    - name: {{ .Values.global.datahub.monitoring.portName }}
       port: 4318
-      targetPort: {{ .Values.global.datahub.monitoring.portName | default "jmx" }}
+      targetPort: {{ .Values.global.datahub.monitoring.portName }}
       protocol: TCP
     {{- end }}
   selector:

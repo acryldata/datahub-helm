@@ -11,7 +11,7 @@ metadata:
   {{- end }}
 spec:
   endpoints:
-  - port: {{ .Values.global.datahub.monitoring.portName | default "jmx" }}
+  - port: {{ .Values.global.datahub.monitoring.portName }}
     relabelings:
     - separator: /
       sourceLabels:

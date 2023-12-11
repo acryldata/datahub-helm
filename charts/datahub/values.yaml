@@ -45,14 +45,14 @@ datahub-frontend:
   ingress:
     enabled: false
   defaultUserCredentials: {}
+    # randomAdminPassword: true
+    # You can also set specific passwords for default users
+    # manualValues: |
+    #   datahub:manualPassword
+    #   initialViewer:manualPassword
   # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   # service:
   #   type: ClusterIP
-  #  randomAdminPassword: true
-  #  # You can also set specific passwords for default users
-  #  # manualValues: |
-  #  #   datahub:manualPassword
-  #  #   initialViewer:manualPassword
 
 acryl-datahub-actions:
   enabled: true
@@ -588,6 +588,8 @@ global:
 
     monitoring:
       enablePrometheus: true
+      # Set a custom name for the monitoring port
+      portName: jmx
 
     mae_consumer:
       port: "9091"
@@ -680,3 +682,5 @@ global:
 #    ssl.truststore.type: JKS
 #    ssl.protocol: TLS
 #    ssl.endpoint.identification.algorithm:
+#    basic.auth.credentials.source: USER_INFO
+#    basic.auth.user.info:

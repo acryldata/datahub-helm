@@ -10,10 +10,16 @@ image:
   repository: linkedin/datahub-frontend-react
   tag:
   pullPolicy: IfNotPresent
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -231,6 +237,7 @@ global:
       port: "8080"
     monitoring:
       enablePrometheus: true
+      portName: "jmx"
     appVersion: "1.0"
     frontend:
       validateSignUpEmail: true

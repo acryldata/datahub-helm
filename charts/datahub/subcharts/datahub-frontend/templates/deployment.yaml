@@ -31,6 +31,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -67,6 +68,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.image.command }}
+          command: {{ .Values.image.command | toJson }}
+          {{- end }}
+          {{- if .Values.image.args }}
+          args: {{ .Values.image.args | toJson }}
+          {{- end }}
           lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
           ports:
@@ -74,7 +81,7 @@ spec:
               containerPort: {{ .Values.service.containerPort }}
               protocol: TCP
           {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
-            - name: jmx
+            - name: {{ .Values.global.datahub.monitoring.portName }}
               containerPort: 4318
               protocol: TCP
           {{- end }}
@@ -98,9 +105,9 @@ spec:
               value: "true"
             {{- end }}
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}
             - name: DATAHUB_GMS_PORT
-              value: "{{ .Values.global.datahub.gms.port }}"
+              value: "{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}"
             - name: DATAHUB_SECRET
               valueFrom:
                 {{- if .Values.existingGmsSecret }}

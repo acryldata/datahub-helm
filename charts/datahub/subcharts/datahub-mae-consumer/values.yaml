@@ -10,10 +10,16 @@ image:
   repository: linkedin/datahub-mae-consumer
   pullPolicy: IfNotPresent
   tag:
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -203,6 +209,7 @@ global:
       port: "8080"
     monitoring:
       enablePrometheus: false
+      portName: jmx
 
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will

@@ -205,6 +205,7 @@ global:
       port: "8080"
     monitoring:
       enablePrometheus: false
+      portName: jmx
 
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will

@@ -588,6 +588,8 @@ global:
 
     monitoring:
       enablePrometheus: true
+      # Set a custom name for the monitoring port
+      portName: jmx
 
     mae_consumer:
       port: "9091"

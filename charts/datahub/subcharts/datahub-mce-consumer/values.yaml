@@ -191,6 +191,7 @@ global:
     version: head
     monitoring:
       enablePrometheus: false
+      portName: jmx
     gms:
       port: "8080"
     metadata_service_authentication:

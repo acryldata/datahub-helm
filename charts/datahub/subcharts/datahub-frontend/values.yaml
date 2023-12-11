@@ -233,6 +233,7 @@ global:
       port: "8080"
     monitoring:
       enablePrometheus: true
+      portName: "jmx"
     appVersion: "1.0"
     frontend:
       validateSignUpEmail: true

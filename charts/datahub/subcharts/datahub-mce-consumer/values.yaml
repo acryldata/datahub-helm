@@ -10,6 +10,10 @@ image:
   repository: linkedin/datahub-mce-consumer
   pullPolicy: IfNotPresent
   tag:
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""

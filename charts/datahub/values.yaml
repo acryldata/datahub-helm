@@ -578,7 +578,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.12.0
+    version: v0.12.1
     gms:
       port: "8080"
       nodePort: "30001"

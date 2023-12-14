@@ -85,6 +85,10 @@ actions:
 #   name: ${K8S_SECRET_NAME}
 #   defaultMode: "0444"
 
+# Uncomment the two lines below will set the DATAHUB_DEBUG env var to true
+# debug:
+#   enabled: true
+
 global:
   kafka:
     bootstrap:

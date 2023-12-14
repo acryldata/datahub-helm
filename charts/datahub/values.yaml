@@ -580,6 +580,7 @@ global:
   datahub:
     version: v0.12.1
     gms:
+      protocol: "http"
       port: "8080"
       nodePort: "30001"
 

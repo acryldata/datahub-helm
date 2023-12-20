@@ -505,6 +505,7 @@ global:
       maxRequestSize: "5242880"  # 5MB
     consumer:
       maxPartitionFetchBytes: "5242880"  # 5MB
+      stopContainerOnDeserializationError: true
     ## For AWS MSK set this to a number larger than 1
     # partitions: 3
     # replicationFactor: 3

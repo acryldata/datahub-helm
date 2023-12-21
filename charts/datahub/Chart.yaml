@@ -10,7 +10,7 @@ version: 0.3.20
 appVersion: 0.12.1
 dependencies:
   - name: datahub-gms
-    version: 0.2.159
+    version: 0.2.160
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
@@ -18,11 +18,11 @@ dependencies:
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer
-    version: 0.2.153
+    version: 0.2.154
     repository: file://./subcharts/datahub-mae-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-mce-consumer
-    version: 0.2.155
+    version: 0.2.156
     repository: file://./subcharts/datahub-mce-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-ingestion-cron

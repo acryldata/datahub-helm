@@ -12,6 +12,7 @@ spec:
   concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
   successfulJobsHistoryLimit: {{ default 3 .successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
+  suspend: {{ default false .suspend }}
   jobTemplate:
     spec:
       backoffLimit: {{ default 6 $val.backoffLimit }}

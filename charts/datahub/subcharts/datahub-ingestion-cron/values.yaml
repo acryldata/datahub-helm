@@ -112,6 +112,10 @@ crons: {}
     ##
     #tolerations: []
 
+    # Set the cron job to suspended state
+    ##
+    #suspend: true
+
 global:
   datahub:
     version: head

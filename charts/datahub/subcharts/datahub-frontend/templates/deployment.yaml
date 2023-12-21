@@ -220,15 +220,15 @@ spec:
             {{- end }}
             - name: AUTH_OIDC_BASE_URL
               value: https://{{ (first $.Values.ingress.hosts).host }}
+            - name: AUTH_OIDC_USER_NAME_CLAIM
+              value: {{ .user_name_claim | default "email" }}
+            - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
+              value: {{ .user_name_claim_regex | default "([^@]+)" }}
             {{- if eq .provider "google" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://accounts.google.com/.well-known/openid-configuration
             - name: AUTH_OIDC_SCOPE
               value: {{ .scope | default "openid profile email" }}
-            - name: AUTH_OIDC_USER_NAME_CLAIM
-              value: {{ .user_name_claim | default "email" }}
-            - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
-              value: {{ .user_name_claim_regex | default "([^@]+)" }}
             {{- else if eq .provider "okta" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://{{ .oktaDomain }}/.well-known/openid-configuration

@@ -136,7 +136,7 @@ spec:
         {{- with .Values.kafkaSetupJob.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.kafkaSetupJob.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.kafkaSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -144,7 +144,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.kafkaSetupJob.tolerations }}
+      {{- with default .Values.global.tolerations .Values.kafkaSetupJob.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

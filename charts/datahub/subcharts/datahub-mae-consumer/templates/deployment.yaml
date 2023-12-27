@@ -273,7 +273,7 @@ spec:
         {{- with .Values.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -281,7 +281,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with default .Values.global.tolerations .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

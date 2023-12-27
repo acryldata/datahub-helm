@@ -90,7 +90,7 @@ spec:
         {{- with .Values.mysqlSetupJob.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.mysqlSetupJob.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.mysqlSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -98,7 +98,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.mysqlSetupJob.tolerations }}
+      {{- with default .Values.global.tolerations .Values.mysqlSetupJob.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -100,7 +100,7 @@ spec:
         {{- with .Values.datahubUpgrade.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.datahubUpgrade.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.datahubUpgrade.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 12 }}
       {{- end }}
@@ -108,7 +108,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 12 }}
       {{- end }}
-      {{- with .Values.datahubUpgrade.tolerations }}
+      {{- with default .Values.global.tolerations .Values.datahubUpgrade.tolerations }}
       tolerations:
         {{- toYaml . | nindent 12 }}
       {{- end }}

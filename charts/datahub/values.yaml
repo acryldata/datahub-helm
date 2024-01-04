@@ -305,7 +305,7 @@ datahubUpgrade:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
       # to run
       command:
-      args: [ ]
+      args: []
     resources:
       limits:
         cpu: 500m
@@ -325,7 +325,7 @@ datahubUpgrade:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
       # to run
       command:
-      args: [ ]
+      args: []
     resources:
       limits:
         cpu: 500m

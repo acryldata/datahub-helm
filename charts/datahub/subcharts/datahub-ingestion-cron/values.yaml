@@ -12,17 +12,20 @@ imagePullSecrets: []
 podSecurityContext: {}
 # fsGroup: 2000
 
-crons:
-  #### Example data
-  ## Externally loaded config map
-  # hive:
-  #   ## Daily at midnight (we may want to offset this to not conflict with other processes)
-  #   schedule: "0 0 * * *"
-  #   recipe:
-  #     configmapName: datahub-hive-ingestion
-  #     fileName: hive.yaml
+crons: {}
+  #### Example data with externally managed config map
+  #hive:
+    ## Daily at midnight (we may want to offset this to not conflict with other processes)
+    #schedule: "0 0 * * *"
 
-  # Config map is managed by helm
+    #recipe:
+    #  configmapName:
+    #  fileName:
+
+    ## Command to be executed
+    #command: "datahub ingest -c <recipe.fileName>"
+
+  # Example data with helm managed config map
   # mysql:
   #   schedule: "0 0 0 0 0"
   #   recipe:

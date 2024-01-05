@@ -12,18 +12,40 @@ imagePullSecrets: []
 podSecurityContext: {}
 # fsGroup: 2000
 
-crons: {}
+crons:
   #### Example data
-  #hive:
-    ## Daily at midnight (we may want to offset this to not conflict with other processes)
-    #schedule: "0 0 * * *"
+  ## Externally loaded config map
+  # hive:
+  #   ## Daily at midnight (we may want to offset this to not conflict with other processes)
+  #   schedule: "0 0 * * *"
+  #   recipe:
+  #     configmapName: datahub-hive-ingestion
+  #     fileName: hive.yaml
 
-    #recipe:
-    #  configmapName:
-    #  fileName:
+  # Config map is managed by helm
+  # mysql:
+  #   schedule: "0 0 0 0 0"
+  #   recipe:
+  #     configmapName: datahub-mysql-ingestion
+  #     fileName: mysql.yaml
+  #     # Example mysql -> datahub source recipe
+  #     fileContent:
+  #       source:
+  #         type: mysql
+  #         config:
+  #           # Coordinates
+  #           host_port: localhost:3306
+  #           database: dbname
+  #           # Credentials
+  #           username: root
+  #           password: example
+  #       sink:
+  #         type: datahub-rest
+  #         config:
+  #           server: http://localhost:8080
 
-    ## Command to be executed
-    #command: "datahub ingest -c <recipe.fileName>"
+    # Command to be executed
+#    command: "datahub ingest -c <recipe.fileName>"
 
     ## Deployment pod host aliases
     ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/

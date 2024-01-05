@@ -1,0 +1,15 @@
+{{- $labels := include "datahub-ingestion-cron.labels" .}}
+{{- range $jobName, $val := .Values.crons }}
+{{- if $val.recipe.fileContent }}
+apiVersion: {{ include "datahub-ingestion-cron.cronjob.apiVersion" $}}
+kind: ConfigMap
+metadata:
+  name: {{ $val.recipe.configmapName }}
+  labels: {{- $labels | nindent 4 }}
+data:
+  {{ $val.recipe.fileName }}: |-
+    {{- toYaml $val.recipe.fileContent | nindent 4 }}
+---
+{{- end }}
+{{- end }}
+

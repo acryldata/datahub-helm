@@ -3,6 +3,44 @@ entries:
   datahub:
   - apiVersion: v2
     appVersion: 0.12.1
+    created: "2024-01-09T00:27:12.475451578Z"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./subcharts/datahub-gms
+      version: 0.2.163
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./subcharts/datahub-frontend
+      version: 0.2.155
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mae-consumer
+      repository: file://./subcharts/datahub-mae-consumer
+      version: 0.2.157
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mce-consumer
+      repository: file://./subcharts/datahub-mce-consumer
+      version: 0.2.159
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./subcharts/datahub-ingestion-cron
+      version: 0.2.140
+    - condition: acryl-datahub-actions.enabled
+      name: acryl-datahub-actions
+      repository: file://./subcharts/acryl-datahub-actions
+      version: 0.2.144
+    description: A Helm chart for LinkedIn DataHub
+    digest: 7895d0c28137714f4762169dae20422ed63a4d33bca28423c398df30dea69638
+    maintainers:
+    - email: datahub@acryl.io
+      name: DataHub
+    name: datahub
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-0.3.25/datahub-0.3.25.tgz
+    version: 0.3.25
+  - apiVersion: v2
+    appVersion: 0.12.1
     created: "2024-01-04T20:55:18.992907854Z"
     dependencies:
     - condition: datahub-gms.enabled
@@ -8963,4 +9001,4 @@ entries:
     urls:
     - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.1/datahub-prerequisites-0.0.1.tgz
     version: 0.0.1
-generated: "2024-01-04T20:55:18.994719887Z"
+generated: "2024-01-09T00:27:12.477421366Z"

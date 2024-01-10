@@ -75,7 +75,7 @@ spec:
               {{- toYaml .extraSidecars | nindent 10 }}
             {{- end }}
           restartPolicy: {{ default "OnFailure" .restartPolicy }}
-          {{- with default .Values.global.nodeSelector .nodeSelector }}
+          {{- with default $.Values.global.nodeSelector .nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -83,7 +83,7 @@ spec:
           affinity:
             {{- toYaml .affinity | nindent 12 }}
           {{- end }}
-          {{- with default .Values.global.tolerations .tolerations }}
+          {{- with default $.Values.global.tolerations .tolerations }}
           tolerations:
             {{- toYaml . | nindent 12 }}
           {{- end }}

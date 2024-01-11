@@ -64,8 +64,10 @@ spec:
           args: {{ .Values.kafkaSetupJob.image.args | toRawJson }}
           {{- end }}
           env:
+            {{- if .Values.global.kafka.zookeeper.server }}
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: {{ .Values.global.kafka.zookeeper.server | quote }}
+            {{- end }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: {{ .Values.global.kafka.bootstrap.server | quote }}
             {{- with .Values.global.kafka.maxMessageBytes }}

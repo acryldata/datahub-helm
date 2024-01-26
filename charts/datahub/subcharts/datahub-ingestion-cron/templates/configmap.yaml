@@ -1,7 +1,7 @@
 {{- $labels := include "datahub-ingestion-cron.labels" .}}
 {{- range $jobName, $val := .Values.crons }}
 {{- if $val.recipe.fileContent }}
-apiVersion: {{ include "datahub-ingestion-cron.cronjob.apiVersion" $}}
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $val.recipe.configmapName }}

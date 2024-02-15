@@ -4,6 +4,9 @@ metadata:
   name: {{ include "datahub-frontend.fullname" . }}
   labels:
     {{- include "datahub-frontend.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.service.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
   {{- with .Values.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

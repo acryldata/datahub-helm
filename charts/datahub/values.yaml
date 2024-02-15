@@ -53,6 +53,8 @@ datahub-frontend:
   ingress:
     enabled: false
   defaultUserCredentials: {}
+  service:
+    extraLabels: {}
     # randomAdminPassword: true
     # You can also set specific passwords for default users
     # manualValues: |

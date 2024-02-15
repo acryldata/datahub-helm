@@ -57,6 +57,7 @@ service:
   # Internal load balancer or various other annotation support in AWS
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  extraLabels: {}
 
 serviceMonitor:
   create: false

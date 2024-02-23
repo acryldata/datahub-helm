@@ -1,7 +1,8 @@
 # Default configuration for pre-requisites to get you started
 # Copy this file and update to the configuration of choice
 elasticsearch:
-  enabled: true # set this to false, if you want to provide your own ES instance.
+  # set this to false, if you want to provide your own ES instance.
+  enabled: true
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -117,7 +118,8 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: false
     kafka:
-      bootstrapServers: "prerequisites-kafka:9092" # <<release-name>>-kafka:9092
+      # <<release-name>>-kafka:9092
+      bootstrapServers: "prerequisites-kafka:9092"
   cp-kafka:
     enabled: false
   cp-zookeeper:

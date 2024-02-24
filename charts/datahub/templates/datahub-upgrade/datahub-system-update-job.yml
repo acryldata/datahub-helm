@@ -57,6 +57,12 @@ spec:
         - name: datahub-system-update-job
           image: "{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.datahubSystemUpdate.image.command }}
+          command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.datahubSystemUpdate.image.args }}
+          args: {{ .Values.datahubSystemUpdate.image.args | toRawJson }}
+          {{- else }}
           args:
           {{- if .Values.datahubSystemUpdate.nonblocking.enabled }}
             - "-u"
@@ -135,7 +141,7 @@ spec:
         {{- with .Values.datahubSystemUpdate.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.datahubSystemUpdate.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.datahubSystemUpdate.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 12 }}
       {{- end }}
@@ -143,7 +149,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 12 }}
       {{- end }}
-      {{- with .Values.datahubSystemUpdate.tolerations }}
+      {{- with default .Values.global.tolerations .Values.datahubSystemUpdate.tolerations }}
       tolerations:
         {{- toYaml . | nindent 12 }}
       {{- end }}

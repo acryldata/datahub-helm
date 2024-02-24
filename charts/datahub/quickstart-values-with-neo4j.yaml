@@ -90,6 +90,7 @@ global:
     host: "prerequisites-neo4j:7474"
     uri: "bolt://prerequisites-neo4j"
     username: "neo4j"
+    database: "graph.db"
     password:
       secretRef: neo4j-secrets
       secretKey: neo4j-password

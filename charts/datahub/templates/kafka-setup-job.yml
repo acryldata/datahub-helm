@@ -57,9 +57,17 @@ spec:
         - name: kafka-setup-job
           image: "{{ .Values.kafkaSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.kafkaSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.kafkaSetupJob.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.kafkaSetupJob.image.command }}
+          command: {{ .Values.kafkaSetupJob.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.kafkaSetupJob.image.args }}
+          args: {{ .Values.kafkaSetupJob.image.args | toRawJson }}
+          {{- end }}
           env:
+            {{- if .Values.global.kafka.zookeeper.server }}
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: {{ .Values.global.kafka.zookeeper.server | quote }}
+            {{- end }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: {{ .Values.global.kafka.bootstrap.server | quote }}
             {{- with .Values.global.kafka.maxMessageBytes }}
@@ -136,7 +144,7 @@ spec:
         {{- with .Values.kafkaSetupJob.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.kafkaSetupJob.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.kafkaSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -144,7 +152,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.kafkaSetupJob.tolerations }}
+      {{- with default .Values.global.tolerations .Values.kafkaSetupJob.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -51,6 +51,12 @@ spec:
         - name: mysql-setup-job
           image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.mysqlSetupJob.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.mysqlSetupJob.image.command }}
+          command: {{ .Values.mysqlSetupJob.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.mysqlSetupJob.image.args }}
+          args: {{ .Values.mysqlSetupJob.image.args | toRawJson }}
+          {{- end }}
           env:
             - name: MYSQL_USERNAME
               {{- $usernameValue := (.Values.mysqlSetupJob).username | default .Values.global.sql.datasource.username }}
@@ -90,7 +96,7 @@ spec:
         {{- with .Values.mysqlSetupJob.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.mysqlSetupJob.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.mysqlSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -98,7 +104,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.mysqlSetupJob.tolerations }}
+      {{- with default .Values.global.tolerations .Values.mysqlSetupJob.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

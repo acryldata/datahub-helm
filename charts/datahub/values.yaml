@@ -377,6 +377,11 @@ datahubSystemUpdate:
     enabled: false
     # When mode = 'nonblocking' the nonblocking job should not include the above helm.sh/hook annotations
     annotations: {}
+    image:
+      # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
+      # to run
+      # command: customCommand
+      # args: []
   podAnnotations: {}
   resources:
     limits:

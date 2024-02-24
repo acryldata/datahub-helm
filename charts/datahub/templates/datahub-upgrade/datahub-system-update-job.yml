@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-datahub-system-update-job
+  name: {{ .Release.Name }}-system-update
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
   {{- with .Values.datahubSystemUpdate.annotations }}
@@ -67,9 +67,10 @@ spec:
           {{- if .Values.datahubSystemUpdate.nonblocking.enabled }}
             - "-u"
             - "SystemUpdateBlocking"
-          {{- else -}}
+          {{- else }}
             - "-u"
             - "SystemUpdate"
+          {{- end }}
           {{- end }}
           env:
             - name: DATAHUB_REVISION
@@ -158,7 +159,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-datahub-system-update-job2
+  name: {{ .Release.Name }}-system-update-nonblk
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
   {{- with .Values.datahubSystemUpdate.nonblocking.annotations }}
@@ -200,7 +201,7 @@ spec:
             secretName: {{ .name }}
         {{- end }}
       {{- with .Values.datahubSystemUpdate.extraVolumes }}
-      {{- toYaml . | nindent 8}}
+        {{- toYaml . | nindent 8}}
       {{- end }}
       restartPolicy: Never
       securityContext:
@@ -213,9 +214,16 @@ spec:
         - name: datahub-system-update-job
           image: "{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.datahubSystemUpdate.image.command }}
+          command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.datahubSystemUpdate.nonblocking.image.args }}
+          args: {{ .Values.datahubSystemUpdate.nonblocking.image.args | toRawJson }}
+          {{- else }}
           args:
             - "-u"
             - "SystemUpdateNonBlocking"
+          {{- end }}
           env:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
@@ -286,7 +294,7 @@ spec:
         {{- with .Values.datahubSystemUpdate.extraSidecars }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.datahubSystemUpdate.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.datahubSystemUpdate.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 12 }}
       {{- end }}
@@ -294,7 +302,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 12 }}
       {{- end }}
-      {{- with .Values.datahubSystemUpdate.tolerations }}
+      {{- with default .Values.global.tolerations .Values.datahubSystemUpdate.tolerations }}
       tolerations:
         {{- toYaml . | nindent 12 }}
       {{- end }}

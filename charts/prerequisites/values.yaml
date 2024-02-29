@@ -145,6 +145,9 @@ kafka:
     replicaCount: 0
   broker:
     replicaCount: 1
+    # The new minId for broker is 100. If we don't override this, the broker will have id 100
+    # and cannot load the partitions. So we set minId to 0 to be backwards compatible
+    minId: 0
     # These server properties are no longer exposed as parameters in the bitnami kafka chart since 24.0.0
     # They need to be passed in through extraConfig. See below for reference
     # https://github.com/bitnami/charts/tree/main/bitnami/kafka#to-2400

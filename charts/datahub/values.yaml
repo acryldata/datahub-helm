@@ -374,7 +374,7 @@ datahubSystemUpdate:
   # steps are completed, the non-blocking job runs while the rest of the
   # system is starting.
   nonblocking:
-    enabled: false
+    enabled: true
     # When mode = 'nonblocking' the nonblocking job should not include the above helm.sh/hook annotations
     annotations: {}
     image:

@@ -8324,6 +8324,47 @@ entries:
     version: 0.1.2
   datahub-prerequisites:
   - apiVersion: v2
+    created: "2024-03-01T20:18:30.664367522Z"
+    dependencies:
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: 7.17.3
+    - condition: neo4j.enabled
+      name: neo4j
+      repository: https://helm.neo4j.com/neo4j
+      version: 5.11.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 9.1.8
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 11.2.6
+    - condition: gcloud-sqlproxy.enabled
+      name: gcloud-sqlproxy
+      repository: https://charts.rimusz.net
+      version: 0.24.1
+    - condition: cp-helm-charts.enabled
+      name: cp-helm-charts
+      repository: https://confluentinc.github.io/cp-helm-charts/
+      version: 0.6.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 26.11.2
+    description: A Helm chart for packages that Datahub depends on
+    digest: 224951bdeaea045f2c32599f9f9535c475392bb099faed619f536dcc24450596
+    maintainers:
+    - email: datahub@acryl.io
+      name: DataHub
+    name: datahub-prerequisites
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.1.8/datahub-prerequisites-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
     created: "2024-02-10T05:31:02.88141712Z"
     dependencies:
     - condition: elasticsearch.enabled
@@ -9232,4 +9273,4 @@ entries:
     urls:
     - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.1/datahub-prerequisites-0.0.1.tgz
     version: 0.0.1
-generated: "2024-02-26T16:02:45.499933301Z"
+generated: "2024-03-01T20:18:30.666282568Z"

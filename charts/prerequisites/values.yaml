@@ -1,7 +1,8 @@
 # Default configuration for pre-requisites to get you started
 # Copy this file and update to the configuration of choice
 elasticsearch:
-  enabled: true   # set this to false, if you want to provide your own ES instance.
+  # set this to false, if you want to provide your own ES instance.
+  enabled: true
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -103,13 +104,13 @@ gcloud-sqlproxy:
     # use port 3306 for MySQL, or other port you set for your SQL instance.
     instances:
       # GCP Cloud SQL instance id
-    - instance: ""
-      # GCP project where the instance exists.
-      project: ""
-      # GCP region where the instance exists.
-      region: ""
-      # Port number for the proxy to expose for this instance.
-      port: 3306
+      - instance: ""
+        # GCP project where the instance exists.
+        project: ""
+        # GCP region where the instance exists.
+        region: ""
+        # Port number for the proxy to expose for this instance.
+        port: 3306
 
 cp-helm-charts:
   enabled: false
@@ -117,7 +118,8 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: false
     kafka:
-      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
+      # <<release-name>>-kafka:9092
+      bootstrapServers: "prerequisites-kafka:9092"
   cp-kafka:
     enabled: false
   cp-zookeeper:
@@ -134,7 +136,26 @@ cp-helm-charts:
 # Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
   enabled: true
-  maxMessageBytes: "5242880"
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
+  controller:
+    replicaCount: 0
+  broker:
+    replicaCount: 1
+    # The new minId for broker is 100. If we don't override this, the broker will have id 100
+    # and cannot load the partitions. So we set minId to 0 to be backwards compatible
+    minId: 0
+    # These server properties are no longer exposed as parameters in the bitnami kafka chart since 24.0.0
+    # They need to be passed in through extraConfig. See below for reference
+    # https://github.com/bitnami/charts/tree/main/bitnami/kafka#to-2400
+    extraConfig: |
+      message.max.bytes=5242880
+      default.replication.factor=1
+      offsets.topic.replication.factor=1
+      transaction.state.log.replication.factor=1
   kraft:
     enabled: false
   zookeeper:

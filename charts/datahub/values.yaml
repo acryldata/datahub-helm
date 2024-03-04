@@ -374,10 +374,11 @@ datahubSystemUpdate:
   # steps are completed, the non-blocking job runs while the rest of the
   # system is starting.
   nonblocking:
-    enabled: false
+    enabled: true
     # When mode = 'nonblocking' the nonblocking job should not include the above helm.sh/hook annotations
     annotations: {}
     image:
+      args:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
       # to run
       # command: customCommand
@@ -650,7 +651,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.12.1
+    version: v0.13.0
     gms:
       protocol: "http"
       port: "8080"
@@ -688,7 +689,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.12.1.1"
+      defaultCliVersion: "0.13.0.0"
 
     metadata_service_authentication:
       enabled: true

@@ -61,3 +61,24 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Datahub GMS protocol
+*/}}
+{{- define "acryl-datahub-actions.datahubGmsProtocol" -}}
+{{ ((.Values.datahub).gms).protocol | default .Values.global.datahub.gms.protocol }}
+{{- end -}}
+
+{{/*
+Datahub GMS host
+*/}}
+{{- define "acryl-datahub-actions.datahubGmsHost" -}}
+{{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}
+{{- end -}}
+
+{{/*
+Datahub GMS port
+*/}}
+{{- define "acryl-datahub-actions.datahubGmsPort" -}}
+{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}
+{{- end -}}

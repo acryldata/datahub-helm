@@ -51,6 +51,12 @@ spec:
         - name: elasticsearch-setup-job
           image: "{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.elasticsearchSetupJob.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.elasticsearchSetupJob.image.command }}
+          command: {{ .Values.elasticsearchSetupJob.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.elasticsearchSetupJob.image.args }}
+          args: {{ .Values.elasticsearchSetupJob.image.args | toRawJson }}
+          {{- end }}
           env:
             - name: ELASTICSEARCH_HOST
               value: {{ .Values.global.elasticsearch.host | quote }}
@@ -97,7 +103,7 @@ spec:
         {{- with .Values.elasticsearchSetupJob.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.elasticsearchSetupJob.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.elasticsearchSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -105,7 +111,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.elasticsearchSetupJob.tolerations }}
+      {{- with default .Values.global.tolerations .Values.elasticsearchSetupJob.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

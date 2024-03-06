@@ -12,6 +12,7 @@ spec:
   concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
   successfulJobsHistoryLimit: {{ default 3 .successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
+  suspend: {{ default false .suspend }}
   jobTemplate:
     spec:
       backoffLimit: {{ default 6 $val.backoffLimit }}
@@ -74,17 +75,17 @@ spec:
               {{- toYaml .extraSidecars | nindent 10 }}
             {{- end }}
           restartPolicy: {{ default "OnFailure" .restartPolicy }}
-          {{- if .nodeSelector }}
+          {{- with default $.Values.global.nodeSelector .nodeSelector }}
           nodeSelector:
-            {{- toYaml .nodeSelector | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- if .affinity }}
           affinity:
             {{- toYaml .affinity | nindent 12 }}
           {{- end }}
-          {{- if .tolerations }}
+          {{- with default $.Values.global.tolerations .tolerations }}
           tolerations:
-            {{- toYaml .tolerations | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumes:
             - name: recipe

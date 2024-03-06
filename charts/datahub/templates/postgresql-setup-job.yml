@@ -51,6 +51,12 @@ spec:
         - name: postgresql-setup-job
           image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.postgresqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.postgresqlSetupJob.image.pullPolicy | default "Always" }}
+          {{- if .Values.postgresqlSetupJob.image.command }}
+          command: {{ .Values.postgresqlSetupJob.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.postgresqlSetupJob.image.args }}
+          args: {{ .Values.postgresqlSetupJob.image.args | toRawJson }}
+          {{- end }}
           env:
             - name: POSTGRES_USERNAME
               {{- $usernameValue := (.Values.postgresqlSetupJob).username | default .Values.global.sql.datasource.username }}
@@ -90,7 +96,7 @@ spec:
         {{- with .Values.postgresqlSetupJob.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.postgresqlSetupJob.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.postgresqlSetupJob.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -98,7 +104,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.postgresqlSetupJob.tolerations }}
+      {{- with default .Values.global.tolerations .Values.postgresqlSetupJob.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

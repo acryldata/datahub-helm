@@ -62,6 +62,12 @@ spec:
             - name: datahub-upgrade-job
               image: "{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
               imagePullPolicy: {{ .Values.datahubUpgrade.image.pullPolicy | default "IfNotPresent" }}
+              {{- if .Values.datahubUpgrade.restoreIndices.image.command }}
+              command: {{ .Values.datahubUpgrade.restoreIndices.image.command | toRawJson }}
+              {{- end }}
+              {{- if .Values.datahubUpgrade.restoreIndices.image.args }}
+              args: {{ .Values.datahubUpgrade.restoreIndices.image.args | toRawJson }}
+              {{- else }}
               args:
                 - "-u"
                 - "RestoreIndices"
@@ -69,6 +75,7 @@ spec:
                 - "batchSize={{ .Values.datahubUpgrade.batchSize }}"
                 - "-a"
                 - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
+              {{- end }}
               env:
                 {{- include "datahub.upgrade.env" . | nindent 16}}
                 {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
@@ -98,7 +105,7 @@ spec:
             {{- with .Values.datahubUpgrade.restoreIndices.extraSidecars }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- with .Values.datahubUpgrade.nodeSelector }}
+          {{- with default .Values.global.nodeSelector .Values.datahubUpgrade.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -106,7 +113,7 @@ spec:
           affinity:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.datahubUpgrade.tolerations }}
+          {{- with default .Values.global.tolerations .Values.datahubUpgrade.tolerations }}
           tolerations:
             {{- toYaml . | nindent 12 }}
           {{- end }}

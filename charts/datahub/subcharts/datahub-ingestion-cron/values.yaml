@@ -13,7 +13,7 @@ podSecurityContext: {}
 # fsGroup: 2000
 
 crons: {}
-  #### Example data
+  #### Example data with externally managed config map
   #hive:
     ## Daily at midnight (we may want to offset this to not conflict with other processes)
     #schedule: "0 0 * * *"
@@ -24,6 +24,31 @@ crons: {}
 
     ## Command to be executed
     #command: "datahub ingest -c <recipe.fileName>"
+
+  # Example data with helm managed config map
+  # mysql:
+  #   schedule: "0 0 0 0 0"
+  #   recipe:
+  #     configmapName: datahub-mysql-ingestion
+  #     fileName: mysql.yaml
+  #     # Example mysql -> datahub source recipe
+  #     fileContent:
+  #       source:
+  #         type: mysql
+  #         config:
+  #           # Coordinates
+  #           host_port: localhost:3306
+  #           database: dbname
+  #           # Credentials
+  #           username: root
+  #           password: example
+  #       sink:
+  #         type: datahub-rest
+  #         config:
+  #           server: http://localhost:8080
+
+    # Command to be executed
+#    command: "datahub ingest -c <recipe.fileName>"
 
     ## Deployment pod host aliases
     ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
@@ -111,6 +136,10 @@ crons: {}
     ## Toleration settings  for job pod
     ##
     #tolerations: []
+
+    # Set the cron job to suspended state
+    ##
+    #suspend: true
 
 global:
   datahub:

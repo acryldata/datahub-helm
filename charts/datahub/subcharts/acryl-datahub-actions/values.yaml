@@ -77,14 +77,19 @@ affinity: {}
 
 actions:
   kafkaAutoOffsetPolicy: "latest"
+  # Configure a custom executor id that will be set as the EXECUTOR_ID environment variable
+  # executorId: ""
 
 # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
 # ingestionSecretFiles:
 #   name: ${K8S_SECRET_NAME}
 #   defaultMode: "0444"
 
-global:
+debug:
+  # Set enabled to true will set the DATAHUB_DEBUG env var to true
+  enabled: false
 
+global:
   kafka:
     bootstrap:
       server: "broker:9092"

@@ -177,8 +177,8 @@ spec:
     {{- with .Values.global.podLabels }}
       labels:
         {{- range $key, $value := . }}
-          {{ $key }}: {{ $value | quote }}
-          {{- end }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     {{- end }}
     {{- end }}
     spec:
@@ -277,22 +277,22 @@ spec:
               value: {{ . | quote }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
-          {{- toYaml . | nindent 10 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.datahubSystemUpdate.securityContext | nindent 12 }}
           volumeMounts:
           {{- with .Values.global.credentialsAndCertsSecrets }}
-          - name: datahub-certs-dir
-            mountPath: {{ .path | default "/mnt/certs" }}
+            - name: datahub-certs-dir
+              mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
           {{- with .Values.datahubSystemUpdate.extraVolumeMounts }}
-          {{- toYaml . | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.datahubSystemUpdate.resources | nindent 12 }}
         {{- with .Values.datahubSystemUpdate.extraSidecars }}
-        {{- toYaml . | nindent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with default .Values.global.nodeSelector .Values.datahubSystemUpdate.nodeSelector }}
       nodeSelector:

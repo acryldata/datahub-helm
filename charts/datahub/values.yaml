@@ -376,7 +376,11 @@ datahubSystemUpdate:
   nonblocking:
     enabled: true
     # When mode = 'nonblocking' the nonblocking job should not include the above helm.sh/hook annotations
-    annotations: {}
+    annotations:
+      # This is what defines this resource as a hook. Without this line, the
+      # job is considered part of the release.
+      helm.sh/hook: post-install,post-upgrade
+      helm.sh/hook-delete-policy: before-hook-creation
     image:
       args:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script

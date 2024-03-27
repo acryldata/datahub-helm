@@ -277,7 +277,7 @@ spec:
               value: {{ . | quote }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
-          {{- toYaml . | nindent 12 }}
+          {{- toYaml . | nindent 10 }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.datahubSystemUpdate.securityContext | nindent 12 }}

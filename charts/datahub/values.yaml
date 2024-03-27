@@ -68,7 +68,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.13"
+    tag: "v0.0.16"
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -571,6 +571,19 @@ global:
       metadata_change_log_timeseries_topic_name: "MetadataChangeLog_Timeseries_v1"
       platform_event_topic_name: "PlatformEvent_v1"
       datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
+    consumer_groups:
+      datahub_upgrade_history_kafka_consumer_group_id: {}
+      #   gms: "<<release-name>>-duhe-consumer-job-client-gms"
+      #   mae-consumer: "<<release-name>>-duhe-consumer-job-client-mcl"
+      #   mce-consumer: "<<release-name>>-duhe-consumer-job-client-mcp"
+      datahub_actions_ingestion_executor_consumer_group_id: "ingestion_executor"
+      datahub_actions_slack_consumer_group_id: "datahub_slack_action"
+      datahub_actions_teams_consumer_group_id: "datahub_teams_action"
+      datahub_usage_event_kafka_consumer_group_id: "datahub-usage-event-consumer-job-client"
+      metadata_change_log_kafka_consumer_group_id: "generic-mae-consumer-job-client"
+      platform_event_kafka_consumer_group_id: "generic-platform-event-job-client"
+      metadata_change_event_kafka_consumer_group_id: "mce-consumer-job-client"
+      metadata_change_proposal_kafka_consumer_group_id: "generic-mce-consumer-job-client"
     maxMessageBytes: "5242880"  # 5MB
     producer:
       compressionType: none

@@ -43,7 +43,7 @@ separately on-prem or leveraged as managed services.
 Assuming kubectl context points to the correct kubernetes cluster, first create kubernetes secrets that contain MySQL and Neo4j passwords. 
 
 ```(shell)
-kubectl create secret generic mysql-secrets --from-literal=mysql-root-password=datahub
+kubectl create secret generic mysql-secrets --from-literal=mysql-root-password=datahub --from-literal=mysql-password=datahub
 kubectl create secret generic neo4j-secrets --from-literal=neo4j-password=datahub --from-literal=NEO4J_AUTH=neo4j/datahub
 ```
 

@@ -71,26 +71,36 @@ spec:
               containerPort: 9093
               protocol: TCP
           {{- if .Values.image.command }}
-          command: {{ .Values.image.command | toJson }}
+          command: {{ .Values.image.command | toRawJson }}
           {{- end }}
           {{- if .Values.image.args }}
-          args: {{ .Values.image.args | toJson }}
+          args: {{ .Values.image.args | toRawJson }}
           {{- end }}
           env:
+            - name: DATAHUB_GMS_PROTOCOL
+              value: {{ include "acryl-datahub-actions.datahubGmsProtocol" . }}
             - name: DATAHUB_GMS_HOST
-              value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}
+              value: {{ include "acryl-datahub-actions.datahubGmsHost" . }}
             - name: DATAHUB_GMS_PORT
-              value: "{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}"
+              value: {{ include "acryl-datahub-actions.datahubGmsPort" . | quote }}
             # Deprecated in favour of DATAHUB_* variables
             - name: GMS_HOST
               value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
             - name: GMS_PORT
               value: "{{ .Values.global.datahub.gms.port }}"
+            {{- if .Values.actions.executorId }}
+            - name: EXECUTOR_ID
+              value: "{{ .Values.actions.executorId }}"
+            {{- end }}
+            {{- if .Values.debug.enabled }}
+            - name: DATAHUB_DEBUG
+              value: "true"
+            {{- end }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_URL
-              value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+              value: {{ printf "%s://%s:%s/schema-registry/api/" (include "acryl-datahub-actions.datahubGmsProtocol" .) (include "acryl-datahub-actions.datahubGmsHost" .) (include "acryl-datahub-actions.datahubGmsPort" .) | quote }}
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: SCHEMA_REGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"
@@ -162,7 +172,7 @@ spec:
         {{- with .Values.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -170,7 +180,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with default .Values.global.tolerations .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

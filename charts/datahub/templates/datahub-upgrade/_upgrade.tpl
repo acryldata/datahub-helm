@@ -96,6 +96,8 @@ Return the env variables for upgrade jobs
   value: "{{ .Values.global.neo4j.host }}"
 - name: NEO4J_URI
   value: "{{ .Values.global.neo4j.uri }}"
+- name: NEO4J_DATABASE
+  value: "{{ .Values.global.neo4j.database | default "graph.db" }}"
 - name: NEO4J_USERNAME
   value: "{{ .Values.global.neo4j.username }}"
 - name: NEO4J_PASSWORD

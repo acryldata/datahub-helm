@@ -64,10 +64,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.image.command }}
-          command: {{ .Values.image.command | toJson }}
+          command: {{ .Values.image.command | toRawJson }}
           {{- end }}
           {{- if .Values.image.args }}
-          args: {{ .Values.image.args | toJson }}
+          args: {{ .Values.image.args | toRawJson }}
           {{- end }}
           ports:
             - name: http
@@ -129,6 +129,10 @@ spec:
             - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
               value: {{ . | quote }}
             {{- end }}
+            {{- with .Values.global.kafka.consumer.stopContainerOnDeserializationError }}
+            - name: KAFKA_CONSUMER_STOP_ON_DESERIALIZATION_ERROR
+              value: "{{ . }}"
+            {{- end }}
             {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
             - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
               value: {{ . | quote }}
@@ -186,6 +190,8 @@ spec:
               value: "{{ .Values.global.neo4j.host }}"
             - name: NEO4J_URI
               value: "{{ .Values.global.neo4j.uri }}"
+            - name: NEO4J_DATABASE
+              value: "{{ .Values.global.neo4j.database | default "graph.db" }}"
             - name: NEO4J_USERNAME
               value: "{{ .Values.global.neo4j.username }}"
             - name: NEO4J_PASSWORD
@@ -267,7 +273,7 @@ spec:
         {{- with .Values.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -275,7 +281,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with default .Values.global.tolerations .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

@@ -32,6 +32,7 @@ serviceAccount:
 
 serviceMonitor:
   create: false
+  extraLabels: {}
 
 
 podAnnotations: {}

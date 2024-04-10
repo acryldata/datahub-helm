@@ -228,7 +228,7 @@ global:
       view:
         authorization:
           # search/view authorization filters
-          enabled: true
+          enabled: false
           # recommendation settings when search/view authorization is in effect
           recommendations:
             # whether to restrict Most Popular entities 

@@ -725,6 +725,10 @@ global:
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true
 
+    telemetry:
+      # Whether or not user tracking is enabled in the product (using external tool like hotjar)
+      userTrackingEnabled: false
+
     ## Values specific to the unified search and browse feature.
     search_and_browse:
       show_search_v2: true  # If on, show the new search filters experience as of v0.10.5

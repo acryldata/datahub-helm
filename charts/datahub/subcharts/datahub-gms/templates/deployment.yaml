@@ -382,6 +382,8 @@ spec:
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
             - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
               value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
+            - name: USER_TRACKING_ENABLED
+              value: {{ .Values.global.datahub.telemetry.userTrackingEnabled | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

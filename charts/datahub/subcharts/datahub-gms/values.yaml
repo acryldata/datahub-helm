@@ -7,7 +7,7 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-gms
+  repository: acryldata/datahub-gms
   pullPolicy: IfNotPresent
   tag:
   # Override the image's command & args with a new one.
@@ -225,6 +225,14 @@ global:
       # systemClientSecret:
       #  secretRef: <secret-ref>
       #  secretKey: <secret-key>
+      view:
+        authorization:
+          # search/view authorization filters
+          enabled: true
+          # recommendation settings when search/view authorization is in effect
+          recommendations:
+            # whether to restrict Most Popular entities 
+            peerGroupEnabled: true
 
     encryptionKey:
       secretRef: "encryption-key-secret"

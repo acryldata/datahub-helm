@@ -7,7 +7,7 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-frontend-react
+  repository: acryldata/datahub-frontend-react
   tag:
   pullPolicy: IfNotPresent
   # Override the image's command & args with a new one.

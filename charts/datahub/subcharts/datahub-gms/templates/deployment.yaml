@@ -311,6 +311,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- if .Values.global.datahub.metadata_service_authentication.view.authorization.enabled }}
+            - name: VIEW_AUTHORIZATION_ENABLED
+              value: "true"
+            {{- if .Values.global.datahub.metadata_service_authentication.view.authorization.recommendations.peerGroupEnabled }}
+            - name: VIEW_AUTHORIZATION_RECOMMENDATIONS_PEER_GROUP_ENABLED
+              value: "true"
+            {{- end }}
+            {{- end }}
             {{- end }}
             {{- if .Values.global.datahub.managed_ingestion.enabled }}
             - name: UI_INGESTION_ENABLED

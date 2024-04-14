@@ -7,7 +7,7 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-mce-consumer
+  repository: acryldata/datahub-mce-consumer
   pullPolicy: IfNotPresent
   tag:
   # Override the image's command & args with a new one.

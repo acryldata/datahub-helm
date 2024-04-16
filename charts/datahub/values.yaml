@@ -655,7 +655,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.13.1
+    version: v0.13.2
     gms:
       protocol: "http"
       port: "8080"

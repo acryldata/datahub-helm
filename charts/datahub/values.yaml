@@ -335,6 +335,8 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+    # Schedule of CronJob when enabled
+    schedule: "0 0 * * 0"
     # Add the concurrency Policy flexibility via values
     concurrencyPolicy: Allow
     # Add extra sidecar containers to job pod

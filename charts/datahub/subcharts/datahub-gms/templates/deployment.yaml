@@ -390,6 +390,8 @@ spec:
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
             - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
               value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
+            - name: GRAPHQL_QUERY_INTROSPECTION_ENABLED
+              value: {{ .Values.global.datahub.gms.graphl.introspection.enabled | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

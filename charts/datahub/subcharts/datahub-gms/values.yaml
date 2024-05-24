@@ -201,7 +201,7 @@ global:
       portName: jmx
     gms:
       port: "8080"
-      graphl:
+      graphql:
         introspection:
           enabled: 'true' # v0.13.3+
     appVersion: "1.0"

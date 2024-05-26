@@ -121,9 +121,6 @@ tolerations: []
 
 affinity: {}
 
-env:
-  JMXPORT: 1099
-
 livenessProbe:
   initialDelaySeconds: 60
   periodSeconds: 30

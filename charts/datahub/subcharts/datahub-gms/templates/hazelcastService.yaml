@@ -1,4 +1,4 @@
-{{- if gt .Values.replicaCount 1.0}}
+{{- if gt .Values.replicaCount 1.0 }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,4 +13,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{- include "datahub-gms.name" . | nindent 6 }}
   type: ClusterIP
-{{- end}}
+{{- end }}

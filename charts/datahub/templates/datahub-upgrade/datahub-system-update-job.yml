@@ -11,7 +11,7 @@ metadata:
   {{- end }}
 spec:
   template:
-    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations}}
+    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations }}
     metadata:
     {{- with .Values.datahubSystemUpdate.podAnnotations }}
       annotations:
@@ -44,7 +44,7 @@ spec:
             secretName: {{ .name }}
         {{- end }}
       {{- with .Values.datahubSystemUpdate.extraVolumes }}
-        {{- toYaml . | nindent 8}}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Never
       securityContext:
@@ -75,7 +75,7 @@ spec:
           env:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
@@ -178,7 +178,7 @@ metadata:
   {{- end }}
 spec:
   template:
-    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations}}
+    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations }}
     metadata:
     {{- with .Values.datahubSystemUpdate.podAnnotations }}
       annotations:
@@ -211,7 +211,7 @@ spec:
             secretName: {{ .name }}
         {{- end }}
       {{- with .Values.datahubSystemUpdate.extraVolumes }}
-        {{- toYaml . | nindent 8}}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Never
       securityContext:
@@ -237,7 +237,7 @@ spec:
           env:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}

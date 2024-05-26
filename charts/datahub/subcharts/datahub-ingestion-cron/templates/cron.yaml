@@ -8,7 +8,7 @@ metadata:
   name: "{{ $baseName }}-{{ $jobName }}"
   labels: {{- $labels | nindent 4 }}
 spec:
-  schedule: {{ default "0 0 * * *" .schedule | quote}}
+  schedule: {{ default "0 0 * * *" .schedule | quote }}
   concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
   successfulJobsHistoryLimit: {{ default 3 .successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
@@ -50,7 +50,7 @@ spec:
             {{- if .extraVolumeMounts }}
               {{- toYaml .extraVolumeMounts | nindent 14 }}
             {{- end }}
-            command: ["/bin/sh", "-c", {{ default $defaultCommand .command }} ]
+            command: ["/bin/sh", "-c", {{ default $defaultCommand .command }}]
             {{- if .securityContext }}
             securityContext:
               {{- toYaml .securityContext | nindent 14 }}
@@ -58,17 +58,17 @@ spec:
             env:
               {{- if .env }}
               {{- range $key,$value := .env }}
-              - name: {{ $key | quote}}
-                value: {{ $value | quote}}
+              - name: {{ $key | quote }}
+                value: {{ $value | quote }}
               {{- end }}
               {{- end }}
               {{- if .envFromSecrets }}
               {{- range $key,$value := .envFromSecrets }}
-              - name: {{ $key | quote}}
+              - name: {{ $key | quote }}
                 valueFrom:
                   secretKeyRef:
-                    name: {{ $value.secret | quote}}
-                    key: {{ $value.key | quote}}
+                    name: {{ $value.secret | quote }}
+                    key: {{ $value.key | quote }}
               {{- end }}
               {{- end }}
             {{- if .extraSidecars }}

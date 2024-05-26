@@ -185,7 +185,7 @@ spec:
             {{- end }}
             {{- if .Values.global.kafka.topics }}
             - name: DATAHUB_TRACKING_TOPIC
-              value: {{ .Values.global.kafka.topics.datahub_usage_event_name}}
+              value: {{ .Values.global.kafka.topics.datahub_usage_event_name }}
             {{- else }}
             - name: DATAHUB_TRACKING_TOPIC
               value: "DataHubUsageEvent_v1"
@@ -200,6 +200,9 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- else }}
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "false"
             {{- end }}
             - name: AUTH_SESSION_TTL_HOURS
               value: {{ .Values.auth.sessionTTLHours | quote }}

@@ -11,7 +11,7 @@ metadata:
   {{- end }}
 spec:
   template:
-    {{- if or .Values.global.podLabels .Values.datahubUpgrade.podAnnotations}}
+    {{- if or .Values.global.podLabels .Values.datahubUpgrade.podAnnotations }}
     metadata:
     {{- with .Values.datahubUpgrade.podAnnotations }}
       annotations:
@@ -44,7 +44,7 @@ spec:
             secretName: {{ .name }}
         {{- end }}
       {{- with .Values.datahubUpgrade.extraVolumes }}
-        {{- toYaml . | nindent 8}}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Never
       securityContext:
@@ -74,7 +74,7 @@ spec:
             - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
           {{- end }}
           env:
-            {{- include "datahub.upgrade.env" . | nindent 12}}
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
             {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
             - name: DATAHUB_SYSTEM_CLIENT_ID
               value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}

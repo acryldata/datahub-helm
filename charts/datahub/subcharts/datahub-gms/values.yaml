@@ -34,7 +34,6 @@ serviceMonitor:
   create: false
   extraLabels: {}
 
-
 podAnnotations: {}
   # co.elastic.logs/enabled: "true"
 
@@ -231,6 +230,10 @@ global:
       # systemClientSecret:
       #  secretRef: <secret-ref>
       #  secretKey: <secret-key>
+      restApi:
+        authorization:
+          # enables authorization of reads, writes, and deletes on REST APIs
+          enabled: true
       view:
         authorization:
           # search/view authorization filters

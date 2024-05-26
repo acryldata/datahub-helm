@@ -27,6 +27,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
+serviceMonitor:
+  create: false
+  extraLabels: {}
+
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -98,6 +102,9 @@ global:
   datahub:
     gms:
       port: "8080"
+    monitoring:
+      enablePrometheus: true
+      portName: "jmx"
     metadata_service_authentication:
       enabled: true
       systemClientId: "__datahub_system"

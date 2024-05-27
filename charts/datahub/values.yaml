@@ -335,6 +335,8 @@ datahubUpgrade:
       requests:
         cpu: 300m
         memory: 256Mi
+    # Schedule of CronJob when enabled
+    schedule: "0 0 * * 0"
     # Add the concurrency Policy flexibility via values
     concurrencyPolicy: Allow
     # Add extra sidecar containers to job pod
@@ -429,8 +431,18 @@ global:
 
       ## Index settings can be overridden for entity indices or other indices on an index by index basis
       ## Some index settings, such as # of shards, requires reindexing while others, i.e. replicas, do not
+      ## The index settings options can be specified as a string or a map (which is converted to a string
+      ## representation)
+      ##
       ## Non-Entity indices do not require the prefix
       # settingsOverrides: '{"graph_service_v1":{"number_of_shards":"5"},"system_metadata_service_v1":{"number_of_shards":"5"}}'
+      ## or
+      # settingsOverrides:
+      #   graph_service_v1:
+      #     number_of_shards: '5'
+      #   system_metadata_service_v1:
+      #     number_of_shards: '6'
+      #
       ## Entity indices do not require the prefix or suffix
       # entitySettingsOverrides: '{"dataset":{"number_of_shards":"10"}}'
 

@@ -109,12 +109,22 @@ spec:
               value: {{ . | quote }}
             {{- end }}
             {{- with .Values.global.elasticsearch.index.settingsOverrides }}
+            {{- if typeIs "map[string]interface {}" . }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ toJson . | quote }}
+            {{- else }}
             - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
               value: {{ . | quote }}
             {{- end }}
+            {{- end }}
             {{- with .Values.global.elasticsearch.index.entitySettingsOverrides }}
+            {{- if typeIs "map[string]interface {}" . }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ toJson . | quote }}
+            {{- else }}
             - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
               value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- with .Values.global.elasticsearch.index.refreshIntervalSeconds }}
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
@@ -261,12 +271,22 @@ spec:
               value: {{ . | quote }}
             {{- end }}
             {{- with .Values.global.elasticsearch.index.settingsOverrides }}
+            {{- if typeIs "map[string]interface {}" . }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ toJson . | quote }}
+            {{- else }}
             - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
               value: {{ . | quote }}
             {{- end }}
+            {{- end }}
             {{- with .Values.global.elasticsearch.index.entitySettingsOverrides }}
+            {{- if typeIs "map[string]interface {}" . }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ toJson . | quote }}
+            {{- else }}
             - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
               value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- with .Values.global.elasticsearch.index.refreshIntervalSeconds }}
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS

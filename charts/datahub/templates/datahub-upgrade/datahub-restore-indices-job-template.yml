@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
 spec:
-  schedule: "* * * * *"
+  schedule: {{ .Values.datahubUpgrade.restoreIndices.schedule | default "0 0 * * 0" }}
   suspend: true
   concurrencyPolicy: {{ .Values.datahubUpgrade.restoreIndices.concurrencyPolicy | default "Allow" }}
   jobTemplate:

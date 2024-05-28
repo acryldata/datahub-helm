@@ -61,6 +61,7 @@ service:
 
 serviceMonitor:
   create: false
+  extraLabels: {}
 
 ingress:
   # className: ""

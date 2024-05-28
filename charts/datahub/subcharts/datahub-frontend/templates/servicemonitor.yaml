@@ -5,6 +5,9 @@ metadata:
   name: {{ printf "%s-%s" .Release.Name "datahub-frontend" }}
   labels:
     {{- include "datahub-frontend.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.serviceMonitor.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
   {{- with .Values.serviceMonitor.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

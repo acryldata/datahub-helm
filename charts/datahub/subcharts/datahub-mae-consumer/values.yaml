@@ -32,6 +32,7 @@ serviceAccount:
 
 serviceMonitor:
   create: false
+  extraLabels: {}
 
 podAnnotations: {}
   # co.elastic.logs/enabled: "true"

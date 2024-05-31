@@ -7,13 +7,19 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-mae-consumer
+  repository: acryldata/datahub-mae-consumer
   pullPolicy: IfNotPresent
   tag:
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -40,6 +46,8 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+priorityClassName:
 
 service:
   type: ClusterIP # NodePort
@@ -167,7 +175,7 @@ readinessProbe:
   failureThreshold: 8
 
 global:
-  graph_service_impl: neo4j
+  graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
 
   elasticsearch:
@@ -180,6 +188,12 @@ global:
       server: "broker:9092"
     schemaregistry:
       url: "http://schema-registry:8081"
+    ## Kafka producer and consumer settings
+    #producer:
+    #  compressionType: snappy
+    #  maxRequestSize: 5242880
+    #consumer:
+    #  maxPartitionFetchBytes: 5242880
 
   neo4j:
     host: "neo4j:7474"
@@ -195,6 +209,7 @@ global:
       port: "8080"
     monitoring:
       enablePrometheus: false
+      portName: jmx
 
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
@@ -208,7 +223,7 @@ global:
       enabled: true
 
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

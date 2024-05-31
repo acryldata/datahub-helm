@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-datahub-system-update-job
+  name: {{ .Release.Name }}-system-update
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
   {{- with .Values.datahubSystemUpdate.annotations }}
@@ -57,9 +57,21 @@ spec:
         - name: datahub-system-update-job
           image: "{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.datahubSystemUpdate.image.command }}
+          command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.datahubSystemUpdate.image.args }}
+          args: {{ .Values.datahubSystemUpdate.image.args | toRawJson }}
+          {{- else }}
           args:
+          {{- if .Values.datahubSystemUpdate.nonblocking.enabled }}
+            - "-u"
+            - "SystemUpdateBlocking"
+          {{- else }}
             - "-u"
             - "SystemUpdate"
+          {{- end }}
+          {{- end }}
           env:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
@@ -130,7 +142,7 @@ spec:
         {{- with .Values.datahubSystemUpdate.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.datahubSystemUpdate.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.datahubSystemUpdate.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 12 }}
       {{- end }}
@@ -138,8 +150,161 @@ spec:
       affinity:
         {{- toYaml . | nindent 12 }}
       {{- end }}
-      {{- with .Values.datahubSystemUpdate.tolerations }}
+      {{- with default .Values.global.tolerations .Values.datahubSystemUpdate.tolerations }}
       tolerations:
         {{- toYaml . | nindent 12 }}
       {{- end }}
+{{- if .Values.datahubSystemUpdate.nonblocking.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-system-update-nonblk
+  labels:
+    {{- include "datahub.labels" . | nindent 4 }}
+  {{- with .Values.datahubSystemUpdate.nonblocking.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  template:
+    {{- if or .Values.global.podLabels .Values.datahubSystemUpdate.podAnnotations}}
+    metadata:
+    {{- with .Values.datahubSystemUpdate.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.global.podLabels }}
+      labels:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    spec:
+    {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.datahubSystemUpdate.serviceAccount }}
+      serviceAccountName: {{ . }}
+    {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: {{ .name }}
+        {{- end }}
+      {{- with .Values.datahubSystemUpdate.extraVolumes }}
+        {{- toYaml . | nindent 8}}
+      {{- end }}
+      restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
+      {{- with .Values.datahubSystemUpdate.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: datahub-system-update-job
+          image: "{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
+          imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.datahubSystemUpdate.image.command }}
+          command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.datahubSystemUpdate.nonblocking.image.args }}
+          args: {{ .Values.datahubSystemUpdate.nonblocking.image.args | toRawJson }}
+          {{- else }}
+          args:
+            - "-u"
+            - "SystemUpdateNonBlocking"
+          {{- end }}
+          env:
+            - name: DATAHUB_REVISION
+              value: {{ .Release.Revision | quote }}
+            {{- include "datahub.upgrade.env" . | nindent 12}}
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: SCHEMA_REGISTRY_SYSTEM_UPDATE
+              value: "true"
+            - name: SPRING_KAFKA_PROPERTIES_AUTO_REGISTER_SCHEMAS
+              value: "true"
+            - name: SPRING_KAFKA_PROPERTIES_USE_LATEST_VERSION
+              value: "true"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.type }}
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.glue }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_REGION
+              value: "{{ .region }}"
+            {{- with .registry }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_NAME
+              value: "{{ . }}"
+            {{- end }}
+            {{- end }}
+            - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneIndices | quote }}
+            {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.enableSettingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.settingsOverrides }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.entitySettingsOverrides }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.refreshIntervalSeconds }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: {{ . | quote }}
+            {{- end }}
+          {{- with .Values.datahubSystemUpdate.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.datahubSystemUpdate.securityContext | nindent 12 }}
+          volumeMounts:
+          {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: datahub-certs-dir
+              mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- with .Values.datahubSystemUpdate.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.datahubSystemUpdate.resources | nindent 12 }}
+        {{- with .Values.datahubSystemUpdate.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with default .Values.global.nodeSelector .Values.datahubSystemUpdate.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- with .Values.datahubSystemUpdate.affinity }}
+      affinity:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- with default .Values.global.tolerations .Values.datahubSystemUpdate.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+{{- end }}
 {{- end -}}

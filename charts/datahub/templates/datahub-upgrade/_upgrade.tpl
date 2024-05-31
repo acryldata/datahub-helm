@@ -39,8 +39,29 @@ Return the env variables for upgrade jobs
   value: "{{ .Values.global.sql.datasource.url }}"
 - name: EBEAN_DATASOURCE_DRIVER
   value: "{{ .Values.global.sql.datasource.driver }}"
+{{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+- name: DATAHUB_SYSTEM_CLIENT_ID
+  value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+- name: DATAHUB_SYSTEM_CLIENT_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+      key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+{{- end }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
+{{- with .Values.global.kafka.producer.compressionType }}
+- name: KAFKA_PRODUCER_COMPRESSION_TYPE
+  value: "{{ . }}"
+{{- end }}
+{{- with .Values.global.kafka.producer.maxRequestSize }}
+- name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+  value: {{ . | quote }}
+{{- end }}
+{{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+- name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+  value: {{ . | quote }}
+{{- end }}
 {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
@@ -84,6 +105,8 @@ Return the env variables for upgrade jobs
   value: "{{ .Values.global.neo4j.host }}"
 - name: NEO4J_URI
   value: "{{ .Values.global.neo4j.uri }}"
+- name: NEO4J_DATABASE
+  value: "{{ .Values.global.neo4j.database | default "graph.db" }}"
 - name: NEO4J_USERNAME
   value: "{{ .Values.global.neo4j.username }}"
 - name: NEO4J_PASSWORD

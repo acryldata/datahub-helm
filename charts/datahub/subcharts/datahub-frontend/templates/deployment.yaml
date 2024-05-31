@@ -15,10 +15,13 @@ spec:
       {{- include "datahub-frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      {{- if .Values.defaultUserCredentials }}
+        checksum/secret: {{ include (print $.Template.BasePath "/user-secrets.yaml") . | sha256sum }}
+      {{- end }}
       labels:
         {{- include "datahub-frontend.selectorLabels" . | nindent 8 }}
         {{- range $key, $value := .Values.global.podLabels }}
@@ -28,6 +31,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
     spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -51,6 +55,9 @@ spec:
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
       initContainers:
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
@@ -61,14 +68,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.image.command }}
+          command: {{ .Values.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.image.args }}
+          args: {{ .Values.image.args | toRawJson }}
+          {{- end }}
           lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
           ports:
             - name: http
-              containerPort: 9002
+              containerPort: {{ .Values.service.containerPort }}
               protocol: TCP
           {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
-            - name: jmx
+            - name: {{ .Values.global.datahub.monitoring.portName }}
               containerPort: 4318
               protocol: TCP
           {{- end }}
@@ -92,9 +105,9 @@ spec:
               value: "true"
             {{- end }}
             - name: DATAHUB_GMS_HOST
-              value: {{ printf "%s-%s" .Release.Name "datahub-gms" }}
+              value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}
             - name: DATAHUB_GMS_PORT
-              value: "{{ .Values.global.datahub.gms.port }}"
+              value: "{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}"
             - name: DATAHUB_SECRET
               valueFrom:
                 {{- if .Values.existingGmsSecret }}
@@ -114,6 +127,20 @@ spec:
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            - name: ENFORCE_VALID_EMAIL
+              value: "{{ .Values.global.datahub.frontend.validateSignUpEmail }}"
+            {{- with .Values.global.kafka.producer.compressionType }}
+            - name: KAFKA_PRODUCER_COMPRESSION_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.producer.maxRequestSize }}
+            - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+            - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+              value: {{ . | quote }}
+            {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
             - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
@@ -193,15 +220,15 @@ spec:
             {{- end }}
             - name: AUTH_OIDC_BASE_URL
               value: https://{{ (first $.Values.ingress.hosts).host }}
+            - name: AUTH_OIDC_USER_NAME_CLAIM
+              value: {{ .user_name_claim | default "email" }}
+            - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
+              value: {{ .user_name_claim_regex | default "([^@]+)" }}
             {{- if eq .provider "google" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://accounts.google.com/.well-known/openid-configuration
             - name: AUTH_OIDC_SCOPE
               value: {{ .scope | default "openid profile email" }}
-            - name: AUTH_OIDC_USER_NAME_CLAIM
-              value: email
-            - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX
-              value: ([^@]+)
             {{- else if eq .provider "okta" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://{{ .oktaDomain }}/.well-known/openid-configuration
@@ -238,7 +265,7 @@ spec:
         {{- with .Values.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -246,7 +273,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with default .Values.global.tolerations .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

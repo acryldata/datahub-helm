@@ -1,7 +1,8 @@
 # Default configuration for pre-requisites to get you started
 # Copy this file and update to the configuration of choice
 elasticsearch:
-  enabled: true   # set this to false, if you want to provide your own ES instance.
+  # set this to false, if you want to provide your own ES instance.
+  enabled: true
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -15,16 +16,16 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
   # # Shrink default JVM heap.
-  esJavaOpts: "-Xmx384m -Xms384m"
+  esJavaOpts: "-Xmx512m -Xms512m"
 
   # # Allocate smaller chunks of memory per pod.
   resources:
     requests:
       cpu: "100m"
-      memory: "768M"
+      memory: "1024M"
     limits:
       cpu: "1000m"
-      memory: "768M"
+      memory: "1024M"
 
   # # Request smaller persistent volumes.
   # volumeClaimTemplate:
@@ -34,30 +35,52 @@ elasticsearch:
   #     requests:
   #       storage: 100M
 
-# Official neo4j chart uses the Neo4j Enterprise Edition which requires a license
+# Official neo4j chart, supports both community and enterprise editions
+# see https://neo4j.com/docs/operations-manual/current/kubernetes/ for more information
+# source: https://github.com/neo4j/helm-charts
 neo4j:
-  enabled: false  # set this to true, if you have a license for the enterprise edition
-  acceptLicenseAgreement: "yes"
-  defaultDatabase: "graph.db"
-  neo4jPassword: "datahub"
-  # For better security, add password to neo4j-secrets k8s secret and uncomment below
-  # existingPasswordSecret: neo4j-secrets
-  core:
-    standalone: true
+  enabled: false
+  nameOverride: neo4j
+  neo4j:
+    name: neo4j
+    edition: "community"
+    acceptLicenseAgreement: "yes"
+    defaultDatabase: "graph.db"
+    password: "datahub"
+    # For better security, add password to neo4j-secrets k8s secret with  neo4j-username neo4j-passwordn and NEO4J_AUTH and uncomment below
+    # NEO4J_AUTH: should be composed like so: {Username}/{Password}
+    # passwordFromSecret: neo4j-secrets
 
-# Deploys neo4j community version. Only supports single node
-neo4j-community:
-  enabled: false   # set this to true, if you want to run neo4j community edition
-  acceptLicenseAgreement: "yes"
-  defaultDatabase: "graph.db"
-  # For better security, add neo4j-secrets k8s secret with neo4j-password and uncomment below
-  existingPasswordSecret: neo4j-secrets
+  # Set security context for pod
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 7474
+    runAsGroup: 7474
+    fsGroup: 7474
+    fsGroupChangePolicy: "Always"
+
+  # Disallow privilegeEscalation on container level
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+
+  # Create a volume for neo4j, SSD storage is recommended
+  volumes:
+    data:
+      mode: "defaultStorageClass"
+      # mode: "dynamic"
+      # dynamic:
+      #   storageClassName: managed-csi-premium
+
+  env:
+    NEO4J_PLUGINS: '["apoc"]'
 
 mysql:
   enabled: true
   auth:
     # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
     existingSecret: mysql-secrets
+  primary:
+    extraFlags: "--character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
 
 postgresql:
   enabled: false
@@ -81,13 +104,13 @@ gcloud-sqlproxy:
     # use port 3306 for MySQL, or other port you set for your SQL instance.
     instances:
       # GCP Cloud SQL instance id
-    - instance: ""
-      # GCP project where the instance exists.
-      project: ""
-      # GCP region where the instance exists.
-      region: ""
-      # Port number for the proxy to expose for this instance.
-      port: 3306
+      - instance: ""
+        # GCP project where the instance exists.
+        project: ""
+        # GCP region where the instance exists.
+        region: ""
+        # Port number for the proxy to expose for this instance.
+        port: 3306
 
 cp-helm-charts:
   enabled: false
@@ -95,7 +118,8 @@ cp-helm-charts:
   cp-schema-registry:
     enabled: false
     kafka:
-      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
+      # <<release-name>>-kafka:9092
+      bootstrapServers: "prerequisites-kafka:9092"
   cp-kafka:
     enabled: false
   cp-zookeeper:
@@ -112,6 +136,26 @@ cp-helm-charts:
 # Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
   enabled: true
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
+  controller:
+    replicaCount: 0
+  broker:
+    replicaCount: 1
+    # The new minId for broker is 100. If we don't override this, the broker will have id 100
+    # and cannot load the partitions. So we set minId to 0 to be backwards compatible
+    minId: 0
+    # These server properties are no longer exposed as parameters in the bitnami kafka chart since 24.0.0
+    # They need to be passed in through extraConfig. See below for reference
+    # https://github.com/bitnami/charts/tree/main/bitnami/kafka#to-2400
+    extraConfig: |
+      message.max.bytes=5242880
+      default.replication.factor=1
+      offsets.topic.replication.factor=1
+      transaction.state.log.replication.factor=1
   kraft:
     enabled: false
   zookeeper:

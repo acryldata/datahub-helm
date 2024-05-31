@@ -7,10 +7,16 @@ image:
   repository: acryldata/datahub-actions
   tag: "v0.0.1"
   pullPolicy: IfNotPresent
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -29,6 +35,8 @@ podAnnotations: {}
 podSecurityContext: {}
 
 securityContext: {}
+
+priorityClassName:
 
 service:
   type: ClusterIP
@@ -69,14 +77,19 @@ affinity: {}
 
 actions:
   kafkaAutoOffsetPolicy: "latest"
+  # Configure a custom executor id that will be set as the EXECUTOR_ID environment variable
+  # executorId: ""
 
 # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
 # ingestionSecretFiles:
 #   name: ${K8S_SECRET_NAME}
 #   defaultMode: "0444"
 
-global:
+debug:
+  # Set enabled to true will set the DATAHUB_DEBUG env var to true
+  enabled: false
 
+global:
   kafka:
     bootstrap:
       server: "broker:9092"
@@ -87,7 +100,7 @@ global:
     gms:
       port: "8080"
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

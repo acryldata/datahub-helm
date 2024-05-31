@@ -87,9 +87,10 @@ global:
       url: "http://prerequisites-cp-schema-registry:8081"
 
   neo4j:
-    host: "prerequisites-neo4j-community:7474"
-    uri: "bolt://prerequisites-neo4j-community"
+    host: "prerequisites-neo4j:7474"
+    uri: "bolt://prerequisites-neo4j"
     username: "neo4j"
+    database: "graph.db"
     password:
       secretRef: neo4j-secrets
       secretKey: neo4j-password

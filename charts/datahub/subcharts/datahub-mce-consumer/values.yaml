@@ -7,13 +7,19 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-mce-consumer
+  repository: acryldata/datahub-mce-consumer
   pullPolicy: IfNotPresent
   tag:
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -38,6 +44,8 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+priorityClassName:
 
 service:
   type: ClusterIP # NodePort
@@ -176,15 +184,22 @@ global:
       server: "broker:9092"
     schemaregistry:
       url: "http://schema-registry:8081"
+    # Kafka producer and consumer settings
+    #producer:
+    #  compressionType: snappy
+    #  maxRequestSize: "5242880"
+    #consumer:
+    #  maxPartitionFetchBytes: "5242880"
 
   datahub:
     version: head
     monitoring:
       enablePrometheus: false
+      portName: jmx
     gms:
       port: "8080"
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

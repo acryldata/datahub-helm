@@ -57,6 +57,12 @@ spec:
         - name: datahub-upgrade-job
           image: "{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" ($.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubUpgrade.image.pullPolicy | default "IfNotPresent" }}
+          {{- if .Values.datahubUpgrade.noCodeDataMigration.image.command }}
+          command: {{ .Values.datahubUpgrade.noCodeDataMigration.image.command | toRawJson }}
+          {{- end }}
+          {{- if .Values.datahubUpgrade.noCodeDataMigration.image.args }}
+          args: {{ .Values.datahubUpgrade.noCodeDataMigration.image.args | toRawJson }}
+          {{- else }}
           args:
             - "-u"
             - "NoCodeDataMigration"
@@ -66,6 +72,7 @@ spec:
             - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
             - "-a"
             - "dbType={{ .Values.datahubUpgrade.noCodeDataMigration.sqlDbType }}"
+          {{- end }}
           env:
             {{- include "datahub.upgrade.env" . | nindent 12}}
             {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
@@ -100,7 +107,7 @@ spec:
         {{- with .Values.datahubUpgrade.extraSidecars }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.datahubUpgrade.nodeSelector }}
+      {{- with default .Values.global.nodeSelector .Values.datahubUpgrade.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 12 }}
       {{- end }}
@@ -108,7 +115,7 @@ spec:
       affinity:
         {{- toYaml . | nindent 12 }}
       {{- end }}
-      {{- with .Values.datahubUpgrade.tolerations }}
+      {{- with default .Values.global.tolerations .Values.datahubUpgrade.tolerations }}
       tolerations:
         {{- toYaml . | nindent 12 }}
       {{- end }}

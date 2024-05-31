@@ -7,13 +7,19 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-gms
+  repository: acryldata/datahub-gms
   pullPolicy: IfNotPresent
   tag:
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -41,6 +47,8 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+priorityClassName:
 
 service:
   type: LoadBalancer # ClusterIP or NodePort
@@ -133,7 +141,7 @@ readinessProbe:
 # helm install datahub-gms datahub-gms/
 global:
   datahub_analytics_enabled: true
-  graph_service_impl: neo4j
+  graph_service_impl: elasticsearch
 
   elasticsearch:
     host: "elasticsearch"
@@ -160,6 +168,12 @@ global:
       server: "broker:9092"
     schemaregistry:
       url: "http://schema-registry:8081"
+    ## Kafka producer and consumer settings
+    #producer:
+    #  compressionType: snappy
+    #  maxRequestSize: "5242880"
+    #consumer:
+    #  maxPartitionFetchBytes: "5242880"
 
   neo4j:
     host: "neo4j:7474"
@@ -184,6 +198,7 @@ global:
     monitoring:
       enablePrometheus: false
       enableJMXPort: false
+      portName: jmx
     gms:
       port: "8080"
     appVersion: "1.0"
@@ -198,7 +213,7 @@ global:
       # defaultCliVersion: "X.X.X" --> Optional: Controls the acryl-datahub package version downloaded from PyPI.
 
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       # tokenService:
       #   signingKey:
       #    secretRef: <secret-ref>
@@ -210,6 +225,14 @@ global:
       # systemClientSecret:
       #  secretRef: <secret-ref>
       #  secretKey: <secret-key>
+      view:
+        authorization:
+          # search/view authorization filters
+          enabled: false
+          # recommendation settings when search/view authorization is in effect
+          recommendations:
+            # whether to restrict Most Popular entities 
+            peerGroupEnabled: true
 
     encryptionKey:
       secretRef: "encryption-key-secret"

@@ -12,6 +12,7 @@ spec:
   concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
   successfulJobsHistoryLimit: {{ default 3 .successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
+  suspend: {{ default false .suspend }}
   jobTemplate:
     spec:
       backoffLimit: {{ default 6 $val.backoffLimit }}
@@ -37,6 +38,8 @@ spec:
         {{- if .serviceAccountName }}
           serviceAccountName: {{ .serviceAccountName }}
         {{- end }}
+          securityContext:
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
           containers:
           - name: {{ $jobName }}-crawler
             image: "{{ $.Values.image.repository }}:{{ required "Global or specific tag is required" ($.Values.image.tag | default $.Values.global.datahub.version) }}"
@@ -48,6 +51,10 @@ spec:
               {{- toYaml .extraVolumeMounts | nindent 14 }}
             {{- end }}
             command: ["/bin/sh", "-c", {{ default $defaultCommand .command }} ]
+            {{- if .securityContext }}
+            securityContext:
+              {{- toYaml .securityContext | nindent 14 }}
+            {{- end }}
             env:
               {{- if .env }}
               {{- range $key,$value := .env }}
@@ -68,17 +75,17 @@ spec:
               {{- toYaml .extraSidecars | nindent 10 }}
             {{- end }}
           restartPolicy: {{ default "OnFailure" .restartPolicy }}
-          {{- if .nodeSelector }}
+          {{- with default $.Values.global.nodeSelector .nodeSelector }}
           nodeSelector:
-            {{- toYaml .nodeSelector | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- if .affinity }}
           affinity:
             {{- toYaml .affinity | nindent 12 }}
           {{- end }}
-          {{- if .tolerations }}
+          {{- with default $.Values.global.tolerations .tolerations }}
           tolerations:
-            {{- toYaml .tolerations | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumes:
             - name: recipe

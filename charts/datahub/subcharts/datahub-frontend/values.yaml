@@ -7,13 +7,19 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  repository: linkedin/datahub-frontend-react
+  repository: acryldata/datahub-frontend-react
   tag:
   pullPolicy: IfNotPresent
+  # Override the image's command & args with a new one.
+  # This may be necessary for custom startup or shutdown behaviors
+  command:
+  args:
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+terminationGracePeriodSeconds: 150
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -38,16 +44,20 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+priorityClassName:
+
 service:
   type: LoadBalancer # ClusterIP or NodePort
   port: 9002
   targetPort: http
+  containerPort: 9002
   protocol: TCP
   name: http
   # Annotations to add to the service, this will help in adding
   # Internal load balancer or various other annotation support in AWS
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  extraLabels: {}
 
 serviceMonitor:
   create: false
@@ -88,6 +98,11 @@ oidcAuthentication:
   # azureTenantId: your-azure-tenant-id
   # if needed, it should set meaningful defaults from provider
   # scope: "openid profile email"
+
+  # The attribute that will contain the username used on the DataHub platform.
+  # user_name_claim: "email"
+  # A regex string used for extracting the username from the userNameClaim attribute.
+  # user_name_claim_regex: "([^@]+)"
 
 # Extra labels for Deployment
 extraLabels: {}
@@ -223,9 +238,12 @@ global:
       port: "8080"
     monitoring:
       enablePrometheus: true
+      portName: "jmx"
     appVersion: "1.0"
+    frontend:
+      validateSignUpEmail: true
     metadata_service_authentication:
-      enabled: false
+      enabled: true
       systemClientId: "__datahub_system"
       # systemClientSecret:
       #  secretRef: <secret-ref>

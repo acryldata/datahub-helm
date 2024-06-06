@@ -97,6 +97,8 @@ gcloud-sqlproxy:
   existingSecret: ""
   # The key in the existing secret that stores the credentials
   existingSecretKey: ""
+  ## the name of the ServiceAccount to be used
+  serviceAccountName: ""
   # SQL connection settings
   cloudsql:
     # MySQL instances:

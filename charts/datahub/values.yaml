@@ -148,6 +148,10 @@ elasticsearchSetupJob:
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: before-hook-creation
   podAnnotations: {}
+  # If you want to use OpenSearch instead of ElasticSearch add the USE_AWS_ELASTICSEARCH environment variable below
+  # extraEnvs:
+  #   - name: USE_AWS_ELASTICSEARCH
+  #     value: "true"
   # Add extra sidecar containers to job pod
   extraSidecars: []
     # - name: my-image-name
@@ -412,6 +416,8 @@ global:
 
   elasticsearch:
     host: "elasticsearch-master"
+    # If you want to use OpenSearch instead of ElasticSearch use different hostname below
+    # host: "opensearch-cluster-master"
     port: "9200"
     skipcheck: "false"
     insecure: "false"

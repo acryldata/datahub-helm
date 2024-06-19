@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
+  registry: docker.io
   repository: acryldata/datahub-ingestion
   tag:
   pullPolicy: IfNotPresent
@@ -142,5 +143,7 @@ crons: {}
     #suspend: true
 
 global:
+  imageRegistry: ""
+
   datahub:
     version: head

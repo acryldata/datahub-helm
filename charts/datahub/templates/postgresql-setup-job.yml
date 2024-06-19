@@ -49,7 +49,8 @@ spec:
       {{- end }}
       containers:
         - name: postgresql-setup-job
-          image: "{{ .Values.postgresqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.postgresqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
+          {{- $registry := .Values.global.imageRegistry | default .Values.postgresqlSetupJob.image.registry -}}
+          image: "{{ $registry }}/{{ .Values.postgresqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.postgresqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.postgresqlSetupJob.image.pullPolicy | default "Always" }}
           {{- if .Values.postgresqlSetupJob.image.command }}
           command: {{ .Values.postgresqlSetupJob.image.command | toRawJson }}

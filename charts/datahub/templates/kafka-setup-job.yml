@@ -55,7 +55,8 @@ spec:
       {{- end }}
       containers:
         - name: kafka-setup-job
-          image: "{{ .Values.kafkaSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.kafkaSetupJob.image.tag | default .Values.global.datahub.version) }}"
+          {{- $registry := .Values.global.imageRegistry | default .Values.kafkaSetupJob.image.registry -}}
+          image: "{{ $registry }}/{{ .Values.kafkaSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.kafkaSetupJob.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.kafkaSetupJob.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.kafkaSetupJob.image.command }}
           command: {{ .Values.kafkaSetupJob.image.command | toRawJson }}

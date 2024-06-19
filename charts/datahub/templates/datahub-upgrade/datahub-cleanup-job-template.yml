@@ -54,7 +54,8 @@ spec:
           {{- end }}
           containers:
             - name: datahub-upgrade-job
-              image: "{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
+              {{- $registry := .Values.global.imageRegistry | default .Values.datahubUpgrade.image.registry -}}
+              image: "{{ $registry }}/{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) }}"
               imagePullPolicy: {{ .Values.datahubUpgrade.image.pullPolicy | default "IfNotPresent" }}
               {{- if .Values.datahubUpgrade.cleanupJob.image.command }}
               command: {{ .Values.datahubUpgrade.cleanupJob.image.command | toRawJson }}

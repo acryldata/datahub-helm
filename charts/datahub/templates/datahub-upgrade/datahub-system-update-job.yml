@@ -55,7 +55,8 @@ spec:
       {{- end }}
       containers:
         - name: datahub-system-update-job
-          image: "{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
+          {{- $registry := .Values.global.imageRegistry | default .Values.datahubSystemUpdate.image.registry -}}
+          image: "{{ $registry }}/{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.datahubSystemUpdate.image.command }}
           command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}
@@ -222,7 +223,8 @@ spec:
       {{- end }}
       containers:
         - name: datahub-system-update-job
-          image: "{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
+          {{- $registry := .Values.global.imageRegistry | default .Values.datahubSystemUpdate.image.registry -}}
+          image: "{{ $registry }}/{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) }}"
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.datahubSystemUpdate.image.command }}
           command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}

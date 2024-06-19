@@ -7,6 +7,7 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
+  registry: docker.io
   repository: acryldata/datahub-gms
   pullPolicy: IfNotPresent
   tag:
@@ -141,6 +142,8 @@ readinessProbe:
 #This section is useful if we are installing this chart separately for testing
 # helm install datahub-gms datahub-gms/
 global:
+  imageRegistry: ""
+
   datahub_analytics_enabled: true
   graph_service_impl: elasticsearch
 

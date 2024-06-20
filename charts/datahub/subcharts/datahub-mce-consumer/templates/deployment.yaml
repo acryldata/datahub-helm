@@ -270,6 +270,60 @@ spec:
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
             - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
               value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
+            {{- with .Values.global.datahub.mcp.throttle }}
+            {{- with .updateIntervalMs }}
+            - name: MCP_THROTTLE_UPDATE_INTERVAL_MS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if .versioned.enabled }}
+            - name: MCP_VERSIONED_THROTTLE_ENABLED
+              value: 'true'
+            {{- with .versioned.threshold }}
+            - name: MCP_VERSIONED_THRESHOLD
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .versioned.maxAttempts }}
+            - name: MCP_VERSIONED_MAX_ATTEMPTS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .versioned.initialIntervalMs }}
+            - name: MCP_VERSIONED_INITIAL_INTERVAL_MS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .versioned.multiplier }}
+            - name: MCP_VERSIONED_MULTIPLIER
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .versioned.maxIntervalMs }}
+            - name: MCP_VERSIONED_MAX_INTERVAL_MS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if .timeseries.enabled }}
+            - name: MCP_TIMESERIES_THROTTLE_ENABLED
+              value: 'true'
+            {{- with .timeseries.threshold }}
+            - name: MCP_TIMESERIES_THRESHOLD
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .timeseries.maxAttempts }}
+            - name: MCP_TIMESERIES_MAX_ATTEMPTS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .timeseries.initialIntervalMs }}
+            - name: MCP_TIMESERIES_INITIAL_INTERVAL_MS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .timeseries.multiplier }}
+            - name: MCP_TIMESERIES_MULTIPLIER
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .timeseries.maxIntervalMs }}
+            - name: MCP_TIMESERIES_MAX_INTERVAL_MS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

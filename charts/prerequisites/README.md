@@ -1,6 +1,6 @@
 DataHub Prerequisites
 =======
-A Helm chart for installing components required to run LinkedIn DataHub
+A Helm chart for installing components required to run DataHub
 
 ## Install Prerequisites
 Run the following command to install datahub with default configuration.

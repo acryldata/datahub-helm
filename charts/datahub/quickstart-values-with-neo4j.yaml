@@ -3,14 +3,14 @@
 datahub-gms:
   enabled: true
   image:
-    repository: linkedin/datahub-gms
+    repository: acryldata/datahub-gms
     # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 datahub-frontend:
   enabled: true
   image:
-    repository: linkedin/datahub-frontend-react
+    repository: acryldata/datahub-frontend-react
     # tag: "v0.11.0 # defaults to .global.datahub.version
 
   # Set up ingress to expose react front-end
@@ -39,14 +39,14 @@ acryl-datahub-actions:
 elasticsearchSetupJob:
   enabled: true
   image:
-    repository: linkedin/datahub-elasticsearch-setup
+    repository: acryldata/datahub-elasticsearch-setup
     # tag: "v0.11.0 # defaults to .global.datahub.version
 
 
 kafkaSetupJob:
   enabled: true
   image:
-    repository: linkedin/datahub-kafka-setup
+    repository: acryldata/datahub-kafka-setup
     # tag: "v0.11.0 # defaults to .global.datahub.version
 
 

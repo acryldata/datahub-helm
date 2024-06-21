@@ -2,9 +2,9 @@
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/datahub)](https://artifacthub.io/packages/search?repo=datahub)
 
 ## Introduction
-[This repo](https://github.com/acryldata/datahub-helm) provides 
-the Kubernetes [Helm](https://helm.sh/) charts for deploying 
-[Datahub](https://github.com/linkedin/datahub) and it's dependencies 
+[This repo](https://github.com/acryldata/datahub-helm) provides
+the Kubernetes [Helm](https://helm.sh/) charts for deploying
+[Datahub](https://github.com/datahub-project/datahub) and it's dependencies
 (Elasticsearch, optionally Neo4j, MySQL, and Kafka) on a Kubernetes cluster.
 
 ## Setup

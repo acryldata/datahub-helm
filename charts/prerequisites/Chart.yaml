@@ -4,7 +4,7 @@ description: A Helm chart for packages that Datahub depends on
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.12
+version: 0.1.13
 dependencies:
   - name: elasticsearch
     version: 7.17.3
@@ -20,7 +20,7 @@ dependencies:
     repository: https://helm.neo4j.com/neo4j
     condition: neo4j.enabled
   - name: mysql
-    version: 9.4.9
+    version: 9.4.9  # Remove image.tag from values.yaml on next upgrade
     repository: https://charts.bitnami.com/bitnami
     condition: mysql.enabled
   - name: postgresql

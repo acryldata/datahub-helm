@@ -113,6 +113,8 @@ neo4j:
 
 mysql:
   enabled: true
+  image:
+    tag: 8.0.32-debian-11-r26
   auth:
     # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
     existingSecret: mysql-secrets

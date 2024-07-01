@@ -151,6 +151,10 @@ spec:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
             {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.enabled }}
+            - name: DATAHUB_REVISION
+              value: {{ .Release.Revision | quote }}
+            {{- end }}
           {{- if .Values.extraEnvs }}
             {{ toYaml .Values.extraEnvs | nindent 12 }}
           {{- end }}

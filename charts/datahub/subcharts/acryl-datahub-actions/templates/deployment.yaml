@@ -14,12 +14,14 @@ spec:
       {{- include "acryl-datahub-actions.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
       annotations:
         # Ensures resource is only deployed at GMS is deployed, since there is a dependency on GMS being up.
         "helm.sh/hook-weight": "1"
+        # https://helm.sh/docs/howto/charts_tips_and_tricks/#automatically-roll-deployments
+        rollme: {{ randAlphaNum 5 | quote }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- end }}
       labels:
         {{- include "acryl-datahub-actions.selectorLabels" . | nindent 8 }}
         {{- range $key, $value := .Values.global.podLabels }}

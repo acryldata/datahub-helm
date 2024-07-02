@@ -772,6 +772,9 @@ global:
         #  multiplier: 10
         #  maxIntervalMs: 30000
 
+## @param extraDeploy Extra objects to deploy (value evaluated as a template)
+##
+extraDeploy: []
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

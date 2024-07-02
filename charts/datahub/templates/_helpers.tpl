@@ -72,3 +72,23 @@ Return the appropriate apiVersion for cronjob.
 {{- print "batch/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/* vim: set filetype=mustache: */}}
+{{/*
+Renders a value that contains template perhaps with scope if the scope is present.
+Usage:
+{{ include "datahub.extradeploy.render" ( dict "value" .Values.path.to.the.Value "context" $ ) }}
+{{ include "datahub.extradeploy.render" ( dict "value" .Values.path.to.the.Value "context" $ "scope" $app ) }}
+*/}}
+{{- define "datahub.extradeploy.render" -}}
+{{- $value := typeIs "string" .value | ternary .value (.value | toYaml) }}
+{{- if contains "{{" (toJson .value) }}
+  {{- if .scope }}
+      {{- tpl (cat "{{- with $.RelativeScope -}}" $value "{{- end }}") (merge (dict "RelativeScope" .scope) .context) }}
+  {{- else }}
+    {{- tpl $value .context }}
+  {{- end }}
+{{- else }}
+    {{- $value }}
+{{- end }}
+{{- end -}}

@@ -446,6 +446,42 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
+            {{- with .Values.global.kafka.metadataChangeLog.hooks.siblings }}
+            - name: ENABLE_SIBLING_HOOK
+              value: "{{ .enabled }}"
+            - name: SIBLINGS_HOOK_CONSUMER_GROUP_SUFFIX
+              value: "{{ .consumerGroupSuffix }}"
+            {{- end }}
+            {{- with .Values.global.kafka.metadataChangeLog.hooks.updateIndices }}
+            - name: ENABLE_UPDATE_INDICES_HOOK
+              value: "{{ .enabled }}"
+            - name: UPDATE_INDICES_CONSUMER_GROUP_SUFFIX
+              value: "{{ .consumerGroupSuffix }}"
+            {{- end }}
+            {{- with .Values.global.kafka.metadataChangeLog.hooks.ingestionScheduler }}
+            - name: ENABLE_INGESTION_SCHEDULER_HOOK
+              value: "{{ .enabled }}"
+            - name: INGESTION_SCHEDULER_HOOK_CONSUMER_GROUP_SUFFIX
+              value: "{{ .consumerGroupSuffix }}"
+            {{- end }}
+            {{- with .Values.global.kafka.metadataChangeLog.hooks.incidents }}
+            - name: ENABLE_INCIDENTS_HOOK
+              value: "{{ .enabled }}"
+            - name: INCIDENTS_HOOK_CONSUMER_GROUP_SUFFIX
+              value: "{{ .consumerGroupSuffix }}"
+            {{- end }}
+            {{- with .Values.global.kafka.metadataChangeLog.hooks.entityChangeEvents }}
+            - name: ENABLE_ENTITY_CHANGE_EVENTS_HOOK
+              value: "{{ .enabled }}"
+            - name: ECE_CONSUMER_GROUP_SUFFIX
+              value: "{{ .consumerGroupSuffix }}"
+            {{- end }}
+            {{- with .Values.global.kafka.metadataChangeLog.hooks.forms }}
+            - name: FORMS_HOOK_ENABLED
+              value: "{{ .enabled }}"
+            - name: FORMS_HOOK_CONSUMER_GROUP_SUFFIX
+              value: "{{ .consumerGroupSuffix }}"
+            {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

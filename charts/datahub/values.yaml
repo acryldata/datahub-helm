@@ -593,6 +593,26 @@ global:
       metadata_change_log_timeseries_topic_name: "MetadataChangeLog_Timeseries_v1"
       platform_event_topic_name: "PlatformEvent_v1"
       datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
+    metadataChangeLog:
+      hooks:
+        siblings:
+          enabled: true
+          consumerGroupSuffix: ''
+        updateIndices:
+          enabled: true
+          consumerGroupSuffix: ''
+        ingestionScheduler:
+          enabled: true
+          consumerGroupSuffix: ''
+        incidents:
+          enabled: true
+          consumerGroupSuffix: ''
+        entityChangeEvents:
+          enabled: true
+          consumerGroupSuffix: ''
+        forms:
+          enabled: true
+          consumerGroupSuffix: ''
     maxMessageBytes: "5242880"  # 5MB
     producer:
       compressionType: none

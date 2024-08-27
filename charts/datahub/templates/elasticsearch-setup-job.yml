@@ -49,8 +49,7 @@ spec:
       {{- end }}
       containers:
         - name: elasticsearch-setup-job
-          {{- $registry := .Values.global.imageRegistry | default .Values.elasticsearchSetupJob.image.registry -}}
-          image: "{{ $registry }}/{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) }}"
+          image: {{ include "elasticsearchSetupJob.image" . }}
           imagePullPolicy: {{ .Values.elasticsearchSetupJob.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.elasticsearchSetupJob.image.command }}
           command: {{ .Values.elasticsearchSetupJob.image.command | toRawJson }}

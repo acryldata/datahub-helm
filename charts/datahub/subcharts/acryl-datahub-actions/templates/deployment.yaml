@@ -64,8 +64,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
-          image: "{{ $registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ include "datahub.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

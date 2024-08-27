@@ -72,3 +72,43 @@ Return the appropriate apiVersion for cronjob.
 {{- print "batch/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create general image registry, name and tag
+*/}}
+{{- define "datahub.image" -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
+{{ $registry }}/{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) -}}
+{{- end -}}
+
+{{/*
+Create image registry, name and tag for elasticsearch setup job
+*/}}
+{{- define "elasticsearchSetupJob.image" -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.elasticsearchSetupJob.image.registry -}}
+{{ $registry }}/{{ .Values.elasticsearchSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.elasticsearchSetupJob.image.tag | default .Values.global.datahub.version) -}}
+{{- end -}}
+
+{{/*
+Create image registry, name and tag for kafka setup job
+*/}}
+{{- define "kafkaSetupJob.image" -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.kafkaSetupJob.image.registry -}}
+{{ $registry }}/{{ .Values.kafkaSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.kafkaSetupJob.image.tag | default .Values.global.datahub.version) -}}
+{{- end -}}
+
+{{/*
+Create image registry, name and tag for mysql setup job
+*/}}
+{{- define "mysqlSetupJob.image" -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.mysqlSetupJob.image.registry -}}
+{{ $registry }}/{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) -}}
+{{- end -}}
+
+{{/*
+Create image registry, name and tag for postgres setup job
+*/}}
+{{- define "postgresqlSetupJob.image" -}}
+{{- $registry := .Values.global.imageRegistry | default .Values.postgresqlSetupJob.image.registry -}}
+{{ $registry }}/{{ .Values.postgresqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" (.Values.postgresqlSetupJob.image.tag | default .Values.global.datahub.version) -}}
+{{- end -}}

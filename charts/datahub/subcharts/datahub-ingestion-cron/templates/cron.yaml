@@ -42,8 +42,7 @@ spec:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
           containers:
           - name: {{ $jobName }}-crawler
-            {{- $registry := .Values.global.imageRegistry | default .Values.image.registry -}}
-            image: "{{ $registry }}/{{ $.Values.image.repository }}:{{ required "Global or specific tag is required" ($.Values.image.tag | default $.Values.global.datahub.version) }}"
+            image: {{ include "datahub.image" . }}
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             volumeMounts:
               - name: recipe

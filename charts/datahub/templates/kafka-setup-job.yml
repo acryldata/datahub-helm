@@ -55,7 +55,7 @@ spec:
       {{- end }}
       containers:
         - name: kafka-setup-job
-          image: {{ include "kafkaSetupJob.image" . }}
+          image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" .Values.kafkaSetupJob.image) }}
           imagePullPolicy: {{ .Values.kafkaSetupJob.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.kafkaSetupJob.image.command }}
           command: {{ .Values.kafkaSetupJob.image.command | toRawJson }}

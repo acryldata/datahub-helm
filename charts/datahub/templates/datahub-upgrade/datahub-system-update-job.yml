@@ -55,7 +55,7 @@ spec:
       {{- end }}
       containers:
         - name: datahub-system-update-job
-          image: {{ include "datahubSystemUpdate.image" . }}
+          image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" .Values.datahubSystemUpdate.image) }}
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.datahubSystemUpdate.image.command }}
           command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}
@@ -222,7 +222,7 @@ spec:
       {{- end }}
       containers:
         - name: datahub-system-update-job
-          image: {{ include "datahubSystemUpdate.image" . }}
+          image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" .Values.datahubSystemUpdate.image) }}
           imagePullPolicy: {{ .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.datahubSystemUpdate.image.command }}
           command: {{ .Values.datahubSystemUpdate.image.command | toRawJson }}

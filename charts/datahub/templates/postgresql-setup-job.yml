@@ -49,7 +49,7 @@ spec:
       {{- end }}
       containers:
         - name: postgresql-setup-job
-          image: {{ include "postgresqlSetupJob.image" . }}
+          image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" .Values.postgresqlSetupJob.image) }}
           imagePullPolicy: {{ .Values.postgresqlSetupJob.image.pullPolicy | default "Always" }}
           {{- if .Values.postgresqlSetupJob.image.command }}
           command: {{ .Values.postgresqlSetupJob.image.command | toRawJson }}

@@ -144,19 +144,3 @@ Return the env variables for upgrade jobs
   value: {{ .datahub_upgrade_history_topic_name }}
 {{- end }}
 {{- end -}}
-
-{{/*
-Create image registry, name and tag for datahub upgrade jobs
-*/}}
-{{- define "datahubUpgrade.image" -}}
-{{- $registry := .Values.global.imageRegistry | default .Values.datahubUpgrade.image.registry -}}
-{{ $registry }}/{{ .Values.datahubUpgrade.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubUpgrade.image.tag | default .Values.global.datahub.version) -}}
-{{- end -}}
-
-{{/*
-Create image registry, name and tag for datahub system update job
-*/}}
-{{- define "datahubSystemUpdate.image" -}}
-{{- $registry := .Values.global.imageRegistry | default .Values.datahubSystemUpdate.image.registry -}}
-{{ $registry }}/{{ .Values.datahubSystemUpdate.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemUpdate.image.tag | default .Values.global.datahub.version) -}}
-{{- end -}}

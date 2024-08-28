@@ -180,6 +180,8 @@ datahub:
       buffer:
         size: "10MB"
 global:
+  imageRegistry: "docker.io"
+
   datahub_analytics_enabled: true
 
   elasticsearch:

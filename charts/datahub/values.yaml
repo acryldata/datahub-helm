@@ -413,6 +413,7 @@ global:
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
+  imageRegistry: "docker.io"
 
   elasticsearch:
     host: "elasticsearch-master"

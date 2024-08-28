@@ -135,6 +135,8 @@ readinessProbe:
   failureThreshold: 4
 
 global:
+  imageRegistry: "docker.io"
+
   elasticsearch:
     host: "elasticsearch-master"
 

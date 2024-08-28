@@ -72,3 +72,11 @@ Return the appropriate apiVersion for cronjob.
 {{- print "batch/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create image registry, name and tag for a datahub component
+*/}}
+{{- define "datahub.image" -}}
+{{- $registry := .image.registry | default .imageRegistry -}}
+{{ $registry }}/{{ .image.repository }}:{{ required "Global or specific tag is required" (.image.tag | default .version) -}}
+{{- end -}}

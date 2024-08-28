@@ -4,7 +4,6 @@
 replicaCount: 1
 
 image:
-  registry: docker.io
   repository: acryldata/datahub-actions
   tag: "v0.0.1"
   pullPolicy: IfNotPresent
@@ -88,7 +87,7 @@ debug:
   enabled: false
 
 global:
-  imageRegistry: ""
+  imageRegistry: "docker.io"
 
   kafka:
     bootstrap:

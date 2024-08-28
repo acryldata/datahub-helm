@@ -7,7 +7,6 @@ replicaCount: 1
 revisionHistoryLimit: 10
 
 image:
-  registry: docker.io
   repository: acryldata/datahub-frontend-react
   tag:
   pullPolicy: IfNotPresent
@@ -181,7 +180,7 @@ datahub:
       buffer:
         size: "10MB"
 global:
-  imageRegistry: ""
+  imageRegistry: "docker.io"
 
   datahub_analytics_enabled: true
 

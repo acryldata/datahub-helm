@@ -123,7 +123,6 @@ datahub-ingestion-cron:
 elasticsearchSetupJob:
   enabled: true
   image:
-    registry: docker.io
     repository: acryldata/datahub-elasticsearch-setup
     # tag: "v0.11.0" # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -162,7 +161,6 @@ elasticsearchSetupJob:
 kafkaSetupJob:
   enabled: true
   image:
-    registry: docker.io
     repository: acryldata/datahub-kafka-setup
     # tag: "v0.11.0" # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -197,7 +195,6 @@ kafkaSetupJob:
 mysqlSetupJob:
   enabled: true
   image:
-    registry: docker.io
     repository: acryldata/datahub-mysql-setup
     # tag: "v0.11.0" # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -237,7 +234,6 @@ mysqlSetupJob:
 postgresqlSetupJob:
   enabled: false
   image:
-    registry: docker.io
     repository: acryldata/datahub-postgres-setup
     # tag: "v0.11.0" # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -282,7 +278,6 @@ postgresqlSetupJob:
 datahubUpgrade:
   enabled: true
   image:
-    registry: docker.io
     repository: acryldata/datahub-upgrade
     # tag: "v0.11.0"  # defaults to .global.datahub.version
   batchSize: 1000
@@ -363,7 +358,6 @@ datahubUpgrade:
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
 datahubSystemUpdate:
   image:
-    registry: docker.io
     repository: acryldata/datahub-upgrade
     # tag:
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -419,7 +413,7 @@ global:
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
-  imageRegistry: ""
+  imageRegistry: "docker.io"
 
   elasticsearch:
     host: "elasticsearch-master"

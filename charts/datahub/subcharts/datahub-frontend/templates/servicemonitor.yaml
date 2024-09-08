@@ -16,7 +16,8 @@ spec:
   endpoints:
   - port: {{ .Values.global.datahub.monitoring.portName }}
     relabelings:
-    - separator: /
+    - action: replace
+      separator: /
       sourceLabels:
       - namespace
       - pod

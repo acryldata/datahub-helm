@@ -68,7 +68,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.1.0"
+    tag: "v0.1.1"
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -694,7 +694,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.14.0.2
+    version: v0.14.1rc2
     gms:
       protocol: "http"
       port: "8080"
@@ -732,7 +732,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.14.0"
+      defaultCliVersion: "0.14.0.5"
 
     metadata_service_authentication:
       enabled: true

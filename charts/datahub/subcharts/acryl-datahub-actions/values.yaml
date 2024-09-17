@@ -87,6 +87,8 @@ debug:
   enabled: false
 
 global:
+  imageRegistry: "docker.io"
+
   kafka:
     bootstrap:
       server: "broker:9092"

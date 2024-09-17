@@ -68,7 +68,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.0.15"
+    tag: "v0.1.0"
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -413,6 +413,7 @@ global:
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
   datahub_standalone_consumers_enabled: false
+  imageRegistry: "docker.io"
 
   elasticsearch:
     host: "elasticsearch-master"
@@ -593,6 +594,26 @@ global:
       metadata_change_log_timeseries_topic_name: "MetadataChangeLog_Timeseries_v1"
       platform_event_topic_name: "PlatformEvent_v1"
       datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
+    metadataChangeLog:
+      hooks:
+        siblings:
+          enabled: true
+          consumerGroupSuffix: ''
+        updateIndices:
+          enabled: true
+          consumerGroupSuffix: ''
+        ingestionScheduler:
+          enabled: true
+          consumerGroupSuffix: ''
+        incidents:
+          enabled: true
+          consumerGroupSuffix: ''
+        entityChangeEvents:
+          enabled: true
+          consumerGroupSuffix: ''
+        forms:
+          enabled: true
+          consumerGroupSuffix: ''
     maxMessageBytes: "5242880"  # 5MB
     producer:
       compressionType: none
@@ -673,7 +694,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.13.2
+    version: v0.14.0.2
     gms:
       protocol: "http"
       port: "8080"
@@ -711,7 +732,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.13.1.2"
+      defaultCliVersion: "0.14.0"
 
     metadata_service_authentication:
       enabled: true

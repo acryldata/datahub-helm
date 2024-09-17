@@ -142,5 +142,7 @@ crons: {}
     #suspend: true
 
 global:
+  imageRegistry: "docker.io"
+
   datahub:
     version: head

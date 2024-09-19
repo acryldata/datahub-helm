@@ -74,6 +74,15 @@ Return the appropriate apiVersion for cronjob.
 {{- end -}}
 
 {{/*
+Create image registry, name and tag for a datahub component
+*/}}
+{{- define "datahub.image" -}}
+{{- $registry := .image.registry | default .imageRegistry -}}
+{{ $registry }}/{{ .image.repository }}:{{ required "Global or specific tag is required" (.image.tag | default .version) -}}
+{{- end -}}
+
+
+{{/*
 Renders a value that contains template perhaps with scope if the scope is present.
 Usage:
 {{ include "common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $ ) }}

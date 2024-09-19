@@ -49,7 +49,7 @@ spec:
       {{- end }}
       containers:
         - name: mysql-setup-job
-          image: "{{ .Values.mysqlSetupJob.image.repository }}:{{ required "Global or specific tag is required" ( .Values.mysqlSetupJob.image.tag | default .Values.global.datahub.version) }}"
+          image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" .Values.mysqlSetupJob.image) }}
           imagePullPolicy: {{ .Values.mysqlSetupJob.image.pullPolicy | default "IfNotPresent" }}
           {{- if .Values.mysqlSetupJob.image.command }}
           command: {{ .Values.mysqlSetupJob.image.command | toRawJson }}

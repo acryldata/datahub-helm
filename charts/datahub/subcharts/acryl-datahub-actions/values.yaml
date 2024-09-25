@@ -5,7 +5,7 @@ replicaCount: 1
 
 image:
   repository: acryldata/datahub-actions
-  tag: "v0.0.1"
+  tag: "v0.1.0"
   pullPolicy: IfNotPresent
   # Override the image's command & args with a new one.
   # This may be necessary for custom startup or shutdown behaviors
@@ -26,6 +26,10 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name:
+
+serviceMonitor:
+  create: false
+  extraLabels: {}
 
 podAnnotations: {}
 
@@ -98,6 +102,9 @@ global:
   datahub:
     gms:
       port: "8080"
+    monitoring:
+      enablePrometheus: true
+      portName: "jmx"
     metadata_service_authentication:
       enabled: true
       systemClientId: "__datahub_system"

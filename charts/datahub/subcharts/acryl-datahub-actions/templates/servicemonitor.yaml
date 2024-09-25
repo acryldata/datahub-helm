@@ -1,0 +1,28 @@
+{{- if and .Values.serviceMonitor.create .Values.global.datahub.monitoring.enablePrometheus -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "acryl-datahub-actions.fullname" . }}
+  labels:
+    {{- include "acryl-datahub-actions.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.serviceMonitor.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- with .Values.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  endpoints:
+  - port: {{ .Values.global.datahub.monitoring.portName }}
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: acryl-datahub-actions
+{{- end -}}

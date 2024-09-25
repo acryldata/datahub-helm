@@ -70,6 +70,11 @@ spec:
             - name: http
               containerPort: 9093
               protocol: TCP
+          {{- if or .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: {{ .Values.global.datahub.monitoring.portName }}
+              containerPort: 8000
+              protocol: TCP
+          {{- end }}
           {{- if .Values.image.command }}
           command: {{ .Values.image.command | toRawJson }}
           {{- end }}
@@ -150,6 +155,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+            {{- if or .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: DATAHUB_ACTIONS_MONITORING_ENABLED
+              value: "true"
             {{- end }}
           {{- if .Values.extraEnvs }}
             {{ toYaml .Values.extraEnvs | nindent 12 }}

@@ -41,8 +41,10 @@ spec:
         {{- toYaml . | nindent 8}}
       {{- end }}
       restartPolicy: Never
+      {{- if .Values.global.enableSecurityContext }}
       securityContext:
         {{- toYaml .Values.elasticsearchSetupJob.podSecurityContext | nindent 8 }}
+      {{- end }}
       {{- with .Values.elasticsearchSetupJob.extraInitContainers }}
       initContainers:
         {{- toYaml . | nindent 8 }}
@@ -92,8 +94,10 @@ spec:
           {{- with .Values.elasticsearchSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.global.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.elasticsearchSetupJob.securityContext | nindent 12 }}
+          {{- end }}
           volumeMounts:
           {{- with .Values.elasticsearchSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

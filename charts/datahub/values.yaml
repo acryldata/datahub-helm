@@ -409,6 +409,9 @@ datahubSystemUpdate:
   extraInitContainers: []
 
 global:
+  # Openshift needs to take over the SecurityContext
+  # With this option we can disable it in the charts to leave to Openshift
+  enableSecurityContext: true
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true

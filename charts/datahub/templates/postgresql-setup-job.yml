@@ -41,8 +41,10 @@ spec:
         {{- toYaml . | nindent 8}}
       {{- end }}
       restartPolicy: Never
+      {{- if .Values.global.enableSecurityContext }}
       securityContext:
         {{- toYaml .Values.postgresqlSetupJob.podSecurityContext | nindent 8 }}
+      {{- end }}
       {{- with .Values.postgresqlSetupJob.extraInitContainers }}
       initContainers:
         {{- toYaml . | nindent 8 }}
@@ -85,8 +87,10 @@ spec:
           {{- with .Values.postgresqlSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.global.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.postgresqlSetupJob.securityContext | nindent 12 }}
+          {{- end }}
           volumeMounts:
           {{- with .Values.postgresqlSetupJob.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}

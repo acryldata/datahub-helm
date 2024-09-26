@@ -33,8 +33,10 @@ spec:
       serviceAccountName: {{ . }}
     {{- end }}
       restartPolicy: Never
+      {{- if .Values.global.enableSecurityContext }}
       securityContext:
         {{- toYaml .Values.kafkaSetupJob.podSecurityContext | nindent 8 }}
+      {{- end }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -129,8 +131,10 @@ spec:
           {{- with .Values.kafkaSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.global.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.kafkaSetupJob.securityContext | nindent 12 }}
+          {{- end }}
           volumeMounts:
           {{- if .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir

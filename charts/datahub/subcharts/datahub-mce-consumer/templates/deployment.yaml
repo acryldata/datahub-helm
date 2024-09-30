@@ -234,6 +234,9 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                   key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- else }}
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "false"
             {{- end }}
             {{- if .Values.global.springKafkaConfigurationOverrides }}
             {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
@@ -277,7 +280,7 @@ spec:
             {{- end }}
             {{- if .versioned.enabled }}
             - name: MCP_VERSIONED_THROTTLE_ENABLED
-              value: 'true'
+              value: "true"
             {{- with .versioned.threshold }}
             - name: MCP_VERSIONED_THRESHOLD
               value: {{ . | quote }}
@@ -301,7 +304,7 @@ spec:
             {{- end }}
             {{- if .timeseries.enabled }}
             - name: MCP_TIMESERIES_THROTTLE_ENABLED
-              value: 'true'
+              value: "true"
             {{- with .timeseries.threshold }}
             - name: MCP_TIMESERIES_THRESHOLD
               value: {{ . | quote }}

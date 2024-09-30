@@ -77,7 +77,7 @@ spec:
                 - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
               {{- end }}
               env:
-                {{- include "datahub.upgrade.env" . | nindent 16}}
+                {{- include "datahub.upgrade.env" . | nindent 16 }}
                 {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
                 - name: DATAHUB_SYSTEM_CLIENT_ID
                   value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
@@ -101,7 +101,7 @@ spec:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               resources:
-                {{- toYaml .Values.datahubUpgrade.restoreIndices.resources | nindent 16}}
+                {{- toYaml .Values.datahubUpgrade.restoreIndices.resources | nindent 16 }}
             {{- with .Values.datahubUpgrade.restoreIndices.extraSidecars }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

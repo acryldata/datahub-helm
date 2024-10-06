@@ -296,6 +296,16 @@ spec:
             - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
               value: {{ . | quote }}
             {{- end }}
+            {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
+            {{- $result := dict }}
+            {{- $result = merge $result $v.values }}
+            {{- range $v.values_generated_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            - name: {{ $v.values_env }}
+              value: {{ $result | toJson | quote }}
+            {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

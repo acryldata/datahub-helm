@@ -144,3 +144,63 @@ Return the env variables for upgrade jobs
   value: {{ .datahub_upgrade_history_topic_name }}
 {{- end }}
 {{- end -}}
+
+{{- define "deepMerge" -}}
+{{- $dst := deepCopy .dst -}}
+{{- range $key, $srcValue := .src -}}
+  {{- if hasKey $dst $key -}}
+    {{- $dstValue := index $dst $key -}}
+    {{- if and (kindIs "map" $dstValue) (kindIs "map" $srcValue) -}}
+      {{- $newDst := dict "dst" $dstValue "src" $srcValue -}}
+      {{- $mergedValue := include "deepMerge" $newDst | fromYaml -}}
+      {{- $_ := set $dst $key $mergedValue -}}
+    {{- else -}}
+      {{- $_ := set $dst $key $srcValue -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $_ := set $dst $key $srcValue -}}
+  {{- end -}}
+{{- end -}}
+{{- $dst | toYaml -}}
+{{- end -}}
+
+{{- define "randomHourInRange" -}}
+{{- $start := index . 0 -}}
+{{- $end := index . 1 -}}
+
+{{- if eq $start $end -}}
+  {{- $start -}}
+{{- else -}}
+  {{- $range := int64 0 -}}
+  {{- if lt $end $start -}}
+    {{- /* Range spans midnight */ -}}
+    {{- $range = add (sub (int64 24) $start) $end -}}
+  {{- else -}}
+    {{- $range = sub $end $start -}}
+  {{- end -}}
+  {{- $seed := now | unixEpoch -}}
+  {{- $randomOffset := mod $seed (add $range 1) -}}
+  {{- mod (add $start $randomOffset) 24 -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+datahubGC cron daily custom scheduling
+*/}}
+{{- define "datahub.systemUpdate.datahubGC.dailyCronWindow" -}}
+{{- if .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.enabled -}}
+schedule:
+  interval: {{ printf "%d %s * * * " (mod (randNumeric 2) 60) (include "randomHourInRange" (list .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.startHour .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.endHour)) }}
+{{- else }}
+schedule:
+    interval: {{ .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values.schedule.interval | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
+datahubGC timezone
+*/}}
+{{- define "datahub.systemUpdate.datahubGC.timezone" -}}
+schedule:
+  timezone: {{ .Values.global.datahub.timezone | default .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values.schedule.timezone | quote }}
+{{- end -}}

@@ -84,7 +84,7 @@ neo4j:
     acceptLicenseAgreement: "yes"
     defaultDatabase: "graph.db"
     password: "datahub"
-    # For better security, add password to neo4j-secrets k8s secret with  neo4j-username neo4j-passwordn and NEO4J_AUTH and uncomment below
+    # For better security, add password to neo4j-secrets k8s secret with: neo4j-username, neo4j-password, and NEO4J_AUTH then uncomment below
     # NEO4J_AUTH: should be composed like so: {Username}/{Password}
     # passwordFromSecret: neo4j-secrets
 

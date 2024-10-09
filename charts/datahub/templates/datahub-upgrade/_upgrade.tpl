@@ -181,7 +181,7 @@ Return the env variables for upgrade jobs
   {{- /* Generate a seed using a combination of methods */ -}}
   {{- $randomString := randAlphaNum 32 -}}
   {{- $checksum := adler32sum $randomString -}}
-  {{- $currentTime := now | unixNano -}}
+  {{- $currentTime := now | unixEpoch -}}
   {{- $seed := add (mod (mul $checksum 65537) 1000000) (mod $currentTime 1000000) -}}
   {{- $randomOffset := mod $seed (add $range 1) -}}
   {{- mod (add $start $randomOffset) 24 -}}

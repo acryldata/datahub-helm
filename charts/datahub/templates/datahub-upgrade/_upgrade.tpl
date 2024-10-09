@@ -178,7 +178,11 @@ Return the env variables for upgrade jobs
   {{- else -}}
     {{- $range = sub $end $start -}}
   {{- end -}}
-  {{- $seed := now | unixEpoch -}}
+  {{- /* Generate a seed using a combination of methods */ -}}
+  {{- $randomString := randAlphaNum 32 -}}
+  {{- $checksum := adler32sum $randomString -}}
+  {{- $currentTime := now | unixEpoch -}}
+  {{- $seed := add (mod (mul $checksum 65537) 1000000) (mod $currentTime 1000000) -}}
   {{- $randomOffset := mod $seed (add $range 1) -}}
   {{- mod (add $start $randomOffset) 24 -}}
 {{- end -}}
@@ -193,7 +197,7 @@ schedule:
   interval: {{ printf "%d %s * * * " (mod (randNumeric 2) 60) (include "randomHourInRange" (list .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.startHour .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.endHour)) }}
 {{- else }}
 schedule:
-    interval: {{ .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values.schedule.interval | quote }}
+  interval: {{ .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values.schedule.interval | quote }}
 {{- end }}
 {{- end -}}
 

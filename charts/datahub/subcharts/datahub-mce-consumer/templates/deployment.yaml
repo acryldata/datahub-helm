@@ -278,6 +278,10 @@ spec:
             - name: MCP_THROTTLE_UPDATE_INTERVAL_MS
               value: {{ . | quote }}
             {{- end }}
+            {{- with .mceConsumer.enabled }}
+            - name: MCP_MCE_CONSUMER_THROTTLE_ENABLED
+              value: {{ . | quote }}
+            {{- end }}
             {{- if .versioned.enabled }}
             - name: MCP_VERSIONED_THROTTLE_ENABLED
               value: "true"

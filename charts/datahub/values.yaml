@@ -811,6 +811,10 @@ global:
     mcp:
       throttle:
         # updateIntervalMs: 60000
+        mceConsumer:  # v0.14.2+
+          enabled: false
+        apiRequests:  # v0.14.2+
+          enabled: false
         ## Versioned MCL topic
         versioned:
           ## Whether to throttle MCP processing based on MCL backlog

@@ -417,13 +417,13 @@ datahubSystemUpdate:
           timezone: "UTC"
           # overridden if dynamic.dailyCronWindow.enable is true
           interval: "0 1 * * *"
-        cleanup_expired_tokens: false
-        truncate_indices: true
+        cleanup_expired_tokens: "false"
+        truncate_indices: "true"
         dataprocess_cleanup:
           retention_days: 30
-          delete_empty_data_jobs: true
-          delete_empty_data_flows: true
-          hard_delete_entities: false
+          delete_empty_data_jobs: "true"
+          delete_empty_data_flows: "true"
+          hard_delete_entities: "false"
           keep_last_n: 10
         soft_deleted_entities_cleanup:
           retention_days: 30

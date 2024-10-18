@@ -42,8 +42,10 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       serviceAccountName: {{ include "datahub-mce-consumer.serviceAccountName" . }}
+      {{- if .Values.global.enableSecurityContext }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
       volumes:
         {{- if .Values.global.credentialsAndCertsSecrets }}
         - name: datahub-certs-dir
@@ -63,8 +65,10 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- if .Values.global.enableSecurityContext }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
           image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" .Values.image) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.image.command }}

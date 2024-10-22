@@ -78,6 +78,7 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  pathType: ImplementationSpecific
 
 auth:
   sessionTTLHours: "24"

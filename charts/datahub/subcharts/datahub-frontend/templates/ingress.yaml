@@ -2,6 +2,7 @@
 {{- $fullName := include "datahub-frontend.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $ingressApiVersion := include "datahub-frontend.ingress.apiVersion" . -}}
+{{- $ingressPathType := .Values.ingress.pathType -}}
 apiVersion: {{ template "datahub-frontend.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -37,7 +38,7 @@ spec:
         {{- range .redirectPaths }}
           - path: {{ .path }}
             {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
-            pathType: ImplementationSpecific
+            pathType: {{ $ingressPathType }}
             backend:
               service:
                 name: {{ .name }}
@@ -56,7 +57,7 @@ spec:
         {{- range .paths }}
           - path: {{ . }}
             {{- if eq $ingressApiVersion "networking.k8s.io/v1" }}
-            pathType: ImplementationSpecific
+            pathType: {{ $ingressPathType }}
             backend:
               service:
                 name: {{ $fullName }}

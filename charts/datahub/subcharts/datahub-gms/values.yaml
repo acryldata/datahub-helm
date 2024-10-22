@@ -76,6 +76,7 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  pathType: ImplementationSpecific
 
 # Extra labels for Deployment
 extraLabels: {}

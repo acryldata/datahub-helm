@@ -104,8 +104,6 @@ spec:
             - name: BACKFILL_BROWSE_PATHS_V2
               value: {{ .Values.global.datahub.search_and_browse.backfill_browse_v2 | quote }}
             {{- if .Values.global.datahub.systemUpdate.enabled }}
-            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
-              value: {{ printf "%s-%s" .Release.Name "duhe-consumer-job-client-mcp" }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- end }}
@@ -268,6 +266,16 @@ spec:
               value: {{ .metadata_change_log_timeseries_topic_name }}
             - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
               value: {{ .datahub_upgrade_history_topic_name }}
+            {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.enabled }}
+            - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
+              value: {{ index .Values.global.kafka.consumer_groups.datahub_upgrade_history_kafka_consumer_group_id "mce-consumer" | default (printf "%s-%s" .Release.Name "duhe-consumer-job-client-mcp")  }}
+            {{- end }}
+            {{- with .Values.global.kafka.consumer_groups }}
+            - name: METADATA_CHANGE_EVENT_KAFKA_CONSUMER_GROUP_ID
+              value: {{ .metadata_change_event_kafka_consumer_group_id }}
+            - name: METADATA_CHANGE_PROPOSAL_KAFKA_CONSUMER_GROUP_ID
+              value: {{ .metadata_change_proposal_kafka_consumer_group_id }}
             {{- end }}
             - name: ALWAYS_EMIT_CHANGE_LOG
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}

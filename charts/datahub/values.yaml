@@ -2,6 +2,8 @@
 # Copy this chart and change configuration as needed.
 datahub-gms:
   enabled: true
+  hpa:
+    enabled: true
   image:
     repository: acryldata/datahub-gms
     # tag: "v0.11.0 # defaults to .global.datahub.version
@@ -446,7 +448,7 @@ global:
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
-  datahub_standalone_consumers_enabled: false
+  datahub_standalone_consumers_enabled: true
   imageRegistry: "docker.io"
 
   elasticsearch:

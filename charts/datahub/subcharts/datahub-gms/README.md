@@ -2,7 +2,7 @@ datahub-gms
 ===========
 A Helm chart for DataHub's datahub-gms component
 
-Current chart version is `0.2.0`
+Current chart version is `0.2.176`
 
 ## Chart Values
 

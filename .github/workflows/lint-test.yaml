@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 7onn/autoscale-gms
     paths-ignore:
       - '**.md'
       - 'LICENSE'

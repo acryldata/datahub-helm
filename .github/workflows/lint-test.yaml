@@ -1,11 +1,9 @@
 name: Lint and Test Charts
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
-      - 7onn/autoscale-gms
     paths-ignore:
       - '**.md'
       - 'LICENSE'

@@ -408,10 +408,12 @@ datahubSystemUpdate:
         - "datahub.systemUpdate.datahubGC.timezone"
       # Environment variable containing the json value for the template mcp
       values_env: DATAHUB_GC_BOOTSTRAP_VALUES
+      revision_env: DATAHUB_GC_BOOTSTRAP_REVISION
       # Base values for the template mcp
       values:
         ingestion:
           name: datahub-gc
+          version: "0.14.1.7rc2"
         schedule:
           # overridden by global.datahub.timezone
           timezone: "UTC"

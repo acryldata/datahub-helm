@@ -142,6 +142,10 @@ spec:
             {{- end }}
             - name: {{ $v.values_env }}
               value: {{ $result | toJson | quote }}
+            {{- with $v.revision_env }}
+            - name: {{ . }}
+              value: '{"version":"{{ $.Chart.Version }}-{{ $.Release.Revision }}"}'
+            {{- end }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
             {{- toYaml . | nindent 12 }}
@@ -313,6 +317,10 @@ spec:
             {{- end }}
             - name: {{ $v.values_env }}
               value: {{ $result | toJson | quote }}
+            {{- with $v.revision_env }}
+            - name: {{ . }}
+              value: '{"version":"{{ $.Chart.Version }}-{{ $.Release.Revision }}"}'
+            {{- end }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
             {{- toYaml . | nindent 12 }}

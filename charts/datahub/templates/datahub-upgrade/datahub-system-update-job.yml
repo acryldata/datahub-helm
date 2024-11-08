@@ -135,7 +135,14 @@ spec:
               value: {{ . | quote }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
-            {{- $result := deepCopy $v.values }}
+            {{- if ne $k "default" }}
+            {{- $result := dict }}
+            {{- range $.Values.datahubSystemUpdate.bootstrapMCPs.default.value_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            {{- $valuesCopy := deepCopy $v.values }}
+            {{- $result = include "deepMerge" (dict "dst" $result "src" $valuesCopy) | fromYaml }}
             {{- range $v.values_generated_configs }}
               {{- $funcOutput := include . $ | fromYaml }}
               {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
@@ -145,6 +152,7 @@ spec:
             {{- with $v.revision_env }}
             - name: {{ . }}
               value: '{"version":"{{ $.Chart.Version }}-{{ $.Release.Revision }}"}'
+            {{- end }}
             {{- end }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
@@ -310,7 +318,14 @@ spec:
               value: {{ . | quote }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
-            {{- $result := deepCopy $v.values }}
+            {{- if ne $k "default" }}
+            {{- $result := dict }}
+            {{- range $.Values.datahubSystemUpdate.bootstrapMCPs.default.value_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            {{- $valuesCopy := deepCopy $v.values }}
+            {{- $result = include "deepMerge" (dict "dst" $result "src" $valuesCopy) | fromYaml }}
             {{- range $v.values_generated_configs }}
               {{- $funcOutput := include . $ | fromYaml }}
               {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
@@ -320,6 +335,7 @@ spec:
             {{- with $v.revision_env }}
             - name: {{ . }}
               value: '{"version":"{{ $.Chart.Version }}-{{ $.Release.Revision }}"}'
+            {{- end }}
             {{- end }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}

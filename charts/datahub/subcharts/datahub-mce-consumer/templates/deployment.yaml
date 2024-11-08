@@ -272,6 +272,8 @@ spec:
               value: {{ index .Values.global.kafka.consumer_groups.datahub_upgrade_history_kafka_consumer_group_id "mce-consumer" | default (printf "%s-%s" .Release.Name "duhe-consumer-job-client-mcp")  }}
             {{- end }}
             {{- with .Values.global.kafka.consumer_groups }}
+            - name: METADATA_CHANGE_LOG_KAFKA_CONSUMER_GROUP_ID
+              value: {{ .metadata_change_log_kafka_consumer_group_id }}
             - name: METADATA_CHANGE_EVENT_KAFKA_CONSUMER_GROUP_ID
               value: {{ .metadata_change_event_kafka_consumer_group_id }}
             - name: METADATA_CHANGE_PROPOSAL_KAFKA_CONSUMER_GROUP_ID

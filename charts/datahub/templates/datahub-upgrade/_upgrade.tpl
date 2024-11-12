@@ -192,19 +192,27 @@ Return the env variables for upgrade jobs
 datahubGC cron daily custom scheduling
 */}}
 {{- define "datahub.systemUpdate.datahubGC.dailyCronWindow" -}}
-{{- if .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.enabled -}}
-schedule:
-  interval: {{ printf "%d %s * * * " (mod (randNumeric 2) 60) (include "randomHourInRange" (list .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.startHour .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.endHour)) }}
-{{- else }}
+{{- if hasKey (index .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values "schedule" | default dict) "interval" -}}
 schedule:
   interval: {{ .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values.schedule.interval | quote }}
+{{- else }}
+schedule:
+  interval: {{ printf "%d %s * * * " (mod (randNumeric 2) 60) (include "randomHourInRange" (list .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.startHour .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.dailyCronWindow.endHour)) }}
 {{- end }}
 {{- end -}}
 
 {{/*
-datahubGC timezone
+  timezone
 */}}
-{{- define "datahub.systemUpdate.datahubGC.timezone" -}}
+{{- define "datahub.bootstrapMCPs.default.schedule.timezone" -}}
 schedule:
-  timezone: {{ .Values.global.datahub.timezone | default .Values.datahubSystemUpdate.bootstrapMCPs.datahubGC.values.schedule.timezone | quote }}
+  timezone: {{ .Values.global.datahub.timezone | quote }}
+{{- end -}}
+
+{{/*
+  default cli version
+*/}}
+{{- define "datahub.bootstrapMCPs.default.ingestion.version" -}}
+ingestion:
+  version: {{ .Values.global.datahub.managed_ingestion.defaultCliVersion | quote }}
 {{- end -}}

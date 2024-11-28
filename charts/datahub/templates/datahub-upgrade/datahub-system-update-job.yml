@@ -135,13 +135,25 @@ spec:
               value: {{ . | quote }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
-            {{- $result := deepCopy $v.values }}
+            {{- if ne $k "default" }}
+            {{- $result := dict }}
+            {{- range $.Values.datahubSystemUpdate.bootstrapMCPs.default.value_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            {{- $valuesCopy := deepCopy $v.values }}
+            {{- $result = include "deepMerge" (dict "dst" $result "src" $valuesCopy) | fromYaml }}
             {{- range $v.values_generated_configs }}
               {{- $funcOutput := include . $ | fromYaml }}
               {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
             {{- end }}
             - name: {{ $v.values_env }}
               value: {{ $result | toJson | quote }}
+            {{- with $v.revision_env }}
+            - name: {{ . }}
+              value: '{"version":"{{ $.Values.global.datahub.version }}-{{ $result | toJson | sha256sum | trunc 7 }}"}'
+            {{- end }}
+            {{- end }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
             {{- toYaml . | nindent 12 }}
@@ -306,13 +318,25 @@ spec:
               value: {{ . | quote }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
-            {{- $result := deepCopy $v.values }}
+            {{- if ne $k "default" }}
+            {{- $result := dict }}
+            {{- range $.Values.datahubSystemUpdate.bootstrapMCPs.default.value_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            {{- $valuesCopy := deepCopy $v.values }}
+            {{- $result = include "deepMerge" (dict "dst" $result "src" $valuesCopy) | fromYaml }}
             {{- range $v.values_generated_configs }}
               {{- $funcOutput := include . $ | fromYaml }}
               {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
             {{- end }}
             - name: {{ $v.values_env }}
               value: {{ $result | toJson | quote }}
+            {{- with $v.revision_env }}
+            - name: {{ . }}
+              value: '{"version":"{{ $.Values.global.datahub.version }}-{{ $result | toJson | sha256sum | trunc 7 }}"}'
+            {{- end }}
+            {{- end }}
             {{- end }}
           {{- with .Values.datahubSystemUpdate.extraEnvs }}
             {{- toYaml . | nindent 12 }}

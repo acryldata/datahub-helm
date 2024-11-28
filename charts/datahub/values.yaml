@@ -395,30 +395,36 @@ datahubSystemUpdate:
       # args: []
   # Depends on v0.14.2 or greater
   bootstrapMCPs:
+    default:
+      value_configs:
+        - "datahub.bootstrapMCPs.default.ingestion.version"
+        - "datahub.bootstrapMCPs.default.schedule.timezone"
     datahubGC:
       # For information about this recipe https://datahubproject.io/docs/0.14.0/generated/ingestion/sources/datahubgc/#install-the-plugin
-      # Overrides values.schedule.interval below with a jitter window using a generated config
+      # Generate values.schedule.interval with a jitter window using a generated config
       dailyCronWindow:
-        enabled: true
         startHour: 18
         endHour: 5
       # dynamic overrides, the output to each function is deepMerged with values
       values_generated_configs:
         - "datahub.systemUpdate.datahubGC.dailyCronWindow"
-        - "datahub.systemUpdate.datahubGC.timezone"
       # Environment variable containing the json value for the template mcp
       values_env: DATAHUB_GC_BOOTSTRAP_VALUES
+      revision_env: DATAHUB_GC_BOOTSTRAP_REVISION
       # Base values for the template mcp
       values:
         ingestion:
           name: datahub-gc
-        schedule:
-          # overridden by global.datahub.timezone
-          timezone: "UTC"
-          # overridden if dynamic.dailyCronWindow.enable is true
-          interval: "0 1 * * *"
+          # # override global.datahub.managed_ingestion.defaultCliVersion
+          # version: "0.14.1.7rc2"
+        # schedule:
+          # # override global.datahub.timezone
+          # timezone: "UTC"
+          # # override dailyCronWindow
+          # interval: "0 1 * * *"
         cleanup_expired_tokens: "false"
         truncate_indices: "true"
+        truncate_indices_retention_days: 30
         dataprocess_cleanup:
           retention_days: 30
           delete_empty_data_jobs: "true"
@@ -813,6 +819,9 @@ global:
 
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true
+
+    ## Enable stricter URN validation logic
+    strictUrnValidation: false
 
     ## Values specific to the unified search and browse feature.
     search_and_browse:

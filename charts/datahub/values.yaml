@@ -415,8 +415,8 @@ datahubSystemUpdate:
       values:
         ingestion:
           name: datahub-gc
-          # override global.datahub.managed_ingestion.defaultCliVersion
-          version: "0.14.1.7rc2"
+          # # override global.datahub.managed_ingestion.defaultCliVersion
+          # version: "0.14.1.7rc2"
         # schedule:
           # # override global.datahub.timezone
           # timezone: "UTC"
@@ -424,6 +424,7 @@ datahubSystemUpdate:
           # interval: "0 1 * * *"
         cleanup_expired_tokens: "false"
         truncate_indices: "true"
+        truncate_indices_retention_days: 30
         dataprocess_cleanup:
           retention_days: 30
           delete_empty_data_jobs: "true"
@@ -818,6 +819,9 @@ global:
 
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true
+
+    ## Enable stricter URN validation logic
+    strictUrnValidation: false
 
     ## Values specific to the unified search and browse feature.
     search_and_browse:

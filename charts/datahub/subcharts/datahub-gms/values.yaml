@@ -4,6 +4,15 @@
 
 replicaCount: 1
 
+hpa:
+  # Can only be enabled if global.datahub_standalone_consumers_enabled
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  behavior: {}
+  targetCPUUtilizationPercentage: 100
+  targetMemoryUtilizationPercentage:
+
 revisionHistoryLimit: 10
 
 image:
@@ -256,6 +265,9 @@ global:
     ## Enables diff mode for graph writes, uses a different code path that produces a diff from previous to next to write relationships instead of wholesale deleting edges and reading
     enableGraphDiffMode: true
 
+    ## Enable stricter URN validation logic
+    strictUrnValidation: false
+
     cache:
       search:
         ## Enable general search caching
@@ -274,6 +286,11 @@ global:
           enabled: false
           ttlSeconds: 86400
           lightningThreshold: 300
+
+    metadataChangeProposal:
+      consumer:
+        batch:
+          enabled: false
 
   hostAliases:
     - ip: "192.168.0.104"

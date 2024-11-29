@@ -341,6 +341,12 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
+            {{- with .Values.global.datahub.strictUrnValidation }}
+            - name: STRICT_URN_VALIDATION_ENABLED
+              value: "{{ . }}"
+            {{- end }}
+            - name: MCP_CONSUMER_BATCH_ENABLED
+              value: {{ .Values.global.datahub.metadataChangeProposal.consumer.batch.enabled | quote }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

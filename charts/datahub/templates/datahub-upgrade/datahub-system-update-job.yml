@@ -151,7 +151,7 @@ spec:
               value: {{ $result | toJson | quote }}
             {{- with $v.revision_env }}
             - name: {{ . }}
-              value: '{"version":"{{ $.Chart.Version }}-{{ $.Release.Revision }}"}'
+              value: '{"version":"{{ $.Values.global.datahub.version }}-{{ $result | toJson | sha256sum | trunc 7 }}"}'
             {{- end }}
             {{- end }}
             {{- end }}
@@ -334,7 +334,7 @@ spec:
               value: {{ $result | toJson | quote }}
             {{- with $v.revision_env }}
             - name: {{ . }}
-              value: '{"version":"{{ $.Chart.Version }}-{{ $.Release.Revision }}"}'
+              value: '{"version":"{{ $.Values.global.datahub.version }}-{{ $result | toJson | sha256sum | trunc 7 }}"}'
             {{- end }}
             {{- end }}
             {{- end }}

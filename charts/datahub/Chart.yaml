@@ -22,7 +22,7 @@ dependencies:
     repository: file://./subcharts/datahub-mae-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-mce-consumer
-    version: 0.2.167
+    version: 0.2.168
     repository: file://./subcharts/datahub-mce-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-ingestion-cron

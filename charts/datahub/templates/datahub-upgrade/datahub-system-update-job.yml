@@ -73,6 +73,8 @@ spec:
           {{- end }}
           {{- end }}
           env:
+            - name: ENTITY_VERSIONING_ENABLED
+              value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12 }}
@@ -261,6 +263,8 @@ spec:
             {{- include "datahub.upgrade.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            - name: ENTITY_VERSIONING_ENABLED
+              value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_SYSTEM_UPDATE
               value: "true"

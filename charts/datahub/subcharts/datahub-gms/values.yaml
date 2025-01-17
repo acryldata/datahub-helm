@@ -179,7 +179,11 @@ global:
     bootstrap:
       server: "broker:9092"
     schemaregistry:
-      url: "http://schema-registry:8081"
+      # GMS Implementation - `url` configured based on component context
+      type: INTERNAL
+      # Confluent Kafka Implementation
+      # type: KAFKA
+      # url: "http://schema-registry:8081"
     ## Kafka producer and consumer settings
     #producer:
     #  compressionType: snappy

@@ -9768,6 +9768,51 @@ entries:
     version: 0.1.2
   datahub-prerequisites:
   - apiVersion: v2
+    created: "2025-01-17T15:42:40.387260716Z"
+    dependencies:
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: 7.17.3
+    - condition: opensearch.enabled
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 2.18.0
+    - condition: neo4j.enabled
+      name: neo4j
+      repository: https://helm.neo4j.com/neo4j
+      version: 5.11.0
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.4.9
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 11.2.6
+    - condition: gcloud-sqlproxy.enabled
+      name: gcloud-sqlproxy
+      repository: https://charts.rimusz.net
+      version: 0.24.1
+    - condition: cp-helm-charts.enabled
+      name: cp-helm-charts
+      repository: https://confluentinc.github.io/cp-helm-charts/
+      version: 0.6.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 26.11.2
+    description: A Helm chart for packages that Datahub depends on
+    digest: ba7517ef33d88448939ffcf14dcd9f0e67fa1aa6bc1eded0520ba5418045e169
+    maintainers:
+    - email: datahub@acryl.io
+      name: DataHub
+    name: datahub-prerequisites
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.1.15/datahub-prerequisites-0.1.15.tgz
+    version: 0.1.15
+  - apiVersion: v2
     created: "2025-01-17T15:06:23.129310922Z"
     dependencies:
     - condition: elasticsearch.enabled
@@ -10979,4 +11024,4 @@ entries:
     urls:
     - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.1/datahub-prerequisites-0.0.1.tgz
     version: 0.0.1
-generated: "2025-01-17T15:06:23.131736351Z"
+generated: "2025-01-17T15:42:40.38962114Z"

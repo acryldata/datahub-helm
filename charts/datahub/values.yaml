@@ -747,7 +747,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.14.1
+    version: v0.15.0
     gms:
       protocol: "http"
       port: "8080"
@@ -788,7 +788,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.14.0.5"
+      defaultCliVersion: "0.15.0.2rc6"
 
     metadata_service_authentication:
       enabled: true

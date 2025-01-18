@@ -747,7 +747,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.14.1
+    version: v0.15.0
     gms:
       protocol: "http"
       port: "8080"
@@ -788,7 +788,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.14.0.5"
+      defaultCliVersion: "0.15.0.1"
 
     metadata_service_authentication:
       enabled: true
@@ -828,6 +828,13 @@ global:
       show_search_v2: true  # If on, show the new search filters experience as of v0.10.5
       show_browse_v2: true  # If on, show the new browse experience as of v0.10.5
       backfill_browse_v2: true  # If on, run the backfill upgrade job that generates default browse paths for relevant entities
+
+    ## v0.15.0+
+    metadataChangeProposal:
+      consumer:
+        batch:
+          enabled: false
+
 
     ## v0.13.4+
     mcp:

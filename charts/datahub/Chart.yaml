@@ -4,13 +4,13 @@ description: A Helm chart for DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.4.39
+version: 0.5.1
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: 0.14.1
+appVersion: 0.15.0
 dependencies:
   - name: datahub-gms
-    version: 0.2.176
+    version: 0.2.177
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend

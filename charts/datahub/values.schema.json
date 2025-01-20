@@ -1785,6 +1785,9 @@
                   "properties": {},
                   "required": []
                 },
+                "datahub_actions_doc_propagation_consumer_group_id": {
+                  "type": "string"
+                },
                 "datahub_actions_ingestion_executor_consumer_group_id": {
                   "type": "string"
                 },
@@ -1812,6 +1815,7 @@
               },
               "required": [
                 "datahub_upgrade_history_kafka_consumer_group_id",
+                "datahub_actions_doc_propagation_consumer_group_id",
                 "datahub_actions_ingestion_executor_consumer_group_id",
                 "datahub_actions_slack_consumer_group_id",
                 "datahub_actions_teams_consumer_group_id",

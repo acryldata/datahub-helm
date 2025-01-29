@@ -242,6 +242,11 @@ spec:
               value: https://login.microsoftonline.com/{{ .azureTenantId }}/v2.0/.well-known/openid-configuration
             - name: AUTH_OIDC_SCOPE
               value: {{ .scope | default "openid profile email" }}
+            {{- else if eq .provider "other" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: {{ .discoveryUri }}
+            - name: AUTH_OIDC_SCOPE
+              value: {{ .scope | default "openid profile email" }}
             {{- else }}
             {{- fail (printf "unsupported .oidcAuthentication.provider value '%s'" .provider) }}
             {{- end }}

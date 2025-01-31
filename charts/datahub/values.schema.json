@@ -1,0 +1,2446 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Json Schema to validate DataHub values.yaml",
+  "type": "object",
+  "properties": {
+    "datahub-gms": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "livenessProbe": {
+          "type": "object",
+          "properties": {
+            "initialDelaySeconds": {
+              "type": "number"
+            },
+            "periodSeconds": {
+              "type": "number"
+            },
+            "failureThreshold": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "initialDelaySeconds",
+            "periodSeconds",
+            "failureThreshold"
+          ]
+        },
+        "readinessProbe": {
+          "type": "object",
+          "properties": {
+            "initialDelaySeconds": {
+              "type": "number"
+            },
+            "periodSeconds": {
+              "type": "number"
+            },
+            "failureThreshold": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "initialDelaySeconds",
+            "periodSeconds",
+            "failureThreshold"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "livenessProbe",
+        "readinessProbe"
+      ]
+    },
+    "datahub-frontend": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ]
+        },
+        "defaultUserCredentials": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "extraLabels": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          },
+          "required": [
+            "extraLabels"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "ingress",
+        "defaultUserCredentials",
+        "service"
+      ]
+    },
+    "acryl-datahub-actions": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            },
+            "tag": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "tag"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources"
+      ]
+    },
+    "datahub-mae-consumer": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        }
+      },
+      "required": [
+        "image",
+        "resources"
+      ]
+    },
+    "datahub-mce-consumer": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        }
+      },
+      "required": [
+        "image",
+        "resources"
+      ]
+    },
+    "datahub-ingestion-cron": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "image"
+      ]
+    },
+    "elasticsearchSetupJob": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {
+            "fsGroup": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "fsGroup"
+          ]
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {
+            "runAsUser": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "runAsUser"
+          ]
+        },
+        "annotations": {
+          "type": "object",
+          "properties": {
+            "helm.sh/hook": {
+              "type": "string"
+            },
+            "helm.sh/hook-weight": {
+              "type": "string"
+            },
+            "helm.sh/hook-delete-policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "helm.sh/hook",
+            "helm.sh/hook-weight",
+            "helm.sh/hook-delete-policy"
+          ]
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "extraInitContainers",
+        "podSecurityContext",
+        "securityContext",
+        "annotations",
+        "podAnnotations",
+        "extraSidecars"
+      ]
+    },
+    "kafkaSetupJob": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {
+            "fsGroup": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "fsGroup"
+          ]
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {
+            "runAsUser": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "runAsUser"
+          ]
+        },
+        "annotations": {
+          "type": "object",
+          "properties": {
+            "helm.sh/hook": {
+              "type": "string"
+            },
+            "helm.sh/hook-weight": {
+              "type": "string"
+            },
+            "helm.sh/hook-delete-policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "helm.sh/hook",
+            "helm.sh/hook-weight",
+            "helm.sh/hook-delete-policy"
+          ]
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "extraInitContainers",
+        "podSecurityContext",
+        "securityContext",
+        "annotations",
+        "podAnnotations",
+        "extraSidecars"
+      ]
+    },
+    "mysqlSetupJob": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {
+            "fsGroup": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "fsGroup"
+          ]
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {
+            "runAsUser": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "runAsUser"
+          ]
+        },
+        "annotations": {
+          "type": "object",
+          "properties": {
+            "helm.sh/hook": {
+              "type": "string"
+            },
+            "helm.sh/hook-weight": {
+              "type": "string"
+            },
+            "helm.sh/hook-delete-policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "helm.sh/hook",
+            "helm.sh/hook-weight",
+            "helm.sh/hook-delete-policy"
+          ]
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "extraInitContainers",
+        "podSecurityContext",
+        "securityContext",
+        "annotations",
+        "podAnnotations",
+        "extraSidecars"
+      ]
+    },
+    "postgresqlSetupJob": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {
+            "fsGroup": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "fsGroup"
+          ]
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {
+            "runAsUser": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "runAsUser"
+          ]
+        },
+        "annotations": {
+          "type": "object",
+          "properties": {
+            "helm.sh/hook": {
+              "type": "string"
+            },
+            "helm.sh/hook-weight": {
+              "type": "string"
+            },
+            "helm.sh/hook-delete-policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "helm.sh/hook",
+            "helm.sh/hook-weight",
+            "helm.sh/hook-delete-policy"
+          ]
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "resources",
+        "extraInitContainers",
+        "podSecurityContext",
+        "securityContext",
+        "annotations",
+        "podAnnotations",
+        "extraSidecars"
+      ]
+    },
+    "datahubUpgrade": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "batchSize": {
+          "type": "number"
+        },
+        "batchDelayMs": {
+          "type": "number"
+        },
+        "noCodeDataMigration": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "command": {},
+                "args": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": [
+                "args"
+              ]
+            },
+            "sqlDbType": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "image",
+            "sqlDbType"
+          ]
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "annotations": {
+          "type": "object",
+          "properties": {
+            "helm.sh/hook": {
+              "type": "string"
+            },
+            "helm.sh/hook-weight": {
+              "type": "string"
+            },
+            "helm.sh/hook-delete-policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "helm.sh/hook",
+            "helm.sh/hook-weight",
+            "helm.sh/hook-delete-policy"
+          ]
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        },
+        "cleanupJob": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "command": {},
+                "args": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": [
+                "args"
+              ]
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ]
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ]
+                }
+              },
+              "required": [
+                "limits",
+                "requests"
+              ]
+            },
+            "concurrencyPolicy": {
+              "type": "string"
+            },
+            "extraSidecars": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "image",
+            "resources",
+            "concurrencyPolicy",
+            "extraSidecars"
+          ]
+        },
+        "restoreIndices": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "command": {},
+                "args": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": [
+                "args"
+              ]
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ]
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ]
+                }
+              },
+              "required": [
+                "limits",
+                "requests"
+              ]
+            },
+            "schedule": {
+              "type": "string"
+            },
+            "concurrencyPolicy": {
+              "type": "string"
+            },
+            "extraSidecars": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "image",
+            "resources",
+            "schedule",
+            "concurrencyPolicy",
+            "extraSidecars"
+          ]
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "batchSize",
+        "batchDelayMs",
+        "noCodeDataMigration",
+        "podSecurityContext",
+        "securityContext",
+        "annotations",
+        "podAnnotations",
+        "extraSidecars",
+        "cleanupJob",
+        "restoreIndices",
+        "extraInitContainers"
+      ]
+    },
+    "datahubSystemUpdate": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "annotations": {
+          "type": "object",
+          "properties": {
+            "helm.sh/hook": {
+              "type": "string"
+            },
+            "helm.sh/hook-weight": {
+              "type": "string"
+            },
+            "helm.sh/hook-delete-policy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "helm.sh/hook",
+            "helm.sh/hook-weight",
+            "helm.sh/hook-delete-policy"
+          ]
+        },
+        "nonblocking": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "annotations": {
+              "type": "object",
+              "properties": {
+                "helm.sh/hook": {
+                  "type": "string"
+                },
+                "helm.sh/hook-delete-policy": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "helm.sh/hook",
+                "helm.sh/hook-delete-policy"
+              ]
+            },
+            "image": {
+              "type": "object",
+              "properties": {
+                "args": {}
+              }
+            }
+          },
+          "required": [
+            "enabled",
+            "annotations",
+            "image"
+          ]
+        },
+        "bootstrapMCPs": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "type": "object",
+              "properties": {
+                "value_configs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "value_configs"
+              ]
+            },
+            "datahubGC": {
+              "type": "object",
+              "properties": {
+                "dailyCronWindow": {
+                  "type": "object",
+                  "properties": {
+                    "startHour": {
+                      "type": "number"
+                    },
+                    "endHour": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "startHour",
+                    "endHour"
+                  ]
+                },
+                "values_generated_configs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "values_env": {
+                  "type": "string"
+                },
+                "revision_env": {
+                  "type": "string"
+                },
+                "values": {
+                  "type": "object",
+                  "properties": {
+                    "ingestion": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    },
+                    "cleanup_expired_tokens": {
+                      "type": "string"
+                    },
+                    "truncate_indices": {
+                      "type": "string"
+                    },
+                    "truncate_indices_retention_days": {
+                      "type": "number"
+                    },
+                    "dataprocess_cleanup": {
+                      "type": "object",
+                      "properties": {
+                        "retention_days": {
+                          "type": "number"
+                        },
+                        "delete_empty_data_jobs": {
+                          "type": "string"
+                        },
+                        "delete_empty_data_flows": {
+                          "type": "string"
+                        },
+                        "hard_delete_entities": {
+                          "type": "string"
+                        },
+                        "keep_last_n": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "retention_days",
+                        "delete_empty_data_jobs",
+                        "delete_empty_data_flows",
+                        "hard_delete_entities",
+                        "keep_last_n"
+                      ]
+                    },
+                    "soft_deleted_entities_cleanup": {
+                      "type": "object",
+                      "properties": {
+                        "retention_days": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "retention_days"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ingestion",
+                    "cleanup_expired_tokens",
+                    "truncate_indices",
+                    "truncate_indices_retention_days",
+                    "dataprocess_cleanup",
+                    "soft_deleted_entities_cleanup"
+                  ]
+                }
+              },
+              "required": [
+                "dailyCronWindow",
+                "values_generated_configs",
+                "values_env",
+                "revision_env",
+                "values"
+              ]
+            }
+          },
+          "required": [
+            "default",
+            "datahubGC"
+          ]
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memory": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ]
+            }
+          },
+          "required": [
+            "limits",
+            "requests"
+          ]
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "image",
+        "podSecurityContext",
+        "securityContext",
+        "annotations",
+        "nonblocking",
+        "bootstrapMCPs",
+        "podAnnotations",
+        "resources",
+        "extraSidecars",
+        "extraInitContainers"
+      ]
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "strict_mode": {
+          "type": "boolean"
+        },
+        "graph_service_impl": {
+          "type": "string"
+        },
+        "datahub_analytics_enabled": {
+          "type": "boolean"
+        },
+        "datahub_standalone_consumers_enabled": {
+          "type": "boolean"
+        },
+        "imageRegistry": {
+          "type": "string"
+        },
+        "elasticsearch": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "string"
+            },
+            "skipcheck": {
+              "type": "string"
+            },
+            "insecure": {
+              "type": "string"
+            },
+            "useSSL": {
+              "type": "string"
+            },
+            "index": {
+              "type": "object",
+              "properties": {
+                "enableMappingsReindex": {
+                  "type": "boolean"
+                },
+                "enableSettingsReindex": {
+                  "type": "boolean"
+                },
+                "upgrade": {
+                  "type": "object",
+                  "properties": {
+                    "cloneIndices": {
+                      "type": "boolean"
+                    },
+                    "allowDocCountMismatch": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "cloneIndices",
+                    "allowDocCountMismatch"
+                  ]
+                }
+              },
+              "required": [
+                "enableMappingsReindex",
+                "enableSettingsReindex",
+                "upgrade"
+              ]
+            },
+            "search": {
+              "type": "object",
+              "properties": {
+                "maxTermBucketSize": {
+                  "type": "number"
+                },
+                "exactMatch": {
+                  "type": "object",
+                  "properties": {
+                    "exclusive": {
+                      "type": "boolean"
+                    },
+                    "withPrefix": {
+                      "type": "boolean"
+                    },
+                    "exactFactor": {
+                      "type": "number"
+                    },
+                    "prefixFactor": {
+                      "type": "number"
+                    },
+                    "caseSensitivityFactor": {
+                      "type": "number"
+                    },
+                    "enableStructured": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "exclusive",
+                    "withPrefix",
+                    "exactFactor",
+                    "prefixFactor",
+                    "caseSensitivityFactor",
+                    "enableStructured"
+                  ]
+                },
+                "graph": {
+                  "type": "object",
+                  "properties": {
+                    "timeoutSeconds": {
+                      "type": "number"
+                    },
+                    "batchSize": {
+                      "type": "number"
+                    },
+                    "maxResult": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "timeoutSeconds",
+                    "batchSize",
+                    "maxResult"
+                  ]
+                },
+                "custom": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "config": {
+                      "type": "object",
+                      "properties": {
+                        "queryConfigurations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "queryRegex": {
+                                "type": "string"
+                              },
+                              "simpleQuery": {
+                                "type": "boolean"
+                              },
+                              "prefixMatchQuery": {
+                                "type": "boolean"
+                              },
+                              "exactMatchQuery": {
+                                "type": "boolean"
+                              },
+                              "boolQuery": {
+                                "type": "object",
+                                "properties": {
+                                  "must_not": {
+                                    "type": "object",
+                                    "properties": {
+                                      "term": {
+                                        "type": "object",
+                                        "properties": {
+                                          "deprecated": {
+                                            "type": "object",
+                                            "properties": {
+                                              "value": {
+                                                "type": "boolean"
+                                              }
+                                            },
+                                            "required": [
+                                              "value"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "deprecated"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "term"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "must_not"
+                                ]
+                              },
+                              "functionScore": {
+                                "type": "object",
+                                "properties": {
+                                  "functions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "filter": {
+                                          "type": "object",
+                                          "properties": {
+                                            "term": {
+                                              "type": "object",
+                                              "properties": {
+                                                "materialized": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "value": {
+                                                      "type": "boolean"
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "value"
+                                                  ]
+                                                },
+                                                "deprecated": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "value": {
+                                                      "type": "boolean"
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "value"
+                                                  ]
+                                                }
+                                              },
+                                              "required": []
+                                            }
+                                          },
+                                          "required": [
+                                            "term"
+                                          ]
+                                        },
+                                        "weight": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "filter",
+                                        "weight"
+                                      ]
+                                    }
+                                  },
+                                  "score_mode": {
+                                    "type": "string"
+                                  },
+                                  "boost_mode": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "functions",
+                                  "score_mode",
+                                  "boost_mode"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "queryRegex",
+                              "simpleQuery",
+                              "prefixMatchQuery",
+                              "exactMatchQuery",
+                              "functionScore"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "queryConfigurations"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "config"
+                  ]
+                }
+              },
+              "required": [
+                "maxTermBucketSize",
+                "exactMatch",
+                "graph",
+                "custom"
+              ]
+            }
+          },
+          "required": [
+            "host",
+            "port",
+            "skipcheck",
+            "insecure",
+            "useSSL",
+            "index",
+            "search"
+          ]
+        },
+        "kafka": {
+          "type": "object",
+          "properties": {
+            "bootstrap": {
+              "type": "object",
+              "properties": {
+                "server": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "server"
+              ]
+            },
+            "zookeeper": {
+              "type": "object",
+              "properties": {
+                "server": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "server"
+              ]
+            },
+            "topics": {
+              "type": "object",
+              "properties": {
+                "metadata_change_event_name": {
+                  "type": "string"
+                },
+                "failed_metadata_change_event_name": {
+                  "type": "string"
+                },
+                "metadata_audit_event_name": {
+                  "type": "string"
+                },
+                "datahub_usage_event_name": {
+                  "type": "string"
+                },
+                "metadata_change_proposal_topic_name": {
+                  "type": "string"
+                },
+                "failed_metadata_change_proposal_topic_name": {
+                  "type": "string"
+                },
+                "metadata_change_log_versioned_topic_name": {
+                  "type": "string"
+                },
+                "metadata_change_log_timeseries_topic_name": {
+                  "type": "string"
+                },
+                "platform_event_topic_name": {
+                  "type": "string"
+                },
+                "datahub_upgrade_history_topic_name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "metadata_change_event_name",
+                "failed_metadata_change_event_name",
+                "metadata_audit_event_name",
+                "datahub_usage_event_name",
+                "metadata_change_proposal_topic_name",
+                "failed_metadata_change_proposal_topic_name",
+                "metadata_change_log_versioned_topic_name",
+                "metadata_change_log_timeseries_topic_name",
+                "platform_event_topic_name",
+                "datahub_upgrade_history_topic_name"
+              ]
+            },
+            "consumer_groups": {
+              "type": "object",
+              "properties": {
+                "datahub_upgrade_history_kafka_consumer_group_id": {
+                  "type": "object",
+                  "properties": {},
+                  "required": []
+                },
+                "datahub_actions_ingestion_executor_consumer_group_id": {
+                  "type": "string"
+                },
+                "datahub_actions_slack_consumer_group_id": {
+                  "type": "string"
+                },
+                "datahub_actions_teams_consumer_group_id": {
+                  "type": "string"
+                },
+                "datahub_usage_event_kafka_consumer_group_id": {
+                  "type": "string"
+                },
+                "metadata_change_log_kafka_consumer_group_id": {
+                  "type": "string"
+                },
+                "platform_event_kafka_consumer_group_id": {
+                  "type": "string"
+                },
+                "metadata_change_event_kafka_consumer_group_id": {
+                  "type": "string"
+                },
+                "metadata_change_proposal_kafka_consumer_group_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "datahub_upgrade_history_kafka_consumer_group_id",
+                "datahub_actions_ingestion_executor_consumer_group_id",
+                "datahub_actions_slack_consumer_group_id",
+                "datahub_actions_teams_consumer_group_id",
+                "datahub_usage_event_kafka_consumer_group_id",
+                "metadata_change_log_kafka_consumer_group_id",
+                "platform_event_kafka_consumer_group_id",
+                "metadata_change_event_kafka_consumer_group_id",
+                "metadata_change_proposal_kafka_consumer_group_id"
+              ]
+            },
+            "metadataChangeLog": {
+              "type": "object",
+              "properties": {
+                "hooks": {
+                  "type": "object",
+                  "properties": {
+                    "siblings": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "consumerGroupSuffix": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "consumerGroupSuffix"
+                      ]
+                    },
+                    "updateIndices": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "consumerGroupSuffix": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "consumerGroupSuffix"
+                      ]
+                    },
+                    "ingestionScheduler": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "consumerGroupSuffix": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "consumerGroupSuffix"
+                      ]
+                    },
+                    "incidents": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "consumerGroupSuffix": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "consumerGroupSuffix"
+                      ]
+                    },
+                    "entityChangeEvents": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "consumerGroupSuffix": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "consumerGroupSuffix"
+                      ]
+                    },
+                    "forms": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "consumerGroupSuffix": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "consumerGroupSuffix"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "siblings",
+                    "updateIndices",
+                    "ingestionScheduler",
+                    "incidents",
+                    "entityChangeEvents",
+                    "forms"
+                  ]
+                }
+              },
+              "required": [
+                "hooks"
+              ]
+            },
+            "maxMessageBytes": {
+              "type": "string"
+            },
+            "producer": {
+              "type": "object",
+              "properties": {
+                "compressionType": {
+                  "type": "string"
+                },
+                "maxRequestSize": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "compressionType",
+                "maxRequestSize"
+              ]
+            },
+            "consumer": {
+              "type": "object",
+              "properties": {
+                "maxPartitionFetchBytes": {
+                  "type": "string"
+                },
+                "stopContainerOnDeserializationError": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "maxPartitionFetchBytes",
+                "stopContainerOnDeserializationError"
+              ]
+            },
+            "schemaregistry": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          },
+          "required": [
+            "bootstrap",
+            "zookeeper",
+            "topics",
+            "consumer_groups",
+            "metadataChangeLog",
+            "maxMessageBytes",
+            "producer",
+            "consumer",
+            "schemaregistry"
+          ]
+        },
+        "neo4j": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "secretRef": {
+                  "type": "string"
+                },
+                "secretKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "secretRef",
+                "secretKey"
+              ]
+            }
+          },
+          "required": [
+            "host",
+            "uri",
+            "username",
+            "password"
+          ]
+        },
+        "sql": {
+          "type": "object",
+          "properties": {
+            "datasource": {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string"
+                },
+                "hostForMysqlClient": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "driver": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "object",
+                  "properties": {
+                    "secretRef": {
+                      "type": "string"
+                    },
+                    "secretKey": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "secretRef",
+                    "secretKey"
+                  ]
+                }
+              },
+              "required": [
+                "host",
+                "hostForMysqlClient",
+                "port",
+                "url",
+                "driver",
+                "username",
+                "password"
+              ]
+            }
+          },
+          "required": [
+            "datasource"
+          ]
+        },
+        "datahub": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "gms": {
+              "type": "object",
+              "properties": {
+                "protocol": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": "string"
+                },
+                "nodePort": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "protocol",
+                "port",
+                "nodePort"
+              ]
+            },
+            "timezone": {
+              "type": "string"
+            },
+            "frontend": {
+              "type": "object",
+              "properties": {
+                "validateSignUpEmail": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "validateSignUpEmail"
+              ]
+            },
+            "monitoring": {
+              "type": "object",
+              "properties": {
+                "enablePrometheus": {
+                  "type": "boolean"
+                },
+                "portName": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "enablePrometheus",
+                "portName"
+              ]
+            },
+            "mae_consumer": {
+              "type": "object",
+              "properties": {
+                "port": {
+                  "type": "string"
+                },
+                "nodePort": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "port",
+                "nodePort"
+              ]
+            },
+            "appVersion": {
+              "type": "string"
+            },
+            "systemUpdate": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            "encryptionKey": {
+              "type": "object",
+              "properties": {
+                "secretRef": {
+                  "type": "string"
+                },
+                "secretKey": {
+                  "type": "string"
+                },
+                "provisionSecret": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "autoGenerate": {
+                      "type": "boolean"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "properties": {},
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "autoGenerate",
+                    "annotations"
+                  ]
+                }
+              },
+              "required": [
+                "secretRef",
+                "secretKey",
+                "provisionSecret"
+              ]
+            },
+            "managed_ingestion": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "defaultCliVersion": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "enabled",
+                "defaultCliVersion"
+              ]
+            },
+            "metadata_service_authentication": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "systemClientId": {
+                  "type": "string"
+                },
+                "systemClientSecret": {
+                  "type": "object",
+                  "properties": {
+                    "secretRef": {
+                      "type": "string"
+                    },
+                    "secretKey": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "secretRef",
+                    "secretKey"
+                  ]
+                },
+                "tokenService": {
+                  "type": "object",
+                  "properties": {
+                    "signingKey": {
+                      "type": "object",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ]
+                    },
+                    "salt": {
+                      "type": "object",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "signingKey",
+                    "salt"
+                  ]
+                },
+                "provisionSecrets": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "autoGenerate": {
+                      "type": "boolean"
+                    },
+                    "annotations": {
+                      "type": "object",
+                      "properties": {},
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "autoGenerate",
+                    "annotations"
+                  ]
+                }
+              },
+              "required": [
+                "enabled",
+                "systemClientId",
+                "systemClientSecret",
+                "tokenService",
+                "provisionSecrets"
+              ]
+            },
+            "alwaysEmitChangeLog": {
+              "type": "boolean"
+            },
+            "enableGraphDiffMode": {
+              "type": "boolean"
+            },
+            "strictUrnValidation": {
+              "type": "boolean"
+            },
+            "search_and_browse": {
+              "type": "object",
+              "properties": {
+                "show_search_v2": {
+                  "type": "boolean"
+                },
+                "show_browse_v2": {
+                  "type": "boolean"
+                },
+                "backfill_browse_v2": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "show_search_v2",
+                "show_browse_v2",
+                "backfill_browse_v2"
+              ]
+            },
+            "mcp": {
+              "type": "object",
+              "properties": {
+                "throttle": {
+                  "type": "object",
+                  "properties": {
+                    "mceConsumer": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    },
+                    "apiRequests": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    },
+                    "versioned": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    },
+                    "timeseries": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "mceConsumer",
+                    "apiRequests",
+                    "versioned",
+                    "timeseries"
+                  ]
+                }
+              },
+              "required": [
+                "throttle"
+              ]
+            }
+          },
+          "required": [
+            "version",
+            "gms",
+            "timezone",
+            "frontend",
+            "monitoring",
+            "mae_consumer",
+            "appVersion",
+            "systemUpdate",
+            "encryptionKey",
+            "managed_ingestion",
+            "metadata_service_authentication",
+            "alwaysEmitChangeLog",
+            "enableGraphDiffMode",
+            "strictUrnValidation",
+            "search_and_browse",
+            "mcp"
+          ]
+        }
+      },
+      "required": [
+        "strict_mode",
+        "graph_service_impl",
+        "datahub_analytics_enabled",
+        "datahub_standalone_consumers_enabled",
+        "imageRegistry",
+        "elasticsearch",
+        "kafka",
+        "neo4j",
+        "sql",
+        "datahub"
+      ]
+    }
+  },
+  "required": [
+    "datahub-gms",
+    "datahub-frontend",
+    "acryl-datahub-actions",
+    "datahub-mae-consumer",
+    "datahub-mce-consumer",
+    "datahub-ingestion-cron",
+    "elasticsearchSetupJob",
+    "kafkaSetupJob",
+    "mysqlSetupJob",
+    "postgresqlSetupJob",
+    "datahubUpgrade",
+    "datahubSystemUpdate",
+    "global"
+  ]
+}

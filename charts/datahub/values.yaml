@@ -452,7 +452,7 @@ global:
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
-  datahub_standalone_consumers_enabled: false
+  datahub_standalone_consumers_enabled: true
   imageRegistry: "docker.io"
 
   elasticsearch:

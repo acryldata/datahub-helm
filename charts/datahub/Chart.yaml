@@ -37,5 +37,3 @@ maintainers:
   - name: DataHub
     email: datahub@acryl.io
 
-# Reference the JSON Schema for validation
-schema: values.schema.json

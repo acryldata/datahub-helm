@@ -1,5 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Json Schema to validate DataHub values.yaml",
   "type": "object",
   "properties": {
     "datahub-gms": {
@@ -58,13 +59,13 @@
           "type": "object",
           "properties": {
             "initialDelaySeconds": {
-              "type": "integer"
+              "type": "number"
             },
             "periodSeconds": {
-              "type": "integer"
+              "type": "number"
             },
             "failureThreshold": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -77,13 +78,13 @@
           "type": "object",
           "properties": {
             "initialDelaySeconds": {
-              "type": "integer"
+              "type": "number"
             },
             "periodSeconds": {
-              "type": "integer"
+              "type": "number"
             },
             "failureThreshold": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -165,13 +166,17 @@
           ]
         },
         "defaultUserCredentials": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "service": {
           "type": "object",
           "properties": {
             "extraLabels": {
-              "type": "object"
+              "type": "object",
+              "properties": {},
+              "required": []
             }
           },
           "required": [
@@ -448,7 +453,7 @@
           "type": "object",
           "properties": {
             "fsGroup": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -459,7 +464,7 @@
           "type": "object",
           "properties": {
             "runAsUser": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -486,7 +491,9 @@
           ]
         },
         "podAnnotations": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "extraSidecars": {
           "type": "array",
@@ -569,7 +576,7 @@
           "type": "object",
           "properties": {
             "fsGroup": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -580,7 +587,7 @@
           "type": "object",
           "properties": {
             "runAsUser": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -607,7 +614,9 @@
           ]
         },
         "podAnnotations": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "extraSidecars": {
           "type": "array",
@@ -690,7 +699,7 @@
           "type": "object",
           "properties": {
             "fsGroup": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -701,7 +710,7 @@
           "type": "object",
           "properties": {
             "runAsUser": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -728,7 +737,9 @@
           ]
         },
         "podAnnotations": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "extraSidecars": {
           "type": "array",
@@ -811,7 +822,7 @@
           "type": "object",
           "properties": {
             "fsGroup": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -822,7 +833,7 @@
           "type": "object",
           "properties": {
             "runAsUser": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [
@@ -849,7 +860,9 @@
           ]
         },
         "podAnnotations": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "extraSidecars": {
           "type": "array",
@@ -886,10 +899,10 @@
           ]
         },
         "batchSize": {
-          "type": "integer"
+          "type": "number"
         },
         "batchDelayMs": {
-          "type": "integer"
+          "type": "number"
         },
         "noCodeDataMigration": {
           "type": "object",
@@ -897,16 +910,13 @@
             "image": {
               "type": "object",
               "properties": {
-                "command": {
-                  "type": "null"
-                },
+                "command": {},
                 "args": {
                   "type": "array",
                   "items": {}
                 }
               },
               "required": [
-                "command",
                 "args"
               ]
             },
@@ -920,10 +930,14 @@
           ]
         },
         "podSecurityContext": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "securityContext": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "annotations": {
           "type": "object",
@@ -945,7 +959,9 @@
           ]
         },
         "podAnnotations": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "extraSidecars": {
           "type": "array",
@@ -957,16 +973,13 @@
             "image": {
               "type": "object",
               "properties": {
-                "command": {
-                  "type": "null"
-                },
+                "command": {},
                 "args": {
                   "type": "array",
                   "items": {}
                 }
               },
               "required": [
-                "command",
                 "args"
               ]
             },
@@ -1030,16 +1043,13 @@
             "image": {
               "type": "object",
               "properties": {
-                "command": {
-                  "type": "null"
-                },
+                "command": {},
                 "args": {
                   "type": "array",
                   "items": {}
                 }
               },
               "required": [
-                "command",
                 "args"
               ]
             },
@@ -1137,10 +1147,14 @@
           ]
         },
         "podSecurityContext": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "securityContext": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "annotations": {
           "type": "object",
@@ -1185,13 +1199,8 @@
             "image": {
               "type": "object",
               "properties": {
-                "args": {
-                  "type": "null"
-                }
-              },
-              "required": [
-                "args"
-              ]
+                "args": {}
+              }
             }
           },
           "required": [
@@ -1208,14 +1217,9 @@
               "properties": {
                 "value_configs": {
                   "type": "array",
-                  "items": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "string"
-                    }
-                  ]
+                  "items": {
+                    "type": "string"
+                  }
                 }
               },
               "required": [
@@ -1229,10 +1233,10 @@
                   "type": "object",
                   "properties": {
                     "startHour": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "endHour": {
-                      "type": "integer"
+                      "type": "number"
                     }
                   },
                   "required": [
@@ -1242,11 +1246,9 @@
                 },
                 "values_generated_configs": {
                   "type": "array",
-                  "items": [
-                    {
-                      "type": "string"
-                    }
-                  ]
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "values_env": {
                   "type": "string"
@@ -1275,13 +1277,13 @@
                       "type": "string"
                     },
                     "truncate_indices_retention_days": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "dataprocess_cleanup": {
                       "type": "object",
                       "properties": {
                         "retention_days": {
-                          "type": "integer"
+                          "type": "number"
                         },
                         "delete_empty_data_jobs": {
                           "type": "string"
@@ -1293,7 +1295,7 @@
                           "type": "string"
                         },
                         "keep_last_n": {
-                          "type": "integer"
+                          "type": "number"
                         }
                       },
                       "required": [
@@ -1308,7 +1310,7 @@
                       "type": "object",
                       "properties": {
                         "retention_days": {
-                          "type": "integer"
+                          "type": "number"
                         }
                       },
                       "required": [
@@ -1341,7 +1343,9 @@
           ]
         },
         "podAnnotations": {
-          "type": "object"
+          "type": "object",
+          "properties": {},
+          "required": []
         },
         "resources": {
           "type": "object",
@@ -1475,7 +1479,7 @@
               "type": "object",
               "properties": {
                 "maxTermBucketSize": {
-                  "type": "integer"
+                  "type": "number"
                 },
                 "exactMatch": {
                   "type": "object",
@@ -1512,13 +1516,13 @@
                   "type": "object",
                   "properties": {
                     "timeoutSeconds": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "batchSize": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "maxResult": {
-                      "type": "integer"
+                      "type": "number"
                     }
                   },
                   "required": [
@@ -1538,371 +1542,132 @@
                       "properties": {
                         "queryConfigurations": {
                           "type": "array",
-                          "items": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "queryRegex": {
-                                  "type": "string"
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "queryRegex": {
+                                "type": "string"
+                              },
+                              "simpleQuery": {
+                                "type": "boolean"
+                              },
+                              "prefixMatchQuery": {
+                                "type": "boolean"
+                              },
+                              "exactMatchQuery": {
+                                "type": "boolean"
+                              },
+                              "boolQuery": {
+                                "type": "object",
+                                "properties": {
+                                  "must_not": {
+                                    "type": "object",
+                                    "properties": {
+                                      "term": {
+                                        "type": "object",
+                                        "properties": {
+                                          "deprecated": {
+                                            "type": "object",
+                                            "properties": {
+                                              "value": {
+                                                "type": "boolean"
+                                              }
+                                            },
+                                            "required": [
+                                              "value"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "deprecated"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "term"
+                                    ]
+                                  }
                                 },
-                                "simpleQuery": {
-                                  "type": "boolean"
-                                },
-                                "prefixMatchQuery": {
-                                  "type": "boolean"
-                                },
-                                "exactMatchQuery": {
-                                  "type": "boolean"
-                                },
-                                "boolQuery": {
-                                  "type": "object",
-                                  "properties": {
-                                    "must_not": {
+                                "required": [
+                                  "must_not"
+                                ]
+                              },
+                              "functionScore": {
+                                "type": "object",
+                                "properties": {
+                                  "functions": {
+                                    "type": "array",
+                                    "items": {
                                       "type": "object",
                                       "properties": {
-                                        "term": {
+                                        "filter": {
                                           "type": "object",
                                           "properties": {
-                                            "deprecated": {
+                                            "term": {
                                               "type": "object",
                                               "properties": {
-                                                "value": {
-                                                  "type": "boolean"
-                                                }
-                                              },
-                                              "required": [
-                                                "value"
-                                              ]
-                                            }
-                                          },
-                                          "required": [
-                                            "deprecated"
-                                          ]
-                                        }
-                                      },
-                                      "required": [
-                                        "term"
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "must_not"
-                                  ]
-                                },
-                                "functionScore": {
-                                  "type": "object",
-                                  "properties": {
-                                    "functions": {
-                                      "type": "array",
-                                      "items": [
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "filter": {
-                                              "type": "object",
-                                              "properties": {
-                                                "term": {
+                                                "materialized": {
                                                   "type": "object",
                                                   "properties": {
-                                                    "materialized": {
-                                                      "type": "object",
-                                                      "properties": {
-                                                        "value": {
-                                                          "type": "boolean"
-                                                        }
-                                                      },
-                                                      "required": [
-                                                        "value"
-                                                      ]
+                                                    "value": {
+                                                      "type": "boolean"
                                                     }
                                                   },
                                                   "required": [
-                                                    "materialized"
+                                                    "value"
                                                   ]
-                                                }
-                                              },
-                                              "required": [
-                                                "term"
-                                              ]
-                                            },
-                                            "weight": {
-                                              "type": "number"
-                                            }
-                                          },
-                                          "required": [
-                                            "filter",
-                                            "weight"
-                                          ]
-                                        }
-                                      ]
-                                    },
-                                    "score_mode": {
-                                      "type": "string"
-                                    },
-                                    "boost_mode": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "functions",
-                                    "score_mode",
-                                    "boost_mode"
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "queryRegex",
-                                "simpleQuery",
-                                "prefixMatchQuery",
-                                "exactMatchQuery",
-                                "boolQuery",
-                                "functionScore"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "queryRegex": {
-                                  "type": "string"
-                                },
-                                "simpleQuery": {
-                                  "type": "boolean"
-                                },
-                                "prefixMatchQuery": {
-                                  "type": "boolean"
-                                },
-                                "exactMatchQuery": {
-                                  "type": "boolean"
-                                },
-                                "functionScore": {
-                                  "type": "object",
-                                  "properties": {
-                                    "functions": {
-                                      "type": "array",
-                                      "items": [
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "filter": {
-                                              "type": "object",
-                                              "properties": {
-                                                "term": {
+                                                },
+                                                "deprecated": {
                                                   "type": "object",
                                                   "properties": {
-                                                    "materialized": {
-                                                      "type": "object",
-                                                      "properties": {
-                                                        "value": {
-                                                          "type": "boolean"
-                                                        }
-                                                      },
-                                                      "required": [
-                                                        "value"
-                                                      ]
+                                                    "value": {
+                                                      "type": "boolean"
                                                     }
                                                   },
                                                   "required": [
-                                                    "materialized"
+                                                    "value"
                                                   ]
                                                 }
                                               },
-                                              "required": [
-                                                "term"
-                                              ]
-                                            },
-                                            "weight": {
-                                              "type": "number"
+                                              "required": []
                                             }
                                           },
                                           "required": [
-                                            "filter",
-                                            "weight"
+                                            "term"
                                           ]
                                         },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "filter": {
-                                              "type": "object",
-                                              "properties": {
-                                                "term": {
-                                                  "type": "object",
-                                                  "properties": {
-                                                    "deprecated": {
-                                                      "type": "object",
-                                                      "properties": {
-                                                        "value": {
-                                                          "type": "boolean"
-                                                        }
-                                                      },
-                                                      "required": [
-                                                        "value"
-                                                      ]
-                                                    }
-                                                  },
-                                                  "required": [
-                                                    "deprecated"
-                                                  ]
-                                                }
-                                              },
-                                              "required": [
-                                                "term"
-                                              ]
-                                            },
-                                            "weight": {
-                                              "type": "integer"
-                                            }
-                                          },
-                                          "required": [
-                                            "filter",
-                                            "weight"
-                                          ]
-                                        }
-                                      ]
-                                    },
-                                    "score_mode": {
-                                      "type": "string"
-                                    },
-                                    "boost_mode": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "functions",
-                                    "score_mode",
-                                    "boost_mode"
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "queryRegex",
-                                "simpleQuery",
-                                "prefixMatchQuery",
-                                "exactMatchQuery",
-                                "functionScore"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "queryRegex": {
-                                  "type": "string"
-                                },
-                                "simpleQuery": {
-                                  "type": "boolean"
-                                },
-                                "prefixMatchQuery": {
-                                  "type": "boolean"
-                                },
-                                "exactMatchQuery": {
-                                  "type": "boolean"
-                                },
-                                "boolQuery": {
-                                  "type": "object",
-                                  "properties": {
-                                    "must_not": {
-                                      "type": "object",
-                                      "properties": {
-                                        "term": {
-                                          "type": "object",
-                                          "properties": {
-                                            "deprecated": {
-                                              "type": "object",
-                                              "properties": {
-                                                "value": {
-                                                  "type": "boolean"
-                                                }
-                                              },
-                                              "required": [
-                                                "value"
-                                              ]
-                                            }
-                                          },
-                                          "required": [
-                                            "deprecated"
-                                          ]
+                                        "weight": {
+                                          "type": "number"
                                         }
                                       },
                                       "required": [
-                                        "term"
+                                        "filter",
+                                        "weight"
                                       ]
                                     }
                                   },
-                                  "required": [
-                                    "must_not"
-                                  ]
+                                  "score_mode": {
+                                    "type": "string"
+                                  },
+                                  "boost_mode": {
+                                    "type": "string"
+                                  }
                                 },
-                                "functionScore": {
-                                  "type": "object",
-                                  "properties": {
-                                    "functions": {
-                                      "type": "array",
-                                      "items": [
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "filter": {
-                                              "type": "object",
-                                              "properties": {
-                                                "term": {
-                                                  "type": "object",
-                                                  "properties": {
-                                                    "materialized": {
-                                                      "type": "object",
-                                                      "properties": {
-                                                        "value": {
-                                                          "type": "boolean"
-                                                        }
-                                                      },
-                                                      "required": [
-                                                        "value"
-                                                      ]
-                                                    }
-                                                  },
-                                                  "required": [
-                                                    "materialized"
-                                                  ]
-                                                }
-                                              },
-                                              "required": [
-                                                "term"
-                                              ]
-                                            },
-                                            "weight": {
-                                              "type": "number"
-                                            }
-                                          },
-                                          "required": [
-                                            "filter",
-                                            "weight"
-                                          ]
-                                        }
-                                      ]
-                                    },
-                                    "score_mode": {
-                                      "type": "string"
-                                    },
-                                    "boost_mode": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "functions",
-                                    "score_mode",
-                                    "boost_mode"
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "queryRegex",
-                                "simpleQuery",
-                                "prefixMatchQuery",
-                                "exactMatchQuery",
-                                "boolQuery",
-                                "functionScore"
-                              ]
-                            }
-                          ]
+                                "required": [
+                                  "functions",
+                                  "score_mode",
+                                  "boost_mode"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "queryRegex",
+                              "simpleQuery",
+                              "prefixMatchQuery",
+                              "exactMatchQuery",
+                              "functionScore"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -2010,7 +1775,9 @@
               "type": "object",
               "properties": {
                 "datahub_upgrade_history_kafka_consumer_group_id": {
-                  "type": "object"
+                  "type": "object",
+                  "properties": {},
+                  "required": []
                 },
                 "datahub_actions_ingestion_executor_consumer_group_id": {
                   "type": "string"
@@ -2409,7 +2176,9 @@
                       "type": "boolean"
                     },
                     "annotations": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {},
+                      "required": []
                     }
                   },
                   "required": [
@@ -2513,7 +2282,9 @@
                       "type": "boolean"
                     },
                     "annotations": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {},
+                      "required": []
                     }
                   },
                   "required": [

@@ -1,4 +1,4 @@
-{{- if .Values.datahubUpgrade.enabled -}}
+{{- if .Values.datahubUpgrade.noCodeDataMigration.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:

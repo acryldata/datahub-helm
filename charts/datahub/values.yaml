@@ -283,6 +283,7 @@ datahubUpgrade:
   batchSize: 1000
   batchDelayMs: 100
   noCodeDataMigration:
+    enabled: false
     image:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
       # to run
@@ -331,7 +332,28 @@ datahubUpgrade:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
       # to run
       command:
+      # Overrides the entire set of upgrade job arguments, for if you want to specify exactly whi
       args: []
+    # Alternative for overriding specific args instead of changing the entire set and overriding defaults
+    args:
+      # Restore only rows with less than a certain epoch millisecond timestamp
+      lePitEpochMs:
+      # Restore only rows with greater than a certain epoch millisecond timestamp
+      gePitEpochMs:
+      # Used in conjunction with urnBasedPagination, resume from a particular urn
+      lastUrn:
+      # Used in conjunction with urnBasedPagination and lastUrn, resume from a particular urn for a particular aspect to avoid reprocessing certain aspects
+      lastAspect:
+      # Uses a key based paging strategy when scrolling through SQL rows instead of offset. Often faster for large sets of data
+      urnBasedPagination:
+      # Only restore for certain aspects, comma separated list
+      aspectNames:
+      # A SQL "like" statement that matches against the urn column
+      urnLike:
+      # Used with default paging, start from a specified offset
+      startingOffset:
+      # Specifies number of threads for processing pages of rows to restore
+      numThreads:
     resources:
       limits:
         cpu: 500m

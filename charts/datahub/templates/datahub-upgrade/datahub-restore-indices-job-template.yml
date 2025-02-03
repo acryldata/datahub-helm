@@ -75,6 +75,42 @@ spec:
                 - "batchSize={{ .Values.datahubUpgrade.batchSize }}"
                 - "-a"
                 - "batchDelayMs={{ .Values.datahubUpgrade.batchDelayMs }}"
+                {{- if .Values.datahubUpgrade.restoreIndices.args.lePitEpochMs }}
+                - "-a"
+                - "lePitEpochMs={{ .Values.datahubUpgrade.restoreIndices.args.lePitEpochMs }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.gePitEpochMs }}
+                - "-a"
+                - "gePitEpochMs={{ .Values.datahubUpgrade.restoreIndices.args.gePitEpochMs }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.lastUrn }}
+                - "-a"
+                - "lastUrn={{ .Values.datahubUpgrade.restoreIndices.args.lastUrn }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.lastAspect}}
+                - "-a"
+                - "lastAspect={{ .Values.datahubUpgrade.restoreIndices.args.lastAspect }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.urnBasedPagination}}
+                - "-a"
+                - "urnBasedPagination={{ .Values.datahubUpgrade.restoreIndices.args.urnBasedPagination }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.aspectNames}}
+                - "-a"
+                - "aspectNames={{ .Values.datahubUpgrade.restoreIndices.args.aspectNames }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.urnLike}}
+                - "-a"
+                - "urnLike={{ .Values.datahubUpgrade.restoreIndices.args.urnLike }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.startingOffset}}
+                - "-a"
+                - "startingOffset={{ .Values.datahubUpgrade.restoreIndices.args.startingOffset }}"
+                {{- end}}
+                {{- if .Values.datahubUpgrade.restoreIndices.args.numThreads}}
+                - "-a"
+                - "numThreads={{ .Values.datahubUpgrade.restoreIndices.args.numThreads }}"
+                {{- end}}
               {{- end }}
               env:
                 {{- include "datahub.upgrade.env" . | nindent 16 }}

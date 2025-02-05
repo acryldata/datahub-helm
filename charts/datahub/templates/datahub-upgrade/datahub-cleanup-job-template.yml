@@ -6,7 +6,7 @@
 apiVersion: {{ include "datahub.cronjob.apiVersion" $}}
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-datahub-cleanup-job-template
+  name: {{ printf "%s-datahub-cleanup-job-template" .Release.Name | trunc 52 }}
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
 spec:

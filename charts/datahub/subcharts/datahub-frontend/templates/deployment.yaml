@@ -100,6 +100,8 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: ENTITY_VERSIONING_ENABLED
+              value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: ENABLE_PROMETHEUS
               value: "true"

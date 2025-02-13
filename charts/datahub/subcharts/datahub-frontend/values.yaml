@@ -85,7 +85,7 @@ auth:
 # OIDC auth based on https://datahubproject.io/docs/authentication/guides/sso/configure-oidc-react
 oidcAuthentication:
   enabled: false
-  # provider: google/okta/azure  <- choose only one
+  # provider: google/okta/azure/other  <- choose only one
 
   # clientId: your-client-id
   # clientSecret: your-client-secret
@@ -93,6 +93,8 @@ oidcAuthentication:
   # clientSecretRef:
   #   secretRef: <secret-ref>
   #   secretKey: <secret-key>
+  # only needed if provider is `other`
+  # discoveryUri: https://my-keycloak.example.com/realms/master/.well-known/openid-configuration
   # only needed if provider is `okta`
   # oktaDomain: your-okta-domain.com
 

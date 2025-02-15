@@ -17,10 +17,18 @@ spec:
     spec:
       backoffLimit: {{ default 6 $val.backoffLimit }}
       template:
-        {{- with $val.podAnnotations }}
+        {{- if or $val.podAnnotations $.Values.global.podLabels }}
         metadata:
+          {{- with $val.podAnnotations }}
           annotations:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if $.Values.global.podLabels }}
+          labels:
+            {{- range $key, $value := $.Values.global.podLabels }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
         {{- end }}
         spec:
         {{- with $.Values.imagePullSecrets }}
@@ -30,7 +38,7 @@ spec:
         {{- if .extraInitContainers }}
           initContainers:
           {{- toYaml .extraInitContainers | nindent 12 }}
-          {{- end }}
+        {{- end }}
         {{- if .hostAliases }}
           hostAliases:
           {{- toYaml .hostAliases | nindent 12 }}

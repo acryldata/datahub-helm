@@ -1411,6 +1411,12 @@
     "global": {
       "type": "object",
       "properties": {
+        "preProcessHooksUIEnabled": {
+          "type": "boolean"
+        },
+        "reProcessUIEventHooks": {
+          "type": "boolean"
+        },
         "strict_mode": {
           "type": "boolean"
         },

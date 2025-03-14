@@ -754,7 +754,7 @@ global:
       #   value: password
 
   datahub:
-    version: v0.15.0.1
+    version: v1.0.0
     gms:
       protocol: "http"
       port: "8080"
@@ -775,7 +775,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.0"
+    appVersion: "1.0.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -795,7 +795,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "0.15.0.1"
+      defaultCliVersion: "1.0.0"
 
     metadata_service_authentication:
       enabled: true

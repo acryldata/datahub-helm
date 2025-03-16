@@ -100,6 +100,8 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: ENTITY_VERSIONING_ENABLED
+              value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: ENABLE_PROMETHEUS
               value: "true"
@@ -240,6 +242,11 @@ spec:
             {{- else if eq .provider "azure" }}
             - name: AUTH_OIDC_DISCOVERY_URI
               value: https://login.microsoftonline.com/{{ .azureTenantId }}/v2.0/.well-known/openid-configuration
+            - name: AUTH_OIDC_SCOPE
+              value: {{ .scope | default "openid profile email" }}
+            {{- else if eq .provider "other" }}
+            - name: AUTH_OIDC_DISCOVERY_URI
+              value: {{ .discoveryUri }}
             - name: AUTH_OIDC_SCOPE
               value: {{ .scope | default "openid profile email" }}
             {{- else }}

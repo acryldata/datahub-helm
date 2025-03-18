@@ -23,6 +23,10 @@ datahub-gms:
     initialDelaySeconds: 120
     periodSeconds: 30
     failureThreshold: 8
+  theme_v2:
+    enabled: true
+    default: false
+    toggeable: true
   # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   # service:
   #   type: ClusterIP

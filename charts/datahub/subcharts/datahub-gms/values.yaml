@@ -28,6 +28,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+theme_v2:
+  enabled: true
+  default: false
+  toggeable: true
+
 terminationGracePeriodSeconds: 150
 
 serviceAccount:

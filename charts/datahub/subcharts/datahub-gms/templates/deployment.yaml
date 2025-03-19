@@ -107,6 +107,12 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: THEME_V2_ENABLED
+              value: {{ .Values.theme_v2.enabled | quote }}
+            - name: THEME_V2_DEFAULT
+              value: {{ .Values.theme_v2.default | quote }}
+            - name: THEME_V2_TOGGLEABLE
+              value: {{ .Values.theme_v2.toggeable | quote }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

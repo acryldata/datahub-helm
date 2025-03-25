@@ -148,6 +148,8 @@ spec:
               value: {{ .platform_event_topic_name }}
             {{- end }}
             {{- with .Values.global.kafka.consumer_groups }}
+            - name: DATAHUB_ACTIONS_DOC_PROPAGATION_CONSUMER_GROUP_ID
+              value: {{ .datahub_actions_doc_propagation_consumer_group_id }}
             - name: DATAHUB_ACTIONS_INGESTION_EXECUTOR_CONSUMER_GROUP_ID
               value: {{ .datahub_actions_ingestion_executor_consumer_group_id }}
             - name: DATAHUB_ACTIONS_SLACK_CONSUMER_GROUP_ID

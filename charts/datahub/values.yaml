@@ -650,6 +650,7 @@ global:
       #   gms: "<<release-name>>-duhe-consumer-job-client-gms"
       #   mae-consumer: "<<release-name>>-duhe-consumer-job-client-mcl"
       #   mce-consumer: "<<release-name>>-duhe-consumer-job-client-mcp"
+      datahub_actions_doc_propagation_consumer_group_id: "datahub_doc_propagation_action"
       datahub_actions_ingestion_executor_consumer_group_id: "ingestion_executor"
       datahub_actions_slack_consumer_group_id: "datahub_slack_action"
       datahub_actions_teams_consumer_group_id: "datahub_teams_action"

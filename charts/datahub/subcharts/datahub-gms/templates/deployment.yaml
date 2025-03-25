@@ -304,12 +304,12 @@ spec:
             - name: DATAHUB_UPGRADE_HISTORY_KAFKA_CONSUMER_GROUP_ID
               value: {{ .Values.global.kafka.consumer_groups.datahub_upgrade_history_kafka_consumer_group_id.gms | default (printf "%s-%s" .Release.Name "duhe-consumer-job-client-gms") }}
             {{- end }}
+            - name: METADATA_CHANGE_LOG_KAFKA_CONSUMER_GROUP_ID
+              value: {{ .Values.global.kafka.consumer_groups.metadata_change_log_kafka_consumer_group_id }}
             {{- if not .Values.global.datahub_standalone_consumers_enabled }}
             {{- with .Values.global.kafka.consumer_groups }}
             - name: DATAHUB_USAGE_EVENT_KAFKA_CONSUMER_GROUP_ID
               value: {{ .datahub_usage_event_kafka_consumer_group_id }}
-            - name: METADATA_CHANGE_LOG_KAFKA_CONSUMER_GROUP_ID
-              value: {{ .metadata_change_log_kafka_consumer_group_id }}
             - name: PLATFORM_EVENT_KAFKA_CONSUMER_GROUP_ID
               value: {{ .platform_event_kafka_consumer_group_id }}
             - name: METADATA_CHANGE_EVENT_KAFKA_CONSUMER_GROUP_ID

@@ -4,6 +4,14 @@
 
 replicaCount: 1
 
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  behavior: {}
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
 revisionHistoryLimit: 10
 
 image:

@@ -40,6 +40,20 @@ datahub-gms:
 
 datahub-frontend:
   enabled: true
+  replicaCount: 1
+  hpa:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 4
+    behavior:
+      scaleDown:
+        stabilizationWindowSeconds: 180
+        policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 180
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 70
   image:
     repository: acryldata/datahub-frontend-react
     # tag: "v0.11.0" # # defaults to .global.datahub.version

@@ -14,12 +14,25 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "datahub-frontend.fullname" . }}
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-  {{- with .Values.hpa.behavior }}
+  minReplicas: {{ default 1 .Values.hpa.minReplicas }}
+  maxReplicas: {{ default 2 .Values.hpa.maxReplicas }}
   behavior:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- if .Values.hpa.behavior }}
+    {{- toYaml .Values.hpa.behavior | nindent 4 }}
+    {{- else }}
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 180
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    {{- end }}
   metrics:
     {{- if .Values.hpa.targetMemoryUtilizationPercentage }}
     - type: Resource

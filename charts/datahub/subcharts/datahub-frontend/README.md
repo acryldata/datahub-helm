@@ -3,7 +3,7 @@ datahub-frontend
 
 A Helm chart for datahub-frontend
 
-Current chart version is `0.2.0`
+Current chart version is `0.2.163`
 
 ## Chart Values
 

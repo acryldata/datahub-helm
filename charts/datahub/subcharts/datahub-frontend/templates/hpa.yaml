@@ -34,28 +34,24 @@ spec:
           periodSeconds: 60
     {{- end }}
   metrics:
-    {{- if .Values.hpa.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        {{- if (eq $apiVersion "autoscaling/v2") }}
+        {{- if eq $apiVersion "autoscaling/v2" }}
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ default 70 .Values.hpa.targetMemoryUtilizationPercentage }}
         {{- else }}
-        targetAverageUtilization: {{ .Values.hpa.targetMemoryUtilizationPercentage }}
+        targetAverageUtilization: {{ default 70 .Values.hpa.targetMemoryUtilizationPercentage }}
         {{- end }}
-    {{- end }}
-    {{- if .Values.hpa.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
-        {{- if (eq $apiVersion "autoscaling/v2") }}
+        {{- if eq $apiVersion "autoscaling/v2" }}
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ default 70 .Values.hpa.targetCPUUtilizationPercentage }}
         {{- else }}
-        targetAverageUtilization: {{ .Values.hpa.targetCPUUtilizationPercentage }}
+        targetAverageUtilization: {{ default 70 .Values.hpa.targetCPUUtilizationPercentage }}
         {{- end }}
-    {{- end }}
 {{- end }}

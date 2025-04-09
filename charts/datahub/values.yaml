@@ -42,7 +42,8 @@ datahub-frontend:
   enabled: true
   replicaCount: 1
   hpa:
-    enabled: false # If enabled, Horizontal Pod Autoscaler (HPA) will automatically scale the number of replicas based on CPU and memory utilization thresholds.
+    # If enabled, Horizontal Pod Autoscaler (HPA) will automatically scale the number of replicas based on CPU and memory utilization thresholds.
+    enabled: false
     minReplicas: 2
     maxReplicas: 3
     behavior:

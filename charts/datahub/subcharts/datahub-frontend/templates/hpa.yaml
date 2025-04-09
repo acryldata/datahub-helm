@@ -14,8 +14,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "datahub-frontend.fullname" . }}
-  minReplicas: {{ default 1 .Values.hpa.minReplicas }}
-  maxReplicas: {{ default 2 .Values.hpa.maxReplicas }}
+  minReplicas: {{ default 2 .Values.hpa.minReplicas }}
+  maxReplicas: {{ default 3 .Values.hpa.maxReplicas }}
   behavior:
     {{- if .Values.hpa.behavior }}
     {{- toYaml .Values.hpa.behavior | nindent 4 }}

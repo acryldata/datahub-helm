@@ -6,8 +6,8 @@ replicaCount: 1
 
 hpa:
   enabled: false # If enabled, Horizontal Pod Autoscaler (HPA) will automatically scale the number of replicas based on CPU and memory utilization thresholds.
-  minReplicas: 1
-  maxReplicas: 2
+  minReplicas: 2
+  maxReplicas: 3
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 300

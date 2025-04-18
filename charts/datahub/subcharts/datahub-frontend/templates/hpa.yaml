@@ -1,0 +1,57 @@
+{{- if .Values.hpa.enabled }}
+{{- $apiVersion := include "datahub-frontend.hpa.apiVersion" . -}}
+apiVersion: {{ $apiVersion }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "datahub-frontend.fullname" . }}
+  labels:
+    {{- include "datahub-frontend.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "datahub-frontend.fullname" . }}
+  minReplicas: {{ default 2 .Values.hpa.minReplicas }}
+  maxReplicas: {{ default 3 .Values.hpa.maxReplicas }}
+  behavior:
+    {{- if .Values.hpa.behavior }}
+    {{- toYaml .Values.hpa.behavior | nindent 4 }}
+    {{- else }}
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 180
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    {{- end }}
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        {{- if eq $apiVersion "autoscaling/v2" }}
+        target:
+          type: Utilization
+          averageUtilization: {{ default 70 .Values.hpa.targetMemoryUtilizationPercentage }}
+        {{- else }}
+        targetAverageUtilization: {{ default 70 .Values.hpa.targetMemoryUtilizationPercentage }}
+        {{- end }}
+    - type: Resource
+      resource:
+        name: cpu
+        {{- if eq $apiVersion "autoscaling/v2" }}
+        target:
+          type: Utilization
+          averageUtilization: {{ default 70 .Values.hpa.targetCPUUtilizationPercentage }}
+        {{- else }}
+        targetAverageUtilization: {{ default 70 .Values.hpa.targetCPUUtilizationPercentage }}
+        {{- end }}
+{{- end }}

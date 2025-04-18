@@ -286,15 +286,6 @@ datahubUpgrade:
     # tag: "v0.11.0"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
-  noCodeDataMigration:
-    enabled: false
-    image:
-      # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
-      # to run
-      command:
-      args: []
-    sqlDbType: "MYSQL"
-    # sqlDbType: "POSTGRES"
   podSecurityContext: {}
     # fsGroup: 1000
   securityContext: {}
@@ -311,26 +302,6 @@ datahubUpgrade:
     # - name: my-image-name
     #   image: my-image
     #   imagePullPolicy: Always
-  cleanupJob:
-    image:
-      # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
-      # to run
-      command:
-      args: []
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        cpu: 300m
-        memory: 256Mi
-    # Add the concurrency Policy flexibility via values
-    concurrencyPolicy: Allow
-    # Add extra sidecar containers to job pod
-    extraSidecars: []
-      # - name: my-image-name
-      #   image: my-image
-      #   imagePullPolicy: Always
   restoreIndices:
     image:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script

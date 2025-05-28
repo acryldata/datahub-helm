@@ -77,16 +77,27 @@ datahub-frontend:
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
+    # className: ""
+    # extraLabels: {}
+    # annotations: {}
+    # hosts:
+    #   - host: chart-example.local
+    #     paths: []
+    #     redirectPaths: []
+    # tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+    # pathType: ImplementationSpecific
   defaultUserCredentials: {}
-  service:
-    extraLabels: {}
     # randomAdminPassword: true
     # You can also set specific passwords for default users
     # manualValues: |
     #   datahub:manualPassword
     #   initialViewer:manualPassword
+  service:
+    extraLabels: {}
   # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
-  # service:
   #   type: ClusterIP
 
 acryl-datahub-actions:
@@ -467,6 +478,10 @@ datahubSystemUpdate:
   extraInitContainers: []
 
 global:
+  # Uncomment and customize the following section to add custom labels to your pods
+  # podLabels:
+  #   name: datahub
+  #   environment: production
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
@@ -481,6 +496,16 @@ global:
     skipcheck: "false"
     insecure: "false"
     useSSL: "false"
+
+    # Authentication
+    # auth:
+      # username: "elastic"
+      # password:
+        # Value can be directly specified here, or stored in a secret with secretRef
+        # value: "<password>"
+        # or
+        # secretRef: <secret-ref>
+        # secretKey: <secret-key>
     # If you want to specify index prefixes use indexPrefix
     # indexPrefix: "dh"
 

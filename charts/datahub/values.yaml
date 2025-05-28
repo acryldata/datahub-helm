@@ -478,6 +478,10 @@ datahubSystemUpdate:
   extraInitContainers: []
 
 global:
+  # Uncomment and customize the following section to add custom labels to your pods
+  # podLabels:
+  #   name: datahub
+  #   environment: production
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true

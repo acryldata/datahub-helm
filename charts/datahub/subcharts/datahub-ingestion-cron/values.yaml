@@ -86,6 +86,16 @@ crons: {}
     #  image: my-image
     #  imagePullPolicy: Always
 
+    ## Resource limits and requests for the cronjob container
+    ##
+    # resources:
+    #   limits:
+    #     cpu: 500m
+    #     memory: 512Mi
+    #   requests:
+    #     cpu: 100m
+    #     memory: 256Mi
+
     ## If you want to specify your own service account, set its name like so.
     ##
     #serviceAccountName: "my-cron-service"

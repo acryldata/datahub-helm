@@ -40,6 +40,27 @@ datahub-gms:
 
 datahub-frontend:
   enabled: true
+  replicaCount: 1
+  hpa:
+    # If enabled, Horizontal Pod Autoscaler (HPA) will automatically scale the number of replicas based on CPU and memory utilization thresholds.
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 3
+    behavior:
+      scaleDown:
+        stabilizationWindowSeconds: 300
+        policies:
+          - type: Pods
+            value: 1
+            periodSeconds: 180
+      scaleUp:
+        stabilizationWindowSeconds: 0
+        policies:
+          - type: Pods
+            value: 1
+            periodSeconds: 60
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 70
   image:
     repository: acryldata/datahub-frontend-react
     # tag: "v0.11.0" # # defaults to .global.datahub.version
@@ -56,23 +77,34 @@ datahub-frontend:
   # Set up ingress to expose react front-end
   ingress:
     enabled: false
+    # className: ""
+    # extraLabels: {}
+    # annotations: {}
+    # hosts:
+    #   - host: chart-example.local
+    #     paths: []
+    #     redirectPaths: []
+    # tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+    # pathType: ImplementationSpecific
   defaultUserCredentials: {}
-  service:
-    extraLabels: {}
     # randomAdminPassword: true
     # You can also set specific passwords for default users
     # manualValues: |
     #   datahub:manualPassword
     #   initialViewer:manualPassword
+  service:
+    extraLabels: {}
   # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
-  # service:
   #   type: ClusterIP
 
 acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    tag: "v0.1.1"
+    tag: "v0.2.0"
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -286,15 +318,6 @@ datahubUpgrade:
     # tag: "v0.11.0"  # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
-  noCodeDataMigration:
-    enabled: false
-    image:
-      # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
-      # to run
-      command:
-      args: []
-    sqlDbType: "MYSQL"
-    # sqlDbType: "POSTGRES"
   podSecurityContext: {}
     # fsGroup: 1000
   securityContext: {}
@@ -311,26 +334,6 @@ datahubUpgrade:
     # - name: my-image-name
     #   image: my-image
     #   imagePullPolicy: Always
-  cleanupJob:
-    image:
-      # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
-      # to run
-      command:
-      args: []
-    resources:
-      limits:
-        cpu: 500m
-        memory: 512Mi
-      requests:
-        cpu: 300m
-        memory: 256Mi
-    # Add the concurrency Policy flexibility via values
-    concurrencyPolicy: Allow
-    # Add extra sidecar containers to job pod
-    extraSidecars: []
-      # - name: my-image-name
-      #   image: my-image
-      #   imagePullPolicy: Always
   restoreIndices:
     image:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -475,6 +478,10 @@ datahubSystemUpdate:
   extraInitContainers: []
 
 global:
+  # Uncomment and customize the following section to add custom labels to your pods
+  # podLabels:
+  #   name: datahub
+  #   environment: production
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
@@ -489,6 +496,16 @@ global:
     skipcheck: "false"
     insecure: "false"
     useSSL: "false"
+
+    # Authentication
+    # auth:
+      # username: "elastic"
+      # password:
+        # Value can be directly specified here, or stored in a secret with secretRef
+        # value: "<password>"
+        # or
+        # secretRef: <secret-ref>
+        # secretKey: <secret-key>
     # If you want to specify index prefixes use indexPrefix
     # indexPrefix: "dh"
 
@@ -758,7 +775,7 @@ global:
       #   value: password
 
   datahub:
-    version: v1.0.0
+    version: v1.1.0
     gms:
       protocol: "http"
       port: "8080"

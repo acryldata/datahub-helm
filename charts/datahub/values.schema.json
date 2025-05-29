@@ -904,31 +904,6 @@
         "batchDelayMs": {
           "type": "number"
         },
-        "noCodeDataMigration": {
-          "type": "object",
-          "properties": {
-            "image": {
-              "type": "object",
-              "properties": {
-                "command": {},
-                "args": {
-                  "type": "array",
-                  "items": {}
-                }
-              },
-              "required": [
-                "args"
-              ]
-            },
-            "sqlDbType": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "image",
-            "sqlDbType"
-          ]
-        },
         "podSecurityContext": {
           "type": "object",
           "properties": {},
@@ -966,76 +941,6 @@
         "extraSidecars": {
           "type": "array",
           "items": {}
-        },
-        "cleanupJob": {
-          "type": "object",
-          "properties": {
-            "image": {
-              "type": "object",
-              "properties": {
-                "command": {},
-                "args": {
-                  "type": "array",
-                  "items": {}
-                }
-              },
-              "required": [
-                "args"
-              ]
-            },
-            "resources": {
-              "type": "object",
-              "properties": {
-                "limits": {
-                  "type": "object",
-                  "properties": {
-                    "cpu": {
-                      "type": "string"
-                    },
-                    "memory": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "cpu",
-                    "memory"
-                  ]
-                },
-                "requests": {
-                  "type": "object",
-                  "properties": {
-                    "cpu": {
-                      "type": "string"
-                    },
-                    "memory": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "cpu",
-                    "memory"
-                  ]
-                }
-              },
-              "required": [
-                "limits",
-                "requests"
-              ]
-            },
-            "concurrencyPolicy": {
-              "type": "string"
-            },
-            "extraSidecars": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "image",
-            "resources",
-            "concurrencyPolicy",
-            "extraSidecars"
-          ]
         },
         "restoreIndices": {
           "type": "object",
@@ -1121,13 +1026,11 @@
         "image",
         "batchSize",
         "batchDelayMs",
-        "noCodeDataMigration",
         "podSecurityContext",
         "securityContext",
         "annotations",
         "podAnnotations",
         "extraSidecars",
-        "cleanupJob",
         "restoreIndices",
         "extraInitContainers"
       ]

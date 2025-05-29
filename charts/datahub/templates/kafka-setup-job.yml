@@ -74,7 +74,7 @@ spec:
             - name: MAX_MESSAGE_BYTES
               value: {{ . | quote }}
             {{- end }}
-            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            {{- if or (eq .Values.global.kafka.schemaregistry.type "INTERNAL") (eq .Values.global.kafka.schemaregistry.type "AWS_GLUE") }}
             - name: USE_CONFLUENT_SCHEMA_REGISTRY
               value: "false"
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}

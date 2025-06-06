@@ -1541,9 +1541,7 @@
                                               "required": []
                                             }
                                           },
-                                          "required": [
-                                            "term"
-                                          ]
+                                          "required": []
                                         },
                                         "weight": {
                                           "type": "number"

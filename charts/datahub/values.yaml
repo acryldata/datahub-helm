@@ -402,7 +402,7 @@ datahubSystemCronHourly:
     #   imagePullPolicy: Always
   extraInitContainers: []
   jvmOpts:
-    XX: ":+ExitOnOutOfMemoryError -XX:MaxRAMPercentage=75.0"  
+    XX: ":+ExitOnOutOfMemoryError -XX:MaxRAMPercentage=75.0"
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)

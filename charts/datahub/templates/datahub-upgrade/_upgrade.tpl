@@ -145,6 +145,14 @@ Return the env variables for upgrade jobs
 {{- end }}
 {{- end -}}
 
+{{/*
+Set up cron hourly custom scheduling
+*/}}
+{{- define "datahub.upgrade.hourlyCronWindow" -}}
+# Generate a random 2 digit numeric string, modulo 60
+schedule: {{ printf "%d * * * * " (mod (randNumeric 2) 60) }}
+{{- end -}}
+
 {{- define "deepMerge" -}}
 {{- $dst := deepCopy .dst -}}
 {{- range $key, $srcValue := .src -}}

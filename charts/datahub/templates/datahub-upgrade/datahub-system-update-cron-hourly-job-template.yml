@@ -1,0 +1,121 @@
+{{- if .Values.datahubSystemCronHourly.enabled -}}
+# Hourly cron job
+#   - tweaking replicas (set to 0 when 0 docs, increase when >0 docs)
+# Run the following command to do so
+# kubectl create job --from=cronjob/<<release-name>>-datahub-system-update-cron-hourly-job-template datahub-system-update-cron-hourly-job
+apiVersion: {{ include "datahub.cronjob.apiVersion" $}}
+kind: CronJob
+metadata:
+  name: {{ printf "%s-datahub-system-update-cron-hourly-job-tpl" ( .Release.Name | trunc 35 ) | trunc 52 | trimSuffix "-" }}
+  labels:
+    {{- include "datahub.labels" . | nindent 4 }}
+spec:
+  suspend: {{ .Values.global.readonly }}
+  {{- include "datahub.upgrade.dailyCronWindow" . | nindent 2}}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.datahubSystemCronHourly.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- range $key, $value := .Values.global.podLabels }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $value := .Values.datahubSystemCronHourly.extraPodLabels }}
+            {{ $key }}: {{ $value | quote }}
+            {{- end }}
+        spec:
+        {{- with .Values.global.hostAliases }}
+          hostAliases:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.datahubSystemCronHourly.serviceAccount }}
+          serviceAccountName: {{ . }}
+        {{- end }}
+        {{- with .Values.datahubSystemCronHourly.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+          volumes:
+            {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: datahub-certs-dir
+              secret:
+                defaultMode: 0444
+                secretName: {{ .name }}
+            {{- end }}
+          {{- with .Values.datahubSystemCronHourly.extraVolumes }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+          securityContext:
+            {{- toYaml .Values.datahubSystemCronHourly.podSecurityContext | nindent 12 }}
+          initContainers:
+          {{- with .Values.datahubSystemCronHourly.extraInitContainers }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: datahub-system-update-cron-hourly-job
+              image: "{{ .Values.datahubSystemCronHourly.image.repository }}:{{ required "Global or specific tag is required" (.Values.datahubSystemCronHourly.image.tag | default .Values.global.datahub.version) }}"
+              {{- if .Values.global.pullAlways }}
+              imagePullPolicy: Always
+              {{- else }}
+              imagePullPolicy: {{ .Values.datahubSystemCronHourly.image.pullPolicy | default "IfNotPresent" }}
+              {{- end }}
+              args:
+                - "-u"
+                - "SystemUpdateCron"
+                # to test, no changes will be done:
+                # - "-a"
+                # - "dryRun=true"
+              env:
+                {{- include "datahub.upgrade.env" . | nindent 16}}
+                {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+                - name: DATAHUB_SYSTEM_CLIENT_ID
+                  value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+                - name: DATAHUB_SYSTEM_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                      key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+                {{- end }}
+              {{- with .Values.datahubSystemCronHourly.jvmOpts }}
+                - name: JDK_JAVA_OPTIONS
+                  value: >-
+                  {{- range $key, $value := . }}
+                    {{ printf "-%s%s" $key $value | nindent 16 | trim -}}
+                  {{- end }}
+              {{- end }}
+              {{- with .Values.datahubSystemCronHourly.extraEnvs }}
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              securityContext:
+                {{- toYaml .Values.datahubSystemCronHourly.securityContext | nindent 16 }}
+              volumeMounts:
+              {{- with .Values.global.credentialsAndCertsSecrets }}
+                - name: datahub-certs-dir
+                  mountPath: {{ .path | default "/mnt/certs" }}
+              {{- end }}
+              {{- with .Values.datahubSystemCronHourly.extraVolumeMounts }}
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              resources:
+                {{- toYaml .Values.datahubSystemCronHourly.restoreIndices.resources | nindent 16}}
+            {{- with .Values.datahubSystemCronHourly.restoreIndices.extraSidecars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.datahubSystemCronHourly.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.datahubSystemCronHourly.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.datahubSystemCronHourly.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end -}}

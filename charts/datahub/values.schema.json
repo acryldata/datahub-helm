@@ -3,6 +3,63 @@
   "title": "Json Schema to validate DataHub values.yaml",
   "type": "object",
   "properties": {
+     "datahubSystemCronHourly": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository"
+          ]
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "podAnnotations": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "extraSidecars": {
+          "type": "array",
+          "items": {}
+        },
+        "extraInitContainers": {
+          "type": "array",
+          "items": {}
+        },
+        "jvmOpts": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      },
+      "required": [
+        "enabled",
+        "image",
+        "podSecurityContext",
+        "securityContext",
+        "podAnnotations",
+        "extraSidecars",
+        "extraInitContainers",
+        "jvmOpts"
+      ]
+    },       
     "datahub-gms": {
       "type": "object",
       "properties": {

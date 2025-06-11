@@ -385,6 +385,7 @@ datahubUpgrade:
 
 ## Code for ES replica tweaking
 datahubSystemCronHourly:
+  # This feature is not ready yet, DO NOT enable
   # Enabled by default in case resources need to be allocated to be able to run this job
   enabled: false
   image:

@@ -4,7 +4,7 @@ description: A Helm chart for DataHub
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.6.8
+version: 0.6.9
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
@@ -31,7 +31,7 @@ dependencies:
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
   - name: acryl-datahub-actions
-    version: 0.2.151
+    version: 0.2.152
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
 maintainers:

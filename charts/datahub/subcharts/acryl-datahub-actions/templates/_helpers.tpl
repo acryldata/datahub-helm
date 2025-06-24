@@ -82,3 +82,11 @@ Datahub GMS port
 {{- define "acryl-datahub-actions.datahubGmsPort" -}}
 {{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}
 {{- end -}}
+
+{{/*
+Create image registry, name and tag for a datahub component
+*/}}
+{{- define "datahub.image" -}}
+{{- $registry := .image.registry | default .imageRegistry -}}
+{{ $registry }}/{{ .image.repository }}:{{ required "Global or specific tag is required" (.image.tag | default .version) -}}
+{{- end -}}

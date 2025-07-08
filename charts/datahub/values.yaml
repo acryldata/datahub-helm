@@ -577,6 +577,10 @@ global:
         ## ensures a complete backup of the original index is preserved.
         allowDocCountMismatch: false
 
+        ## Only enable for OpenSearch/ElasticSearch clusters with zone awareness, otherwise optimization should be utilized
+        ## Will use full replication during reindexing which will make the process slower
+        zoneAwarenessEnabled: false
+
     ## Search related configuration
     search:
       ## Maximum terms in aggregations

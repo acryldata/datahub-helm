@@ -1427,11 +1427,15 @@
                     },
                     "allowDocCountMismatch": {
                       "type": "boolean"
+                    },
+                    "zoneAwarenessEnabled": {
+                      "type": "boolean"
                     }
                   },
                   "required": [
                     "cloneIndices",
-                    "allowDocCountMismatch"
+                    "allowDocCountMismatch",
+                    "zoneAwarenessEnabled"
                   ]
                 }
               },

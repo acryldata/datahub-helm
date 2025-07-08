@@ -107,6 +107,8 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: ELASTICSEARCH_BUILD_INDICES_ZONE_AWARENESS_ENABLED
+              value: {{ .Values.global.elasticsearch.index.upgrade.zoneAwarenessEnabled }}
             - name: THEME_V2_ENABLED
               value: {{ .Values.theme_v2.enabled | quote }}
             - name: THEME_V2_DEFAULT

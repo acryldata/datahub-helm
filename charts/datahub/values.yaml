@@ -25,7 +25,7 @@ datahub-gms:
     failureThreshold: 8
   theme_v2:
     enabled: true
-    default: false
+    default: true
     toggeable: true
   # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   # service:

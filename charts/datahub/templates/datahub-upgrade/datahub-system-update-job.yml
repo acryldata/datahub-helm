@@ -285,8 +285,8 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- end }}
-            - name: ELASTICSEARCH_BUILD_INDICES_ZONE_AWARENESS_ENABLED
-              value: {{ .Values.global.elasticsearch.index.upgrade.zoneAwarenessEnabled }}
+            - name: ELASTICSEARCH_BUILD_INDICES_REINDEX_OPTIMIZATION_ENABLED
+              value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled }}
             - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
               value: {{ .Values.global.elasticsearch.index.upgrade.cloneIndices | quote }}
             {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}

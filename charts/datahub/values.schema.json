@@ -1428,14 +1428,14 @@
                     "allowDocCountMismatch": {
                       "type": "boolean"
                     },
-                    "zoneAwarenessEnabled": {
+                    "reindexOptimizationEnabled": {
                       "type": "boolean"
                     }
                   },
                   "required": [
                     "cloneIndices",
                     "allowDocCountMismatch",
-                    "zoneAwarenessEnabled"
+                    "reindexOptimizationEnabled"
                   ]
                 }
               },

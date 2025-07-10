@@ -108,7 +108,7 @@ spec:
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
             - name: ELASTICSEARCH_BUILD_INDICES_REINDEX_OPTIMIZATION_ENABLED
-              value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled }}
+              value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled | quote }}
             - name: THEME_V2_ENABLED
               value: {{ .Values.theme_v2.enabled | quote }}
             - name: THEME_V2_DEFAULT

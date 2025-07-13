@@ -30,7 +30,7 @@ fullnameOverride: ""
 
 theme_v2:
   enabled: true
-  default: false
+  default: true
   toggeable: true
 
 terminationGracePeriodSeconds: 150

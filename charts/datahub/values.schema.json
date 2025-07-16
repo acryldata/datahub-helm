@@ -1642,11 +1642,7 @@
                         "queryConfigurations"
                       ]
                     }
-                  },
-                  "required": [
-                    "enabled",
-                    "config"
-                  ]
+                  }
                 }
               },
               "required": [

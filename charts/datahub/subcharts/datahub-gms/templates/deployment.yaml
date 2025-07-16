@@ -51,7 +51,7 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
-        {{- if .Values.global.elasticsearch.search.custom.enabled }}
+        {{- if and .Values.global.elasticsearch.search.custom.enabled .Values.global.elasticsearch.search.custom.config }}
         - configMap:
             name: {{ printf "%s-%s" .Release.Name "search-custom" }}
           name: search-config
@@ -123,14 +123,14 @@ spec:
               value: {{ .Values.global.datahub.search_and_browse.show_browse_v2 | quote }}
             - name: BACKFILL_BROWSE_PATHS_V2
               value: {{ .Values.global.datahub.search_and_browse.backfill_browse_v2 | quote }}
-            {{- if .Values.global.elasticsearch.search.custom.enabled }}
+            {{- if and .Values.global.elasticsearch.search.custom.enabled .Values.global.elasticsearch.search.custom.config }}
             - name: ELASTICSEARCH_QUERY_CUSTOM_CONFIG_ENABLED
               value: "true"
             - name: ELASTICSEARCH_QUERY_CUSTOM_CONFIG_FILE
               value: "/datahub/datahub-gms/resources/search/search_config.yml"
-            {{- else }}
+            {{- else if .Values.global.elasticsearch.search.custom.enabled }}
             - name: ELASTICSEARCH_QUERY_CUSTOM_CONFIG_ENABLED
-              value: "false"
+              value: {{ .Values.global.elasticsearch.search.custom.enabled | quote }}
             {{- end }}
             {{- if gt (.Values.replicaCount | int) 1 }}
             - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
@@ -530,7 +530,7 @@ spec:
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
-          {{- if .Values.global.elasticsearch.search.custom.enabled }}
+          {{- if and .Values.global.elasticsearch.search.custom.enabled .Values.global.elasticsearch.search.custom.config }}
             - name: search-config
               mountPath: "/datahub/datahub-gms/resources/search"
           {{- end }}

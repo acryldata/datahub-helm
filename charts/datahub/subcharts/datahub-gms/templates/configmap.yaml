@@ -1,4 +1,4 @@
-{{- if .Values.global.elasticsearch.search.custom.enabled -}}
+{{- if and .Values.global.elasticsearch.search.custom.enabled .Values.global.elasticsearch.search.custom.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:

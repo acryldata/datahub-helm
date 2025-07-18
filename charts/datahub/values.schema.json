@@ -1994,22 +1994,110 @@
               "type": "object",
               "properties": {
                 "host": {
-                  "type": "string"
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "title": "Direct Hostname"
+                    },
+                    {
+                      "type": "object",
+                      "title": "Host from Secret",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
                 },
                 "hostForMysqlClient": {
-                  "type": "string"
-                },
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "title": "Direct MySQL Host"
+                    },
+                    {
+                      "type": "object",
+                      "title": "MySQL Host from Secret",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },                
                 "port": {
                   "type": "string"
                 },
                 "url": {
-                  "type": "string"
-                },
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "title": "Direct URL"
+                    },
+                    {
+                      "type": "object",
+                      "title": "URL from Secret",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },                
                 "driver": {
                   "type": "string"
                 },
                 "username": {
-                  "type": "string"
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "title": "Direct Username"
+                    },
+                    {
+                      "type": "object",
+                      "title": "Username from Secret",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
                 },
                 "password": {
                   "type": "object",

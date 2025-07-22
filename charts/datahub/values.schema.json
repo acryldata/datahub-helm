@@ -2009,7 +2009,26 @@
                   "type": "string"
                 },
                 "username": {
-                  "type": "string"
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "secretRef": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "secretRef",
+                        "secretKey"
+                      ]
+                    }
+                  ]
                 },
                 "password": {
                   "type": "object",

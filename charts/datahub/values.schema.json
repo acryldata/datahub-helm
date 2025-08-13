@@ -267,8 +267,7 @@
             }
           },
           "required": [
-            "repository",
-            "tag"
+            "repository"
           ]
         },
         "resources": {

@@ -129,6 +129,11 @@ oidcAuthentication:
   # A regex string used for extracting the username from the userNameClaim attribute.
   # user_name_claim_regex: "([^@]+)"
 
+# Configuration for auth cookies, used to share these cookies for their domain with the iFrame in DataHub Chrome extension
+authCookies:
+  sameSite: "LAX"
+  secure: "false"
+
 # Extra labels for Deployment
 extraLabels: {}
   # owner: myteam

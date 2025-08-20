@@ -254,6 +254,12 @@ spec:
             {{- end }}
             {{- end }}
           {{- end }}
+          {{- with .Values.authCookies }}
+            - name: AUTH_COOKIE_SAME_SITE
+              value: "{{ .sameSite }}"
+            - name: AUTH_COOKIE_SECURE
+              value: "{{ .secure }}"
+          {{- end }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

@@ -149,6 +149,17 @@
             "periodSeconds",
             "failureThreshold"
           ]
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "loadBalancerClass": {
+              "type": "string"
+            }
+          }
         }
       },
       "required": [

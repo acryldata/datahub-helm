@@ -30,6 +30,8 @@ datahub-gms:
   # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   # service:
   #   type: ClusterIP
+  # Load balancer class for datahub-gms. Used by cloud providers to select a load balancer implementation other than the cloud provider default.
+  #   loadBalancerClass: ""
   # Optionally set a GMS specific SQL login (defaults to global login)
   # sql:
   #   datasource:

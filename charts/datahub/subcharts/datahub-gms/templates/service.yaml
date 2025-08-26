@@ -26,5 +26,8 @@ spec:
       targetPort: {{ .Values.global.datahub.monitoring.portName }}
       protocol: TCP
     {{- end }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (.Values.service.loadBalancerClass) }}
+  loadBalancerClass: {{ .Values.service.loadBalancerClass }}
+  {{- end }}
   selector:
     {{- include "datahub-gms.selectorLabels" . | nindent 4 }}

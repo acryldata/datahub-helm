@@ -196,40 +196,6 @@ elasticsearchSetupJob:
     #   image: my-image
     #   imagePullPolicy: Always
 
-kafkaSetupJob:
-  enabled: true
-  image:
-    repository: acryldata/datahub-kafka-setup
-    # tag: "v0.11.0" # defaults to .global.datahub.version
-    # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
-    # to run
-    # command: customCommand
-    # args: []
-  resources:
-    limits:
-      cpu: 500m
-      memory: 1024Mi
-    requests:
-      cpu: 300m
-      memory: 768Mi
-  extraInitContainers: []
-  podSecurityContext:
-    fsGroup: 1000
-  securityContext:
-    runAsUser: 1000
-  annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "-5"
-    helm.sh/hook-delete-policy: before-hook-creation
-  podAnnotations: {}
-  # Add extra sidecar containers to job pod
-  extraSidecars: []
-    # - name: my-image-name
-    #   image: my-image
-    #   imagePullPolicy: Always
-
 mysqlSetupJob:
   enabled: true
   image:

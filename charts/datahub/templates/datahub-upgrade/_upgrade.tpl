@@ -41,6 +41,18 @@ Return the env variables for upgrade jobs
   value: "{{ .Values.global.sql.datasource.driver }}"
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
+{{- with .Values.global.kafka.maxMessageBytes }}
+- name: MAX_MESSAGE_BYTES
+  value: {{ . | quote }}
+{{- end }}
+{{- if or (eq .Values.global.kafka.schemaregistry.type "INTERNAL") (eq .Values.global.kafka.schemaregistry.type "AWS_GLUE") }}
+- name: USE_CONFLUENT_SCHEMA_REGISTRY
+  value: "false"
+{{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+- name: USE_CONFLUENT_SCHEMA_REGISTRY
+  value: "true"
+{{- end }}
+
 {{- with .Values.global.kafka.producer.compressionType }}
 - name: KAFKA_PRODUCER_COMPRESSION_TYPE
   value: "{{ . }}"
@@ -132,6 +144,8 @@ Return the env variables for upgrade jobs
   value: {{ .failed_metadata_change_event_name }}
 - name: METADATA_AUDIT_EVENT_NAME
   value: {{ .metadata_audit_event_name }}
+- name: DATAHUB_USAGE_EVENT_NAME
+  value: {{ .datahub_usage_event_name }}
 - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
   value: {{ .metadata_change_proposal_topic_name }}
 - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
@@ -140,8 +154,18 @@ Return the env variables for upgrade jobs
   value: {{ .metadata_change_log_versioned_topic_name }}
 - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
   value: {{ .metadata_change_log_timeseries_topic_name }}
+- name: PLATFORM_EVENT_TOPIC_NAME
+  value: {{ .platform_event_topic_name }}
 - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
   value: {{ .datahub_upgrade_history_topic_name }}
+{{- end }}
+{{- with .Values.global.kafka.partitions }}
+- name: PARTITIONS
+  value: {{ . | quote }}
+{{- end }}
+{{- with .Values.global.kafka.replicationFactor }}
+- name: REPLICATION_FACTOR
+  value: {{ . | quote }}
 {{- end }}
 {{- end -}}
 

@@ -1438,69 +1438,6 @@ This document provides a comprehensive reference for every single configurable v
 </tbody>
 </table>
 
-### kafkaSetupJob
-
-<table>
-<thead>
-<tr>
-<th>Configuration Path</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>kafkaSetupJob.enabled</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Enable Kafka setup job.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.image.repository</code></td>
-<td>string</td>
-<td><code>acryldata/datahub-kafka-setup</code></td>
-<td>Docker image repository for Kafka setup job.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.image.tag</code></td>
-<td>string</td>
-<td><code></code></td>
-<td>Docker image tag for Kafka setup job. Defaults to global.datahub.version if not specified.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.resources.limits.cpu</code></td>
-<td>string</td>
-<td><code>500m</code></td>
-<td>CPU limit for Kafka setup job.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.resources.limits.memory</code></td>
-<td>string</td>
-<td><code>1024Mi</code></td>
-<td>Memory limit for Kafka setup job.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.resources.requests.cpu</code></td>
-<td>string</td>
-<td><code>300m</code></td>
-<td>CPU request for Kafka setup job.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.resources.requests.memory</code></td>
-<td>string</td>
-<td><code>768Mi</code></td>
-<td>Memory request for Kafka setup job.</td>
-</tr>
-<tr>
-<td><code>kafkaSetupJob.extraSidecars</code></td>
-<td>array</td>
-<td><code>[]</code></td>
-<td>Extra sidecar containers for Kafka setup job.</td>
-</tr>
-</tbody>
-</table>
-
 ### mysqlSetupJob
 
 <table>

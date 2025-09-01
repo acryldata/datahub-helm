@@ -824,7 +824,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.0.0"
+    appVersion: "1.2.0.1"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -844,7 +844,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "1.0.0"
+      defaultCliVersion: "1.2.0.1"
 
     metadata_service_authentication:
       enabled: true

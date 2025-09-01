@@ -713,7 +713,7 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>global.datahub.appVersion</code></td>
 <td>string</td>
-<td><code>1.0.0</code></td>
+<td><code>1.2.0.1</code></td>
 <td>Application version identifier.</td>
 </tr>
 <tr>
@@ -761,7 +761,7 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>global.datahub.managed_ingestion.defaultCliVersion</code></td>
 <td>string</td>
-<td><code>1.0.0</code></td>
+<td><code>1.2.0.1</code></td>
 <td>Default CLI version for managed ingestion.</td>
 </tr>
 <tr>

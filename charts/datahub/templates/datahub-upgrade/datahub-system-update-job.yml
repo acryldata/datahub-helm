@@ -5,6 +5,9 @@ metadata:
   name: {{ .Release.Name }}-system-update
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
+    {{- with .Values.datahubSystemUpdate.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.datahubSystemUpdate.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -195,6 +198,9 @@ metadata:
   name: {{ .Release.Name }}-system-update-nonblk
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
+    {{- with .Values.datahubSystemUpdate.nonblocking.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.datahubSystemUpdate.nonblocking.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

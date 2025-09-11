@@ -113,6 +113,10 @@ crons: {}
     ##
     #podAnnotations: {}
 
+    ## Custom labels to add to the CronJob metadata
+    ##
+    #labels: {}
+
     ## Add your own restartPolicy
     ##
     #restartPolicy:

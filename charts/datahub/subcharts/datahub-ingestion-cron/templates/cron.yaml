@@ -14,6 +14,11 @@ spec:
   failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
   suspend: {{ default false .suspend }}
   jobTemplate:
+    metadata:
+      labels: {{- $labels | nindent 8 }}
+      {{- with $val.labels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       backoffLimit: {{ default 6 $val.backoffLimit }}
       template:

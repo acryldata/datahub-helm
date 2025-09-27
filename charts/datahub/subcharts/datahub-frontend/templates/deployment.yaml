@@ -87,19 +87,25 @@ spec:
           {{- end }}
           livenessProbe:
             httpGet:
-              path: /admin
+              path: {{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.frontend }}{{ end }}/admin
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /admin
+              path: {{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.frontend }}{{ end }}/admin
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_BASE_PATH
+              value: {{ .Values.global.basePath.frontend | quote }}
+            - name: DATAHUB_GMS_BASE_PATH
+              value: {{ .Values.global.basePath.gms | quote }}
+            {{- end }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}

@@ -513,6 +513,21 @@ global:
   datahub_standalone_consumers_enabled: false
   imageRegistry: "docker.io"
 
+  # Base path configuration for serving DataHub behind a proxy
+  # When enabled, DataHub services will be accessible under the specified base paths
+  # This allows hosting DataHub under a subpath like /datahub instead of root /
+  # When using the INTERNAL schema registry this will also set the basePath path for clients.
+  basePath:
+    # Enable basepath support
+    enabled: false
+    # Base path for DataHub frontend (e.g., /datahub)
+    # When set, the frontend will be accessible at this path
+    frontend: ""
+    # Base path for DataHub GMS API (e.g., /datahub)
+    # When set, the GMS will be accessible at this path
+    # For deployments where GMS won't be exposed via an ingress that can be left empty.
+    gms: ""
+
   elasticsearch:
     host: "elasticsearch-master"
     # If you want to use OpenSearch instead of ElasticSearch use different hostname below

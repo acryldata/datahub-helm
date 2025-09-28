@@ -1402,6 +1402,25 @@
         "imageRegistry": {
           "type": "string"
         },
+        "basePath": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "frontend": {
+              "type": "string"
+            },
+            "gms": {
+              "type": "string"
+            }
+	  },
+	  "required": [
+	    "enabled",
+	    "frontend",
+	    "gms"
+	  ]
+        },
         "elasticsearch": {
           "type": "object",
           "properties": {
@@ -2417,6 +2436,7 @@
         "datahub_analytics_enabled",
         "datahub_standalone_consumers_enabled",
         "imageRegistry",
+        "basePath",
         "elasticsearch",
         "kafka",
         "neo4j",

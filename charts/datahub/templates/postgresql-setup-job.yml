@@ -5,6 +5,9 @@ metadata:
   name: {{ .Release.Name }}-postgresql-setup-job
   labels:
     {{- include "datahub.labels" . | nindent 4 }}
+    {{- with .Values.postgresqlSetupJob.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.postgresqlSetupJob.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

@@ -103,6 +103,8 @@ spec:
             {{- if .Values.global.basePath.enabled }}
             - name: DATAHUB_BASE_PATH
               value: {{ .Values.global.basePath.frontend | quote }}
+            - name: PLAY_HTTP_CONTEXT
+              value: {{ .Values.global.basePath.frontend | quote }}
             - name: DATAHUB_GMS_BASE_PATH
               value: {{ .Values.global.basePath.gms | quote }}
             {{- end }}

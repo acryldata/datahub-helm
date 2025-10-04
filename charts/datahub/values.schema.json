@@ -1421,6 +1421,82 @@
 	    "gms"
 	  ]
         },
+        "cdc": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "urnKeySpec": {
+              "type": "string"
+            },
+            "configureSource": {
+              "type": "boolean"
+            },
+            "database": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["mysql", "postgres"]
+                },
+                "username": {
+                  "oneOf": [
+                    {"type": "string"},
+                    {
+                      "type": "object",
+                      "properties": {
+                        "secretRef": {"type": "string"},
+                        "secretKey": {"type": "string"}
+                      },
+                      "required": ["secretRef", "secretKey"]
+                    }
+                  ]
+                },
+                "password": {
+                  "type": "object",
+                  "properties": {
+                    "value": {"type": "string"},
+                    "secretRef": {"type": "string"},
+                    "secretKey": {"type": "string"}
+                  }
+                },
+                "serverId": {
+                  "type": "string"
+                },
+                "includeTable": {
+                  "type": "string"
+                },
+                "includeSchema": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "username", "password"]
+            },
+            "debezium": {
+              "type": "object",
+              "properties": {
+                "connectorName": {
+                  "type": "string"
+                },
+                "kafkaConnectUrl": {
+                  "type": "string"
+                },
+                "requestTimeout": {
+                  "type": "string"
+                },
+                "connectorClass": {
+                  "type": "string"
+                },
+                "pluginName": {
+                  "type": "string"
+                }
+              },
+              "required": ["connectorName", "kafkaConnectUrl", "requestTimeout"]
+            }
+          },
+          "required": ["enabled", "urnKeySpec", "configureSource", "database", "debezium"]
+        },
         "elasticsearch": {
           "type": "object",
           "properties": {

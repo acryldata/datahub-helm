@@ -123,6 +123,10 @@ spec:
             - name: DATAHUB_GMS_BASE_PATH
               value: {{ .Values.global.basePath.gms | quote }}
             {{- end }}
+            {{- if .Values.global.cdc.enabled }}
+            - name: CDC_MCL_PROCESSING_ENABLED
+              value: {{ .Values.global.cdc.enabled | quote }}
+            {{- end }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

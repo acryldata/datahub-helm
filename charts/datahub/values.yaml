@@ -528,6 +528,52 @@ global:
     # For deployments where GMS won't be exposed via an ingress that can be left empty.
     gms: ""
 
+  # Change Data Capture (CDC) configuration
+  # CDC mode provides strict ordering guarantees for metadata changes by generating
+  # MCLs from database change events via Debezium instead of directly from GMS.
+  # For more information, see: https://datahubproject.io/docs/deploy/configure-cdc
+  # NOTE: CDC topic name is configured in kafka.topics.cdc_topic_name
+  cdc:
+    # Enable CDC mode (disabled by default)
+    enabled: false
+    # Partitioning key specification (table:column format)
+    urnKeySpec: "datahub.metadata_aspect_v2:urn"
+    # Auto-configure Debezium connector (recommended false for production)
+    configureSource: false
+    # Database configuration for CDC
+    database:
+      # Database type: mysql or postgres
+      type: "mysql"
+      # CDC database username - can be a direct string value or reference a secret
+      username: "datahub_cdc"
+      # OR use secret reference:
+      # username:
+      #   secretRef: mysql-secrets
+      #   secretKey: mysql-cdc-username
+      # CDC database password - supports both direct value and secret reference
+      password:
+        secretRef: mysql-secrets
+        secretKey: mysql-cdc-password
+        # --------------OR----------------
+        # value: datahub_cdc
+      # MySQL-specific configuration
+      serverId: "184001"
+      # PostgreSQL-specific configuration
+      includeTable: "public.metadata_aspect_v2"
+      includeSchema: "public"
+    # Debezium/Kafka Connect configuration
+    debezium:
+      # Debezium connector name
+      connectorName: "datahub-cdc-connector"
+      # Kafka Connect REST API URL
+      kafkaConnectUrl: "http://kafka-connect:8083"
+      # Request timeout in milliseconds
+      requestTimeout: "10000"
+      # Optional: Override connector class for specific database
+      # connectorClass: "io.debezium.connector.mysql.MySqlConnector"
+      # Optional: Override logical decoding plugin
+      # pluginName: "decoderbufs"
+
   elasticsearch:
     host: "elasticsearch-master"
     # If you want to use OpenSearch instead of ElasticSearch use different hostname below
@@ -705,6 +751,7 @@ global:
       metadata_change_log_timeseries_topic_name: "MetadataChangeLog_Timeseries_v1"
       platform_event_topic_name: "PlatformEvent_v1"
       datahub_upgrade_history_topic_name: "DataHubUpgradeHistory_v1"
+      cdc_topic_name: "datahub.metadata_aspect_v2"
     consumer_groups:
       datahub_upgrade_history_kafka_consumer_group_id: {}
       #   gms: "<<release-name>>-duhe-consumer-job-client-gms"

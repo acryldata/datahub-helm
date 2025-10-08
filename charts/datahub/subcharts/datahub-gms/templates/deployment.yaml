@@ -94,14 +94,14 @@ spec:
           {{- end }}
           livenessProbe:
             httpGet:
-              path: {{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.gms }}{{ end }}/health
+              path: {{ if .Values.global.basePath.enabled }}{{ if eq .Values.global.basePath.gms "/" }}{{ else }}{{ .Values.global.basePath.gms }}{{ end }}{{ end }}/health
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: {{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.gms }}{{ end }}/health
+              path: {{ if .Values.global.basePath.enabled }}{{ if eq .Values.global.basePath.gms "/" }}{{ else }}{{ .Values.global.basePath.gms }}{{ end }}{{ end }}/health
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}

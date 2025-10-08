@@ -108,6 +108,13 @@ spec:
             - name: DATAHUB_GMS_BASE_PATH
               value: {{ .Values.global.basePath.gms | quote }}
             {{- end }}
+            {{- if and .Values.global.basePath.gms (ne .Values.global.basePath.gms "") (ne .Values.global.basePath.gms "/") }}
+            - name: DATAHUB_GMS_BASE_PATH_ENABLED
+              value: "true"
+            {{- else }}
+            - name: DATAHUB_GMS_BASE_PATH_ENABLED
+              value: "false"
+            {{- end }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}

@@ -197,7 +197,7 @@ elasticsearchSetupJob:
     #   imagePullPolicy: Always
 
 kafkaSetupJob:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-kafka-setup
     tag: v1.2.0.1

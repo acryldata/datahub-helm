@@ -13,6 +13,12 @@ spec:
   suspend: {{ .Values.global.readonly }}
   {{- include "datahub.upgrade.dailyCronWindow" . | nindent 2}}
   jobTemplate:
+    metadata:
+      labels:
+        {{- include "datahub.labels" . | nindent 8 }}
+        {{- with .Values.datahubSystemCronHourly.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       template:
         metadata:

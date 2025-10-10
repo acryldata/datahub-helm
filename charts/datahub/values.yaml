@@ -167,6 +167,8 @@ elasticsearchSetupJob:
     # to run
     # command: customCommand
     # args: []
+  # Custom labels to add to the Job metadata
+  labels: {}
   resources:
     limits:
       cpu: 500m
@@ -206,6 +208,8 @@ kafkaSetupJob:
     # to run
     # command: customCommand
     # args: []
+  # Custom labels to add to the Job metadata
+  labels: {}
   resources:
     limits:
       cpu: 500m
@@ -240,6 +244,8 @@ mysqlSetupJob:
     # to run
     # command: customCommand
     # args: []
+  # Custom labels to add to the Job metadata
+  labels: {}
   resources:
     limits:
       cpu: 500m
@@ -279,6 +285,8 @@ postgresqlSetupJob:
     # to run
     # command: customCommand
     # args: []
+  # Custom labels to add to the Job metadata
+  labels: {}
   resources:
     limits:
       cpu: 500m
@@ -338,6 +346,8 @@ datahubUpgrade:
     #   image: my-image
     #   imagePullPolicy: Always
   restoreIndices:
+    # Custom labels to add to the CronJob metadata
+    labels: {}
     image:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
       # to run
@@ -391,6 +401,8 @@ datahubSystemCronHourly:
   # This feature is not ready yet, DO NOT enable
   # Enabled by default in case resources need to be allocated to be able to run this job
   enabled: false
+  # Custom labels to add to the CronJob metadata
+  labels: {}
   image:
     repository: 795586375822.dkr.ecr.us-west-2.amazonaws.com/datahub-upgrade
     # tag: "v0.2.0"  # defaults to .global.datahub.version
@@ -411,6 +423,8 @@ datahubSystemCronHourly:
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
 datahubSystemUpdate:
+  # Custom labels to add to the Job metadata
+  labels: {}
   image:
     repository: acryldata/datahub-upgrade
     # tag:
@@ -435,6 +449,8 @@ datahubSystemUpdate:
   # system is starting.
   nonblocking:
     enabled: true
+    # Custom labels to add to the nonblocking Job metadata
+    labels: {}
     # When mode = 'nonblocking' the nonblocking job should not include the above helm.sh/hook annotations
     annotations:
       # This is what defines this resource as a hook. Without this line, the

@@ -6,6 +6,7 @@ replicaCount: 1
 image:
   repository: acryldata/datahub-actions
   pullPolicy: IfNotPresent
+  tag: ~
   # Override the image's command & args with a new one.
   # This may be necessary for custom startup or shutdown behaviors
   command:

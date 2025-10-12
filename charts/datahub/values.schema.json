@@ -14,6 +14,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -71,6 +77,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -181,6 +193,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -274,7 +292,10 @@
               "type": "string"
             },
             "tag": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -331,6 +352,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -386,6 +413,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -444,6 +477,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -467,6 +506,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -590,6 +635,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -713,6 +764,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -836,6 +893,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -959,6 +1022,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
@@ -1110,6 +1179,12 @@
           "properties": {
             "repository": {
               "type": "string"
+            },
+            "tag": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [

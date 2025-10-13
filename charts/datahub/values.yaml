@@ -197,7 +197,7 @@ elasticsearchSetupJob:
     #   imagePullPolicy: Always
 
 kafkaSetupJob:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-kafka-setup
     tag: v1.2.0.1
@@ -866,7 +866,7 @@ global:
       #   value: password
 
   datahub:
-    version: v1.2.0.1
+    version: v1.3.0
     gms:
       protocol: "http"
       port: "8080"

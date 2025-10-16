@@ -107,6 +107,10 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: ELASTICSEARCH_SHIM_ENGINE_TYPE
+              value: {{ .Values.global.elasticsearch.engineType | quote }}
+            - name: ELASTICSEARCH_SHIM_AUTO_DETECT
+              value: {{ .Values.global.elasticsearch.autoDetect | quote }}
             - name: ELASTICSEARCH_BUILD_INDICES_REINDEX_OPTIMIZATION_ENABLED
               value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled | quote }}
             - name: THEME_V2_ENABLED

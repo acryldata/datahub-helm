@@ -97,6 +97,10 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            - name: ELASTICSEARCH_SHIM_ENGINE_TYPE
+              value: {{ .Values.global.elasticsearch.engineType | quote }}
+            - name: ELASTICSEARCH_SHIM_AUTO_DETECT
+              value: {{ .Values.global.elasticsearch.autoDetect | quote }}
             {{- if .Values.global.basePath.enabled }}
             - name: DATAHUB_BASE_PATH
               value: {{ .Values.global.basePath.frontend | quote }}

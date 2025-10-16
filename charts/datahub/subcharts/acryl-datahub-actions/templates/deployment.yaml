@@ -82,6 +82,12 @@ spec:
           args: {{ .Values.image.args | toRawJson }}
           {{- end }}
           env:
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_BASE_PATH
+              value: {{ .Values.global.basePath.frontend | quote }}
+            - name: DATAHUB_GMS_BASE_PATH
+              value: {{ .Values.global.basePath.gms | quote }}
+            {{- end }}
             - name: DATAHUB_GMS_PROTOCOL
               value: {{ include "acryl-datahub-actions.datahubGmsProtocol" . }}
             - name: DATAHUB_GMS_HOST
@@ -105,7 +111,7 @@ spec:
               value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_URL
-              value: {{ printf "%s://%s:%s/schema-registry/api/" (include "acryl-datahub-actions.datahubGmsProtocol" .) (include "acryl-datahub-actions.datahubGmsHost" .) (include "acryl-datahub-actions.datahubGmsPort" .) | quote }}
+              value: {{ printf "%s://%s:%s%s/schema-registry/api/" (include "acryl-datahub-actions.datahubGmsProtocol" .) (include "acryl-datahub-actions.datahubGmsHost" .) (include "acryl-datahub-actions.datahubGmsPort" .) (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) | quote }}
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: SCHEMA_REGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"

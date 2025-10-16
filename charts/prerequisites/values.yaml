@@ -56,14 +56,17 @@ opensearch:
       value: "true"
 
   image:
-    tag: "2.11.0"
+    tag: "2.17.0"
 
-  # opensearchJavaOpts: "-Xmx512M -Xms512M"
+  # opensearchJavaOpts: "-Xms768m -Xmx1024m"
 
-  # resources:
-  #   requests:
-  #     cpu: "1000m"
-  #     memory: "100Mi"
+  #  resources:
+  #    requests:
+  #      cpu: "100m"
+  #      memory: "1024M"
+  #    limits:
+  #      cpu: "1000m"
+  #      memory: "2048M"
 
   # Request smaller persistent volumes.
   # persistence:
@@ -114,6 +117,7 @@ neo4j:
 mysql:
   enabled: true
   image:
+    repository: bitnamilegacy/mysql
     tag: 8.0.32-debian-11-r26
   auth:
     # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
@@ -177,6 +181,8 @@ cp-helm-charts:
 # Bitnami version of Kafka that deploys open source Kafka https://artifacthub.io/packages/helm/bitnami/kafka
 kafka:
   enabled: true
+  image:
+    repository: bitnamilegacy/kafka
   listeners:
     client:
       protocol: PLAINTEXT
@@ -201,3 +207,5 @@ kafka:
     enabled: false
   zookeeper:
     enabled: true
+    image:
+      repository: bitnamilegacy/zookeeper

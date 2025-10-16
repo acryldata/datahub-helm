@@ -94,14 +94,14 @@ spec:
           {{- end }}
           livenessProbe:
             httpGet:
-              path: /health
+              path: {{ if .Values.global.basePath.enabled }}{{ if eq .Values.global.basePath.gms "/" }}{{ else }}{{ .Values.global.basePath.gms }}{{ end }}{{ end }}/health
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /health
+              path: {{ if .Values.global.basePath.enabled }}{{ if eq .Values.global.basePath.gms "/" }}{{ else }}{{ .Values.global.basePath.gms }}{{ end }}{{ end }}/health
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
@@ -115,6 +115,18 @@ spec:
               value: {{ .Values.theme_v2.default | quote }}
             - name: THEME_V2_TOGGLEABLE
               value: {{ .Values.theme_v2.toggeable | quote }}
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_BASE_PATH
+              value: {{ .Values.global.basePath.frontend | quote }}
+            {{- end }}
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_GMS_BASE_PATH
+              value: {{ .Values.global.basePath.gms | quote }}
+            {{- end }}
+            {{- if .Values.global.cdc.enabled }}
+            - name: CDC_MCL_PROCESSING_ENABLED
+              value: {{ .Values.global.cdc.enabled | quote }}
+            {{- end }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2
@@ -204,7 +216,7 @@ spec:
             {{- end }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
-              value: {{ printf "http://localhost:%s/schema-registry/api/" .Values.global.datahub.gms.port }}
+              value: {{ printf "http://localhost:%s%s/schema-registry/api/" .Values.global.datahub.gms.port (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) }}
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"

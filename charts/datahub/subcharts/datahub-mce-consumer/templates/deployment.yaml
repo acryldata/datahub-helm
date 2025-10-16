@@ -97,6 +97,16 @@ spec:
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           env:
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_BASE_PATH
+              value: {{ .Values.global.basePath.frontend | quote }}
+            - name: DATAHUB_GMS_BASE_PATH
+              value: {{ .Values.global.basePath.gms | quote }}
+            {{- end }}
+            {{- if .Values.global.cdc.enabled }}
+            - name: CDC_MCL_PROCESSING_ENABLED
+              value: {{ .Values.global.cdc.enabled | quote }}
+            {{- end }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2
@@ -135,7 +145,7 @@ spec:
             {{- end }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
-              value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+              value: {{ printf "http://%s-%s:%s%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) }}
             {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
             - name: KAFKA_SCHEMAREGISTRY_URL
               value: "{{ .Values.global.kafka.schemaregistry.url }}"

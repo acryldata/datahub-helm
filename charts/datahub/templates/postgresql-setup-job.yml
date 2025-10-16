@@ -85,6 +85,32 @@ spec:
               value: {{ .Values.global.sql.datasource.hostForpostgresqlClient | quote }}
             - name: POSTGRES_PORT
               value: {{ .Values.global.sql.datasource.port | quote }}
+            - name: DATAHUB_DB_NAME
+              value: "datahub"
+          {{- if .Values.global.cdc.enabled }}
+            - name: CDC_MCL_PROCESSING_ENABLED
+              value: {{ .Values.global.cdc.enabled | quote }}
+            - name: CDC_USER
+              {{- $cdcUsernameValue := .Values.global.cdc.database.username }}
+              {{- if and (kindIs "string" $cdcUsernameValue) $cdcUsernameValue }}
+              value: {{ $cdcUsernameValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.cdc.database.username.secretRef }}"
+                  key: "{{ .Values.global.cdc.database.username.secretKey }}"
+              {{- end }}
+            - name: CDC_PASSWORD
+              {{- $cdcPasswordValue := .Values.global.cdc.database.password.value }}
+              {{- if $cdcPasswordValue }}
+              value: {{ $cdcPasswordValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.cdc.database.password.secretRef }}"
+                  key: "{{ .Values.global.cdc.database.password.secretKey }}"
+              {{- end }}
+          {{- end }}
           {{- with .Values.postgresqlSetupJob.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

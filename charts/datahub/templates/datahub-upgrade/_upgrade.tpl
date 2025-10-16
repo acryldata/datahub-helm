@@ -3,6 +3,12 @@
 Return the env variables for upgrade jobs
 */}}
 {{- define "datahub.upgrade.env" -}}
+{{- if .Values.global.basePath.enabled }}
+- name: DATAHUB_BASE_PATH
+  value: {{ .Values.global.basePath.frontend | quote }}
+- name: DATAHUB_GMS_BASE_PATH
+  value: {{ .Values.global.basePath.gms | quote }}
+{{- end }}
 - name: ENTITY_REGISTRY_CONFIG_PATH
   value: /datahub/datahub-gms/resources/entity-registry.yml
 - name: DATAHUB_GMS_HOST
@@ -74,7 +80,7 @@ Return the env variables for upgrade jobs
 {{- end }}
 {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
-  value: {{ printf "http://%s-%s:%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port }}
+  value: {{ printf "http://%s-%s:%s%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) }}
 {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: "{{ .Values.global.kafka.schemaregistry.url }}"
@@ -165,6 +171,62 @@ Return the env variables for upgrade jobs
   value: {{ .platform_event_topic_name }}
 - name: DATAHUB_USAGE_EVENT_NAME
   value: {{ .datahub_usage_event_name }}
+- name: CDC_TOPIC_NAME
+  value: {{ .cdc_topic_name }}
+{{- end }}
+
+{{- if .Values.global.cdc.enabled }}
+- name: CDC_MCL_PROCESSING_ENABLED
+  value: {{ .Values.global.cdc.enabled | quote }}
+- name: CDC_CONFIGURE_SOURCE
+  value: {{ .Values.global.cdc.configureSource | quote }}
+- name: CDC_URN_KEY_SPEC
+  value: {{ .Values.global.cdc.urnKeySpec | quote }}
+- name: CDC_DB_TYPE
+  value: {{ .Values.global.cdc.database.type | quote }}
+- name: CDC_USER
+  {{- $cdcUsernameValue := .Values.global.cdc.database.username }}
+  {{- if and (kindIs "string" $cdcUsernameValue) $cdcUsernameValue }}
+  value: {{ $cdcUsernameValue | quote }}
+  {{- else }}
+  valueFrom:
+    secretKeyRef:
+      name: "{{ .Values.global.cdc.database.username.secretRef }}"
+      key: "{{ .Values.global.cdc.database.username.secretKey }}"
+  {{- end }}
+- name: CDC_PASSWORD
+  {{- $cdcPasswordValue := .Values.global.cdc.database.password.value }}
+  {{- if $cdcPasswordValue }}
+  value: {{ $cdcPasswordValue | quote }}
+  {{- else }}
+  valueFrom:
+    secretKeyRef:
+      name: "{{ .Values.global.cdc.database.password.secretRef }}"
+      key: "{{ .Values.global.cdc.database.password.secretKey }}"
+  {{- end }}
+- name: DATAHUB_CDC_CONNECTOR_NAME
+  value: {{ .Values.global.cdc.debezium.connectorName | quote }}
+- name: CDC_KAFKA_CONNECT_URL
+  value: {{ .Values.global.cdc.debezium.kafkaConnectUrl | quote }}
+- name: CDC_KAFKA_CONNECT_REQUEST_TIMEOUT
+  value: {{ .Values.global.cdc.debezium.requestTimeout | quote }}
+{{- if eq .Values.global.cdc.database.type "mysql" }}
+- name: CDC_SERVER_ID
+  value: {{ .Values.global.cdc.database.serverId | quote }}
+{{- else if eq .Values.global.cdc.database.type "postgres" }}
+- name: CDC_INCLUDE_TABLE
+  value: {{ .Values.global.cdc.database.includeTable | quote }}
+- name: CDC_INCLUDE_SCHEMA
+  value: {{ .Values.global.cdc.database.includeSchema | quote }}
+{{- end }}
+{{- with .Values.global.cdc.debezium.connectorClass }}
+- name: DEBEZIUM_CONNECTOR_CLASS
+  value: {{ . | quote }}
+{{- end }}
+{{- with .Values.global.cdc.debezium.pluginName }}
+- name: DEBEZIUM_PLUGIN_NAME
+  value: {{ . | quote }}
+{{- end }}
 {{- end }}
 {{- end -}}
 

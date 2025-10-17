@@ -11,7 +11,7 @@ version: 0.7.2
 appVersion: v1.3.0
 dependencies:
   - name: datahub-gms
-    version: 0.2.191
+    version: 0.2.192
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
@@ -19,7 +19,7 @@ dependencies:
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer
-    version: 0.2.168
+    version: 0.2.169
     repository: file://./subcharts/datahub-mae-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-mce-consumer

@@ -6,7 +6,8 @@ apiVersion: {{ include "datahub-ingestion-cron.cronjob.apiVersion" $}}
 kind: CronJob
 metadata:
   name: "{{ $baseName }}-{{ $jobName }}"
-  labels: {{- $labels | nindent 4 }}
+  labels:
+    {{- $labels | nindent 4 }}
 spec:
   schedule: {{ default "0 0 * * *" .schedule | quote }}
   concurrencyPolicy: {{ default "Allow" .concurrencyPolicy }}
@@ -14,6 +15,12 @@ spec:
   failedJobsHistoryLimit: {{ default 1 .failedJobsHistoryLimit }}
   suspend: {{ default false .suspend }}
   jobTemplate:
+    metadata:
+      labels:
+        {{- $labels | nindent 8 }}
+        {{- with $val.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       backoffLimit: {{ default 6 $val.backoffLimit }}
       template:

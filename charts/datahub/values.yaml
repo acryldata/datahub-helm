@@ -123,6 +123,8 @@ acryl-datahub-actions:
       memory: 256Mi
 
 datahub-mae-consumer:
+  enabled: true
+  replicaCount: 2
   image:
     repository: acryldata/datahub-mae-consumer
     # tag: "v0.11.0" # defaults to .global.datahub.version
@@ -132,12 +134,13 @@ datahub-mae-consumer:
     # args: []
   resources:
     limits:
-      memory: 1536Mi
+      memory: 2Gi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 1000m
+      memory: 1500Mi
 
 datahub-mce-consumer:
+  enabled: true
   image:
     repository: acryldata/datahub-mce-consumer
     # tag: "v0.11.0" # defaults to .global.datahub.version
@@ -147,10 +150,10 @@ datahub-mce-consumer:
     # args: []
   resources:
     limits:
-      memory: 1536Mi
+      memory: 3Gi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 1000m
+      memory: 2252Mi
 
 datahub-ingestion-cron:
   enabled: false
@@ -510,7 +513,7 @@ global:
   strict_mode: true
   graph_service_impl: elasticsearch
   datahub_analytics_enabled: true
-  datahub_standalone_consumers_enabled: false
+  datahub_standalone_consumers_enabled: true
   imageRegistry: "docker.io"
 
   # Base path configuration for serving DataHub behind a proxy

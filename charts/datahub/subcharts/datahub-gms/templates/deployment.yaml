@@ -164,11 +164,11 @@ spec:
             {{- end }}
             {{- if not .Values.global.datahub_standalone_consumers_enabled }}
             - name: MCE_CONSUMER_ENABLED
-              value: "true"
+              value: {{ not .Values.global.datahub_standalone_consumers_enabled | quote }}
             - name: MAE_CONSUMER_ENABLED
-              value: "true"
+              value: {{ not .Values.global.datahub_standalone_consumers_enabled | quote }}
             - name: PE_CONSUMER_ENABLED
-              value: "true"
+              value: {{ not .Values.global.datahub_standalone_consumers_enabled | quote }}
             {{- end }}
             - name: ENTITY_REGISTRY_CONFIG_PATH
               value: /datahub/datahub-gms/resources/entity-registry.yml

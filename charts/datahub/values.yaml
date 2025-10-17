@@ -599,6 +599,10 @@ global:
     insecure: "false"
     useSSL: "false"
 
+    # Auto-detection is supported if you have cluster permissions for getting current cluster info, may cause issues on restrictive deployed managed services
+    engineType: "AUTO_DETECT"
+    autoDetect: "true"
+
     # Authentication
     # auth:
       # username: "elastic"

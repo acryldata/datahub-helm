@@ -538,6 +538,12 @@ spec:
             {{- end }}
             - name: MCP_CONSUMER_BATCH_ENABLED
               value: {{ .Values.global.datahub.metadataChangeProposal.consumer.batch.enabled | quote }}
+            {{- with .Values.global.datahub.gms.s3 }}
+            - name: DATAHUB_BUCKET_NAME
+              value: {{ .bucketName }}
+            - name: DATAHUB_ROLE_ARN
+              value: {{ .roleArn }}
+            {{- end}}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

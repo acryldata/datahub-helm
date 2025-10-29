@@ -85,3 +85,22 @@ Return the appropriate apiVersion for HorizontalPodAutoscaler.
     {{- print "autoscaling/v2beta1" -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Kafka IAM environment variables for AWS MSK authentication if enabled.
+For Java/Spring-based services that use Spring Kafka.
+*/}}
+{{- define "datahub.kafka.iam.env" -}}
+{{- if .Values.global.kafka.iam.enabled -}}
+- name: SPRING_KAFKA_PROPERTIES_SASL_CLIENT_CALLBACK_HANDLER_CLASS
+  value: software.amazon.msk.auth.iam.IAMClientCallbackHandler
+- name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+  value: software.amazon.msk.auth.iam.IAMLoginModule required;
+- name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+  value: AWS_MSK_IAM
+- name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+  value: TLS
+- name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+  value: SASL_SSL
+{{- end -}}
+{{- end -}}

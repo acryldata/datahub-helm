@@ -442,11 +442,70 @@ datahubSystemUpdate:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-4"
     helm.sh/hook-delete-policy: before-hook-creation
+  # increase from default of 6
+  backOffLimit: 15
+  useAdmin: true
+  # Authentication configuration for system-update job
+  # Allows system-update to use different auth than the main application
+  sql:
+    # Override IAM authentication for Ebean (SQL)
+    iam:
+      # Initial bootstrap, no iam
+      enabled: false
+    # Override Ebean credentials (defaults to global.sql.datasource)
+    # username: "override-username"
+    # password:
+    #   value: "override-password"
+    #   secretRef: "override-secret-name"
+    #   secretKey: "override-secret-key"
+    # SQL setup within system-update job
+    # REQUIRED when global.sql.iam.enabled=true
+    setup:
+      enabled: false  # Replaces the legacy mysqlSetupJob/postgresqlSetupJob
+      createTables: true     # CREATE_TABLES env var - create DataHub tables
+      createDatabase: true   # CREATE_DB env var - create DataHub database
+      createUser: false      # CREATE_USER env var - create database user
+      # Optional: Override username/password for new user being created (defaults to global.sql.datasource)
+      # createUsername: "custom-setup-user"
+      # createPassword:
+      #   value: "password"
+      #   secretRef: "secret-name"
+      #   secretKey: "password-key"
+      # Environment variables generated when createUser=true: CREATE_USER_USERNAME, CREATE_USER_PASSWORD
+  elasticsearch:
+    # Override IAM authentication for Elasticsearch
+    iam:
+      # Initial bootstrap, no iam
+      enabled: false
+    # Override Elasticsearch credentials (defaults to global.elasticsearch.auth)
+    # username: "override-username"
+    # password:
+    #   value: "override-password"
+    #   secretRef: "override-secret-name"
+    #   secretKey: "override-secret-key"
+    # Elasticsearch setup within system-update job
+    setup:
+      enabled: false            # Enable Elasticsearch user creation
+      createUser: false         # CREATE_USER_ES env var - create Elasticsearch user
+      createUserIamRoleArn: ""  # CREATE_USER_ES_IAM_ROLE_ARN env var - IAM role ARN to map to the user (only if createUser=true)
+      # Optional: Override username/password for the new user being created (defaults to global.elasticsearch.auth)
+      # createUsername: "datahub-user"
+      # createPassword:
+      #   value: "password"
+      #   secretRef: "secret-name"
+      #   secretKey: "password-key"
+      # Environment variables generated: CREATE_USER_ES_USERNAME, CREATE_USER_ES_PASSWORD, CREATE_USER_ES_IAM_ROLE_ARN
   # !! Requires version v0.13.0 or greater
   # Split the system update into 2 jobs, one that is blocking the rest of
   # the deployment and the other which is non-blocking. Once the blocking
   # steps are completed, the non-blocking job runs while the rest of the
   # system is starting.
+  # Optional: Service account configuration for the blocking system-update job
+  # If not specified, defaults to the namespace's default service account
+  # serviceAccount:
+  #   create: true
+  #   rbac: true
+  #   name: datahub-operator-sa
   nonblocking:
     enabled: true
     # Custom labels to add to the nonblocking Job metadata
@@ -457,6 +516,12 @@ datahubSystemUpdate:
       # job is considered part of the release.
       helm.sh/hook: post-install,post-upgrade
       helm.sh/hook-delete-policy: before-hook-creation
+    # Optional: Override service account for the non-blocking job
+    # If not specified, defaults to datahubSystemUpdate.serviceAccount
+    # serviceAccount:
+    #   create: true
+    #   rbac: true
+    #   name: datahub-operator-sa-nonblocking
     image:
       args:
       # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
@@ -603,6 +668,15 @@ global:
     engineType: "AUTO_DETECT"
     autoDetect: "true"
 
+    # AWS IAM authentication for OpenSearch
+    # When enabled, DataHub will use AWS IAM credentials instead of username/password
+    # Requires proper IAM roles and policies to be configured
+    iam:
+      enabled: false  # Sets OPENSEARCH_USE_AWS_IAM_AUTH
+    # AWS region for OpenSearch (required when iam.enabled is true)
+    # Example: "us-west-2"
+    region: ""
+
     # Authentication
     # auth:
       # username: "elastic"
@@ -651,6 +725,8 @@ global:
         ## When reindexing is required, this option will clone the existing index as a backup
         ## The clone indices are not currently managed.
         cloneIndices: true
+        cloneRetentionValue: 7
+        cloneRetentionUnit: DAYS
 
         ## Typically when reindexing the document counts between the original and destination indices should match.
         ## In some cases reindexing might not be able to proceed due to incompatibilities between a document in the
@@ -758,6 +834,14 @@ global:
       server: "prerequisites-kafka:9092"
     zookeeper:
       server: "prerequisites-zookeeper:2181"
+    # AWS IAM authentication for MSK
+    # When enabled, DataHub will use AWS IAM credentials instead of username/password
+    # Applies to all components that use Kafka (both Java/Spring and Python services).
+    iam:
+      enabled: false  # Sets SPRING_KAFKA_PROPERTIES_SASL_* environment variables for Java services
+      # AWS region for Kafka/MSK (optional, will be auto-detected if not specified)
+      # Example: "us-west-2"
+      awsRegion: ""
     # This section defines the names for the kafka topics that DataHub depends on, at a global level. Do not override this config
     # at a sub-chart level.
     topics:
@@ -884,6 +968,13 @@ global:
       #   secretKey: mysql-root-password
       # --------------OR----------------
       #   value: password
+
+    # IAM authentication for SQL databases (supports both MySQL and PostgreSQL)
+    # When enabled, DataHub will use IAM credentials instead of username/password
+    # Requires proper IAM roles and policies to be configured
+    iam:
+      enabled: false  # Sets EBEAN_USE_IAM_AUTH and EBEAN_POSTGRES_USE_AWS_IAM_AUTH
+      cloudProvider: "auto"  # Cloud provider: "auto" (detect), "aws", or "gcp"
 
   datahub:
     version: v1.3.0

@@ -1105,6 +1105,12 @@
     "datahubSystemUpdate": {
       "type": "object",
       "properties": {
+        "backOffLimit": {
+          "type": "number"
+        },
+        "useAdmin": {
+          "type": "boolean"
+        },
         "image": {
           "type": "object",
           "properties": {
@@ -1170,6 +1176,20 @@
               "type": "object",
               "properties": {
                 "args": {}
+              }
+            },
+            "serviceAccount": {
+              "type": "object",
+              "properties": {
+                "create": {
+                  "type": "boolean"
+                },
+                "rbac": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "type": "string"
+                }
               }
             }
           },
@@ -1363,6 +1383,103 @@
         "extraInitContainers": {
           "type": "array",
           "items": {}
+        },
+        "sql": {
+          "type": "object",
+          "properties": {
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"]
+            },
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "value": { "type": "string" },
+                "secretRef": { "type": "string" },
+                "secretKey": { "type": "string" }
+              }
+            },
+            "setup": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "createTables": { "type": "boolean" },
+                "createDatabase": { "type": "boolean" },
+                "createUser": { "type": "boolean" },
+                "createUsername": { "type": "string" },
+                "createPassword": {
+                  "type": "object",
+                  "properties": {
+                    "value": { "type": "string" },
+                    "secretRef": { "type": "string" },
+                    "secretKey": { "type": "string" }
+                  }
+                }
+              },
+              "required": [
+                "enabled",
+                "createTables",
+                "createDatabase",
+                "createUser"
+              ]
+            }
+          },
+          "required": ["iam", "setup"]
+        },
+        "elasticsearch": {
+          "type": "object",
+          "properties": {
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"]
+            },
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "value": { "type": "string" },
+                "secretRef": { "type": "string" },
+                "secretKey": { "type": "string" }
+              }
+            },
+            "setup": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "createUser": { "type": "boolean" },
+                "createUserIamRoleArn": { "type": "string" },
+                "createUsername": { "type": "string" },
+                "createPassword": {
+                  "type": "object",
+                  "properties": {
+                    "value": { "type": "string" },
+                    "secretRef": { "type": "string" },
+                    "secretKey": { "type": "string" }
+                  }
+                }
+              },
+              "required": [
+                "enabled",
+                "createUser"
+              ]
+            }
+          },
+          "required": ["iam", "setup"]
         }
       },
       "required": [
@@ -1549,6 +1666,18 @@
                 "enableSettingsReindex",
                 "upgrade"
               ]
+            },
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"]
+            },
+            "region": {
+              "type": "string"
             },
             "search": {
               "type": "object",
@@ -2033,6 +2162,18 @@
                 "stopContainerOnDeserializationError"
               ]
             },
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "awsRegion": {
+                  "type": "string"
+                }
+              },
+              "required": ["enabled"]
+            },
             "schemaregistry": {
               "type": "object",
               "properties": {
@@ -2160,6 +2301,18 @@
                 "username",
                 "password"
               ]
+            },
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "cloudProvider": {
+                  "type": "string"
+                }
+              },
+              "required": ["enabled"]
             }
           },
           "required": [

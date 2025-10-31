@@ -1,4 +1,9 @@
 {{- if .Values.global.datahub.systemUpdate.enabled -}}
+{{/*
+Validate IAM authentication configuration
+Prevents legacy setup jobs from being enabled when IAM is configured
+*/}}
+{{- include "datahub.validate.iam.setup" . -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -32,8 +37,14 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.datahubSystemUpdate.serviceAccount }}
-      serviceAccountName: {{ . }}
+    {{- if .Values.datahubSystemUpdate.nonblocking.serviceAccount }}
+      {{- with .Values.datahubSystemUpdate.nonblocking.serviceAccount }}
+      serviceAccountName: {{ .name }}
+      {{- end }}
+    {{- else }}
+      {{- with .Values.datahubSystemUpdate.serviceAccount }}
+      serviceAccountName: {{ .name }}
+      {{- end }}
     {{- end }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -78,11 +89,142 @@ spec:
           env:
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
-            - name: DATAHUB_REVISION
-              value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12 }}
-            - name: DATAHUB_ANALYTICS_ENABLED
-              value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: DATAHUB_GMS_HOST
+              value: {{ (.Values.global.datahub.gms.host | default (printf "%s-%s" .Release.Name "datahub-gms")) | trunc 63 | trimSuffix "-"}}
+            - name: DATAHUB_GMS_PORT
+              value: "{{ .Values.global.datahub.gms.port }}"
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_BASE_PATH
+              value: {{ .Values.global.basePath.frontend | quote }}
+            - name: DATAHUB_GMS_BASE_PATH
+              value: {{ .Values.global.basePath.gms | quote }}
+            {{- end }}
+            - name: DATAHUB_MAE_CONSUMER_HOST
+              value: {{ printf "%s-%s" .Release.Name "datahub-mae-consumer" }}
+            - name: DATAHUB_MAE_CONSUMER_PORT
+              value: "{{ .Values.global.datahub.mae_consumer.port }}"
+            - name: EBEAN_DATASOURCE_USERNAME
+              {{- $usernameValue := (.Values.datahubSystemUpdate.sql).username | default .Values.global.sql.datasource.username }}
+              {{- if and (kindIs "string" $usernameValue) $usernameValue }}
+              value: {{ $usernameValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ ($usernameValue.secretRef | default .Values.global.sql.datasource.username.secretRef) | quote }}
+                  key: {{ ($usernameValue.secretKey | default .Values.global.sql.datasource.username.secretKey) | quote }}
+              {{- end }}
+            {{- if not (.Values.datahubSystemUpdate.sql.iam.enabled | default false) }}
+            - name: EBEAN_DATASOURCE_PASSWORD
+              {{- $passwordValue := (.Values.datahubSystemUpdate.sql.password).value | default .Values.global.sql.datasource.password.value }}
+              {{- if $passwordValue }}
+              value: {{ $passwordValue | quote }}
+              {{- else }}
+              {{- $passwordSecretRef := ((.Values.datahubSystemUpdate.sql.password).secretRef | default .Values.global.sql.datasource.password.secretRef) }}
+              {{- $passwordSecretKey := ((.Values.datahubSystemUpdate.sql.password).secretKey | default .Values.global.sql.datasource.password.secretKey) }}
+              {{- if and $passwordSecretRef $passwordSecretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $passwordSecretRef | quote }}
+                  key: {{ $passwordSecretKey | quote }}
+              {{- end }}
+              {{- end }}
+            {{- end }}
+            - name: EBEAN_DATASOURCE_HOST
+              value: "{{ .Values.global.sql.datasource.host }}"
+            - name: EBEAN_DATASOURCE_URL
+              value: "{{ .Values.global.sql.datasource.url }}"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "{{ .Values.global.sql.datasource.driver }}"
+            {{- if (.Values.datahubSystemUpdate.sql.iam.enabled | default false) }}
+            - name: EBEAN_POSTGRES_USE_AWS_IAM_AUTH
+              value: "true"
+            - name: EBEAN_USE_IAM_AUTH
+              value: "true"
+            {{- if .Values.global.sql.iam.cloudProvider }}
+            - name: EBEAN_CLOUD_PROVIDER
+              value: {{ .Values.global.sql.iam.cloudProvider | quote }}
+            {{- else }}
+            - name: EBEAN_CLOUD_PROVIDER
+              value: "auto"
+            {{- end }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.sql.setup.enabled }}
+            # Enable SQL setup within system-update job
+            # This replaces the legacy mysqlSetupJob/postgresqlSetupJob
+            - name: DATAHUB_SQL_SETUP_ENABLED
+              value: "true"
+            - name: CREATE_TABLES
+              value: {{ .Values.datahubSystemUpdate.sql.setup.createTables | default "true" | quote }}
+            - name: CREATE_DB
+              value: {{ .Values.datahubSystemUpdate.sql.setup.createDatabase | default "true" | quote }}
+            {{- if .Values.datahubSystemUpdate.sql.setup.createUser }}
+            - name: CREATE_USER
+              value: {{ .Values.datahubSystemUpdate.sql.setup.createUser | default "false" | quote }}
+            {{- $username := .Values.datahubSystemUpdate.sql.setup.createUsername | default .Values.global.sql.datasource.username }}
+            {{- if $username }}
+            - name: CREATE_USER_USERNAME
+              value: {{ $username | quote }}
+            {{- end }}
+            {{- $password := .Values.datahubSystemUpdate.sql.setup.createPassword }}
+            {{- $passwordValue := $password.value | default .Values.global.sql.datasource.password.value }}
+            {{- if $passwordValue }}
+            - name: CREATE_USER_PASSWORD
+              value: {{ $passwordValue | quote }}
+            {{- else }}
+            - name: CREATE_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ ($password.secretRef | default .Values.global.sql.datasource.password.secretRef) | quote }}
+                  key: {{ ($password.secretKey | default .Values.global.sql.datasource.password.secretKey) | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.enabled }}
+            # Enable Elasticsearch setup within system-update job
+            # This replaces the legacy elasticsearchSetupJob
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.createUser }}
+            - name: CREATE_USER_ES
+              value: {{ .Values.datahubSystemUpdate.elasticsearch.setup.createUser | default "false" | quote }}
+            {{- $username := .Values.datahubSystemUpdate.elasticsearch.setup.createUsername | default .Values.global.elasticsearch.auth.username }}
+            {{- if $username }}
+            - name: CREATE_USER_ES_USERNAME
+              value: {{ $username | quote }}
+            {{- end }}
+            {{- $password := .Values.datahubSystemUpdate.elasticsearch.setup.createPassword }}
+            {{- $passwordValue := $password.value | default .Values.global.elasticsearch.auth.password.value }}
+            {{- $passwordSecretRef := $password.secretRef | default .Values.global.elasticsearch.auth.password.secretRef }}
+            {{- $passwordSecretKey := $password.secretKey | default .Values.global.elasticsearch.auth.password.secretKey }}
+            {{- if or $passwordValue $passwordSecretRef }}
+            {{- if $passwordValue }}
+            - name: CREATE_USER_ES_PASSWORD
+              value: {{ $passwordValue | quote }}
+            {{- else }}
+            - name: CREATE_USER_ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $passwordSecretRef | quote }}
+                  key: {{ $passwordSecretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn }}
+            - name: CREATE_USER_ES_IAM_ROLE_ARN
+              value: {{ .Values.datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_SYSTEM_UPDATE
               value: "true"
@@ -90,6 +232,185 @@ spec:
               value: "true"
             - name: SPRING_KAFKA_PROPERTIES_USE_LATEST_VERSION
               value: "true"
+            {{- end }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: {{ printf "http://%s-%s:%s%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ .Values.global.kafka.schemaregistry.url }}"
+            {{- end }}
+            - name: ELASTICSEARCH_HOST
+              value: {{ .Values.global.elasticsearch.host | quote }}
+            - name: ELASTICSEARCH_PORT
+              value: {{ .Values.global.elasticsearch.port | quote }}
+            {{- with .Values.global.elasticsearch.implementation }}
+            - name: ELASTICSEARCH_IMPLEMENTATION
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if ($.Values.datahubSystemUpdate.elasticsearch.iam.enabled | default false) }}
+            - name: OPENSEARCH_USE_AWS_IAM_AUTH
+              value: "true"
+            {{- if .Values.global.elasticsearch.region }}
+            - name: AWS_REGION
+              value: {{ .Values.global.elasticsearch.region | quote }}
+            {{- end }}
+            {{- end }}
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: {{ .Values.global.elasticsearch.skipcheck | quote }}
+            - name: ELASTICSEARCH_INSECURE
+              value: {{ .Values.global.elasticsearch.insecure | quote }}
+            {{- with .Values.global.elasticsearch.useSSL }}
+            - name: ELASTICSEARCH_USE_SSL
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.useAdmin }}
+            {{- with .Values.global.elasticsearch.auth }}
+            - name: ELASTICSEARCH_USERNAME
+              value: {{ $.Values.datahubSystemUpdate.elasticsearch.username | default .master_username }}
+            {{- if not ($.Values.datahubSystemUpdate.elasticsearch.iam.enabled | default false) }}
+            {{- if $.Values.datahubSystemUpdate.elasticsearch.password }}
+            - name: ELASTICSEARCH_PASSWORD
+              value: {{ $.Values.datahubSystemUpdate.elasticsearch.password | quote }}
+            {{- else if and $.Values.datahubSystemUpdate.elasticsearch.password.secretRef $.Values.datahubSystemUpdate.elasticsearch.password.secretKey }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.datahubSystemUpdate.elasticsearch.password.secretRef | quote }}
+                  key: {{ $.Values.datahubSystemUpdate.elasticsearch.password.secretKey | quote }}
+            {{- else if .master_password.value }}
+            - name: ELASTICSEARCH_PASSWORD
+              value: {{ .master_password.value | quote }}
+            {{- else if and .master_password.secretRef .master_password.secretKey }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .master_password.secretRef | quote }}
+                  key: {{ .master_password.secretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- else }}
+            {{- with .Values.global.elasticsearch.auth }}
+            - name: ELASTICSEARCH_USERNAME
+              value: {{ $.Values.datahubSystemUpdate.elasticsearch.username | default .username }}
+            {{- if not ($.Values.datahubSystemUpdate.elasticsearch.iam.enabled | default false) }}
+            {{- if $.Values.datahubSystemUpdate.elasticsearch.password }}
+            - name: ELASTICSEARCH_PASSWORD
+              value: {{ $.Values.datahubSystemUpdate.elasticsearch.password | quote }}
+            {{- else if and $.Values.datahubSystemUpdate.elasticsearch.password.secretRef $.Values.datahubSystemUpdate.elasticsearch.password.secretKey }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.datahubSystemUpdate.elasticsearch.password.secretRef | quote }}
+                  key: {{ $.Values.datahubSystemUpdate.elasticsearch.password.secretKey | quote }}
+            {{- else if .password.value }}
+            - name: ELASTICSEARCH_PASSWORD
+              value: {{ .password.value | quote }}
+            {{- else if and .password.secretRef .password.secretKey }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .password.secretRef | quote }}
+                  key: {{ .password.secretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.indexPrefix }}
+            - name: INDEX_PREFIX
+              value: {{ . }}
+            {{- end }}
+            - name: GRAPH_SERVICE_IMPL
+              value: {{ .Values.global.graph_service_impl }}
+            {{- if eq .Values.global.graph_service_impl "neo4j" }}
+            - name: NEO4J_HOST
+              value: "{{ .Values.global.neo4j.host }}"
+            - name: NEO4J_URI
+              value: "{{ .Values.global.neo4j.uri }}"
+            - name: NEO4J_USERNAME
+              value: "{{ .Values.global.neo4j.username }}"
+            - name: NEO4J_PASSWORD
+              {{- if .Values.global.neo4j.password.value }}
+              value: {{ .Values.global.neo4j.password.value | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.neo4j.password.secretRef }}"
+                  key: "{{ .Values.global.neo4j.password.secretKey }}"
+              {{- end }}
+            {{- end }}
+            {{- include "datahub.kafka.iam.env" . | nindent 12 }}
+            {{- if .Values.global.springKafkaConfigurationOverrides }}
+            {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
+            {{- /* Skip security.protocol when IAM is enabled to avoid overriding SASL_SSL */}}
+            {{- if or (ne $configName "security.protocol") (not $.Values.global.kafka.iam.enabled) }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
+              value: {{ $configValue | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.credentialsAndCertsSecrets }}
+            {{- range $envVarName, $envVarValue := .Values.global.credentialsAndCertsSecrets.secureEnv }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $envVarName | replace "." "_" | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
+                  key: {{ $envVarValue }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.global.kafka.topics }}
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: {{ .metadata_change_event_name }}
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: {{ .failed_metadata_change_event_name }}
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: {{ .metadata_audit_event_name }}
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .metadata_change_proposal_topic_name }}
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .failed_metadata_change_proposal_topic_name }}
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: {{ .metadata_change_log_versioned_topic_name }}
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: {{ .metadata_change_log_timeseries_topic_name }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: {{ .platform_event_topic_name }}
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: {{ .datahub_usage_event_name }}
+            {{- end }}
+            {{- with .Values.global.kafka.maxMessageBytes }}
+            - name: MAX_MESSAGE_BYTES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if or (eq .Values.global.kafka.schemaregistry.type "INTERNAL") (eq .Values.global.kafka.schemaregistry.type "AWS_GLUE") }}
+            - name: USE_CONFLUENT_SCHEMA_REGISTRY
+              value: "false"
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: USE_CONFLUENT_SCHEMA_REGISTRY
+              value: "true"
+            {{- end }}
+            {{- with .Values.global.kafka.partitions }}
+            - name: PARTITIONS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.replicationFactor }}
+            - name: REPLICATION_FACTOR
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.producer.compressionType }}
+            - name: KAFKA_PRODUCER_COMPRESSION_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.producer.maxRequestSize }}
+            - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+            - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+              value: {{ . | quote }}
             {{- end }}
             {{- with .Values.global.kafka.schemaregistry.type }}
             - name: SCHEMA_REGISTRY_TYPE
@@ -103,8 +424,22 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- end }}
+            - name: DATAHUB_REVISION
+              value: {{ .Release.Revision | quote }}
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_REINDEX_OPTIMIZATION_ENABLED
+              value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled | quote }}
             - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
               value: {{ .Values.global.elasticsearch.index.upgrade.cloneIndices | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_RETENTION_VALUE
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneRetentionValue | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_RETENTION_UNIT
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneRetentionUnit | quote }}
+            - name: ELASTICSEARCH_SHIM_ENGINE_TYPE
+              value: {{ .Values.global.elasticsearch.engineType | quote }}
+            - name: ELASTICSEARCH_SHIM_AUTO_DETECT
+              value: {{ .Values.global.elasticsearch.autoDetect | quote }}
             {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
             - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
               value: {{ . | quote }}
@@ -225,8 +560,14 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.datahubSystemUpdate.serviceAccount }}
-      serviceAccountName: {{ . }}
+    {{- if .Values.datahubSystemUpdate.nonblocking.serviceAccount }}
+      {{- with .Values.datahubSystemUpdate.nonblocking.serviceAccount }}
+      serviceAccountName: {{ .name }}
+      {{- end }}
+    {{- else }}
+      {{- with .Values.datahubSystemUpdate.serviceAccount }}
+      serviceAccountName: {{ .name }}
+      {{- end }}
     {{- end }}
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -264,13 +605,87 @@ spec:
             - "SystemUpdateNonBlocking"
           {{- end }}
           env:
-            - name: DATAHUB_REVISION
-              value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12 }}
-            - name: DATAHUB_ANALYTICS_ENABLED
-              value: {{ .Values.global.datahub_analytics_enabled | quote }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: DATAHUB_GMS_HOST
+              value: {{ (.Values.global.datahub.gms.host | default (printf "%s-%s" .Release.Name "datahub-gms")) | trunc 63 | trimSuffix "-"}}
+            - name: DATAHUB_GMS_PORT
+              value: "{{ .Values.global.datahub.gms.port }}"
+            {{- if .Values.global.basePath.enabled }}
+            - name: DATAHUB_BASE_PATH
+              value: {{ .Values.global.basePath.frontend | quote }}
+            - name: DATAHUB_GMS_BASE_PATH
+              value: {{ .Values.global.basePath.gms | quote }}
+            {{- end }}
+            - name: DATAHUB_MAE_CONSUMER_HOST
+              value: {{ printf "%s-%s" .Release.Name "datahub-mae-consumer" }}
+            - name: DATAHUB_MAE_CONSUMER_PORT
+              value: "{{ .Values.global.datahub.mae_consumer.port }}"
+            - name: EBEAN_DATASOURCE_USERNAME
+              {{- $usernameValue := (.Values.datahubSystemUpdate.sql).username | default .Values.global.sql.datasource.username }}
+              {{- if and (kindIs "string" $usernameValue) $usernameValue }}
+              value: {{ $usernameValue | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ ($usernameValue.secretRef | default .Values.global.sql.datasource.username.secretRef) | quote }}
+                  key: {{ ($usernameValue.secretKey | default .Values.global.sql.datasource.username.secretKey) | quote }}
+              {{- end }}
+            {{- $useIamAuth := .Values.global.sql.iam.enabled | default false }}
+            {{- if not $useIamAuth }}
+            - name: EBEAN_DATASOURCE_PASSWORD
+              {{- $passwordValue := (.Values.datahubSystemUpdate.sql.password).value | default .Values.global.sql.datasource.password.value }}
+              {{- if $passwordValue }}
+              value: {{ $passwordValue | quote }}
+              {{- else }}
+              {{- $passwordSecretRef := ((.Values.datahubSystemUpdate.sql.password).secretRef | default .Values.global.sql.datasource.password.secretRef) }}
+              {{- $passwordSecretKey := ((.Values.datahubSystemUpdate.sql.password).secretKey | default .Values.global.sql.datasource.password.secretKey) }}
+              {{- if and $passwordSecretRef $passwordSecretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $passwordSecretRef | quote }}
+                  key: {{ $passwordSecretKey | quote }}
+              {{- end }}
+              {{- end }}
+            {{- end }}
+            - name: EBEAN_DATASOURCE_HOST
+              value: "{{ .Values.global.sql.datasource.host }}"
+            - name: EBEAN_DATASOURCE_URL
+              value: "{{ .Values.global.sql.datasource.url }}"
+            - name: EBEAN_DATASOURCE_DRIVER
+              value: "{{ .Values.global.sql.datasource.driver }}"
+            {{- if .Values.global.sql.iam.enabled }}
+            - name: EBEAN_POSTGRES_USE_AWS_IAM_AUTH
+              value: "true"
+            - name: EBEAN_USE_IAM_AUTH
+              value: "true"
+            {{- if .Values.global.sql.iam.cloudProvider }}
+            - name: EBEAN_CLOUD_PROVIDER
+              value: {{ .Values.global.sql.iam.cloudProvider | quote }}
+            {{- else }}
+            - name: EBEAN_CLOUD_PROVIDER
+              value: "auto"
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+            {{- if hasKey .Values.global.kafka "zookeeper" }}
+            {{- if hasKey .Values.global.kafka.zookeeper "server" }}
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: {{ .Values.global.kafka.zookeeper.server | quote }}
+            {{- end }}
+            {{- end }}
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_SYSTEM_UPDATE
               value: "true"
@@ -278,6 +693,160 @@ spec:
               value: "true"
             - name: SPRING_KAFKA_PROPERTIES_USE_LATEST_VERSION
               value: "true"
+            {{- end }}
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: {{ printf "http://%s-%s:%s%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ .Values.global.kafka.schemaregistry.url }}"
+            {{- end }}
+            - name: ELASTICSEARCH_HOST
+              value: {{ .Values.global.elasticsearch.host | quote }}
+            - name: ELASTICSEARCH_PORT
+              value: {{ .Values.global.elasticsearch.port | quote }}
+            {{- with .Values.global.elasticsearch.implementation }}
+            - name: ELASTICSEARCH_IMPLEMENTATION
+              value: {{ . | quote }}
+            {{- end }}
+            {{- include "datahub.elasticsearch.iam.env" . | nindent 12 }}
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: {{ .Values.global.elasticsearch.skipcheck | quote }}
+            - name: ELASTICSEARCH_INSECURE
+              value: {{ .Values.global.elasticsearch.insecure | quote }}
+            {{- with .Values.global.elasticsearch.useSSL }}
+            - name: ELASTICSEARCH_USE_SSL
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.useAdmin }}
+            {{- with .Values.global.elasticsearch.auth }}
+            - name: ELASTICSEARCH_USERNAME
+              value: {{ .master_username }}
+            {{- if not ($.Values.global.elasticsearch.iam.enabled | default false) }}
+            {{- if .master_password.value }}
+            - name: ELASTICSEARCH_PASSWORD
+              value: {{ .master_password.value | quote }}
+            {{- else if and .master_password.secretRef .master_password.secretKey }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .master_password.secretRef | quote }}
+                  key: {{ .master_password.secretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- else }}
+            {{- with .Values.global.elasticsearch.auth }}
+            - name: ELASTICSEARCH_USERNAME
+              value: {{ .username }}
+            {{- if not ($.Values.global.elasticsearch.iam.enabled | default false) }}
+            {{- if .password.value }}
+            - name: ELASTICSEARCH_PASSWORD
+              value: {{ .password.value | quote }}
+            {{- else if and .password.secretRef .password.secretKey }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .password.secretRef | quote }}
+                  key: {{ .password.secretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.indexPrefix }}
+            - name: INDEX_PREFIX
+              value: {{ . }}
+            {{- end }}
+            - name: GRAPH_SERVICE_IMPL
+              value: {{ .Values.global.graph_service_impl }}
+            {{- if eq .Values.global.graph_service_impl "neo4j" }}
+            - name: NEO4J_HOST
+              value: "{{ .Values.global.neo4j.host }}"
+            - name: NEO4J_URI
+              value: "{{ .Values.global.neo4j.uri }}"
+            - name: NEO4J_USERNAME
+              value: "{{ .Values.global.neo4j.username }}"
+            - name: NEO4J_PASSWORD
+              {{- if .Values.global.neo4j.password.value }}
+              value: {{ .Values.global.neo4j.password.value | quote }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.neo4j.password.secretRef }}"
+                  key: "{{ .Values.global.neo4j.password.secretKey }}"
+              {{- end }}
+            {{- end }}
+            {{- include "datahub.kafka.iam.env" . | nindent 12 }}
+            {{- if .Values.global.springKafkaConfigurationOverrides }}
+            {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
+            {{- /* Skip security.protocol when IAM is enabled to avoid overriding SASL_SSL */}}
+            {{- if or (ne $configName "security.protocol") (not $.Values.global.kafka.iam.enabled) }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
+              value: {{ $configValue | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.global.credentialsAndCertsSecrets }}
+            {{- range $envVarName, $envVarValue := .Values.global.credentialsAndCertsSecrets.secureEnv }}
+            - name: SPRING_KAFKA_PROPERTIES_{{ $envVarName | replace "." "_" | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
+                  key: {{ $envVarValue }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.global.kafka.topics }}
+            - name: METADATA_CHANGE_EVENT_NAME
+              value: {{ .metadata_change_event_name }}
+            - name: FAILED_METADATA_CHANGE_EVENT_NAME
+              value: {{ .failed_metadata_change_event_name }}
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: {{ .metadata_audit_event_name }}
+            - name: METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .metadata_change_proposal_topic_name }}
+            - name: FAILED_METADATA_CHANGE_PROPOSAL_TOPIC_NAME
+              value: {{ .failed_metadata_change_proposal_topic_name }}
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: {{ .metadata_change_log_versioned_topic_name }}
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: {{ .metadata_change_log_timeseries_topic_name }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: {{ .platform_event_topic_name }}
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: {{ .datahub_usage_event_name }}
+            {{- end }}
+            {{- with .Values.global.kafka.maxMessageBytes }}
+            - name: MAX_MESSAGE_BYTES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if or (eq .Values.global.kafka.schemaregistry.type "INTERNAL") (eq .Values.global.kafka.schemaregistry.type "AWS_GLUE") }}
+            - name: USE_CONFLUENT_SCHEMA_REGISTRY
+              value: "false"
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: USE_CONFLUENT_SCHEMA_REGISTRY
+              value: "true"
+            {{- end }}
+            {{- with .Values.global.kafka.partitions }}
+            - name: PARTITIONS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.replicationFactor }}
+            - name: REPLICATION_FACTOR
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.producer.compressionType }}
+            - name: KAFKA_PRODUCER_COMPRESSION_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.producer.maxRequestSize }}
+            - name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+            - name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+              value: {{ . | quote }}
             {{- end }}
             {{- with .Values.global.kafka.schemaregistry.type }}
             - name: SCHEMA_REGISTRY_TYPE
@@ -291,10 +860,89 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- end }}
+            - name: DATAHUB_REVISION
+              value: {{ .Release.Revision | quote }}
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: {{ .Values.global.datahub_analytics_enabled | quote }}
             - name: ELASTICSEARCH_BUILD_INDICES_REINDEX_OPTIMIZATION_ENABLED
               value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled | quote }}
             - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
               value: {{ .Values.global.elasticsearch.index.upgrade.cloneIndices | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_RETENTION_VALUE
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneRetentionValue | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_RETENTION_UNIT
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneRetentionUnit | quote }}
+            - name: ELASTICSEARCH_SHIM_ENGINE_TYPE
+              value: {{ .Values.global.elasticsearch.engineType | quote }}
+            - name: ELASTICSEARCH_SHIM_AUTO_DETECT
+              value: {{ .Values.global.elasticsearch.autoDetect | quote }}
+            {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.enableSettingsReindex }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_REINDEX
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.settingsOverrides }}
+            {{- if typeIs "map[string]interface {}" . }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ toJson . | quote }}
+            {{- else }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.entitySettingsOverrides }}
+            {{- if typeIs "map[string]interface {}" . }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ toJson . | quote }}
+            {{- else }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_ENTITY_SETTINGS_OVERRIDES
+              value: {{ . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.refreshIntervalSeconds }}
+            - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: {{ . | quote }}
+            {{- end }}
+            {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
+            {{- if ne $k "default" }}
+            {{- $result := dict }}
+            {{- range $.Values.datahubSystemUpdate.bootstrapMCPs.default.value_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            {{- $valuesCopy := deepCopy $v.values }}
+            {{- $result = include "deepMerge" (dict "dst" $result "src" $valuesCopy) | fromYaml }}
+            {{- range $v.values_generated_configs }}
+              {{- $funcOutput := include . $ | fromYaml }}
+              {{- $result = include "deepMerge" (dict "dst" $result "src" $funcOutput) | fromYaml }}
+            {{- end }}
+            - name: {{ $v.values_env }}
+              value: {{ $result | toJson | quote }}
+            {{- with $v.revision_env }}
+            - name: {{ . }}
+              value: '{"version":"{{ $.Values.global.datahub.version }}-{{ $result | toJson | sha256sum | trunc 7 }}"}'
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            - name: ELASTICSEARCH_BUILD_INDICES_REINDEX_OPTIMIZATION_ENABLED
+              value: {{ .Values.global.elasticsearch.index.upgrade.reindexOptimizationEnabled | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_CLONE_INDICES
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneIndices | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_RETENTION_VALUE
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneRetentionValue | quote }}
+            - name: ELASTICSEARCH_BUILD_INDICES_RETENTION_UNIT
+              value: {{ .Values.global.elasticsearch.index.upgrade.cloneRetentionUnit | quote }}
+            - name: ELASTICSEARCH_SHIM_ENGINE_TYPE
+              value: {{ .Values.global.elasticsearch.engineType | quote }}
+            - name: ELASTICSEARCH_SHIM_AUTO_DETECT
+              value: {{ .Values.global.elasticsearch.autoDetect | quote }}
             {{- with .Values.global.elasticsearch.index.enableMappingsReindex }}
             - name: ELASTICSEARCH_INDEX_BUILDER_MAPPINGS_REINDEX
               value: {{ . | quote }}

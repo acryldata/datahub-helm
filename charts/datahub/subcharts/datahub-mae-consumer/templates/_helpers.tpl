@@ -61,3 +61,41 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Kafka IAM environment variables for AWS MSK authentication if enabled.
+For Java/Spring-based services that use Spring Kafka.
+*/}}
+{{- define "datahub.kafka.iam.env" -}}
+{{- if .Values.global.kafka.iam.enabled -}}
+- name: SPRING_KAFKA_PROPERTIES_SASL_CLIENT_CALLBACK_HANDLER_CLASS
+  value: software.amazon.msk.auth.iam.IAMClientCallbackHandler
+- name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+  value: software.amazon.msk.auth.iam.IAMLoginModule required;
+- name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+  value: AWS_MSK_IAM
+- name: SPRING_KAFKA_PROPERTIES_SSL_PROTOCOL
+  value: TLS
+- name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+  value: SASL_SSL
+{{- end -}}
+{{- end -}}
+
+{{/*
+OpenSearch/Elasticsearch IAM authentication environment variables for AWS OpenSearch.
+*/}}
+{{- define "datahub.elasticsearch.iam.env" -}}
+{{- if .Values.global.elasticsearch.iam.enabled }}
+{{- if and .Values.global.elasticsearch.region .Values.global.kafka.region }}
+{{- if ne .Values.global.elasticsearch.region .Values.global.kafka.region }}
+{{- fail (printf "AWS_REGION mismatch: Kafka region (%s) differs from OpenSearch region (%s). Both must be in the same region for IAM authentication." .Values.global.kafka.region .Values.global.elasticsearch.region) }}
+{{- end }}
+{{- end }}
+- name: OPENSEARCH_USE_AWS_IAM_AUTH
+  value: "true"
+{{- if .Values.global.elasticsearch.region }}
+- name: AWS_REGION
+  value: {{ .Values.global.elasticsearch.region | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}

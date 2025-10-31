@@ -19,32 +19,8 @@ Return the env variables for upgrade jobs
   value: {{ printf "%s-%s" .Release.Name "datahub-mae-consumer" }}
 - name: DATAHUB_MAE_CONSUMER_PORT
   value: "{{ .Values.global.datahub.mae_consumer.port }}"
-- name: EBEAN_DATASOURCE_USERNAME
-  {{- $usernameValue := (.Values.sql).datasource.username | default .Values.global.sql.datasource.username }}
-  {{- if and (kindIs "string" $usernameValue) $usernameValue }}
-  value: {{ $usernameValue | quote }}
-  {{- else }}
-  valueFrom:
-    secretKeyRef:
-      name: "{{ (.Values.sql).datasource.username.secretRef | default .Values.global.sql.datasource.username.secretRef }}"
-      key: "{{ (.Values.sql).datasource.username.secretKey | default .Values.global.sql.datasource.username.secretKey }}"
-  {{- end }}
-- name: EBEAN_DATASOURCE_PASSWORD
-  {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
-  {{- if $passwordValue }}
-  value: {{ $passwordValue | quote }}
-  {{- else }}
-  valueFrom:
-    secretKeyRef:
-      name: "{{ (.Values.sql).datasource.password.secretRef | default .Values.global.sql.datasource.password.secretRef }}"
-      key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
-  {{- end }}
-- name: EBEAN_DATASOURCE_HOST
-  value: "{{ .Values.global.sql.datasource.host }}"
-- name: EBEAN_DATASOURCE_URL
-  value: "{{ .Values.global.sql.datasource.url }}"
-- name: EBEAN_DATASOURCE_DRIVER
-  value: "{{ .Values.global.sql.datasource.driver }}"
+{{- include "datahub.sql.connection.env" . | nindent 0 }}
+{{- include "datahub.sql.iam.env" . | nindent 0 }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
 {{- with .Values.global.kafka.maxMessageBytes }}
@@ -85,75 +61,28 @@ Return the env variables for upgrade jobs
 - name: KAFKA_SCHEMAREGISTRY_URL
   value: "{{ .Values.global.kafka.schemaregistry.url }}"
 {{- end }}
-- name: ELASTICSEARCH_HOST
-  value: {{ .Values.global.elasticsearch.host | quote }}
-- name: ELASTICSEARCH_PORT
-  value: {{ .Values.global.elasticsearch.port | quote }}
-- name: SKIP_ELASTICSEARCH_CHECK
-  value: {{ .Values.global.elasticsearch.skipcheck | quote }}
-- name: ELASTICSEARCH_INSECURE
-  value: {{ .Values.global.elasticsearch.insecure | quote }}
-{{- with .Values.global.elasticsearch.useSSL }}
-- name: ELASTICSEARCH_USE_SSL
-  value: {{ . | quote }}
+{{- with .Values.global.kafka.schemaregistry.type }}
+- name: SCHEMA_REGISTRY_TYPE
+  value: "{{ . }}"
 {{- end }}
-{{- with .Values.global.elasticsearch.auth }}
-- name: ELASTICSEARCH_USERNAME
-  value: {{ .username }}
-- name: ELASTICSEARCH_PASSWORD
-  {{- if .password.value }}
-  value: {{ .password.value | quote }}
-  {{- else }}
-  valueFrom:
-    secretKeyRef:
-      name: "{{ .password.secretRef }}"
-      key: "{{ .password.secretKey }}"
-  {{- end }}
+{{- with .Values.global.kafka.schemaregistry.glue }}
+- name: AWS_GLUE_SCHEMA_REGISTRY_REGION
+  value: "{{ .region }}"
+{{- with .registry }}
+- name: AWS_GLUE_SCHEMA_REGISTRY_NAME
+  value: "{{ . }}"
 {{- end }}
-- name: ELASTICSEARCH_SHIM_ENGINE_TYPE
-  value: {{ .Values.global.elasticsearch.engineType | quote }}
-- name: ELASTICSEARCH_SHIM_AUTO_DETECT
-  value: {{ .Values.global.elasticsearch.autoDetect | quote }}
-{{- with .Values.global.elasticsearch.indexPrefix }}
-- name: INDEX_PREFIX
-  value: {{ . }}
 {{- end }}
+- name: SPRING_KAFKA_PRODUCER_PROPERTIES_MAX_REQUEST_SIZE
+  value: {{ .Values.global.kafkaMaxSize | quote }}
+{{- include "datahub.elasticsearch.connection.env" . | nindent 0 }}
 - name: GRAPH_SERVICE_IMPL
-  value: {{ .Values.global.graph_service_impl }}
-{{- if eq .Values.global.graph_service_impl "neo4j" }}
-- name: NEO4J_HOST
-  value: "{{ .Values.global.neo4j.host }}"
-- name: NEO4J_URI
-  value: "{{ .Values.global.neo4j.uri }}"
-- name: NEO4J_DATABASE
-  value: "{{ .Values.global.neo4j.database | default "graph.db" }}"
-- name: NEO4J_USERNAME
-  value: "{{ .Values.global.neo4j.username }}"
-- name: NEO4J_PASSWORD
-  {{- if .Values.global.neo4j.password.value }}
-  value: {{ .Values.global.neo4j.password.value | quote }}
-  {{- else }}
-  valueFrom:
-    secretKeyRef:
-      name: "{{ .Values.global.neo4j.password.secretRef }}"
-      key: "{{ .Values.global.neo4j.password.secretKey }}"
-  {{- end }}
-{{- end }}
-{{- if .Values.global.springKafkaConfigurationOverrides }}
-{{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
-- name: SPRING_KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
-  value: {{ $configValue | quote }}
-{{- end }}
-{{- end }}
-{{- if .Values.global.credentialsAndCertsSecrets }}
-{{- range $envVarName, $envVarValue := .Values.global.credentialsAndCertsSecrets.secureEnv }}
-- name: SPRING_KAFKA_PROPERTIES_{{ $envVarName | replace "." "_" | upper }}
-  valueFrom:
-    secretKeyRef:
-      name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
-      key: {{ $envVarValue }}
-{{- end }}
-{{- end }}
+  value: {{ $.Values.global.graph_service_impl | quote }}
+{{- include "datahub.neo4j.connection.env" . | nindent 0 }}
+{{- include "datahub.kafka.iam.env" . | nindent 0 }}
+{{- include "datahub.spring.kafka.overrides" . | nindent 0 }}
+{{- include "datahub.spring.kafka.credentials.env" . | nindent 0 }}
+{{- include "datahub.elasticsearch.iam.env" . | nindent 0 }}
 {{- with .Values.global.kafka.topics }}
 - name: METADATA_CHANGE_EVENT_NAME
   value: {{ .metadata_change_event_name }}
@@ -175,8 +104,6 @@ Return the env variables for upgrade jobs
   value: {{ .platform_event_topic_name }}
 - name: DATAHUB_USAGE_EVENT_NAME
   value: {{ .datahub_usage_event_name }}
-- name: CDC_TOPIC_NAME
-  value: {{ .cdc_topic_name }}
 {{- end }}
 
 {{- if .Values.global.cdc.enabled }}

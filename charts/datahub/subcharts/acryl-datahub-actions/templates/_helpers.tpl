@@ -90,3 +90,42 @@ Create image registry, name and tag for a datahub component
 {{- $registry := .image.registry | default .imageRegistry -}}
 {{ $registry }}/{{ .image.repository }}:{{ required "Global or specific tag is required" (.image.tag | default .version) -}}
 {{- end -}}
+
+{{/*
+Kafka IAM environment variables for AWS MSK authentication if enabled.
+For Python-based services that use confluent_kafka/librdkafka.
+Python services use OAUTHBEARER with a custom OAuth callback instead of AWS_MSK_IAM.
+*/}}
+{{- define "datahub.kafka.iam.python.env" -}}
+{{- if .Values.global.kafka.iam.enabled -}}
+{{- if .Values.global.kafka.iam.awsRegion }}
+- name: AWS_REGION
+  value: {{ .Values.global.kafka.iam.awsRegion | quote }}
+{{- end }}
+- name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+  value: SASL_SSL
+- name: KAFKA_PROPERTIES_SASL_MECHANISM
+  value: OAUTHBEARER
+- name: KAFKA_PROPERTIES_SASL_OAUTHBEARER_METHOD
+  value: default
+{{- end -}}
+{{- end -}}
+
+{{/*
+OpenSearch/Elasticsearch IAM authentication environment variables for AWS OpenSearch.
+*/}}
+{{- define "datahub.elasticsearch.iam.env" -}}
+{{- if .Values.global.elasticsearch.iam.enabled }}
+{{- if and .Values.global.elasticsearch.region .Values.global.kafka.region }}
+{{- if ne .Values.global.elasticsearch.region .Values.global.kafka.region }}
+{{- fail (printf "AWS_REGION mismatch: Kafka region (%s) differs from OpenSearch region (%s). Both must be in the same region for IAM authentication." .Values.global.kafka.region .Values.global.elasticsearch.region) }}
+{{- end }}
+{{- end }}
+- name: OPENSEARCH_USE_AWS_IAM_AUTH
+  value: "true"
+{{- if .Values.global.elasticsearch.region }}
+- name: AWS_REGION
+  value: {{ .Values.global.elasticsearch.region | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}

@@ -4,7 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: acryldata/datahub-gms
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -65,7 +65,7 @@ datahub-frontend:
     targetMemoryUtilizationPercentage: 70
   image:
     repository: acryldata/datahub-frontend-react
-    # tag: "v0.11.0" # # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -106,7 +106,7 @@ acryl-datahub-actions:
   enabled: true
   image:
     repository: acryldata/datahub-actions
-    # tag: "v1.2.0" # # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -125,7 +125,7 @@ acryl-datahub-actions:
 datahub-mae-consumer:
   image:
     repository: acryldata/datahub-mae-consumer
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -140,7 +140,7 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   image:
     repository: acryldata/datahub-mce-consumer
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -156,13 +156,13 @@ datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-elasticsearch-setup
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -202,8 +202,7 @@ kafkaSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-kafka-setup
-    tag: v1.2.0.1
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: v1.2.0.1 # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -239,7 +238,7 @@ mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -280,7 +279,7 @@ postgresqlSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-postgres-setup
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -326,7 +325,7 @@ datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.11.0"  # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
   batchSize: 1000
   batchDelayMs: 100
   podSecurityContext: {}
@@ -405,7 +404,7 @@ datahubSystemCronHourly:
   labels: {}
   image:
     repository: 795586375822.dkr.ecr.us-west-2.amazonaws.com/datahub-upgrade
-    # tag: "v0.2.0"  # defaults to .global.datahub.version
+    tag: ~ # defaults to .global.datahub.version
   podSecurityContext: {}
     # fsGroup: 1000
   securityContext: {}
@@ -427,7 +426,7 @@ datahubSystemUpdate:
   labels: {}
   image:
     repository: acryldata/datahub-upgrade
-    # tag:
+    tag: ~ # defaults to .global.datahub.version
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand

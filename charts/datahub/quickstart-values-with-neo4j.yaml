@@ -4,14 +4,14 @@ datahub-gms:
   enabled: true
   image:
     repository: acryldata/datahub-gms
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
 
 datahub-frontend:
   enabled: true
   image:
     repository: acryldata/datahub-frontend-react
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
   # Set up ingress to expose react front-end
   ingress:
@@ -40,35 +40,35 @@ elasticsearchSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-elasticsearch-setup
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
 
 kafkaSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-kafka-setup
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
 
 mysqlSetupJob:
   enabled: true
   image:
     repository: acryldata/datahub-mysql-setup
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
 
 datahubUpgrade:
   enabled: true
   image:
     repository: acryldata/datahub-upgrade
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
 
 datahub-ingestion-cron:
   enabled: false
   image:
     repository: acryldata/datahub-ingestion
-    # tag: "v0.11.0 # defaults to .global.datahub.version
+    tag: ~
 
 
 global:

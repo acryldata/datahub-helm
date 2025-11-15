@@ -51,12 +51,14 @@ Return the env variables for upgrade jobs
 - name: MAX_MESSAGE_BYTES
   value: {{ . | quote }}
 {{- end }}
+- name: DATAHUB_PRECREATE_TOPICS
+  value: {{ .Values.global.kafka.precreateTopics | quote }}
 {{- if or (eq .Values.global.kafka.schemaregistry.type "INTERNAL") (eq .Values.global.kafka.schemaregistry.type "AWS_GLUE") }}
 - name: USE_CONFLUENT_SCHEMA_REGISTRY
   value: "false"
 {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
 - name: USE_CONFLUENT_SCHEMA_REGISTRY
-  value: "true"
+  value: {{ .Values.global.kafka.schemaregistry.configureCleanupPolicy | default "true"}}
 {{- end }}
 {{- with .Values.global.kafka.partitions }}
 - name: PARTITIONS

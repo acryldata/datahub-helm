@@ -756,8 +756,15 @@ global:
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"
+    # This is no longer used with  datahub version 1.3.0 and later where datahub system update performs the kafka setup
+    # operations if configured. This is retained for legacy reasons for datahub versions before 1.3.0 that still need
+    # kafkaSetupJob.enabled = true (current default is kafkaSetupJob.enabled = false)
     zookeeper:
       server: "prerequisites-zookeeper:2181"
+
+    # Set to false if you don't want datahub to create topics during install/upgrade.
+    precreateTopics: true
+
     # This section defines the names for the kafka topics that DataHub depends on, at a global level. Do not override this config
     # at a sub-chart level.
     topics:
@@ -829,6 +836,11 @@ global:
       #   region: us-east-1
       #   registry: datahub
 
+      # Optional override on whether to configure schema registry clean up policy. When not specified, chooses a suitable
+      # default based on schema registry type (Set to false for types INTERNAL, AWS_GLUE, set to true for KAFKA).
+      # When using a schema registry that datahub cannot configure, explicitly set this flag to false.
+      # configureCleanupPolicy: true
+
   neo4j:
     host: "prerequisites-neo4j:7474"
     uri: "bolt://prerequisites-neo4j"
@@ -886,7 +898,7 @@ global:
       #   value: password
 
   datahub:
-    version: v1.3.0
+    version: v1.3.0.1
     gms:
       protocol: "http"
       port: "8080"

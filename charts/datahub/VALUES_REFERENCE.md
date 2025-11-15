@@ -417,6 +417,12 @@ This document provides a comprehensive reference for every single configurable v
 <td>Stop container when Kafka message deserialization fails. Prevents data corruption from malformed messages.</td>
 </tr>
 <tr>
+<td><code>global.kafka.precreateTopics</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Controls whether DataHub should automatically create Kafka topics during installation and upgrades. Set to <code>false</code> if you want to manage topics externally or when using managed Kafka services without topic creation permissions. This replaces the deprecated <code>kafkaSetupJob.enabled</code> flag for DataHub version 1.3.0+.</td>
+</tr>
+<tr>
 <td><code>global.kafka.schemaregistry.type</code></td>
 <td>string</td>
 <td><code>INTERNAL</code></td>
@@ -427,6 +433,12 @@ This document provides a comprehensive reference for every single configurable v
 <td>string</td>
 <td><code></code></td>
 <td>URL for external Kafka Schema Registry. Required when using KAFKA schema registry type.</td>
+</tr>
+<tr>
+<td><code>global.kafka.schemaregistry.configureCleanupPolicy</code></td>
+<td>boolean</td>
+<td><code>false</code> for INTERNAL/AWS_GLUE, <code>true</code> for KAFKA</td>
+<td>Optional override to control whether DataHub configures the schema registry's cleanup policy. When not specified, defaults to <code>false</code> for INTERNAL and AWS_GLUE schema registries, and <code>true</code> for KAFKA schema registries. Set to <code>false</code> when using a managed schema registry that DataHub cannot configure directly (e.g., external services without configuration permissions).</td>
 </tr>
 </tbody>
 </table>

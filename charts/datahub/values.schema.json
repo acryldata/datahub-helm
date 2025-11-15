@@ -2033,11 +2033,20 @@
                 "stopContainerOnDeserializationError"
               ]
             },
+            "precreateTopics": {
+              "type": "boolean",
+              "description": "Set to false if you don't want DataHub to create Kafka topics during install/upgrade. Default is true.",
+              "default": true
+            },
             "schemaregistry": {
               "type": "object",
               "properties": {
                 "type": {
                   "type": "string"
+                },
+                "configureCleanupPolicy": {
+                  "type": "boolean",
+                  "description": "Optional Override for schema registry cleanup policy. Defaults is based on schemaregistry.type: false (INTERNAL, AWS_GLUE), true (KAFKA). Set false for managed registries that DataHub cannot configure."
                 }
               },
               "required": [
@@ -2052,6 +2061,7 @@
             "consumer_groups",
             "metadataChangeLog",
             "maxMessageBytes",
+            "precreateTopics",
             "producer",
             "consumer",
             "schemaregistry"

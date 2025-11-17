@@ -836,10 +836,10 @@ global:
       #   region: us-east-1
       #   registry: datahub
 
-      # Optional override on whether to configure schema registry clean up policy. When not specified, chooses a suitable
+      # Override on whether to configure schema registry clean up policy. When not specified, chooses a suitable
       # default based on schema registry type (Set to false for types INTERNAL, AWS_GLUE, set to true for KAFKA).
       # When using a schema registry that datahub cannot configure, explicitly set this flag to false.
-      # configureCleanupPolicy: true
+      configureCleanupPolicy: true
 
   neo4j:
     host: "prerequisites-neo4j:7474"

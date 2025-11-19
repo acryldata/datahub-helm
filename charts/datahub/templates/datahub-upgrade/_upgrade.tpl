@@ -58,7 +58,7 @@ Return the env variables for upgrade jobs
   value: "false"
 {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
 - name: USE_CONFLUENT_SCHEMA_REGISTRY
-  value: {{ .Values.global.kafka.schemaregistry.configureCleanupPolicy | default true | quote }}
+  value: {{ .Values.global.kafka.schemaregistry.configureCleanupPolicy | quote }}
 {{- end }}
 {{- with .Values.global.kafka.partitions }}
 - name: PARTITIONS

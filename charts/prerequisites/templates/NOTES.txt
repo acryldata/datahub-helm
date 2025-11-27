@@ -1,0 +1,222 @@
+{{- $warnings := list -}}
+{{- $warningDetails := dict -}}
+
+{{- /* Check Elasticsearch storage class */ -}}
+{{- if .Values.elasticsearch.enabled }}
+  {{- if not (hasKey .Values.elasticsearch "volumeClaimTemplate") }}
+    {{- $warnings = append $warnings "elasticsearch" -}}
+    {{- $_ := set $warningDetails "elasticsearch" (dict "service" "Elasticsearch" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "elasticsearch.volumeClaimTemplate.storageClassName") -}}
+  {{- else if not (hasKey .Values.elasticsearch.volumeClaimTemplate "storageClassName") }}
+    {{- $warnings = append $warnings "elasticsearch" -}}
+    {{- $_ := set $warningDetails "elasticsearch" (dict "service" "Elasticsearch" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "elasticsearch.volumeClaimTemplate.storageClassName") -}}
+  {{- else if not .Values.elasticsearch.volumeClaimTemplate.storageClassName }}
+    {{- $warnings = append $warnings "elasticsearch" -}}
+    {{- $_ := set $warningDetails "elasticsearch" (dict "service" "Elasticsearch" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "elasticsearch.volumeClaimTemplate.storageClassName") -}}
+  {{- end }}
+{{- end }}
+
+{{- /* Check OpenSearch storage class */ -}}
+{{- if .Values.opensearch.enabled }}
+  {{- if not (hasKey .Values.opensearch "persistence") }}
+    {{- $warnings = append $warnings "opensearch" -}}
+    {{- $_ := set $warningDetails "opensearch" (dict "service" "OpenSearch" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "opensearch.persistence.storageClass") -}}
+  {{- else if not (hasKey .Values.opensearch.persistence "storageClass") }}
+    {{- $warnings = append $warnings "opensearch" -}}
+    {{- $_ := set $warningDetails "opensearch" (dict "service" "OpenSearch" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "opensearch.persistence.storageClass") -}}
+  {{- else if not .Values.opensearch.persistence.storageClass }}
+    {{- $warnings = append $warnings "opensearch" -}}
+    {{- $_ := set $warningDetails "opensearch" (dict "service" "OpenSearch" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "opensearch.persistence.storageClass") -}}
+  {{- end }}
+{{- end }}
+
+{{- /* Check MySQL storage class */ -}}
+{{- if .Values.mysql.enabled }}
+  {{- if not (hasKey .Values.mysql "primary") }}
+    {{- $warnings = append $warnings "mysql" -}}
+    {{- $_ := set $warningDetails "mysql" (dict "service" "MySQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "mysql.primary.persistence.storageClass") -}}
+  {{- else if not (hasKey .Values.mysql.primary "persistence") }}
+    {{- $warnings = append $warnings "mysql" -}}
+    {{- $_ := set $warningDetails "mysql" (dict "service" "MySQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "mysql.primary.persistence.storageClass") -}}
+  {{- else if not (hasKey .Values.mysql.primary.persistence "storageClass") }}
+    {{- $warnings = append $warnings "mysql" -}}
+    {{- $_ := set $warningDetails "mysql" (dict "service" "MySQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "mysql.primary.persistence.storageClass") -}}
+  {{- else if not .Values.mysql.primary.persistence.storageClass }}
+    {{- $warnings = append $warnings "mysql" -}}
+    {{- $_ := set $warningDetails "mysql" (dict "service" "MySQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "mysql.primary.persistence.storageClass") -}}
+  {{- end }}
+{{- end }}
+
+{{- /* Check PostgreSQL storage class */ -}}
+{{- if .Values.postgresql.enabled }}
+  {{- if not (hasKey .Values.postgresql "primary") }}
+    {{- $warnings = append $warnings "postgresql" -}}
+    {{- $_ := set $warningDetails "postgresql" (dict "service" "PostgreSQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "postgresql.primary.persistence.storageClass") -}}
+  {{- else if not (hasKey .Values.postgresql.primary "persistence") }}
+    {{- $warnings = append $warnings "postgresql" -}}
+    {{- $_ := set $warningDetails "postgresql" (dict "service" "PostgreSQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "postgresql.primary.persistence.storageClass") -}}
+  {{- else if not (hasKey .Values.postgresql.primary.persistence "storageClass") }}
+    {{- $warnings = append $warnings "postgresql" -}}
+    {{- $_ := set $warningDetails "postgresql" (dict "service" "PostgreSQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "postgresql.primary.persistence.storageClass") -}}
+  {{- else if not .Values.postgresql.primary.persistence.storageClass }}
+    {{- $warnings = append $warnings "postgresql" -}}
+    {{- $_ := set $warningDetails "postgresql" (dict "service" "PostgreSQL" "minIOPS" "3,000" "throughput" "500 MB/s" "path" "postgresql.primary.persistence.storageClass") -}}
+  {{- end }}
+{{- end }}
+
+{{- /* Check Kafka storage class */ -}}
+{{- if .Values.kafka.enabled }}
+  {{- if not (hasKey .Values.kafka "persistence") }}
+    {{- $warnings = append $warnings "kafka" -}}
+    {{- $_ := set $warningDetails "kafka" (dict "service" "Kafka" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "kafka.persistence.storageClass") -}}
+  {{- else if not (hasKey .Values.kafka.persistence "storageClass") }}
+    {{- $warnings = append $warnings "kafka" -}}
+    {{- $_ := set $warningDetails "kafka" (dict "service" "Kafka" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "kafka.persistence.storageClass") -}}
+  {{- else if not .Values.kafka.persistence.storageClass }}
+    {{- $warnings = append $warnings "kafka" -}}
+    {{- $_ := set $warningDetails "kafka" (dict "service" "Kafka" "minIOPS" "5,000" "throughput" "250 MB/s" "path" "kafka.persistence.storageClass") -}}
+  {{- end }}
+{{- end }}
+
+{{- /* Check Neo4j storage class */ -}}
+{{- if .Values.neo4j.enabled }}
+  {{- if hasKey .Values.neo4j "volumes" }}
+    {{- if hasKey .Values.neo4j.volumes "data" }}
+      {{- if eq (.Values.neo4j.volumes.data.mode | toString) "dynamic" }}
+        {{- if not (hasKey .Values.neo4j.volumes.data "dynamic") }}
+          {{- $warnings = append $warnings "neo4j" -}}
+          {{- $_ := set $warningDetails "neo4j" (dict "service" "Neo4j" "minIOPS" "3,000" "throughput" "250 MB/s" "path" "neo4j.volumes.data.dynamic.storageClassName") -}}
+        {{- else if not (hasKey .Values.neo4j.volumes.data.dynamic "storageClassName") }}
+          {{- $warnings = append $warnings "neo4j" -}}
+          {{- $_ := set $warningDetails "neo4j" (dict "service" "Neo4j" "minIOPS" "3,000" "throughput" "250 MB/s" "path" "neo4j.volumes.data.dynamic.storageClassName") -}}
+        {{- else if not .Values.neo4j.volumes.data.dynamic.storageClassName }}
+          {{- $warnings = append $warnings "neo4j" -}}
+          {{- $_ := set $warningDetails "neo4j" (dict "service" "Neo4j" "minIOPS" "3,000" "throughput" "250 MB/s" "path" "neo4j.volumes.data.dynamic.storageClassName") -}}
+        {{- end }}
+      {{- else if eq (.Values.neo4j.volumes.data.mode | toString) "defaultStorageClass" }}
+        {{- $warnings = append $warnings "neo4j" -}}
+        {{- $_ := set $warningDetails "neo4j" (dict "service" "Neo4j" "minIOPS" "3,000" "throughput" "250 MB/s" "path" "neo4j.volumes.data.dynamic.storageClassName") -}}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- if $warnings }}
+================================================================================
+⚠️  STORAGE CLASS CONFIGURATION WARNING ⚠️
+================================================================================
+
+The following service(s) are configured to use the DEFAULT storage class,
+which may result in SEVERE PERFORMANCE ISSUES in production environments:
+
+{{- range $warnings }}
+{{- $detail := index $warningDetails . }}
+
+  ❌ {{ $detail.service }}
+     └─ Missing: {{ $detail.path }}
+     └─ Required: {{ $detail.minIOPS }} IOPS minimum, {{ $detail.throughput }} throughput
+{{- end }}
+
+================================================================================
+PERFORMANCE IMPACT
+================================================================================
+
+Default storage classes on cloud providers are inadequate for database workloads:
+
+  • Azure AKS:  Standard SSD (500 IOPS) - requires 3,000-5,000+ IOPS
+  • AWS EKS:    gp2 (3 IOPS/GB burstable) - may be insufficient
+  • GCP GKE:    pd-standard - variable performance
+
+Real-world impact observed in production:
+  • Elasticsearch queries: minutes instead of seconds
+  • Kafka consumer lag: accumulating for days
+  • Database connections: timing out due to I/O wait
+  • Overall degradation: est. 10-20x slower performance
+
+================================================================================
+RECOMMENDED STORAGE CLASSES BY CLOUD PROVIDER
+================================================================================
+
+Azure AKS:
+  storageClassName: managed-csi-premium  # Premium SSD: 5,000+ IOPS
+
+AWS EKS:
+  storageClassName: gp3  # 3,000 IOPS baseline, expandable to 16,000
+
+GCP GKE:
+  storageClassName: pd-ssd  # SSD persistent disk
+
+================================================================================
+EXAMPLE CONFIGURATION
+================================================================================
+
+Add the following to your values.yaml file:
+
+{{- if has "elasticsearch" $warnings }}
+
+elasticsearch:
+  volumeClaimTemplate:
+    storageClassName: managed-csi-premium  # Use appropriate class for your cloud
+    resources:
+      requests:
+        storage: 100Gi
+{{- end }}
+
+{{- if has "opensearch" $warnings }}
+
+opensearch:
+  persistence:
+    storageClass: managed-csi-premium  # Use appropriate class for your cloud
+    size: 100Gi
+{{- end }}
+
+{{- if has "mysql" $warnings }}
+
+mysql:
+  primary:
+    persistence:
+      storageClass: managed-csi-premium  # Use appropriate class for your cloud
+      size: 50Gi
+{{- end }}
+
+{{- if has "postgresql" $warnings }}
+
+postgresql:
+  primary:
+    persistence:
+      storageClass: managed-csi-premium  # Use appropriate class for your cloud
+      size: 50Gi
+{{- end }}
+
+{{- if has "kafka" $warnings }}
+
+kafka:
+  persistence:
+    storageClass: managed-csi-premium  # Use appropriate class for your cloud
+    size: 100Gi
+{{- end }}
+
+{{- if has "neo4j" $warnings }}
+
+neo4j:
+  volumes:
+    data:
+      mode: dynamic
+      dynamic:
+        storageClassName: managed-csi-premium  # Use appropriate class for your cloud
+{{- end }}
+
+================================================================================
+For more information, see:
+https://datahubproject.io/docs/deploy/kubernetes#storage-configuration
+================================================================================
+
+{{- else }}
+
+================================================================================
+✅ STORAGE CONFIGURATION OK
+================================================================================
+
+All enabled services have explicit storage classes configured.
+
+{{- end }}
+

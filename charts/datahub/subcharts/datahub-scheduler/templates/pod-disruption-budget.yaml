@@ -1,0 +1,11 @@
+{{- if .Values.pdb.enabled -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "datahub-scheduler.fullname" . }}
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "datahub-scheduler.selectorLabels" . | nindent 6 }}
+{{- end -}}

@@ -26,6 +26,10 @@ dependencies:
     version: 0.2.173
     repository: file://./subcharts/datahub-mce-consumer
     condition: global.datahub_standalone_consumers_enabled
+  - name: datahub-scheduler
+    version: 0.1.26
+    repository: file://./subcharts/datahub-scheduler
+    condition: global.datahub.scheduler.enabled
   - name: datahub-ingestion-cron
     version: 0.2.148
     repository: file://./subcharts/datahub-ingestion-cron

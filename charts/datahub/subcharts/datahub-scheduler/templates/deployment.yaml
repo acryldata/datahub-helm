@@ -1,0 +1,297 @@
+{{- if and .Values.global.datahub.scheduler.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "datahub-scheduler.fullname" . }}
+  labels:
+    {{- include "datahub-scheduler.labels" . | nindent 4 }}
+    {{- range $key, $val := .Values.extraLabels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  {{- if (gt .Values.replicaCount 1.0)}}
+  {{- fail "\nIngestion scheduler cannot be scaled to more than 1 instance."}}
+  {{- else }}
+  replicas: {{if .Values.global.readonly}} 0 {{else}} {{ .Values.replicaCount }} {{end}}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "datahub-scheduler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "datahub-scheduler.selectorLabels" . | nindent 8 }}
+        {{- range $key, $value := .Values.global.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value := .Values.extraPodLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- with .Values.global.hostAliases }}
+      hostAliases:
+    {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "datahub-scheduler.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: {{ .name }}
+        {{- end }}
+      {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      {{- with .Values.extraInitContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
+          {{- if .Values.global.pullAlways }}
+          imagePullPolicy: Always
+          {{- else }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 9091
+              protocol: TCP
+            {{- if .Values.debug.enabled }}
+            - name: debug
+              containerPort: 5005
+              protocol: TCP
+            {{- end }}
+            {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
+            - name: jmx
+              containerPort: 4318
+              protocol: TCP
+            {{- end }}
+          {{- if not .Values.debug.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          env:
+            - name: SHOW_SEARCH_FILTERS_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_search_v2 | quote }}
+            - name: SHOW_BROWSE_V2
+              value: {{ .Values.global.datahub.search_and_browse.show_browse_v2 | quote }}
+            - name: BACKFILL_BROWSE_PATHS_V2
+              value: "false"
+            - name: ENABLE_INGESTION_SCHEDULER_HOOK
+              value: "true"
+            - name: ENABLE_SIBLING_HOOK
+              value: "false"
+            - name: ENABLE_UPDATE_INDICES_HOOK
+              value: "false"
+            - name: ENABLE_INCIDENTS_HOOK
+              value: "false"
+            - name: ENABLE_ENTITY_CHANGE_EVENTS_HOOK
+              value: "false"
+            - name: FORMS_HOOK_ENABLED
+              value: "false"
+            - name: METADATA_TESTS_HOOK_ENABLED
+              value: "false"
+            - name: METADATA_SERVICE_NOTIFICATIONS_ENABLED
+              value: "false"
+            - name: DEFAULT_NOTIFICATION_SETTINGS_HOOK_ENABLED
+              value: "false"
+            - name: ENABLE_ASSERTIONS_HOOK
+              value: "false"
+            - name: ASSERTION_ACTIONS_HOOK_ENABLED
+              value: "false"
+            - name: DELETE_MONITOR_HOOK_ENABLED
+              value: "false"
+            - name: OWNER_SUBSCRIPTION_HOOK_ENABLED
+              value: "false"
+            - name: SUBSCRIPTION_SUBRESOURCE_DELETION_HOOK_ENABLED
+              value: "false"
+            - name: SLACK_MEMBER_RESOLUTION_HOOK_ENABLED
+              value: "false"
+            - name: INGESTION_SET_ACTOR_AS_OWNER_HOOK_ENABLED
+              value: "false"
+            {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+            - name: ENABLE_PROMETHEUS
+              value: "true"
+            {{- end }}
+            - name: MAE_CONSUMER_ENABLED
+              value: "true"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-mae-consumer/resources/entity-registry.yml
+            - name: DATAHUB_GMS_HOST
+              value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}
+            - name: DATAHUB_GMS_PORT
+              value: "{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}"
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: "{{ .Values.global.kafka.bootstrap.server }}"
+            - name: KAFKA_LISTENER_CONCURRENCY
+              value: "{{ default .Values.global.kafka.listener.concurrency ((.Values.kafka).listener).concurrency }}"
+            {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: {{ printf "http://%s-%s:%s%s/schema-registry/api/" .Release.Name "datahub-gms" .Values.global.datahub.gms.port (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) }}
+            {{- else if eq .Values.global.kafka.schemaregistry.type "KAFKA" }}
+            - name: KAFKA_SCHEMAREGISTRY_URL
+              value: "{{ .Values.global.kafka.schemaregistry.url }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.type }}
+            - name: SCHEMA_REGISTRY_TYPE
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .Values.global.kafka.schemaregistry.glue }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_REGION
+              value: "{{ .region }}"
+            {{- with .registry }}
+            - name: AWS_GLUE_SCHEMA_REGISTRY_NAME
+              value: "{{ . }}"
+            {{- end }}
+            {{- end }}
+            {{- include "datahub.elasticsearch.connection.env" . | nindent 12 }}
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "{{ .Values.global.datahub_analytics_enabled }}"
+            {{- if .Values.global.sentry.enabled }}
+            - name: SENTRY_ENABLED
+              value: "true"
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.global.id }}
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.sentry.dsn.secret_ref }}
+                  key: {{ .Values.global.sentry.dsn.gms_secret_key }}
+            - name: SENTRY_RELEASE
+              value: "{{ required "Global or specific tag is required" (.Values.image.tag | default .Values.global.datahub.version) }}"
+            {{- end }}
+            {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "true"
+            - name: DATAHUB_TOKEN_SERVICE_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey }}
+            - name: DATAHUB_SYSTEM_CLIENT_ID
+              value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+            - name: DATAHUB_SYSTEM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+            {{- end }}
+            {{- if .Values.global.datahub.managed_ingestion.enabled }}
+            - name: UI_INGESTION_ENABLED
+              value: "true"
+            - name: SECRET_SERVICE_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.global.datahub.encryptionKey.secretRef }}"
+                  key: "{{ .Values.global.datahub.encryptionKey.secretKey }}"
+            {{- else }}
+            - name: UI_INGESTION_ENABLED
+              value: "false"
+            {{- end }}
+            {{- if .Values.global.datahub.managed_ingestion.defaultCliVersion }}
+            - name: UI_INGESTION_DEFAULT_CLI_VERSION
+              value: "{{ .Values.global.datahub.managed_ingestion.defaultCliVersion }}"
+            {{- end }}
+            {{- include "datahub.kafka.iam.env" . | nindent 12 }}
+            {{- include "datahub.elasticsearch.iam.env" . | nindent 12 }}
+            {{- include "datahub.spring.kafka.overrides" . | nindent 12 }}
+            {{- include "datahub.spring.kafka.credentials.env" . | nindent 12 }}
+            {{- with .Values.global.kafka.topics }}
+            - name: METADATA_AUDIT_EVENT_NAME
+              value: {{ .metadata_audit_event_name }}
+            - name: DATAHUB_USAGE_EVENT_NAME
+              value: {{ .datahub_usage_event_name }}
+            - name: METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME
+              value: {{ .metadata_change_log_versioned_topic_name }}
+            - name: METADATA_CHANGE_LOG_TIMESERIES_TOPIC_NAME
+              value: {{ .metadata_change_log_timeseries_topic_name }}
+            - name: PLATFORM_EVENT_TOPIC_NAME
+              value: {{ .platform_event_topic_name }}
+            - name: DATAHUB_UPGRADE_HISTORY_TOPIC_NAME
+              value: {{ .datahub_upgrade_history_topic_name }}
+            {{- end }}
+            - name: METADATA_CHANGE_LOG_KAFKA_CONSUMER_GROUP_ID
+            {{- if .Values.global.kafka.dedicated_consumer_groups.enabled }}
+              value: {{ printf "%s-%s" .Values.global.id .Values.kafka_consumer_id }}
+            {{- else }}
+              value: {{ .Values.kafka_consumer_id }}
+            {{- end }}
+            - name: SPRING_KAFKA_PRODUCER_PROPERTIES_MAX_REQUEST_SIZE
+              value: {{ .Values.global.kafkaMaxSize | quote }}
+            - name: ES_BULK_REQUESTS_LIMIT
+              value: {{ .Values.global.elasticsearch.bulkRequestLimit | quote }}
+            - name: ES_BULK_FLUSH_PERIOD
+              value: {{ .Values.global.elasticsearch.bulkFlushPeriod | quote }}
+            - name: ALWAYS_EMIT_CHANGE_LOG
+              value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
+            - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
+              value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
+            - name: DATAHUB_TELEMETRY_ENABLED
+              value: "false"
+          {{- if or .Values.debug.enabled ( .Values.jvmOpts ) }}
+            - name: JAVA_OPTS
+              value: >-
+              {{- with .Values.jvmOpts -}}
+              {{ range $key, $value := . }}
+                {{ printf "-%s%s" $key $value | nindent 12 | trim -}}
+              {{ end }}
+              {{- end }}
+              {{ include "acryl.debug" . | indent 12 }}
+          {{- end }}
+            {{- include "datahub.env.common" . | nindent 12 }}
+          {{- with .Values.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: datahub-certs-dir
+              mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end -}}

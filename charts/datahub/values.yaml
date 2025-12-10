@@ -801,23 +801,6 @@ global:
         updateIndices:
           enabled: true
           consumerGroupSuffix: ''
-        # CRITICAL: Ingestion scheduler hook for MAE consumers
-        # This MUST be set to false to prevent duplicate ingestion executions!
-        #
-        # Background:
-        # The ingestion scheduler uses in-memory caching with NO distributed locking.
-        # If multiple MAE consumer replicas have this enabled, each replica will:
-        #   1. Independently load all ingestion sources
-        #   2. Calculate next execution times using its own in-memory cache
-        #   3. Schedule execution at the calculated time
-        #   4. Create DUPLICATE ingestion runs!
-        #
-        # Solution:
-        # A dedicated datahub-scheduler service (with exactly 1 replica) handles all
-        # ingestion scheduling. MAE consumers only process Kafka events.
-        #
-        # DO NOT enable this unless you know what you're doing!
-        # See charts/datahub/subcharts/datahub-scheduler/README.md for details.
         ingestionScheduler:
           enabled: false
           consumerGroupSuffix: ''

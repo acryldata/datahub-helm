@@ -2,7 +2,7 @@
 
 A dedicated Helm chart for the DataHub ingestion scheduler service.
 
-Current chart version is `0.1.0`
+Current chart version is `0.0.1`
 
 ## What is the DataHub Scheduler?
 

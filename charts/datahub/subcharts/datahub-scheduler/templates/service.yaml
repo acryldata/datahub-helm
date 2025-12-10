@@ -1,0 +1,28 @@
+{{- if and .Values.global.datahub.scheduler.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "datahub-scheduler" }}
+  labels:
+    {{- include "datahub-scheduler.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
+      name: {{ .Values.service.name }}
+      {{- if eq .Values.service.type "NodePort" }}
+      {{- with .Values.service.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+    - name: jmx
+      port: 4318
+      targetPort: jmx
+      protocol: TCP
+    {{- end }}
+  selector:
+    {{- include "datahub-scheduler.selectorLabels" . | nindent 4 }}
+{{- end -}}

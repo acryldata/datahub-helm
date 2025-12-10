@@ -802,7 +802,7 @@ global:
           enabled: true
           consumerGroupSuffix: ''
         ingestionScheduler:
-          enabled: true
+          enabled: false
           consumerGroupSuffix: ''
         incidents:
           enabled: true
@@ -920,6 +920,31 @@ global:
     mae_consumer:
       port: "9091"
       nodePort: "30002"
+
+    # ========================================================================
+    # Ingestion Scheduler Configuration
+    # ========================================================================
+    #
+    # The scheduler is responsible for scheduling managed ingestion runs.
+    # It runs as a DEDICATED SERVICE with EXACTLY 1 REPLICA to prevent
+    # duplicate executions.
+    #
+    # Architecture:
+    # - datahub-scheduler: Dedicated service (1 replica) for scheduling ingestion runs
+    # - datahub-mae-consumer: Scalable service (1-8 replicas) for processing Kafka events
+    #
+    # The ingestion scheduler uses in-memory caching with NO distributed locking.
+    # Multiple replicas would cause duplicate ingestion executions!
+    #
+    # When enabled:
+    # - Deploys datahub-scheduler service (enforced to 1 replica via Helm template)
+    # - Disables ingestion scheduler hook on MAE consumers (see kafka.metadataChangeLog.hooks.ingestionScheduler)
+    #
+    # Production usage: 100% of deployments use this architecture
+    #
+    # See charts/datahub/subcharts/datahub-scheduler/README.md for detailed documentation.
+    scheduler:
+      enabled: true
 
     appVersion: "1.0.0"
     systemUpdate:

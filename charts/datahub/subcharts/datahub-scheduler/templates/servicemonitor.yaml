@@ -1,0 +1,25 @@
+{{- if and .Values.global.datahub.scheduler.enabled .Values.serviceMonitor.create .Values.global.datahub.monitoring.enablePrometheus -}}
+apiVersion: {{ include "datahub.monitoring.monitoringApiVersion" $}}
+kind: ServiceMonitor
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "datahub-scheduler" }}
+  labels:
+    {{- include "datahub-scheduler.labels" . | nindent 4 }}
+  {{- with .Values.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  endpoints:
+  - port: jmx
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+  selector:
+    matchLabels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: datahub-scheduler
+{{- end -}}

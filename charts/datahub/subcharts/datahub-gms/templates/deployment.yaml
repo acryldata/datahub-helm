@@ -10,7 +10,7 @@ metadata:
 spec:
   {{- if and (.Values.global.strict_mode) (gt (.Values.replicaCount | int) 1) (.Values.global.datahub.managed_ingestion.enabled) (not .Values.global.datahub_standalone_consumers_enabled)}}
   {{- fail "\nManaged ingestion can not be used with multiple GMS instances in non standalone mode. Please enable standalone mode with only 1 MCE replica if you wish to run multiple GMS instances and managed ingestion." }}
-  {{- else }}
+  {{- else if not .Values.hpa.enabled }}
   replicas:  {{ .Values.replicaCount }}
   {{- end }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}

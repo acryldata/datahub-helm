@@ -133,6 +133,7 @@ spec:
               value: "{{ ((.Values.datahub).gms).port | default .Values.global.datahub.gms.port }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- include "datahub.kafka.iam.env" . | nindent 12 }}
             {{- with .Values.global.kafka.producer.compressionType }}
             - name: KAFKA_PRODUCER_COMPRESSION_TYPE
               value: "{{ . }}"
@@ -195,6 +196,7 @@ spec:
             - name: INDEX_PREFIX
               value: {{ . }}
             {{- end }}
+            {{- include "datahub.elasticsearch.iam.env" . | nindent 12 }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}
             {{- if eq .Values.global.graph_service_impl "neo4j" }}

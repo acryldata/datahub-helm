@@ -144,6 +144,7 @@ spec:
               value: "{{ .Values.global.datahub_analytics_enabled }}"
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- include "datahub.kafka.iam.env" . | nindent 12 }}
             - name: ENFORCE_VALID_EMAIL
               value: "{{ .Values.global.datahub.frontend.validateSignUpEmail }}"
             {{- with .Values.global.kafka.producer.compressionType }}

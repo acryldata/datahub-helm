@@ -425,6 +425,37 @@ datahubSystemCronHourly:
 datahubSystemUpdate:
   # Custom labels to add to the Job metadata
   labels: {}
+  # backOffLimit for the system update job (number of retries before job is considered failed)
+  backOffLimit: 6
+  # useAdmin determines whether to run system update with admin credentials
+  useAdmin: true
+  # ServiceAccount configuration for the system update job (enables RBAC when running upgrade jobs)
+  # Uncomment and set create: true to create a dedicated service account for system-update
+  # serviceAccount:
+  #   create: true
+  #   name: datahub-operator-sa
+  #   rbac: true  # Create Role and RoleBinding for this ServiceAccount
+  # SQL setup configuration (when enabled, runs database setup as part of system update)
+  sql:
+    # Override IAM authentication for Ebean (SQL)
+    iam:
+      enabled: false  # Inherit from global.sql.iam.enabled if not set
+    # SQL setup within system-update job (replaces legacy mysqlSetupJob/postgresqlSetupJob when IAM is enabled)
+    setup:
+      enabled: false            # Enable SQL database setup
+      createTables: true        # Create DataHub tables
+      createDatabase: true      # Create the database if it doesn't exist
+      createUser: false         # Create SQL user (for non-IAM setups)
+  # Elasticsearch setup configuration (when enabled, runs ES setup as part of system update)
+  elasticsearch:
+    # Override IAM authentication for Elasticsearch
+    iam:
+      enabled: false  # Inherit from global.elasticsearch.iam.enabled if not set
+    # Elasticsearch setup within system-update job
+    setup:
+      enabled: false            # Enable Elasticsearch user creation
+      createUser: false         # CREATE_USER_ES env var - create Elasticsearch user
+      createUserIamRoleArn: ""  # CREATE_USER_ES_IAM_ROLE_ARN env var - IAM role ARN to map to the user (only if createUser=true)
   image:
     repository: acryldata/datahub-upgrade
     # tag:
@@ -603,6 +634,18 @@ global:
     engineType: "AUTO_DETECT"
     autoDetect: "true"
 
+    # AWS IAM authentication for OpenSearch
+    # When enabled, DataHub will use AWS IAM credentials instead of username/password
+    # Requires proper IAM roles and policies to be configured
+    iam:
+      enabled: false  # Sets OPENSEARCH_USE_AWS_IAM_AUTH
+    # AWS region for OpenSearch (required when iam.enabled is true)
+    # Example: "us-west-2"
+    region: ""
+
+    # Elasticsearch/OpenSearch implementation configuration
+    # implementation: "opensearch"  # Sets ELASTICSEARCH_IMPLEMENTATION - "elasticsearch" or "opensearch"
+
     # Authentication
     # auth:
       # username: "elastic"
@@ -756,6 +799,7 @@ global:
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"
+
     # This is no longer used with  datahub version 1.3.0 and later where datahub system update performs the kafka setup
     # operations if configured. This is retained for legacy reasons for datahub versions before 1.3.0 that still need
     # kafkaSetupJob.enabled = true (current default is kafkaSetupJob.enabled = false)
@@ -843,6 +887,14 @@ global:
       # When using a schema registry that datahub cannot configure, explicitly set this flag to false.
       configureCleanupPolicy: true
 
+    # AWS IAM authentication for MSK
+    # When enabled, DataHub will use AWS IAM credentials instead of username/password
+    # Applies to all components that use Kafka (both Java/Spring and Python services).
+    iam:
+      enabled: false  # Sets SPRING_KAFKA_PROPERTIES_SASL_* environment variables for Java services
+                      # and KAFKA_PROPERTIES_* environment variables for Python services
+      awsRegion: ""   # AWS region where MSK cluster is located, e.g. "us-west-2"
+
   neo4j:
     host: "prerequisites-neo4j:7474"
     uri: "bolt://prerequisites-neo4j"
@@ -898,6 +950,14 @@ global:
       #   secretKey: mysql-root-password
       # --------------OR----------------
       #   value: password
+
+    # IAM authentication for SQL databases (supports both MySQL and PostgreSQL)
+    # When enabled, DataHub will use IAM credentials instead of username/password
+    # Requires proper IAM roles and policies to be configured
+    iam:
+      enabled: false  # Sets EBEAN_USE_IAM_AUTH and EBEAN_POSTGRES_USE_AWS_IAM_AUTH
+      cloudProvider: "auto"  # Cloud provider: "auto" (detect), "aws", or "gcp"
+      awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
     version: v1.3.0.1

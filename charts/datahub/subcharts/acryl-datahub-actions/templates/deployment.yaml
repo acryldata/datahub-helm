@@ -109,6 +109,7 @@ spec:
             {{- end }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
+            {{- include "datahub.kafka.iam.python.env" . | nindent 12 }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
             - name: SCHEMA_REGISTRY_URL
               value: {{ printf "%s://%s:%s%s/schema-registry/api/" (include "acryl-datahub-actions.datahubGmsProtocol" .) (include "acryl-datahub-actions.datahubGmsHost" .) (include "acryl-datahub-actions.datahubGmsPort" .) (ternary .Values.global.basePath.gms "" .Values.global.basePath.enabled) | quote }}

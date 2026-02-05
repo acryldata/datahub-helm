@@ -264,46 +264,76 @@ This document provides a comprehensive reference for every single configurable v
 <td>Embedding provider type. Supported values: <code>"openai"</code>, <code>"bedrock"</code>, or custom provider.</td>
 </tr>
 <tr>
-<td><code>global.elasticsearch.search.semantic.provider.modelId</code></td>
+<td><code>global.elasticsearch.search.semantic.provider.openai.apiKey.secretRef</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td><strong>AWS Bedrock only:</strong> Bedrock model ID for embeddings (e.g., "cohere.embed-english-v3"). Only used when provider.type is "aws-bedrock". For OpenAI/Cohere, use the nested provider-specific model field instead.</td>
+<td><strong>OpenAI only:</strong> Name of Kubernetes secret containing the OpenAI API key. Recommended approach for production deployments.</td>
 </tr>
 <tr>
-<td><code>global.elasticsearch.search.semantic.provider.awsRegion</code></td>
-<td>string</td>
-<td><code>"us-west-2"</code></td>
-<td><strong>AWS Bedrock only:</strong> AWS region where Bedrock is available (e.g., "us-west-2", "us-east-1"). Only used when provider.type is "aws-bedrock".</td>
-</tr>
-<tr>
-<td><code>global.elasticsearch.search.semantic.openai.apiKey.secretRef</code></td>
+<td><code>global.elasticsearch.search.semantic.provider.openai.apiKey.secretKey</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Name of Kubernetes secret containing the OpenAI API key. Recommended approach for production deployments.</td>
+<td><strong>OpenAI only:</strong> Key within the Kubernetes secret that contains the OpenAI API key value.</td>
 </tr>
 <tr>
-<td><code>global.elasticsearch.search.semantic.openai.apiKey.secretKey</code></td>
+<td><code>global.elasticsearch.search.semantic.provider.openai.apiKey.value</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Key within the Kubernetes secret that contains the OpenAI API key value.</td>
+<td><strong>OpenAI only:</strong> OpenAI API key as plain text. Not recommended for production - use secretRef instead.</td>
 </tr>
 <tr>
-<td><code>global.elasticsearch.search.semantic.openai.apiKey.value</code></td>
-<td>string</td>
-<td><code>""</code></td>
-<td>OpenAI API key as plain text. Not recommended for production - use secretRef instead.</td>
-</tr>
-<tr>
-<td><code>global.elasticsearch.search.semantic.openai.model</code></td>
+<td><code>global.elasticsearch.search.semantic.provider.openai.model</code></td>
 <td>string</td>
 <td><code>"text-embedding-3-small"</code></td>
-<td><strong>OpenAI only:</strong> OpenAI embedding model to use. Options: <code>text-embedding-3-small</code> (1536 dimensions, cost-effective) or <code>text-embedding-3-large</code> (3072 dimensions, higher quality). Only used when provider.type is "openai".</td>
+<td><strong>OpenAI only:</strong> OpenAI embedding model to use. Options: <code>text-embedding-3-small</code> (1536 dimensions, cost-effective) or <code>text-embedding-3-large</code> (3072 dimensions, higher quality).</td>
 </tr>
 <tr>
-<td><code>global.elasticsearch.search.semantic.openai.endpoint</code></td>
+<td><code>global.elasticsearch.search.semantic.provider.openai.endpoint</code></td>
 <td>string</td>
 <td><code>"https://api.openai.com/v1/embeddings"</code></td>
-<td><strong>OpenAI only:</strong> OpenAI API endpoint. Customize for Azure OpenAI (e.g., "https://your-resource.openai.azure.com/openai/deployments/your-deployment/embeddings?api-version=2023-05-15") or other OpenAI-compatible services. Only used when provider.type is "openai".</td>
+<td><strong>OpenAI only:</strong> OpenAI API endpoint. Customize for Azure OpenAI or other OpenAI-compatible services.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.bedrock.modelId</code></td>
+<td>string</td>
+<td><code>"cohere.embed-english-v3"</code></td>
+<td><strong>AWS Bedrock only:</strong> Bedrock model ID for embeddings (e.g., "cohere.embed-english-v3" with 1024 dimensions).</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.bedrock.awsRegion</code></td>
+<td>string</td>
+<td><code>"us-west-2"</code></td>
+<td><strong>AWS Bedrock only:</strong> AWS region where Bedrock is available (e.g., "us-west-2", "us-east-1").</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.cohere.apiKey.secretRef</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td><strong>Cohere only:</strong> Name of Kubernetes secret containing the Cohere API key.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.cohere.apiKey.secretKey</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td><strong>Cohere only:</strong> Key within the Kubernetes secret that contains the Cohere API key value.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.cohere.apiKey.value</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td><strong>Cohere only:</strong> Cohere API key as plain text. Not recommended for production - use secretRef instead.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.cohere.model</code></td>
+<td>string</td>
+<td><code>"embed-english-v3.0"</code></td>
+<td><strong>Cohere only:</strong> Cohere embedding model to use (1024 dimensions).</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.cohere.endpoint</code></td>
+<td>string</td>
+<td><code>"https://api.cohere.ai/v1/embed"</code></td>
+<td><strong>Cohere only:</strong> Cohere API endpoint. Can customize for self-hosted Cohere endpoints.</td>
 </tr>
 </tbody>
 </table>

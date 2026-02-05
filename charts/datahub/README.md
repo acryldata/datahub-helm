@@ -262,12 +262,11 @@ global:
 
         provider:
           type: "openai"
-
-        openai:
-          apiKey:
-            secretRef: "openai-secret"
-            secretKey: "api-key"
-          model: "text-embedding-3-small"
+          openai:
+            apiKey:
+              secretRef: "openai-secret"
+              secretKey: "api-key"
+            model: "text-embedding-3-small"
 ```
 
 #### Option 2: AWS Bedrock (Cohere)
@@ -286,8 +285,9 @@ global:
 
         provider:
           type: "aws-bedrock"
-          modelId: "cohere.embed-english-v3"
-          awsRegion: "us-west-2"
+          bedrock:
+            modelId: "cohere.embed-english-v3"
+            awsRegion: "us-west-2"
 ```
 
 > **Note**: AWS Bedrock uses AWS SDK default credentials chain (IAM roles, environment variables, etc.)
@@ -311,10 +311,11 @@ global:
 
         provider:
           type: "cohere"
-          modelId: "embed-english-v3.0"
-
-        # Note: Cohere configuration not yet exposed in helm chart
-        # Use extraEnvs to set COHERE_API_KEY if needed
+          cohere:
+            apiKey:
+              secretRef: "cohere-secret"
+              secretKey: "api-key"
+            model: "embed-english-v3.0"
 ```
 
 ### Vector Dimensions by Model

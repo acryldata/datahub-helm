@@ -1,4 +1,5 @@
 *.lock
 *.tgz
 .vscode
-.idea.git-credentials
+.idea
+.git-credentials

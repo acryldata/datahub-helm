@@ -745,39 +745,61 @@ global:
 
       ## Semantic search configuration (vector similarity search) [BETA]
       ## Note: Only "document" entity type is officially supported. Other entities may work but YMMV.
+      ##
+      ## Quick Start Examples:
+      ##
+      ## OpenAI:
+      ##   enabled: true
+      ##   vectorDimension: 1536
+      ##   provider: { type: "openai", modelId: "text-embedding-3-small" }
+      ##   openai: { apiKey: { secretRef: "openai-secret", secretKey: "api-key" } }
+      ##
+      ## AWS Bedrock:
+      ##   enabled: true
+      ##   vectorDimension: 1024
+      ##   provider: { type: "aws-bedrock", modelId: "cohere.embed-english-v3", awsRegion: "us-west-2" }
+      ##
       semantic:
         ## Enable semantic search functionality
         ## Requires documents with embeddings and OpenSearch k-NN support
         enabled: false  # Sets SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED and ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+
         ## Comma-separated list of entity names for which to create semantic search indices
         ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.
         enabledEntities: "document"  # Sets ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
 
         ## Vector dimension - MUST match your embedding model output:
-        ## - text-embedding-3-small: 1536
-        ## - text-embedding-3-large: 3072
-        ## - cohere.embed-english-v3: 1024
+        ## - OpenAI text-embedding-3-small: 1536
+        ## - OpenAI text-embedding-3-large: 3072
+        ## - AWS Bedrock cohere.embed-english-v3: 1024
+        ## - Cohere embed-english-v3.0: 1024
         vectorDimension: 1536  # Sets ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
 
         ## Embedding provider configuration
         provider:
-          ## Provider type: openai, aws-bedrock, cohere
+          ## Provider type: "openai", "aws-bedrock", or "cohere"
           type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
+
           ## Model ID used for embeddings (must match the model used for document embeddings)
+          ## Examples:
+          ##   - "text-embedding-3-small" (OpenAI)
+          ##   - "cohere.embed-english-v3" (AWS Bedrock)
+          ##   - "embed-english-v3.0" (Cohere)
           modelId: "text-embedding-3-small"  # Sets EMBEDDING_PROVIDER_MODEL_ID
-          ## AWS region (only for aws-bedrock provider)
+
+          ## AWS region (only used when type is "aws-bedrock")
           awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
 
-        ## OpenAI specific configuration (only used if provider.type is "openai")
+        ## OpenAI specific configuration (only used when provider.type is "openai")
         openai:
           ## OpenAI API key - recommend using secret reference
           apiKey:
-            secretRef: ""  # Name of secret containing OpenAI API key
-            secretKey: ""  # Key within secret containing API key
+            secretRef: ""  # Name of k8s secret containing OpenAI API key
+            secretKey: ""  # Key within secret (e.g., "api-key")
             value: ""  # Alternative: set API key directly (not recommended for production)
-          ## OpenAI embedding model (optional, defaults to text-embedding-3-small)
+          ## OpenAI embedding model
           model: "text-embedding-3-small"  # Sets OPENAI_EMBEDDING_MODEL
-          ## OpenAI API endpoint (optional, defaults to https://api.openai.com/v1/embeddings)
+          ## OpenAI API endpoint (can customize for Azure OpenAI)
           endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
       #     # Notes:
       #     #

@@ -232,27 +232,33 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 
 > **⚠️ Beta Feature**: Semantic search is currently in beta. Only the `document` entity type is officially supported. Other entity types may work but your mileage may vary (YMMV).
 
-Semantic search (vector similarity search) allows finding entities based on semantic meaning rather than just keyword matching. To enable semantic search:
+Semantic search (vector similarity search) allows finding entities based on semantic meaning rather than just keyword matching.
 
-1. **Prerequisites:**
-   - Elasticsearch/OpenSearch cluster with k-NN plugin support
-   - Documents must have embeddings generated
-   - OpenAI API key (or other embedding provider credentials)
+### Prerequisites
+- Elasticsearch/OpenSearch cluster with k-NN plugin support
+- Documents must have embeddings generated
+- Embedding provider credentials (OpenAI API key, AWS credentials, or Cohere API key)
 
-2. **Create a secret with your OpenAI API key:**
+### Configuration by Provider
+
+Choose **one** of the following configurations based on your embedding provider:
+
+#### Option 1: OpenAI (Recommended for getting started)
+
+**1. Create a secret with your OpenAI API key:**
 ```bash
 kubectl create secret generic openai-secret --from-literal=api-key=sk-your-api-key-here
 ```
 
-3. **Enable in values.yaml:**
+**2. Configure in values.yaml:**
 ```yaml
 global:
   elasticsearch:
     search:
       semantic:
         enabled: true
-        enabledEntities: "document"  # Only "document" is officially supported
-        vectorDimension: 1536  # MUST match model: 1536 for text-embedding-3-small
+        enabledEntities: "document"
+        vectorDimension: 1536  # For text-embedding-3-small
 
         provider:
           type: "openai"
@@ -263,15 +269,68 @@ global:
             secretRef: "openai-secret"
             secretKey: "api-key"
           model: "text-embedding-3-small"
-          endpoint: "https://api.openai.com/v1/embeddings"
 ```
 
-> **⚠️ Important**: The `vectorDimension` **must** match your embedding model output:
-> - `text-embedding-3-small`: 1536
-> - `text-embedding-3-large`: 3072
-> - AWS Bedrock Cohere: 1024
+#### Option 2: AWS Bedrock (Cohere)
 
-4. **Deploy the updated configuration:**
+**1. Configure AWS credentials** (via IAM role, service account, or secret)
+
+**2. Configure in values.yaml:**
+```yaml
+global:
+  elasticsearch:
+    search:
+      semantic:
+        enabled: true
+        enabledEntities: "document"
+        vectorDimension: 1024  # For Cohere embed-english-v3
+
+        provider:
+          type: "aws-bedrock"
+          modelId: "cohere.embed-english-v3"
+          awsRegion: "us-west-2"
+```
+
+> **Note**: AWS Bedrock uses AWS SDK default credentials chain (IAM roles, environment variables, etc.)
+
+#### Option 3: Cohere Direct
+
+**1. Create a secret with your Cohere API key:**
+```bash
+kubectl create secret generic cohere-secret --from-literal=api-key=your-cohere-key
+```
+
+**2. Configure in values.yaml:**
+```yaml
+global:
+  elasticsearch:
+    search:
+      semantic:
+        enabled: true
+        enabledEntities: "document"
+        vectorDimension: 1024  # For embed-english-v3.0
+
+        provider:
+          type: "cohere"
+          modelId: "embed-english-v3.0"
+
+        # Note: Cohere configuration not yet exposed in helm chart
+        # Use extraEnvs to set COHERE_API_KEY if needed
+```
+
+### Vector Dimensions by Model
+
+> **⚠️ Critical**: The `vectorDimension` **must** match your embedding model output:
+
+| Provider | Model | Vector Dimension |
+|----------|-------|------------------|
+| OpenAI | text-embedding-3-small | 1536 |
+| OpenAI | text-embedding-3-large | 3072 |
+| AWS Bedrock | cohere.embed-english-v3 | 1024 |
+| Cohere | embed-english-v3.0 | 1024 |
+
+### Deploy
+
 ```bash
 helm upgrade datahub datahub/datahub --values values.yaml
 ```

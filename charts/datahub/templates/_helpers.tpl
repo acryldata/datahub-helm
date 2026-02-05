@@ -712,6 +712,10 @@ USAGE: Include in services that need semantic search configuration:
 {{- define "datahub.semantic-search.env" -}}
 {{- $semantic := .Values.global.elasticsearch.search.semantic -}}
 {{- if $semantic.enabled }}
+{{- /* Two separate env vars control different layers of semantic search:
+       ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED  = index-time: creates semantic indices and dual-writes documents into them
+       SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED = query-time: allows semantic search queries to execute
+       Both must be true for a fully working setup, so we set them from a single toggle. */ -}}
 - name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
   value: {{ $semantic.enabled | quote }}
 - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED

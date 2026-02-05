@@ -252,6 +252,12 @@ This document provides a comprehensive reference for every single configurable v
 <td>Comma-separated list of entity types for which semantic search indices are created. <strong>Only <code>"document"</code> is officially supported.</strong> Other entity types (e.g., "chart", "dashboard") may work but your mileage may vary (YMMV).</td>
 </tr>
 <tr>
+<td><code>global.elasticsearch.search.semantic.vectorDimension</code></td>
+<td>integer</td>
+<td><code>1536</code></td>
+<td><strong>CRITICAL:</strong> Vector dimension that must exactly match your embedding model output. text-embedding-3-small: 1536, text-embedding-3-large: 3072, Cohere/Bedrock: 1024. Mismatch will cause semantic search to fail.</td>
+</tr>
+<tr>
 <td><code>global.elasticsearch.search.semantic.provider.type</code></td>
 <td>string</td>
 <td><code>"openai"</code></td>
@@ -262,6 +268,12 @@ This document provides a comprehensive reference for every single configurable v
 <td>string</td>
 <td><code>"text-embedding-3-small"</code></td>
 <td>Model ID used for generating embeddings. Must match the model used for document embeddings to ensure query embeddings are compared correctly.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.awsRegion</code></td>
+<td>string</td>
+<td><code>"us-west-2"</code></td>
+<td>AWS region for AWS Bedrock embedding provider. Only used when provider.type is "aws-bedrock".</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.openai.apiKey.secretRef</code></td>

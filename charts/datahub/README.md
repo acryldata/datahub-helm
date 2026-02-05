@@ -252,6 +252,7 @@ global:
       semantic:
         enabled: true
         enabledEntities: "document"  # Only "document" is officially supported
+        vectorDimension: 1536  # MUST match model: 1536 for text-embedding-3-small
 
         provider:
           type: "openai"
@@ -264,6 +265,11 @@ global:
           model: "text-embedding-3-small"
           endpoint: "https://api.openai.com/v1/embeddings"
 ```
+
+> **⚠️ Important**: The `vectorDimension` **must** match your embedding model output:
+> - `text-embedding-3-small`: 1536
+> - `text-embedding-3-large`: 3072
+> - AWS Bedrock Cohere: 1024
 
 4. **Deploy the updated configuration:**
 ```bash

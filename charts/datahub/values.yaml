@@ -753,12 +753,20 @@ global:
         ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.
         enabledEntities: "document"  # Sets ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
 
+        ## Vector dimension - MUST match your embedding model output:
+        ## - text-embedding-3-small: 1536
+        ## - text-embedding-3-large: 3072
+        ## - cohere.embed-english-v3: 1024
+        vectorDimension: 1536  # Sets ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
+
         ## Embedding provider configuration
         provider:
-          ## Provider type: openai, bedrock, or custom
+          ## Provider type: openai, aws-bedrock, cohere
           type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
           ## Model ID used for embeddings (must match the model used for document embeddings)
           modelId: "text-embedding-3-small"  # Sets EMBEDDING_PROVIDER_MODEL_ID
+          ## AWS region (only for aws-bedrock provider)
+          awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
 
         ## OpenAI specific configuration (only used if provider.type is "openai")
         openai:

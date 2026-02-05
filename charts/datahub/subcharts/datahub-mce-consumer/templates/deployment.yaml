@@ -118,10 +118,16 @@ spec:
             - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
               value: {{ .Values.global.elasticsearch.search.semantic.enabledEntities | quote }}
             {{- if .Values.global.elasticsearch.search.semantic.enabled }}
+            - name: ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
+              value: {{ .Values.global.elasticsearch.search.semantic.vectorDimension | quote }}
             - name: EMBEDDING_PROVIDER_TYPE
               value: {{ .Values.global.elasticsearch.search.semantic.provider.type | quote }}
             - name: EMBEDDING_PROVIDER_MODEL_ID
               value: {{ .Values.global.elasticsearch.search.semantic.provider.modelId | quote }}
+            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "aws-bedrock" }}
+            - name: EMBEDDING_PROVIDER_AWS_REGION
+              value: {{ .Values.global.elasticsearch.search.semantic.provider.awsRegion | quote }}
+            {{- end }}
             {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "openai" }}
             {{- if .Values.global.elasticsearch.search.semantic.openai.apiKey.secretRef }}
             - name: OPENAI_API_KEY

@@ -82,6 +82,12 @@ spec:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12 }}
+            - name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
+              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
+            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
+            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
+              value: {{ .Values.global.elasticsearch.search.semantic.enabledEntities | quote }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
             {{- if eq .Values.global.kafka.schemaregistry.type "INTERNAL" }}
@@ -268,6 +274,12 @@ spec:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12 }}
+            - name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
+              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
+            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
+            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
+              value: {{ .Values.global.elasticsearch.search.semantic.enabledEntities | quote }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}
             - name: ENTITY_VERSIONING_ENABLED

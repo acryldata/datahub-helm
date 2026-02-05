@@ -742,6 +742,16 @@ global:
       #   enabled: true
       #   # See documentation: https://datahubproject.io/docs/how/search/#customizing-search
       #   config:
+
+      ## Semantic search configuration (vector similarity search) [BETA]
+      ## Note: Only "document" entity type is officially supported. Other entities may work but YMMV.
+      semantic:
+        ## Enable semantic search functionality
+        ## Requires documents with embeddings and OpenSearch k-NN support
+        enabled: false  # Sets SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED and ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+        ## Comma-separated list of entity names for which to create semantic search indices
+        ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.
+        enabledEntities: "document"  # Sets ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
       #     # Notes:
       #     #
       #     # First match wins

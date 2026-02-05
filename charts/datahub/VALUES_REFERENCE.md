@@ -239,6 +239,18 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>{}</code></td>
 <td>Custom search configurations. Allows fine-tuning of search behavior for specific use cases or data types.</td>
 </tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td><strong>[BETA]</strong> Enable semantic search (vector similarity search) functionality. Requires documents with embeddings and Elasticsearch/OpenSearch with k-NN plugin support. When enabled, allows finding semantically similar entities based on meaning rather than just keyword matching. <strong>Note:</strong> Currently in beta - only the <code>document</code> entity type is officially supported.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.enabledEntities</code></td>
+<td>string</td>
+<td><code>"document"</code></td>
+<td>Comma-separated list of entity types for which semantic search indices are created. <strong>Only <code>"document"</code> is officially supported.</strong> Other entity types (e.g., "chart", "dashboard") may work but your mileage may vary (YMMV).</td>
+</tr>
 </tbody>
 </table>
 

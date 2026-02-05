@@ -111,6 +111,12 @@ spec:
             - name: CDC_MCL_PROCESSING_ENABLED
               value: {{ .Values.global.cdc.enabled | quote }}
             {{- end }}
+            - name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
+              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
+            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
+            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
+              value: {{ .Values.global.elasticsearch.search.semantic.enabledEntities | quote }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

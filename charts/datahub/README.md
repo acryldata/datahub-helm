@@ -227,3 +227,30 @@ helm install datahub datahub/datahub --values <<path-to-values-file>>
 | global.datahub.enable_retention                                                  | bool   | `false`                      | Whether or not to enable retention on local DB                                                                                                                                                                                                                                                                                                                        |
 | global.sql.datasource.hostForpostgresqlClient                                    | string | `""`                         | SQL database host (without port) when using postgresqlSetupJob                                                                                                                                                                                                                                                                                                        |
 | global.imageRegistry                                                             | string | `"docker.io"`                | Default docker image registry to be used by all services.                                                                                                                                                                                                                                                                                                             |
+
+## Enabling Semantic Search (Beta)
+
+> **⚠️ Beta Feature**: Semantic search is currently in beta. Only the `document` entity type is officially supported. Other entity types may work but your mileage may vary (YMMV).
+
+Semantic search (vector similarity search) allows finding entities based on semantic meaning rather than just keyword matching. To enable semantic search:
+
+1. **Prerequisites:**
+   - Elasticsearch/OpenSearch cluster with k-NN plugin support
+   - Documents must have embeddings generated
+
+2. **Enable in values.yaml:**
+```yaml
+global:
+  elasticsearch:
+    search:
+      semantic:
+        enabled: true
+        enabledEntities: "document"  # Only "document" is officially supported
+```
+
+3. **Deploy the updated configuration:**
+```bash
+helm upgrade datahub datahub/datahub --values values.yaml
+```
+
+For more details, see the [DataHub Semantic Search documentation](https://docs.datahub.com/docs/dev-guides/semantic-search/configuration).

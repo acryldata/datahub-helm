@@ -254,14 +254,14 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>global.elasticsearch.search.semantic.vectorDimension</code></td>
 <td>integer</td>
-<td><code>1536</code></td>
-<td><strong>CRITICAL:</strong> Vector dimension that must exactly match your embedding model output. text-embedding-3-small: 1536, text-embedding-3-large: 3072, Cohere/Bedrock: 1024. Mismatch will cause semantic search to fail.</td>
+<td><code>3072</code></td>
+<td><strong>CRITICAL:</strong> Vector dimension that must exactly match your embedding model output. text-embedding-3-large: 3072, text-embedding-3-small: 1536, Cohere/Bedrock: 1024. Mismatch will cause semantic search to fail.</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.provider.type</code></td>
 <td>string</td>
 <td><code>"openai"</code></td>
-<td>Embedding provider type. Supported values: <code>"openai"</code>, <code>"bedrock"</code>, or custom provider.</td>
+<td>Embedding provider type. Supported values: <code>"openai"</code>, <code>"aws-bedrock"</code>, or <code>"cohere"</code>.</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.provider.openai.apiKey.secretRef</code></td>
@@ -284,8 +284,8 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>global.elasticsearch.search.semantic.provider.openai.model</code></td>
 <td>string</td>
-<td><code>"text-embedding-3-small"</code></td>
-<td><strong>OpenAI only:</strong> OpenAI embedding model to use. Options: <code>text-embedding-3-small</code> (1536 dimensions, cost-effective) or <code>text-embedding-3-large</code> (3072 dimensions, higher quality).</td>
+<td><code>"text-embedding-3-large"</code></td>
+<td><strong>OpenAI only:</strong> OpenAI embedding model to use. Options: <code>text-embedding-3-large</code> (3072 dimensions, higher quality) or <code>text-embedding-3-small</code> (1536 dimensions, cost-effective).</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.provider.openai.endpoint</code></td>

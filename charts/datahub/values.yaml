@@ -751,14 +751,14 @@ global:
       ## For OpenAI:
       ##   semantic:
       ##     enabled: true
-      ##     vectorDimension: 1536
+      ##     vectorDimension: 3072
       ##     provider:
       ##       type: "openai"
       ##       openai:
       ##         apiKey:
       ##           secretRef: "openai-secret"
       ##           secretKey: "api-key"
-      ##         model: "text-embedding-3-small"
+      ##         model: "text-embedding-3-large"
       ##
       ## For AWS Bedrock:
       ##   semantic:
@@ -784,7 +784,7 @@ global:
         ## - OpenAI text-embedding-3-large: 3072
         ## - AWS Bedrock cohere.embed-english-v3: 1024
         ## - Cohere embed-english-v3.0: 1024
-        vectorDimension: 1536  # Sets ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
+        vectorDimension: 3072  # Sets ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
 
         ## Embedding provider configuration
         provider:
@@ -799,7 +799,7 @@ global:
               secretKey: ""  # Key within secret (e.g., "api-key")
               value: ""  # Alternative: set API key directly (not recommended for production)
             ## OpenAI embedding model - "text-embedding-3-small" (1536d) or "text-embedding-3-large" (3072d)
-            model: "text-embedding-3-small"  # Sets OPENAI_EMBEDDING_MODEL
+            model: "text-embedding-3-large"  # Sets OPENAI_EMBEDDING_MODEL
             ## OpenAI API endpoint - can customize for Azure OpenAI or OpenAI-compatible services
             endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
 

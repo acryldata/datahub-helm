@@ -258,7 +258,7 @@ global:
       semantic:
         enabled: true
         enabledEntities: "document"
-        vectorDimension: 1536  # For text-embedding-3-small
+        vectorDimension: 3072  # For text-embedding-3-large
 
         provider:
           type: "openai"
@@ -266,7 +266,7 @@ global:
             apiKey:
               secretRef: "openai-secret"
               secretKey: "api-key"
-            model: "text-embedding-3-small"
+            model: "text-embedding-3-large"
 ```
 
 #### Option 2: AWS Bedrock (Cohere)

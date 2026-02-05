@@ -698,3 +698,78 @@ USAGE: Include in Python services (executor, integrations, actions)
 - name: GRAPH_SERVICE_IMPL
   value: {{ .Values.global.graph_service_impl | quote }}
 {{- end -}}
+
+{{/*
+Semantic search environment variables for vector similarity search.
+Only emits env vars when semantic search is enabled.
+
+USAGE: Include in services that need semantic search configuration:
+- datahub-gms
+- datahub-mae-consumer
+- datahub-mce-consumer
+- datahub-system-update-job (both blocking and non-blocking)
+*/}}
+{{- define "datahub.semantic-search.env" -}}
+{{- $semantic := .Values.global.elasticsearch.search.semantic -}}
+{{- if $semantic.enabled }}
+- name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
+  value: {{ $semantic.enabled | quote }}
+- name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+  value: {{ $semantic.enabled | quote }}
+- name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
+  value: {{ $semantic.enabledEntities | quote }}
+- name: ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
+  value: {{ $semantic.vectorDimension | quote }}
+{{- $providerType := $semantic.provider.type | default "openai" }}
+- name: EMBEDDING_PROVIDER_TYPE
+  value: {{ $providerType | quote }}
+{{- if eq $providerType "aws-bedrock" }}
+{{- with $semantic.provider.bedrock }}
+- name: EMBEDDING_PROVIDER_MODEL_ID
+  value: {{ .modelId | default "cohere.embed-english-v3" | quote }}
+- name: EMBEDDING_PROVIDER_AWS_REGION
+  value: {{ .awsRegion | default "us-west-2" | quote }}
+{{- end }}
+{{- end }}
+{{- if eq $providerType "openai" }}
+{{- with $semantic.provider.openai }}
+{{- if .apiKey }}
+{{- if .apiKey.secretRef }}
+- name: OPENAI_API_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .apiKey.secretRef }}
+      key: {{ .apiKey.secretKey }}
+{{- else if .apiKey.value }}
+- name: OPENAI_API_KEY
+  value: {{ .apiKey.value | quote }}
+{{- end }}
+{{- end }}
+- name: OPENAI_EMBEDDING_MODEL
+  value: {{ .model | default "text-embedding-3-large" | quote }}
+- name: OPENAI_EMBEDDING_ENDPOINT
+  value: {{ .endpoint | default "https://api.openai.com/v1/embeddings" | quote }}
+{{- end }}
+{{- end }}
+{{- if eq $providerType "cohere" }}
+{{- with $semantic.provider.cohere }}
+{{- if .apiKey }}
+{{- if .apiKey.secretRef }}
+- name: COHERE_API_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .apiKey.secretRef }}
+      key: {{ .apiKey.secretKey }}
+{{- else if .apiKey.value }}
+- name: COHERE_API_KEY
+  value: {{ .apiKey.value | quote }}
+{{- end }}
+{{- end }}
+- name: COHERE_EMBEDDING_MODEL
+  value: {{ .model | default "embed-english-v3.0" | quote }}
+- name: COHERE_EMBEDDING_ENDPOINT
+  value: {{ .endpoint | default "https://api.cohere.ai/v1/embed" | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}

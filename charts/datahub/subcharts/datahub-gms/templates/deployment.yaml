@@ -419,56 +419,7 @@ spec:
             - name: CACHE_ENTITY_COUNTS_TTL_SECONDS
               value: {{ .Values.global.datahub.cache.search.homepage.entityCounts.ttlSeconds | quote }}
             {{- end }}
-            - name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
-              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
-            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
-              value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
-            - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
-              value: {{ .Values.global.elasticsearch.search.semantic.enabledEntities | quote }}
-            {{- if .Values.global.elasticsearch.search.semantic.enabled }}
-            - name: ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
-              value: {{ .Values.global.elasticsearch.search.semantic.vectorDimension | quote }}
-            - name: EMBEDDING_PROVIDER_TYPE
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.type | quote }}
-            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "aws-bedrock" }}
-            - name: EMBEDDING_PROVIDER_MODEL_ID
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.bedrock.modelId | quote }}
-            - name: EMBEDDING_PROVIDER_AWS_REGION
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.bedrock.awsRegion | quote }}
-            {{- end }}
-            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "openai" }}
-            {{- if .Values.global.elasticsearch.search.semantic.provider.openai.apiKey.secretRef }}
-            - name: OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.global.elasticsearch.search.semantic.provider.openai.apiKey.secretRef }}
-                  key: {{ .Values.global.elasticsearch.search.semantic.provider.openai.apiKey.secretKey }}
-            {{- else if .Values.global.elasticsearch.search.semantic.provider.openai.apiKey.value }}
-            - name: OPENAI_API_KEY
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.openai.apiKey.value | quote }}
-            {{- end }}
-            - name: OPENAI_EMBEDDING_MODEL
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.openai.model | quote }}
-            - name: OPENAI_EMBEDDING_ENDPOINT
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.openai.endpoint | quote }}
-            {{- end }}
-            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "cohere" }}
-            {{- if .Values.global.elasticsearch.search.semantic.provider.cohere.apiKey.secretRef }}
-            - name: COHERE_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.global.elasticsearch.search.semantic.provider.cohere.apiKey.secretRef }}
-                  key: {{ .Values.global.elasticsearch.search.semantic.provider.cohere.apiKey.secretKey }}
-            {{- else if .Values.global.elasticsearch.search.semantic.provider.cohere.apiKey.value }}
-            - name: COHERE_API_KEY
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.cohere.apiKey.value | quote }}
-            {{- end }}
-            - name: COHERE_EMBEDDING_MODEL
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.cohere.model | quote }}
-            - name: COHERE_EMBEDDING_ENDPOINT
-              value: {{ .Values.global.elasticsearch.search.semantic.provider.cohere.endpoint | quote }}
-            {{- end }}
-            {{- end }}
+            {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: LINEAGE_SEARCH_CACHE_ENABLED
               value: {{ .Values.global.datahub.cache.search.lineage.enabled | quote }}
             {{- if .Values.global.datahub.cache.search.lineage.enabled }}

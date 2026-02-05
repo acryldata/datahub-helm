@@ -752,6 +752,25 @@ global:
         ## Comma-separated list of entity names for which to create semantic search indices
         ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.
         enabledEntities: "document"  # Sets ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
+
+        ## Embedding provider configuration
+        provider:
+          ## Provider type: openai, bedrock, or custom
+          type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
+          ## Model ID used for embeddings (must match the model used for document embeddings)
+          modelId: "text-embedding-3-small"  # Sets EMBEDDING_PROVIDER_MODEL_ID
+
+        ## OpenAI specific configuration (only used if provider.type is "openai")
+        openai:
+          ## OpenAI API key - recommend using secret reference
+          apiKey:
+            secretRef: ""  # Name of secret containing OpenAI API key
+            secretKey: ""  # Key within secret containing API key
+            value: ""  # Alternative: set API key directly (not recommended for production)
+          ## OpenAI embedding model (optional, defaults to text-embedding-3-small)
+          model: "text-embedding-3-small"  # Sets OPENAI_EMBEDDING_MODEL
+          ## OpenAI API endpoint (optional, defaults to https://api.openai.com/v1/embeddings)
+          endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
       #     # Notes:
       #     #
       #     # First match wins

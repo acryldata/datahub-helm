@@ -251,6 +251,48 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>"document"</code></td>
 <td>Comma-separated list of entity types for which semantic search indices are created. <strong>Only <code>"document"</code> is officially supported.</strong> Other entity types (e.g., "chart", "dashboard") may work but your mileage may vary (YMMV).</td>
 </tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.type</code></td>
+<td>string</td>
+<td><code>"openai"</code></td>
+<td>Embedding provider type. Supported values: <code>"openai"</code>, <code>"bedrock"</code>, or custom provider.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.provider.modelId</code></td>
+<td>string</td>
+<td><code>"text-embedding-3-small"</code></td>
+<td>Model ID used for generating embeddings. Must match the model used for document embeddings to ensure query embeddings are compared correctly.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.openai.apiKey.secretRef</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Name of Kubernetes secret containing the OpenAI API key. Recommended approach for production deployments.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.openai.apiKey.secretKey</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Key within the Kubernetes secret that contains the OpenAI API key value.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.openai.apiKey.value</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>OpenAI API key as plain text. Not recommended for production - use secretRef instead.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.openai.model</code></td>
+<td>string</td>
+<td><code>"text-embedding-3-small"</code></td>
+<td>OpenAI embedding model to use. Options: <code>text-embedding-3-small</code> (1536 dimensions, cost-effective) or <code>text-embedding-3-large</code> (3072 dimensions, higher quality).</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.search.semantic.openai.endpoint</code></td>
+<td>string</td>
+<td><code>"https://api.openai.com/v1/embeddings"</code></td>
+<td>OpenAI API endpoint for embeddings. Can be customized for Azure OpenAI or other OpenAI-compatible endpoints.</td>
+</tr>
 </tbody>
 </table>
 

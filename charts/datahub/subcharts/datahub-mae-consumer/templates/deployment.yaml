@@ -111,6 +111,28 @@ spec:
               value: {{ .Values.global.elasticsearch.search.semantic.enabled | quote }}
             - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
               value: {{ .Values.global.elasticsearch.search.semantic.enabledEntities | quote }}
+            {{- if .Values.global.elasticsearch.search.semantic.enabled }}
+            - name: EMBEDDING_PROVIDER_TYPE
+              value: {{ .Values.global.elasticsearch.search.semantic.provider.type | quote }}
+            - name: EMBEDDING_PROVIDER_MODEL_ID
+              value: {{ .Values.global.elasticsearch.search.semantic.provider.modelId | quote }}
+            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "openai" }}
+            {{- if .Values.global.elasticsearch.search.semantic.openai.apiKey.secretRef }}
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.elasticsearch.search.semantic.openai.apiKey.secretRef }}
+                  key: {{ .Values.global.elasticsearch.search.semantic.openai.apiKey.secretKey }}
+            {{- else if .Values.global.elasticsearch.search.semantic.openai.apiKey.value }}
+            - name: OPENAI_API_KEY
+              value: {{ .Values.global.elasticsearch.search.semantic.openai.apiKey.value | quote }}
+            {{- end }}
+            - name: OPENAI_EMBEDDING_MODEL
+              value: {{ .Values.global.elasticsearch.search.semantic.openai.model | quote }}
+            - name: OPENAI_EMBEDDING_ENDPOINT
+              value: {{ .Values.global.elasticsearch.search.semantic.openai.endpoint | quote }}
+            {{- end }}
+            {{- end }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

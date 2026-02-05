@@ -237,8 +237,14 @@ Semantic search (vector similarity search) allows finding entities based on sema
 1. **Prerequisites:**
    - Elasticsearch/OpenSearch cluster with k-NN plugin support
    - Documents must have embeddings generated
+   - OpenAI API key (or other embedding provider credentials)
 
-2. **Enable in values.yaml:**
+2. **Create a secret with your OpenAI API key:**
+```bash
+kubectl create secret generic openai-secret --from-literal=api-key=sk-your-api-key-here
+```
+
+3. **Enable in values.yaml:**
 ```yaml
 global:
   elasticsearch:
@@ -246,9 +252,20 @@ global:
       semantic:
         enabled: true
         enabledEntities: "document"  # Only "document" is officially supported
+
+        provider:
+          type: "openai"
+          modelId: "text-embedding-3-small"
+
+        openai:
+          apiKey:
+            secretRef: "openai-secret"
+            secretKey: "api-key"
+          model: "text-embedding-3-small"
+          endpoint: "https://api.openai.com/v1/embeddings"
 ```
 
-3. **Deploy the updated configuration:**
+4. **Deploy the updated configuration:**
 ```bash
 helm upgrade datahub datahub/datahub --values values.yaml
 ```

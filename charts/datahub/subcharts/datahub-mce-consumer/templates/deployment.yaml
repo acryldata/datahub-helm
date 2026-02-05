@@ -122,9 +122,9 @@ spec:
               value: {{ .Values.global.elasticsearch.search.semantic.vectorDimension | quote }}
             - name: EMBEDDING_PROVIDER_TYPE
               value: {{ .Values.global.elasticsearch.search.semantic.provider.type | quote }}
+            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "aws-bedrock" }}
             - name: EMBEDDING_PROVIDER_MODEL_ID
               value: {{ .Values.global.elasticsearch.search.semantic.provider.modelId | quote }}
-            {{- if eq .Values.global.elasticsearch.search.semantic.provider.type "aws-bedrock" }}
             - name: EMBEDDING_PROVIDER_AWS_REGION
               value: {{ .Values.global.elasticsearch.search.semantic.provider.awsRegion | quote }}
             {{- end }}

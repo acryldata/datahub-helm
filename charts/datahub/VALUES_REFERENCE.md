@@ -266,14 +266,14 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>global.elasticsearch.search.semantic.provider.modelId</code></td>
 <td>string</td>
-<td><code>"text-embedding-3-small"</code></td>
-<td>Model ID used for generating embeddings. Must match the model used for document embeddings to ensure query embeddings are compared correctly.</td>
+<td><code>""</code></td>
+<td><strong>AWS Bedrock only:</strong> Bedrock model ID for embeddings (e.g., "cohere.embed-english-v3"). Only used when provider.type is "aws-bedrock". For OpenAI/Cohere, use the nested provider-specific model field instead.</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.provider.awsRegion</code></td>
 <td>string</td>
 <td><code>"us-west-2"</code></td>
-<td>AWS region for AWS Bedrock embedding provider. Only used when provider.type is "aws-bedrock".</td>
+<td><strong>AWS Bedrock only:</strong> AWS region where Bedrock is available (e.g., "us-west-2", "us-east-1"). Only used when provider.type is "aws-bedrock".</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.openai.apiKey.secretRef</code></td>
@@ -297,13 +297,13 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>global.elasticsearch.search.semantic.openai.model</code></td>
 <td>string</td>
 <td><code>"text-embedding-3-small"</code></td>
-<td>OpenAI embedding model to use. Options: <code>text-embedding-3-small</code> (1536 dimensions, cost-effective) or <code>text-embedding-3-large</code> (3072 dimensions, higher quality).</td>
+<td><strong>OpenAI only:</strong> OpenAI embedding model to use. Options: <code>text-embedding-3-small</code> (1536 dimensions, cost-effective) or <code>text-embedding-3-large</code> (3072 dimensions, higher quality). Only used when provider.type is "openai".</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.search.semantic.openai.endpoint</code></td>
 <td>string</td>
 <td><code>"https://api.openai.com/v1/embeddings"</code></td>
-<td>OpenAI API endpoint for embeddings. Can be customized for Azure OpenAI or other OpenAI-compatible endpoints.</td>
+<td><strong>OpenAI only:</strong> OpenAI API endpoint. Customize for Azure OpenAI (e.g., "https://your-resource.openai.azure.com/openai/deployments/your-deployment/embeddings?api-version=2023-05-15") or other OpenAI-compatible services. Only used when provider.type is "openai".</td>
 </tr>
 </tbody>
 </table>

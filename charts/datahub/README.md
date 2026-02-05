@@ -262,7 +262,6 @@ global:
 
         provider:
           type: "openai"
-          modelId: "text-embedding-3-small"
 
         openai:
           apiKey:

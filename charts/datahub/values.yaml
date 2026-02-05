@@ -748,16 +748,26 @@ global:
       ##
       ## Quick Start Examples:
       ##
-      ## OpenAI:
-      ##   enabled: true
-      ##   vectorDimension: 1536
-      ##   provider: { type: "openai", modelId: "text-embedding-3-small" }
-      ##   openai: { apiKey: { secretRef: "openai-secret", secretKey: "api-key" } }
+      ## For OpenAI:
+      ##   semantic:
+      ##     enabled: true
+      ##     vectorDimension: 1536
+      ##     provider:
+      ##       type: "openai"
+      ##     openai:
+      ##       apiKey:
+      ##         secretRef: "openai-secret"
+      ##         secretKey: "api-key"
+      ##       model: "text-embedding-3-small"
       ##
-      ## AWS Bedrock:
-      ##   enabled: true
-      ##   vectorDimension: 1024
-      ##   provider: { type: "aws-bedrock", modelId: "cohere.embed-english-v3", awsRegion: "us-west-2" }
+      ## For AWS Bedrock:
+      ##   semantic:
+      ##     enabled: true
+      ##     vectorDimension: 1024
+      ##     provider:
+      ##       type: "aws-bedrock"
+      ##       modelId: "cohere.embed-english-v3"
+      ##       awsRegion: "us-west-2"
       ##
       semantic:
         ## Enable semantic search functionality
@@ -780,26 +790,22 @@ global:
           ## Provider type: "openai", "aws-bedrock", or "cohere"
           type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
 
-          ## Model ID used for embeddings (must match the model used for document embeddings)
-          ## Examples:
-          ##   - "text-embedding-3-small" (OpenAI)
-          ##   - "cohere.embed-english-v3" (AWS Bedrock)
-          ##   - "embed-english-v3.0" (Cohere)
-          modelId: "text-embedding-3-small"  # Sets EMBEDDING_PROVIDER_MODEL_ID
+          ## AWS Bedrock specific settings (only used when type is "aws-bedrock")
+          ## Bedrock model ID - e.g., "cohere.embed-english-v3" (1024 dimensions)
+          modelId: ""  # Sets EMBEDDING_PROVIDER_MODEL_ID (only for aws-bedrock)
+          ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
+          awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION (only for aws-bedrock)
 
-          ## AWS region (only used when type is "aws-bedrock")
-          awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
-
-        ## OpenAI specific configuration (only used when provider.type is "openai")
+        ## OpenAI configuration (only used when provider.type is "openai")
         openai:
           ## OpenAI API key - recommend using secret reference
           apiKey:
             secretRef: ""  # Name of k8s secret containing OpenAI API key
             secretKey: ""  # Key within secret (e.g., "api-key")
             value: ""  # Alternative: set API key directly (not recommended for production)
-          ## OpenAI embedding model
+          ## OpenAI embedding model - "text-embedding-3-small" (1536d) or "text-embedding-3-large" (3072d)
           model: "text-embedding-3-small"  # Sets OPENAI_EMBEDDING_MODEL
-          ## OpenAI API endpoint (can customize for Azure OpenAI)
+          ## OpenAI API endpoint - can customize for Azure OpenAI or OpenAI-compatible services
           endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
       #     # Notes:
       #     #

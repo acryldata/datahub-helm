@@ -708,9 +708,10 @@ USAGE: Include in services that need semantic search configuration:
 - datahub-mae-consumer
 - datahub-mce-consumer
 - datahub-system-update-job (both blocking and non-blocking)
+For credentials only (actions pod), see datahub.semantic-search.credentials.env
 */}}
 {{- define "datahub.semantic-search.env" -}}
-{{- $semantic := .Values.global.elasticsearch.search.semantic -}}
+{{- $semantic := .Values.global.semantic_search -}}
 {{- if $semantic.enabled }}
 {{- /* Two separate env vars control different layers of semantic search:
        ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED  = index-time: creates semantic indices and dual-writes documents into them
@@ -788,7 +789,7 @@ USAGE: Include in services that run embedding ingestion:
 - acryl-datahub-actions
 */}}
 {{- define "datahub.semantic-search.credentials.env" -}}
-{{- $semantic := .Values.global.elasticsearch.search.semantic -}}
+{{- $semantic := .Values.global.semantic_search -}}
 {{- if $semantic.enabled }}
 {{- $providerType := $semantic.provider.type | default "openai" }}
 {{- if eq $providerType "openai" }}

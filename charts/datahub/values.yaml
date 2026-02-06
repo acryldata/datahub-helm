@@ -743,89 +743,6 @@ global:
       #   # See documentation: https://datahubproject.io/docs/how/search/#customizing-search
       #   config:
 
-      ## Semantic search configuration (vector similarity search) [BETA]
-      ## Note: Only "document" entity type is officially supported. Other entities may work but YMMV.
-      ##
-      ## Quick Start Examples:
-      ##
-      ## For OpenAI:
-      ##   semantic:
-      ##     enabled: true
-      ##     vectorDimension: 3072
-      ##     provider:
-      ##       type: "openai"
-      ##       openai:
-      ##         apiKey:
-      ##           secretRef: "openai-secret"
-      ##           secretKey: "api-key"
-      ##         model: "text-embedding-3-large"
-      ##
-      ## For AWS Bedrock:
-      ##   semantic:
-      ##     enabled: true
-      ##     vectorDimension: 1024
-      ##     provider:
-      ##       type: "aws-bedrock"
-      ##       bedrock:
-      ##         modelId: "cohere.embed-english-v3"
-      ##         awsRegion: "us-west-2"
-      ##
-      semantic:
-        ## Enable semantic search functionality
-        ## Requires documents with embeddings and OpenSearch k-NN support
-        ##
-        ## This single toggle controls two underlying env vars:
-        ##   ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED  — index-time: creates semantic indices and dual-writes embeddings
-        ##   SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED  — query-time: enables semantic search queries
-        ## Both must be true for a fully working setup, so they are set together from this flag.
-        enabled: false
-
-        ## Comma-separated list of entity names for which to create semantic search indices
-        ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.
-        enabledEntities: "document"  # Sets ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
-
-        ## Vector dimension - MUST match your embedding model output:
-        ## - OpenAI text-embedding-3-small: 1536
-        ## - OpenAI text-embedding-3-large: 3072
-        ## - AWS Bedrock cohere.embed-english-v3: 1024
-        ## - Cohere embed-english-v3.0: 1024
-        vectorDimension: 3072  # Sets ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
-
-        ## Embedding provider configuration
-        provider:
-          ## Provider type: "openai", "aws-bedrock", or "cohere"
-          type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
-
-          ## OpenAI configuration (only used when type is "openai")
-          openai:
-            ## OpenAI API key - recommend using secret reference
-            apiKey:
-              secretRef: ""  # Name of k8s secret containing OpenAI API key
-              secretKey: ""  # Key within secret (e.g., "api-key")
-              value: ""  # Alternative: set API key directly (not recommended for production)
-            ## OpenAI embedding model - "text-embedding-3-small" (1536d) or "text-embedding-3-large" (3072d)
-            model: "text-embedding-3-large"  # Sets OPENAI_EMBEDDING_MODEL
-            ## OpenAI API endpoint - can customize for Azure OpenAI or OpenAI-compatible services
-            endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
-
-          ## AWS Bedrock configuration (only used when type is "aws-bedrock")
-          bedrock:
-            ## Bedrock model ID - e.g., "cohere.embed-english-v3" (1024 dimensions)
-            modelId: "cohere.embed-english-v3"  # Sets EMBEDDING_PROVIDER_MODEL_ID
-            ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
-            awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
-
-          ## Cohere configuration (only used when type is "cohere")
-          cohere:
-            ## Cohere API key
-            apiKey:
-              secretRef: ""  # Name of k8s secret containing Cohere API key
-              secretKey: ""  # Key within secret
-              value: ""  # Alternative: set API key directly (not recommended)
-            ## Cohere embedding model
-            model: "embed-english-v3.0"  # Sets COHERE_EMBEDDING_MODEL
-            ## Cohere API endpoint
-            endpoint: "https://api.cohere.ai/v1/embed"  # Sets COHERE_EMBEDDING_ENDPOINT
       #     # Notes:
       #     #
       #     # First match wins
@@ -879,6 +796,90 @@ global:
       #               weight: 0.5
       #           score_mode: multiply
       #           boost_mode: multiply
+
+  ## Semantic search configuration (vector similarity search) [BETA]
+  ## Note: Only "document" entity type is officially supported. Other entities may work but YMMV.
+  ##
+  ## Quick Start Examples:
+  ##
+  ## For OpenAI:
+  ##   semantic_search:
+  ##     enabled: true
+  ##     vectorDimension: 3072
+  ##     provider:
+  ##       type: "openai"
+  ##       openai:
+  ##         apiKey:
+  ##           secretRef: "openai-secret"
+  ##           secretKey: "api-key"
+  ##         model: "text-embedding-3-large"
+  ##
+  ## For AWS Bedrock:
+  ##   semantic_search:
+  ##     enabled: true
+  ##     vectorDimension: 1024
+  ##     provider:
+  ##       type: "aws-bedrock"
+  ##       bedrock:
+  ##         modelId: "cohere.embed-english-v3"
+  ##         awsRegion: "us-west-2"
+  ##
+  semantic_search:
+    ## Enable semantic search functionality
+    ## Requires documents with embeddings and OpenSearch k-NN support
+    ##
+    ## This single toggle controls two underlying env vars:
+    ##   ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED  — index-time: creates semantic indices and dual-writes embeddings
+    ##   SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED  — query-time: enables semantic search queries
+    ## Both must be true for a fully working setup, so they are set together from this flag.
+    enabled: false
+
+    ## Comma-separated list of entity names for which to create semantic search indices
+    ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.
+    enabledEntities: "document"  # Sets ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
+
+    ## Vector dimension - MUST match your embedding model output:
+    ## - OpenAI text-embedding-3-small: 1536
+    ## - OpenAI text-embedding-3-large: 3072
+    ## - AWS Bedrock cohere.embed-english-v3: 1024
+    ## - Cohere embed-english-v3.0: 1024
+    vectorDimension: 3072  # Sets ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
+
+    ## Embedding provider configuration
+    provider:
+      ## Provider type: "openai", "aws-bedrock", or "cohere"
+      type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
+
+      ## OpenAI configuration (only used when type is "openai")
+      openai:
+        ## OpenAI API key - recommend using secret reference
+        apiKey:
+          secretRef: ""  # Name of k8s secret containing OpenAI API key
+          secretKey: ""  # Key within secret (e.g., "api-key")
+          value: ""  # Alternative: set API key directly (not recommended for production)
+        ## OpenAI embedding model - "text-embedding-3-small" (1536d) or "text-embedding-3-large" (3072d)
+        model: "text-embedding-3-large"  # Sets OPENAI_EMBEDDING_MODEL
+        ## OpenAI API endpoint - can customize for Azure OpenAI or OpenAI-compatible services
+        endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
+
+      ## AWS Bedrock configuration (only used when type is "aws-bedrock")
+      bedrock:
+        ## Bedrock model ID - e.g., "cohere.embed-english-v3" (1024 dimensions)
+        modelId: "cohere.embed-english-v3"  # Sets EMBEDDING_PROVIDER_MODEL_ID
+        ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
+        awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
+
+      ## Cohere configuration (only used when type is "cohere")
+      cohere:
+        ## Cohere API key
+        apiKey:
+          secretRef: ""  # Name of k8s secret containing Cohere API key
+          secretKey: ""  # Key within secret
+          value: ""  # Alternative: set API key directly (not recommended)
+        ## Cohere embedding model
+        model: "embed-english-v3.0"  # Sets COHERE_EMBEDDING_MODEL
+        ## Cohere API endpoint
+        endpoint: "https://api.cohere.ai/v1/embed"  # Sets COHERE_EMBEDDING_ENDPOINT
 
   kafka:
     bootstrap:

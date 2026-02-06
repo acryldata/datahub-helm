@@ -1046,29 +1046,31 @@ global:
     ## Semantic search configuration (vector similarity search) [BETA]
     ## Note: Only "document" entity type is officially supported. Other entities may work but YMMV.
     ##
-    ## Quick Start Examples:
+    ## Quick Start Examples (set under global.datahub):
     ##
     ## For OpenAI:
-    ##   semantic_search:
-    ##     enabled: true
-    ##     vectorDimension: 3072
-    ##     provider:
-    ##       type: "openai"
-    ##       openai:
-    ##         apiKey:
-    ##           secretRef: "openai-secret"
-    ##           secretKey: "api-key"
-    ##         model: "text-embedding-3-large"
+    ##   datahub:
+    ##     semantic_search:
+    ##       enabled: true
+    ##       vectorDimension: 3072
+    ##       provider:
+    ##         type: "openai"
+    ##         openai:
+    ##           apiKey:
+    ##             secretRef: "openai-secret"
+    ##             secretKey: "api-key"
+    ##           model: "text-embedding-3-large"
     ##
     ## For AWS Bedrock:
-    ##   semantic_search:
-    ##     enabled: true
-    ##     vectorDimension: 1024
-    ##     provider:
-    ##       type: "aws-bedrock"
-    ##       bedrock:
-    ##         modelId: "cohere.embed-english-v3"
-    ##         awsRegion: "us-west-2"
+    ##   datahub:
+    ##     semantic_search:
+    ##       enabled: true
+    ##       vectorDimension: 1024
+    ##       provider:
+    ##         type: "aws-bedrock"
+    ##         bedrock:
+    ##           modelId: "cohere.embed-english-v3"
+    ##           awsRegion: "us-west-2"
     ##
     semantic_search:
       ## Enable semantic search functionality

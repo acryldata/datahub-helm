@@ -777,3 +777,57 @@ USAGE: Include in services that need semantic search configuration:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Embedding provider credentials for the datahub-actions pod.
+The datahub-documents ingestion source fetches model/provider config from
+the server via GraphQL, but still needs credentials as env vars to
+authenticate with the embedding API.
+
+USAGE: Include in services that run embedding ingestion:
+- acryl-datahub-actions
+*/}}
+{{- define "datahub.semantic-search.credentials.env" -}}
+{{- $semantic := .Values.global.elasticsearch.search.semantic -}}
+{{- if $semantic.enabled }}
+{{- $providerType := $semantic.provider.type | default "openai" }}
+{{- if eq $providerType "openai" }}
+{{- with $semantic.provider.openai }}
+{{- if .apiKey }}
+{{- if .apiKey.secretRef }}
+- name: OPENAI_API_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .apiKey.secretRef }}
+      key: {{ .apiKey.secretKey }}
+{{- else if .apiKey.value }}
+- name: OPENAI_API_KEY
+  value: {{ .apiKey.value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq $providerType "cohere" }}
+{{- with $semantic.provider.cohere }}
+{{- if .apiKey }}
+{{- if .apiKey.secretRef }}
+- name: COHERE_API_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .apiKey.secretRef }}
+      key: {{ .apiKey.secretKey }}
+{{- else if .apiKey.value }}
+- name: COHERE_API_KEY
+  value: {{ .apiKey.value | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq $providerType "aws-bedrock" }}
+{{- with $semantic.provider.bedrock }}
+- name: AWS_REGION
+  value: {{ .awsRegion | default "us-west-2" | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}

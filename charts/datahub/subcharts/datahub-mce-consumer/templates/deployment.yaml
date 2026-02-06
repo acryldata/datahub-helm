@@ -111,6 +111,7 @@ spec:
             - name: CDC_MCL_PROCESSING_ENABLED
               value: {{ .Values.global.cdc.enabled | quote }}
             {{- end }}
+            {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

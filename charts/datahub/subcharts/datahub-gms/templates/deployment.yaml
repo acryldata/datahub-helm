@@ -419,6 +419,7 @@ spec:
             - name: CACHE_ENTITY_COUNTS_TTL_SECONDS
               value: {{ .Values.global.datahub.cache.search.homepage.entityCounts.ttlSeconds | quote }}
             {{- end }}
+            {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: LINEAGE_SEARCH_CACHE_ENABLED
               value: {{ .Values.global.datahub.cache.search.lineage.enabled | quote }}
             {{- if .Values.global.datahub.cache.search.lineage.enabled }}

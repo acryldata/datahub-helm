@@ -105,6 +105,7 @@ spec:
             {{- end }}
             - name: PRE_PROCESS_HOOKS_UI_ENABLED
               value: {{ or .Values.global.datahub.reProcessUIEventHooks (not .Values.global.datahub.preProcessHooksUIEnabled) | quote }}
+            {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

@@ -179,6 +179,7 @@ spec:
             - name: DATAHUB_ACTIONS_MONITORING_PORT
               value: "8000"
             {{- end }}
+            {{- include "datahub.semantic-search.credentials.env" . | nindent 12 }}
           {{- if .Values.extraEnvs }}
             {{ toYaml .Values.extraEnvs | nindent 12 }}
           {{- end }}

@@ -253,18 +253,19 @@ kubectl create secret generic openai-secret --from-literal=api-key=sk-your-api-k
 **2. Configure in values.yaml:**
 ```yaml
 global:
-  semantic_search:
-    enabled: true
-    enabledEntities: "document"
-    vectorDimension: 3072  # For text-embedding-3-large
+  datahub:
+    semantic_search:
+      enabled: true
+      enabledEntities: "document"
+      vectorDimension: 3072  # For text-embedding-3-large
 
-    provider:
-      type: "openai"
-      openai:
-        apiKey:
-          secretRef: "openai-secret"
-          secretKey: "api-key"
-        model: "text-embedding-3-large"
+      provider:
+        type: "openai"
+        openai:
+          apiKey:
+            secretRef: "openai-secret"
+            secretKey: "api-key"
+          model: "text-embedding-3-large"
 ```
 
 #### Option 2: AWS Bedrock (Cohere)
@@ -274,16 +275,17 @@ global:
 **2. Configure in values.yaml:**
 ```yaml
 global:
-  semantic_search:
-    enabled: true
-    enabledEntities: "document"
-    vectorDimension: 1024  # For Cohere embed-english-v3
+  datahub:
+    semantic_search:
+      enabled: true
+      enabledEntities: "document"
+      vectorDimension: 1024  # For Cohere embed-english-v3
 
-    provider:
-      type: "aws-bedrock"
-      bedrock:
-        modelId: "cohere.embed-english-v3"
-        awsRegion: "us-west-2"
+      provider:
+        type: "aws-bedrock"
+        bedrock:
+          modelId: "cohere.embed-english-v3"
+          awsRegion: "us-west-2"
 ```
 
 > **Note**: AWS Bedrock uses AWS SDK default credentials chain (IAM roles, environment variables, etc.)
@@ -298,18 +300,19 @@ kubectl create secret generic cohere-secret --from-literal=api-key=your-cohere-k
 **2. Configure in values.yaml:**
 ```yaml
 global:
-  semantic_search:
-    enabled: true
-    enabledEntities: "document"
-    vectorDimension: 1024  # For embed-english-v3.0
+  datahub:
+    semantic_search:
+      enabled: true
+      enabledEntities: "document"
+      vectorDimension: 1024  # For embed-english-v3.0
 
-    provider:
-      type: "cohere"
-      cohere:
-        apiKey:
-          secretRef: "cohere-secret"
-          secretKey: "api-key"
-        model: "embed-english-v3.0"
+      provider:
+        type: "cohere"
+        cohere:
+          apiKey:
+            secretRef: "cohere-secret"
+            secretKey: "api-key"
+          model: "embed-english-v3.0"
 ```
 
 ### Vector Dimensions by Model

@@ -773,7 +773,12 @@ global:
       semantic:
         ## Enable semantic search functionality
         ## Requires documents with embeddings and OpenSearch k-NN support
-        enabled: false  # Sets SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED and ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
+        ##
+        ## This single toggle controls two underlying env vars:
+        ##   ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED  — index-time: creates semantic indices and dual-writes embeddings
+        ##   SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED  — query-time: enables semantic search queries
+        ## Both must be true for a fully working setup, so they are set together from this flag.
+        enabled: false
 
         ## Comma-separated list of entity names for which to create semantic search indices
         ## Only "document" is officially supported. Other entity types (e.g., "chart", "dashboard") are experimental.

@@ -961,7 +961,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.3.0.1
+    version: v1.4.0
     gms:
       protocol: "http"
       port: "8080"
@@ -982,7 +982,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.0.0"
+    appVersion: "1.4.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1002,7 +1002,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "1.0.0"
+      defaultCliVersion: "1.4.0.2"
 
     metadata_service_authentication:
       enabled: true

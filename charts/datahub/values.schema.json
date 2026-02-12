@@ -59,7 +59,7 @@
         "extraInitContainers",
         "jvmOpts"
       ]
-    },       
+    },
     "datahub-gms": {
       "type": "object",
       "properties": {
@@ -518,25 +518,13 @@
         },
         "podSecurityContext": {
           "type": "object",
-          "properties": {
-            "fsGroup": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "fsGroup"
-          ]
+          "properties": {},
+          "required": []
         },
         "securityContext": {
           "type": "object",
-          "properties": {
-            "runAsUser": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "runAsUser"
-          ]
+          "properties": {},
+          "required": []
         },
         "annotations": {
           "type": "object",
@@ -641,25 +629,13 @@
         },
         "podSecurityContext": {
           "type": "object",
-          "properties": {
-            "fsGroup": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "fsGroup"
-          ]
+          "properties": {},
+          "required": []
         },
         "securityContext": {
           "type": "object",
-          "properties": {
-            "runAsUser": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "runAsUser"
-          ]
+          "properties": {},
+          "required": []
         },
         "annotations": {
           "type": "object",
@@ -764,25 +740,13 @@
         },
         "podSecurityContext": {
           "type": "object",
-          "properties": {
-            "fsGroup": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "fsGroup"
-          ]
+          "properties": {},
+          "required": []
         },
         "securityContext": {
           "type": "object",
-          "properties": {
-            "runAsUser": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "runAsUser"
-          ]
+          "properties": {},
+          "required": []
         },
         "annotations": {
           "type": "object",
@@ -887,25 +851,13 @@
         },
         "podSecurityContext": {
           "type": "object",
-          "properties": {
-            "fsGroup": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "fsGroup"
-          ]
+          "properties": {},
+          "required": []
         },
         "securityContext": {
           "type": "object",
-          "properties": {
-            "runAsUser": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "runAsUser"
-          ]
+          "properties": {},
+          "required": []
         },
         "annotations": {
           "type": "object",

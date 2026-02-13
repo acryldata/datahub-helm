@@ -1172,6 +1172,53 @@ global:
     ## Reprocess UI events at MAE Consumer, normally if preprocess is enabled this is not required.
     reProcessUIEventHooks: false
 
+  externalSecrets:
+    enabled: false
+    # stores:
+    #   # AWS Example
+    #   aws-store:
+    #     provider: aws
+    #     region: us-west-2
+    #     serviceAccount: parameter-store-access
+    #
+    #   # GCP Example
+    #   gcp-store:
+    #     provider: gcp
+    #     projectID: my-gcp-project
+    #     region: us-central1
+    #     clusterName: my-gke-cluster
+    #     serviceAccount: gcp-secret-manager-access
+    #
+    #   # Azure KeyVault Example with Workload Identity
+    #   azure-wi-store:
+    #     provider: azure
+    #     authType: WorkloadIdentity
+    #     vaultURL: https://my-keyvault.vault.azure.net
+    #     tenantID: 00000000-0000-0000-0000-000000000000
+    #     serviceAccount: azure-keyvault-access
+    #
+    #   # Azure KeyVault Example with Managed Identity
+    #   azure-mi-store:
+    #     provider: azure
+    #     authType: ManagedIdentity
+    #     vaultURL: https://my-keyvault.vault.azure.net
+    #     clientID: 00000000-0000-0000-0000-000000000000 # Needed for user-assigned managed identity
+    #
+    #   # Azure KeyVault Example with Service Principal
+    #   azure-sp-store:
+    #     provider: azure
+    #     authType: ClientSecret
+    #     vaultURL: https://my-keyvault.vault.azure.net
+    #     tenantID: 00000000-0000-0000-0000-000000000000
+    #
+    # # Secrets definition example
+    # secrets:
+    #   mysql-secrets:
+    #     store: aws-store
+    #     data:
+    #       mysql-password: /NAMESPACE/CLUSTER/mysql-password
+    #       mysql-root-password: /CLUSTER/shared/mysql/password
+
 #  hostAliases:
 #    - ip: "192.168.0.104"
 #      hostnames:

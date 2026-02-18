@@ -725,19 +725,20 @@ For credentials only (actions pod), see datahub.semantic-search.credentials.env
   value: {{ $semantic.enabledEntities | quote }}
 - name: ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION
   value: {{ $semantic.vectorDimension | quote }}
-{{- $providerType := $semantic.provider.type | default "openai" }}
+{{- $ep := $semantic.provider -}}
+{{- $providerType := $ep.type | default "openai" }}
 - name: EMBEDDING_PROVIDER_TYPE
   value: {{ $providerType | quote }}
 {{- if eq $providerType "aws-bedrock" }}
-{{- with $semantic.provider.bedrock }}
-- name: EMBEDDING_PROVIDER_MODEL_ID
-  value: {{ .modelId | default "cohere.embed-english-v3" | quote }}
-- name: EMBEDDING_PROVIDER_AWS_REGION
+{{- with $ep.bedrock }}
+- name: BEDROCK_EMBEDDING_AWS_REGION
   value: {{ .awsRegion | default "us-west-2" | quote }}
+- name: BEDROCK_EMBEDDING_MODEL
+  value: {{ .model | default "cohere.embed-english-v3" | quote }}
 {{- end }}
 {{- end }}
 {{- if eq $providerType "openai" }}
-{{- with $semantic.provider.openai }}
+{{- with $ep.openai }}
 {{- if .apiKey }}
 {{- if .apiKey.secretRef }}
 - name: OPENAI_API_KEY
@@ -757,7 +758,7 @@ For credentials only (actions pod), see datahub.semantic-search.credentials.env
 {{- end }}
 {{- end }}
 {{- if eq $providerType "cohere" }}
-{{- with $semantic.provider.cohere }}
+{{- with $ep.cohere }}
 {{- if .apiKey }}
 {{- if .apiKey.secretRef }}
 - name: COHERE_API_KEY
@@ -791,9 +792,10 @@ USAGE: Include in services that run embedding ingestion:
 {{- define "datahub.semantic-search.credentials.env" -}}
 {{- $semantic := .Values.global.datahub.semantic_search -}}
 {{- if $semantic.enabled }}
-{{- $providerType := $semantic.provider.type | default "openai" }}
+{{- $ep := $semantic.provider -}}
+{{- $providerType := $ep.type | default "openai" }}
 {{- if eq $providerType "openai" }}
-{{- with $semantic.provider.openai }}
+{{- with $ep.openai }}
 {{- if .apiKey }}
 {{- if .apiKey.secretRef }}
 - name: OPENAI_API_KEY
@@ -809,7 +811,7 @@ USAGE: Include in services that run embedding ingestion:
 {{- end }}
 {{- end }}
 {{- if eq $providerType "cohere" }}
-{{- with $semantic.provider.cohere }}
+{{- with $ep.cohere }}
 {{- if .apiKey }}
 {{- if .apiKey.secretRef }}
 - name: COHERE_API_KEY
@@ -825,7 +827,7 @@ USAGE: Include in services that run embedding ingestion:
 {{- end }}
 {{- end }}
 {{- if eq $providerType "aws-bedrock" }}
-{{- with $semantic.provider.bedrock }}
+{{- with $ep.bedrock }}
 - name: AWS_REGION
   value: {{ .awsRegion | default "us-west-2" | quote }}
 {{- end }}

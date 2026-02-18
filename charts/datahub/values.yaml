@@ -1069,7 +1069,7 @@ global:
     ##       provider:
     ##         type: "aws-bedrock"
     ##         bedrock:
-    ##           modelId: "cohere.embed-english-v3"
+    ##           model: "cohere.embed-english-v3"
     ##           awsRegion: "us-west-2"
     ##
     semantic_search:
@@ -1095,10 +1095,10 @@ global:
 
       ## Embedding provider configuration
       provider:
-        ## Provider type: "openai", "aws-bedrock", or "cohere"
+        ## Provider type: "aws-bedrock", "openai", or "cohere"
         type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
 
-        ## OpenAI configuration (only used when type is "openai")
+        ## Default: OpenAI configuration (used when type is "openai")
         openai:
           ## OpenAI API key - recommend using secret reference
           apiKey:
@@ -1110,16 +1110,16 @@ global:
           ## OpenAI API endpoint - can customize for Azure OpenAI or OpenAI-compatible services
           endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
 
-        ## AWS Bedrock configuration (only used when type is "aws-bedrock")
+        ## AWS Bedrock configuration (used when type is "aws-bedrock")
         bedrock:
-          ## Bedrock model ID - e.g., "cohere.embed-english-v3" (1024 dimensions)
-          modelId: "cohere.embed-english-v3"  # Sets EMBEDDING_PROVIDER_MODEL_ID
-          ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
-          awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
+          ## AWS region where Bedrock is available (e.g., us-west-2, us-east-1)
+          awsRegion: "us-west-2"  # Sets BEDROCK_EMBEDDING_AWS_REGION
+          ## Bedrock model ID for embeddings (Cohere Embed v3: 1024 dimensions)
+          model: "cohere.embed-english-v3"  # Sets BEDROCK_EMBEDDING_MODEL
 
-        ## Cohere configuration (only used when type is "cohere")
+        ## Cohere configuration (used when type is "cohere")
         cohere:
-          ## Cohere API key
+          ## Cohere API key - recommend using secret reference
           apiKey:
             secretRef: ""  # Name of k8s secret containing Cohere API key
             secretKey: ""  # Key within secret

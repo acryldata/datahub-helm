@@ -733,6 +733,8 @@ For credentials only (actions pod), see datahub.semantic-search.credentials.env
 {{- with $ep.bedrock }}
 - name: BEDROCK_EMBEDDING_AWS_REGION
   value: {{ .awsRegion | default "us-west-2" | quote }}
+- name: EMBEDDING_PROVIDER_AWS_REGION
+  value: {{ .awsRegion | default "us-west-2" | quote }}
 - name: BEDROCK_EMBEDDING_MODEL
   value: {{ .model | default "cohere.embed-english-v3" | quote }}
 {{- end }}
@@ -777,6 +779,13 @@ For credentials only (actions pod), see datahub.semantic-search.credentials.env
   value: {{ .endpoint | default "https://api.cohere.ai/v1/embed" | quote }}
 {{- end }}
 {{- end }}
+{{- $modelId := "" }}
+{{- if eq $providerType "aws-bedrock" }}{{- $modelId = $ep.bedrock.model | default "cohere.embed-english-v3" }}
+{{- else if eq $providerType "openai" }}{{- $modelId = $ep.openai.model | default "text-embedding-3-large" }}
+{{- else if eq $providerType "cohere" }}{{- $modelId = $ep.cohere.model | default "embed-english-v3.0" }}
+{{- end }}
+- name: EMBEDDING_PROVIDER_MODEL_ID
+  value: {{ $modelId | quote }}
 {{- end }}
 {{- end -}}
 

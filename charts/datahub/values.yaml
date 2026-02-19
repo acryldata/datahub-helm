@@ -1112,8 +1112,8 @@ global:
 
         ## AWS Bedrock configuration (only used when type is "aws-bedrock")
         bedrock:
-          ## Bedrock model ID - e.g., "cohere.embed-english-v3" (1024 dimensions)
-          modelId: "cohere.embed-english-v3"  # Sets EMBEDDING_PROVIDER_MODEL_ID
+          ## Bedrock model - e.g., "cohere.embed-english-v3" (1024 dimensions)
+          model: "cohere.embed-english-v3"  # Sets BEDROCK_EMBEDDING_AWS_REGION
           ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
           awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
 

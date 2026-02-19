@@ -1069,7 +1069,7 @@ global:
     ##       provider:
     ##         type: "aws-bedrock"
     ##         bedrock:
-    ##           modelId: "cohere.embed-english-v3"
+    ##           model: "cohere.embed-english-v3"
     ##           awsRegion: "us-west-2"
     ##
     semantic_search:

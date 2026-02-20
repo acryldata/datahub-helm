@@ -961,7 +961,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.4.0
+    version: v1.4.0.3
     gms:
       protocol: "http"
       port: "8080"
@@ -982,7 +982,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.4.0"
+    appVersion: "1.4.0.3"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1002,7 +1002,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "1.4.0.2"
+      defaultCliVersion: "1.4.0.3"
 
     metadata_service_authentication:
       enabled: true
@@ -1095,10 +1095,10 @@ global:
 
       ## Embedding provider configuration
       provider:
-        ## Provider type: "aws-bedrock", "openai", or "cohere"
+        ## Provider type: "openai", "aws-bedrock", or "cohere"
         type: "openai"  # Sets EMBEDDING_PROVIDER_TYPE
 
-        ## Default: OpenAI configuration (used when type is "openai")
+        ## OpenAI configuration (only used when type is "openai")
         openai:
           ## OpenAI API key - recommend using secret reference
           apiKey:
@@ -1110,16 +1110,16 @@ global:
           ## OpenAI API endpoint - can customize for Azure OpenAI or OpenAI-compatible services
           endpoint: "https://api.openai.com/v1/embeddings"  # Sets OPENAI_EMBEDDING_ENDPOINT
 
-        ## AWS Bedrock configuration (used when type is "aws-bedrock")
+        ## AWS Bedrock configuration (only used when type is "aws-bedrock")
         bedrock:
-          ## AWS region where Bedrock is available (e.g., us-west-2, us-east-1)
-          awsRegion: "us-west-2"  # Sets BEDROCK_EMBEDDING_AWS_REGION
-          ## Bedrock model ID for embeddings (Cohere Embed v3: 1024 dimensions)
+          ## Bedrock model - e.g., "cohere.embed-english-v3" (1024 dimensions)
           model: "cohere.embed-english-v3"  # Sets BEDROCK_EMBEDDING_MODEL
+          ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
+          awsRegion: "us-west-2"  # Sets BEDROCK_EMBEDDING_AWS_REGION
 
-        ## Cohere configuration (used when type is "cohere")
+        ## Cohere configuration (only used when type is "cohere")
         cohere:
-          ## Cohere API key - recommend using secret reference
+          ## Cohere API key
           apiKey:
             secretRef: ""  # Name of k8s secret containing Cohere API key
             secretKey: ""  # Key within secret

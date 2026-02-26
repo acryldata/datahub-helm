@@ -10,6 +10,11 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
+{{- if eq .Values.service.type "LoadBalancer" }}
+  {{- if hasKey .Values.service "allocateLoadBalancerNodePorts" }}
+  allocateLoadBalancerNodePorts: {{ .Values.service.allocateLoadBalancerNodePorts }}
+  {{- end }}
+{{- end }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
@@ -26,6 +31,9 @@ spec:
       targetPort: {{ .Values.global.datahub.monitoring.portName }}
       protocol: TCP
     {{- end }}
+    {{- if .Values.service.additionalPorts }}
+    {{- toYaml .Values.service.additionalPorts | nindent 4 }}
+    {{- end}}
   {{- if and (eq .Values.service.type "LoadBalancer") (.Values.service.loadBalancerClass) }}
   loadBalancerClass: {{ .Values.service.loadBalancerClass }}
   {{- end }}

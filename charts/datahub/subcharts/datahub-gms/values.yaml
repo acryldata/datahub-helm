@@ -66,6 +66,10 @@ priorityClassName:
 
 service:
   type: LoadBalancer # ClusterIP or NodePort
+  # Defines if NodePorts will be automatically allocated for services 
+  # with type LoadBalancer. It may be set to "false" if the cluster load-balancer 
+  # does not rely on NodePorts.
+  # allocateLoadBalancerNodePorts: true
   port: "8080"
   targetPort: http
   protocol: TCP
@@ -74,6 +78,12 @@ service:
   # Internal load balancer or various other annotation support in AWS
   annotations: {}
     # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  # Additional ports to be added to the datahub-gms service
+  additionalPorts: []
+    # - name: https
+    #   port: 443
+    #   targetPort: 8080
+    #   protocol: TCP
 
 ingress:
   # className: ""

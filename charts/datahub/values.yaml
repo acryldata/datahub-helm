@@ -961,7 +961,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.4.0
+    version: v1.4.0.3
     gms:
       protocol: "http"
       port: "8080"
@@ -982,7 +982,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.4.0"
+    appVersion: "1.4.0.3"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1002,7 +1002,7 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "1.4.0.2"
+      defaultCliVersion: "1.4.0.3"
 
     metadata_service_authentication:
       enabled: true
@@ -1069,7 +1069,7 @@ global:
     ##       provider:
     ##         type: "aws-bedrock"
     ##         bedrock:
-    ##           modelId: "cohere.embed-english-v3"
+    ##           model: "cohere.embed-english-v3"
     ##           awsRegion: "us-west-2"
     ##
     semantic_search:
@@ -1112,10 +1112,10 @@ global:
 
         ## AWS Bedrock configuration (only used when type is "aws-bedrock")
         bedrock:
-          ## Bedrock model ID - e.g., "cohere.embed-english-v3" (1024 dimensions)
-          modelId: "cohere.embed-english-v3"  # Sets EMBEDDING_PROVIDER_MODEL_ID
+          ## Bedrock model - e.g., "cohere.embed-english-v3" (1024 dimensions)
+          model: "cohere.embed-english-v3"  # Sets BEDROCK_EMBEDDING_MODEL
           ## AWS region where Bedrock is available - e.g., "us-west-2", "us-east-1"
-          awsRegion: "us-west-2"  # Sets EMBEDDING_PROVIDER_AWS_REGION
+          awsRegion: "us-west-2"  # Sets BEDROCK_EMBEDDING_AWS_REGION
 
         ## Cohere configuration (only used when type is "cohere")
         cohere:
@@ -1171,6 +1171,53 @@ global:
     preProcessHooksUIEnabled: true
     ## Reprocess UI events at MAE Consumer, normally if preprocess is enabled this is not required.
     reProcessUIEventHooks: false
+
+  externalSecrets:
+    enabled: false
+    # stores:
+    #   # AWS Example
+    #   aws-store:
+    #     provider: aws
+    #     region: us-west-2
+    #     serviceAccount: parameter-store-access
+    #
+    #   # GCP Example
+    #   gcp-store:
+    #     provider: gcp
+    #     projectID: my-gcp-project
+    #     region: us-central1
+    #     clusterName: my-gke-cluster
+    #     serviceAccount: gcp-secret-manager-access
+    #
+    #   # Azure KeyVault Example with Workload Identity
+    #   azure-wi-store:
+    #     provider: azure
+    #     authType: WorkloadIdentity
+    #     vaultURL: https://my-keyvault.vault.azure.net
+    #     tenantID: 00000000-0000-0000-0000-000000000000
+    #     serviceAccount: azure-keyvault-access
+    #
+    #   # Azure KeyVault Example with Managed Identity
+    #   azure-mi-store:
+    #     provider: azure
+    #     authType: ManagedIdentity
+    #     vaultURL: https://my-keyvault.vault.azure.net
+    #     clientID: 00000000-0000-0000-0000-000000000000 # Needed for user-assigned managed identity
+    #
+    #   # Azure KeyVault Example with Service Principal
+    #   azure-sp-store:
+    #     provider: azure
+    #     authType: ClientSecret
+    #     vaultURL: https://my-keyvault.vault.azure.net
+    #     tenantID: 00000000-0000-0000-0000-000000000000
+    #
+    # # Secrets definition example
+    # secrets:
+    #   mysql-secrets:
+    #     store: aws-store
+    #     data:
+    #       mysql-password: /NAMESPACE/CLUSTER/mysql-password
+    #       mysql-root-password: /CLUSTER/shared/mysql/password
 
 #  hostAliases:
 #    - ip: "192.168.0.104"

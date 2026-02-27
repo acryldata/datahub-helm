@@ -70,7 +70,7 @@ securityContext: {}
 priorityClassName:
 
 service:
-  type: LoadBalancer # ClusterIP or NodePort
+  type: ClusterIP # LoadBalancer, ClusterIP or NodePort
   port: 9002
   targetPort: http
   containerPort: 9002

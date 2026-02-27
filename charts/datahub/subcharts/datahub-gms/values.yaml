@@ -67,7 +67,7 @@ securityContext: {}
 priorityClassName:
 
 service:
-  type: LoadBalancer # ClusterIP or NodePort
+  type: ClusterIP # LoadBalancer or NodePort
   # Defines if NodePorts will be automatically allocated for services 
   # with type LoadBalancer. It may be set to "false" if the cluster load-balancer 
   # does not rely on NodePorts.

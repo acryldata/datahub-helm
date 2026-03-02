@@ -2065,6 +2065,96 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>2Gi</code></td>
 <td>Memory request for system update job.</td>
 </tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable SQL setup within system-update job. Replaces the legacy <code>mysqlSetupJob</code> and <code>postgresqlSetupJob</code>. REQUIRED when <code>global.sql.iam.enabled=true</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createTables</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Create DataHub tables (CREATE_TABLES env var).</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createDatabase</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Create DataHub database (CREATE_DB env var).</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createUser</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Create database user (CREATE_USER env var).</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createUsername</code></td>
+<td>string</td>
+<td>-</td>
+<td>Username for the new user being created (CREATE_USER_USERNAME env var). Defaults to <code>global.sql.datasource.username</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createPassword.value</code></td>
+<td>string</td>
+<td>-</td>
+<td>Password value for the new user. Defaults to <code>global.sql.datasource.password.value</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createPassword.secretRef</code></td>
+<td>string</td>
+<td>-</td>
+<td>Secret reference for the new user password. Defaults to <code>global.sql.datasource.password.secretRef</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.setup.createPassword.secretKey</code></td>
+<td>string</td>
+<td>-</td>
+<td>Secret key for the new user password. Defaults to <code>global.sql.datasource.password.secretKey</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable Elasticsearch setup within system-update job. Replaces the legacy <code>elasticsearchSetupJob</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.createUser</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Create Elasticsearch user (CREATE_USER_ES env var).</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>IAM role ARN to map to the created user (CREATE_USER_ES_IAM_ROLE_ARN env var). Only used when <code>createUser=true</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.createUsername</code></td>
+<td>string</td>
+<td>-</td>
+<td>Username for the new Elasticsearch user (CREATE_USER_ES_USERNAME env var). Defaults to <code>global.elasticsearch.auth.username</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.createPassword.value</code></td>
+<td>string</td>
+<td>-</td>
+<td>Password value for the new Elasticsearch user. Defaults to <code>global.elasticsearch.auth.password.value</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.createPassword.secretRef</code></td>
+<td>string</td>
+<td>-</td>
+<td>Secret reference for the new Elasticsearch user password. Defaults to <code>global.elasticsearch.auth.password.secretRef</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.setup.createPassword.secretKey</code></td>
+<td>string</td>
+<td>-</td>
+<td>Secret key for the new Elasticsearch user password. Defaults to <code>global.elasticsearch.auth.password.secretKey</code>.</td>
+</tr>
 </tbody>
 </table>
 

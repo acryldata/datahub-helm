@@ -30,6 +30,8 @@ serviceMonitor:
   create: false
   extraLabels: {}
 
+annotations: {}
+
 podAnnotations: {}
 
 podSecurityContext: {}

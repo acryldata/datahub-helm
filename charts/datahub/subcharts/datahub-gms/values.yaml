@@ -48,6 +48,8 @@ serviceMonitor:
   create: false
   extraLabels: {}
 
+annotations: {}
+
 podAnnotations: {}
   # co.elastic.logs/enabled: "true"
 

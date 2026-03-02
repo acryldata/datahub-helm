@@ -7,6 +7,10 @@ metadata:
     {{- range $key, $val := .Values.extraLabels }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

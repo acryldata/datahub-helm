@@ -1315,6 +1315,81 @@
         "extraInitContainers": {
           "type": "array",
           "items": {}
+        },
+        "sql": {
+          "type": "object",
+          "properties": {
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"]
+            },
+            "setup": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "createTables": { "type": "boolean" },
+                "createDatabase": { "type": "boolean" },
+                "createUser": { "type": "boolean" },
+                "createUsername": { "type": "string" },
+                "createPassword": {
+                  "type": "object",
+                  "properties": {
+                    "value": { "type": "string" },
+                    "secretRef": { "type": "string" },
+                    "secretKey": { "type": "string" }
+                  }
+                }
+              },
+              "required": [
+                "enabled",
+                "createTables",
+                "createDatabase",
+                "createUser"
+              ]
+            }
+          },
+          "required": ["iam", "setup"]
+        },
+        "elasticsearch": {
+          "type": "object",
+          "properties": {
+            "iam": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"]
+            },
+            "setup": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "createUser": { "type": "boolean" },
+                "createUserIamRoleArn": { "type": "string" },
+                "createUsername": { "type": "string" },
+                "createPassword": {
+                  "type": "object",
+                  "properties": {
+                    "value": { "type": "string" },
+                    "secretRef": { "type": "string" },
+                    "secretKey": { "type": "string" }
+                  }
+                }
+              },
+              "required": [
+                "enabled",
+                "createUser"
+              ]
+            }
+          },
+          "required": ["iam", "setup"]
         }
       },
       "required": [
@@ -1327,7 +1402,9 @@
         "podAnnotations",
         "resources",
         "extraSidecars",
-        "extraInitContainers"
+        "extraInitContainers",
+        "sql",
+        "elasticsearch"
       ]
     },
     "global": {

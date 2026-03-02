@@ -82,6 +82,66 @@ spec:
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12 }}
+            {{- if .Values.datahubSystemUpdate.sql.setup.enabled }}
+            # Enable SQL setup within system-update job
+            # This replaces the legacy mysqlSetupJob/postgresqlSetupJob
+            - name: DATAHUB_SQL_SETUP_ENABLED
+              value: "true"
+            - name: CREATE_TABLES
+              value: {{ .Values.datahubSystemUpdate.sql.setup.createTables | default "true" | quote }}
+            - name: CREATE_DB
+              value: {{ .Values.datahubSystemUpdate.sql.setup.createDatabase | default "true" | quote }}
+            {{- if .Values.datahubSystemUpdate.sql.setup.createUser }}
+            - name: CREATE_USER
+              value: {{ .Values.datahubSystemUpdate.sql.setup.createUser | default "false" | quote }}
+            {{- $username := .Values.datahubSystemUpdate.sql.setup.createUsername | default .Values.global.sql.datasource.username }}
+            {{- if $username }}
+            - name: CREATE_USER_USERNAME
+              value: {{ $username | quote }}
+            {{- end }}
+            {{- if not .Values.datahubSystemUpdate.sql.iam.enabled }}
+            {{- $password := .Values.datahubSystemUpdate.sql.setup.createPassword | default .Values.global.sql.datasource.password }}
+            {{- if $password.value }}
+            - name: CREATE_USER_PASSWORD
+              value: {{ $password.value | quote }}
+            {{- else if $password.secretRef }}
+            - name: CREATE_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $password.secretRef | quote }}
+                  key: {{ $password.secretKey | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.enabled }}
+            # Enable Elasticsearch setup within system-update job
+            # This replaces the legacy elasticsearchSetupJob
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.createUser }}
+            - name: CREATE_USER_ES
+              value: {{ .Values.datahubSystemUpdate.elasticsearch.setup.createUser | default "false" | quote }}
+            {{- $username := .Values.datahubSystemUpdate.elasticsearch.setup.createUsername | default .Values.global.elasticsearch.auth.username }}
+            {{- if $username }}
+            - name: CREATE_USER_ES_USERNAME
+              value: {{ $username | quote }}
+            {{- end }}
+            {{- $password := .Values.datahubSystemUpdate.elasticsearch.setup.createPassword | default .Values.global.elasticsearch.auth.password }}
+            {{- if $password.value }}
+            - name: CREATE_USER_ES_PASSWORD
+              value: {{ $password.value | quote }}
+            {{- else if $password.secretRef }}
+            - name: CREATE_USER_ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $password.secretRef | quote }}
+                  key: {{ $password.secretKey | quote }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn }}
+            - name: CREATE_USER_ES_IAM_ROLE_ARN
+              value: {{ .Values.datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
               value: {{ .Values.global.datahub_analytics_enabled | quote }}

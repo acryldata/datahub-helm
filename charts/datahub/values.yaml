@@ -928,6 +928,7 @@ global:
       port: "3306"
       url: "jdbc:mysql://prerequisites-mysql:3306/datahub?verifyServerCertificate=false&useSSL=true&useUnicode=yes&characterEncoding=UTF-8&enabledTLSProtocols=TLSv1.2"
       driver: "com.mysql.cj.jdbc.Driver"
+      database: "datahub"
       username: "root"
       password:
         secretRef: mysql-secrets
@@ -941,6 +942,7 @@ global:
       # port: "5432"
       # url: "jdbc:postgresql://prerequisites-postgresql:5432/datahub"
       # driver: "org.postgresql.Driver"
+      # database: "datahub"
       # username: "postgres"
       # password:
       #   secretRef: postgresql-secrets

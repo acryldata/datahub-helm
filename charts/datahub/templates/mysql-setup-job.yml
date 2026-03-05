@@ -86,7 +86,7 @@ spec:
             - name: MYSQL_PORT
               value: {{ .Values.global.sql.datasource.port | quote }}
             - name: DATAHUB_DB_NAME
-              value: "datahub"
+              value: {{ .Values.global.sql.datasource.database | quote }}
             - name: MYSQL_ROOT_PASSWORD
               {{- $rootPasswordValue := .Values.global.sql.datasource.password.value }}
               {{- if $rootPasswordValue }}

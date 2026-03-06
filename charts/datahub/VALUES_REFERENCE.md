@@ -846,6 +846,12 @@ This document provides a comprehensive reference for every single configurable v
 <td>Enable system update processes including Elasticsearch index management.</td>
 </tr>
 <tr>
+<td><code>global.datahub.systemUpdate.scaleDown.enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>When true, the system-update job runs the Java-based Kubernetes scale-down step (KubernetesScaleDownStep), scaling selected deployments to zero and applying deployment env updates during upgrade. Available in v1.5.0.</td>
+</tr>
+<tr>
 <td><code>global.datahub.encryptionKey.secretRef</code></td>
 <td>string</td>
 <td><code>datahub-encryption-secrets</code></td>
@@ -1941,6 +1947,8 @@ This document provides a comprehensive reference for every single configurable v
 
 ## DataHub System Update Configuration
 
+System-update scale-down options and operator ServiceAccount/RBAC are available in v1.5.0.
+
 <table>
 <thead>
 <tr>
@@ -2066,10 +2074,34 @@ This document provides a comprehensive reference for every single configurable v
 <td>Memory request for system update job.</td>
 </tr>
 <tr>
+<td><code>datahubSystemUpdate.scaleDown.maxRetries</code></td>
+<td>number</td>
+<td><code>3</code></td>
+<td>Max retries for the Kubernetes scale-down step. Available in v1.5.0.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.scaleDown.scaleDownDeploymentLabelSelectors</code></td>
+<td>array</td>
+<td><code>["app.kubernetes.io/name=datahub-mae-consumer", "app.kubernetes.io/name=datahub-mce-consumer"]</code></td>
+<td>Label selectors for deployments to scale to zero during system update (e.g. MAE, MCE). Available in v1.5.0.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.scaleDown.deploymentEnvUpdates</code></td>
+<td>array</td>
+<td>—</td>
+<td>Deployments that get env vars set when scaling down; state stores previous env per deployment for restore (e.g. GMS with consumers disabled). Available in v1.5.0.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.serviceAccount</code></td>
+<td>object</td>
+<td>—</td>
+<td>ServiceAccount for the system-update job. When <code>global.datahub.systemUpdate.scaleDown.enabled</code> is true or this is set, the job uses an operator SA with RBAC for configmaps and KEDA scaledobjects. Available in v1.5.0.</td>
+</tr>
+<tr>
 <td><code>datahubSystemUpdate.sql.setup.enabled</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Enable SQL setup within system-update job. Replaces the legacy <code>mysqlSetupJob</code> and <code>postgresqlSetupJob</code>. REQUIRED when <code>global.sql.iam.enabled=true</code>.</td>
+<td>Enable SQL setup within system-update job. Replaces the legacy <code>mysqlSetupJob</code> and <code>postgresqlSetupJob</code>. REQUIRED when <code>global.sql.iam.enabled=true</code>. Default enabled in chart for v1.5.0+.</td>
 </tr>
 <tr>
 <td><code>datahubSystemUpdate.sql.setup.createTables</code></td>
@@ -2117,7 +2149,7 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>datahubSystemUpdate.elasticsearch.setup.enabled</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Enable Elasticsearch setup within system-update job. Replaces the legacy <code>elasticsearchSetupJob</code>.</td>
+<td>Enable Elasticsearch setup (BuildIndices) within system-update job. Replaces the legacy <code>elasticsearchSetupJob</code>. Default enabled in chart for v1.5.0+.</td>
 </tr>
 <tr>
 <td><code>datahubSystemUpdate.elasticsearch.setup.createUser</code></td>

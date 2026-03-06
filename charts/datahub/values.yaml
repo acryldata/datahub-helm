@@ -159,7 +159,7 @@ datahub-ingestion-cron:
     # tag: "v0.11.0" # defaults to .global.datahub.version
 
 elasticsearchSetupJob:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-elasticsearch-setup
     # tag: "v0.11.0" # defaults to .global.datahub.version
@@ -236,7 +236,7 @@ kafkaSetupJob:
     #   imagePullPolicy: Always
 
 mysqlSetupJob:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-mysql-setup
     # tag: "v0.11.0" # defaults to .global.datahub.version
@@ -429,6 +429,22 @@ datahubSystemUpdate:
   backOffLimit: 6
   # useAdmin determines whether to run system update with admin credentials
   useAdmin: true
+  # K8 scale-down (available in v1.5.0): options for datahub-upgrade KubernetesScaleDownStep
+  scaleDown:
+    maxRetries: 3
+    # Label selectors for deployments to scale to zero (comma-separated in env). MAE/MCE by default.
+    scaleDownDeploymentLabelSelectors:
+      - app.kubernetes.io/name=datahub-mae-consumer
+      - app.kubernetes.io/name=datahub-mce-consumer
+    # Deployments that get env vars set when scaling down (labelSelector -> env map). State stores previous env per deployment for restore.
+    deploymentEnvUpdates:
+      - labelSelector: app.kubernetes.io/name=datahub-gms
+        env:
+          PRE_PROCESS_HOOKS_UI_ENABLED: "false"
+          MCE_CONSUMER_ENABLED: "false"
+          MAE_CONSUMER_ENABLED: "false"
+          PE_CONSUMER_ENABLED: "false"
+          MCP_CONSUMER_ENABLED: "false"
   # ServiceAccount configuration for the system update job (enables RBAC when running upgrade jobs)
   # Uncomment and set create: true to create a dedicated service account for system-update
   # serviceAccount:
@@ -442,7 +458,7 @@ datahubSystemUpdate:
       enabled: false  # Inherit from global.sql.iam.enabled if not set
     # SQL setup within system-update job (replaces legacy mysqlSetupJob/postgresqlSetupJob when IAM is enabled)
     setup:
-      enabled: false            # Enable SQL database setup
+      enabled: true            # Enable SQL database setup
       createTables: true        # Create DataHub tables
       createDatabase: true      # Create the database if it doesn't exist
       createUser: false         # Create SQL user (for non-IAM setups)
@@ -453,7 +469,7 @@ datahubSystemUpdate:
       enabled: false  # Inherit from global.elasticsearch.iam.enabled if not set
     # Elasticsearch setup within system-update job
     setup:
-      enabled: false            # Enable Elasticsearch user creation
+      enabled: true             # Enable Elasticsearch index setup (BuildIndices)
       createUser: false         # CREATE_USER_ES env var - create Elasticsearch user
       createUserIamRoleArn: ""  # CREATE_USER_ES_IAM_ROLE_ARN env var - IAM role ARN to map to the user (only if createUser=true)
   image:
@@ -987,6 +1003,9 @@ global:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
       enabled: true
+      # K8 scale-down (available in v1.5.0): when true, Java-based scale-down runs (KubernetesScaleDownStep)
+      scaleDown:
+        enabled: true
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"

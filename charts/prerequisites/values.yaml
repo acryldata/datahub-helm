@@ -124,6 +124,14 @@ mysql:
     existingSecret: mysql-secrets
   primary:
     extraFlags: "--character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
+    # Avoid OOMKilled on resource-constrained clusters (e.g. Docker Desktop)
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "100m"
+      limits:
+        memory: "2Gi"
+        cpu: "1000m"
 
 postgresql:
   enabled: false
@@ -195,6 +203,14 @@ kafka:
     # The new minId for broker is 100. If we don't override this, the broker will have id 100
     # and cannot load the partitions. So we set minId to 0 to be backwards compatible
     minId: 0
+    # Avoid OOMKilled on resource-constrained clusters
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "250m"
+      limits:
+        memory: "2Gi"
+        cpu: "1000m"
     # These server properties are no longer exposed as parameters in the bitnami kafka chart since 24.0.0
     # They need to be passed in through extraConfig. See below for reference
     # https://github.com/bitnami/charts/tree/main/bitnami/kafka#to-2400

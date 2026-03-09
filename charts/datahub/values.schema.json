@@ -1131,6 +1131,32 @@
             "image"
           ]
         },
+        "scaleDown": {
+          "type": "object",
+          "properties": {
+            "maxRetries": {
+              "type": "number"
+            },
+            "scaleDownDeploymentLabelSelectors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Label selectors for deployments to scale to zero (e.g. MAE, MCE)"
+            },
+            "deploymentEnvUpdates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "labelSelector": { "type": "string" },
+                  "env": { "type": "object", "additionalProperties": { "type": "string" } }
+                }
+              },
+              "description": "Deployments that get env vars set when scaling down; state stores previous env per deployment for restore"
+            }
+          }
+        },
         "bootstrapMCPs": {
           "type": "object",
           "properties": {
@@ -2282,6 +2308,14 @@
               "properties": {
                 "enabled": {
                   "type": "boolean"
+                },
+                "scaleDown": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  }
                 }
               },
               "required": [

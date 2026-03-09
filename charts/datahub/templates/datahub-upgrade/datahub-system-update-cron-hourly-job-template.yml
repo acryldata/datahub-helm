@@ -79,6 +79,18 @@ spec:
               env:
                 {{- include "datahub.upgrade.env" . | nindent 16}}
                 {{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+                - name: METADATA_SERVICE_AUTH_ENABLED
+                  value: "true"
+                - name: DATAHUB_TOKEN_SERVICE_SIGNING_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef }}
+                      key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey }}
+                - name: DATAHUB_TOKEN_SERVICE_SALT
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretRef }}
+                      key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretKey }}
                 - name: DATAHUB_SYSTEM_CLIENT_ID
                   value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
                 - name: DATAHUB_SYSTEM_CLIENT_SECRET
@@ -86,6 +98,9 @@ spec:
                     secretKeyRef:
                       name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
                       key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+                {{- else }}
+                - name: METADATA_SERVICE_AUTH_ENABLED
+                  value: "false"
                 {{- end }}
               {{- with .Values.datahubSystemCronHourly.jvmOpts }}
                 - name: JDK_JAVA_OPTIONS

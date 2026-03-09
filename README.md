@@ -141,6 +141,9 @@ Used by the Play framework and GMS to encrypt secrets at the application level, 
 
 Used to sign tokens for authentication, see configuration [here](charts/datahub/values.yaml#L605).
 
+### Token Service Salt
+Used to mix with tokens before signing/verifying tokens [here](charts/datahub/values.yaml#L1019)
+
 ## Contributing
 
 We welcome contributions from the community. Please refer to our [Contributing Guidelines](CONTRIBUTING.md) for more details. 

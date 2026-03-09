@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ct-lint
+        name: Helm chart-testing lint
+        entry: --workdir /repo -v .:/repo quay.io/helmpack/chart-testing:v3.14.0 ct lint
+        language: docker_image
+        pass_filenames: false
+        files: ^charts/

@@ -79,6 +79,7 @@ spec:
           {{- end }}
           {{- end }}
           env:
+            {{- include "datahub.upgrade.auth.env" . | nindent 12 }}
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: DATAHUB_REVISION
@@ -352,6 +353,7 @@ spec:
             - "SystemUpdateNonBlocking"
           {{- end }}
           env:
+            {{- include "datahub.upgrade.auth.env" . | nindent 12 }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12 }}

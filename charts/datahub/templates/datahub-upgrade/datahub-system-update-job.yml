@@ -350,6 +350,16 @@ spec:
             - "SystemUpdateNonBlocking"
           {{- end }}
           env:
+            - name: DATAHUB_TOKEN_SERVICE_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey }}
+            - name: DATAHUB_TOKEN_SERVICE_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretKey }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
             {{- include "datahub.upgrade.env" . | nindent 12 }}

@@ -2,7 +2,7 @@ datahub-mce-consumer
 ====================
 A Helm chart for datahub-mce-consumer
 
-Current chart version is `0.2.0`
+Current chart version is `0.3.3`
 
 ## Chart Values
 

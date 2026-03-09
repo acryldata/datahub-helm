@@ -237,6 +237,36 @@ Return the env variables for upgrade jobs
 {{- end -}}
 
 {{/*
+Return the metadata service authentication env variables for upgrade jobs
+*/}}
+{{- define "datahub.upgrade.auth.env" -}}
+{{- if .Values.global.datahub.metadata_service_authentication.enabled }}
+- name: METADATA_SERVICE_AUTH_ENABLED
+  value: "true"
+- name: DATAHUB_TOKEN_SERVICE_SIGNING_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef }}
+      key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey }}
+- name: DATAHUB_TOKEN_SERVICE_SALT
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretRef }}
+      key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretKey }}
+- name: DATAHUB_SYSTEM_CLIENT_ID
+  value: {{ .Values.global.datahub.metadata_service_authentication.systemClientId }}
+- name: DATAHUB_SYSTEM_CLIENT_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretRef }}
+      key: {{ .Values.global.datahub.metadata_service_authentication.systemClientSecret.secretKey }}
+{{- else }}
+- name: METADATA_SERVICE_AUTH_ENABLED
+  value: "false"
+{{- end }}
+{{- end -}}
+
+{{/*
 Set up cron hourly custom scheduling
 */}}
 {{- define "datahub.upgrade.hourlyCronWindow" -}}

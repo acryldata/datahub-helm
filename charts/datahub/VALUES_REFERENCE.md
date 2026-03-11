@@ -867,7 +867,7 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>global.datahub.encryptionKey.provisionSecret.enabled</code></td>
 <td>boolean</td>
 <td><code>true</code></td>
-<td>Enable automatic provisioning of encryption key secret.</td>
+<td>Enable automatic provisioning of encryption key secret. When enabled, the secret is created via a pre-install/pre-upgrade hook (weight -5) so it exists before the system-update Job and GMS.</td>
 </tr>
 <tr>
 <td><code>global.datahub.encryptionKey.provisionSecret.autoGenerate</code></td>
@@ -945,7 +945,7 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>global.datahub.metadata_service_authentication.provisionSecrets.enabled</code></td>
 <td>boolean</td>
 <td><code>true</code></td>
-<td>Enable automatic provisioning of authentication secrets.</td>
+<td>Enable automatic provisioning of authentication secrets. When enabled, the secret is created via a pre-install/pre-upgrade hook (weight -5) so it exists before the system-update Job and other workloads that reference it.</td>
 </tr>
 <tr>
 <td><code>global.datahub.metadata_service_authentication.provisionSecrets.autoGenerate</code></td>
@@ -957,7 +957,7 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>global.datahub.metadata_service_authentication.provisionSecrets.annotations</code></td>
 <td>object</td>
 <td><code>{}</code></td>
-<td>Annotations for the provisioned authentication secrets.</td>
+<td>Optional annotations for the provisioned authentication secrets. The chart also adds <code>helm.sh/hook</code> and <code>helm.sh/hook-weight</code> so the secret is created before Jobs that use it.</td>
 </tr>
 <tr>
 <td><code>global.datahub.alwaysEmitChangeLog</code></td>

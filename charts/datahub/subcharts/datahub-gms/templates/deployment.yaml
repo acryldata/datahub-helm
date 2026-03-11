@@ -374,6 +374,16 @@ spec:
             {{- else }}
             - name: METADATA_SERVICE_AUTH_ENABLED
               value: "false"
+            - name: DATAHUB_TOKEN_SERVICE_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.signingKey.secretKey }}
+            - name: DATAHUB_TOKEN_SERVICE_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretRef }}
+                  key: {{ .Values.global.datahub.metadata_service_authentication.tokenService.salt.secretKey }}
             {{- end }}
             {{- if .Values.global.datahub.managed_ingestion.enabled }}
             - name: UI_INGESTION_ENABLED

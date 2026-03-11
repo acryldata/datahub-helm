@@ -446,11 +446,10 @@ datahubSystemUpdate:
           PE_CONSUMER_ENABLED: "false"
           MCP_CONSUMER_ENABLED: "false"
   # ServiceAccount configuration for the system update job (enables RBAC when running upgrade jobs)
-  # Uncomment and set create: true to create a dedicated service account for system-update
-  # serviceAccount:
-  #   create: true
-  #   name: datahub-operator-sa
-  #   rbac: true  # Create Role and RoleBinding for this ServiceAccount
+  serviceAccount:
+    create: true
+    name: datahub-operator-sa
+    rbac: true  # Create Role and RoleBinding for this ServiceAccount
   # SQL setup configuration (when enabled, runs database setup as part of system update)
   sql:
     # Override IAM authentication for Ebean (SQL)

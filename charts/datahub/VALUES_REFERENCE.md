@@ -1151,7 +1151,7 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>datahub-gms.service.type</code></td>
 <td>string</td>
-<td><code>LoadBalancer</code></td>
+<td><code>ClusterIP</code></td>
 <td>Service type for GMS (LoadBalancer, ClusterIP, or NodePort).</td>
 </tr>
 <tr>
@@ -1298,7 +1298,7 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td><code>datahub-frontend.service.type</code></td>
 <td>string</td>
-<td><code>LoadBalancer</code></td>
+<td><code>ClusterIP</code></td>
 <td>Service type for frontend (LoadBalancer, ClusterIP, or NodePort).</td>
 </tr>
 <tr>

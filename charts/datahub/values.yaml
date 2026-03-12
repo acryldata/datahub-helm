@@ -27,7 +27,7 @@ datahub-gms:
     enabled: true
     default: true
     toggeable: true
-  # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
+  # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: ClusterIP
   # service:
   #   type: ClusterIP
   # Load balancer class for datahub-gms. Used by cloud providers to select a load balancer implementation other than the cloud provider default.
@@ -99,7 +99,7 @@ datahub-frontend:
     #   initialViewer:manualPassword
   service:
     extraLabels: {}
-  # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
+  # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: ClusterIP
   #   type: ClusterIP
 
 acryl-datahub-actions:

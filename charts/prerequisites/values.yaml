@@ -175,6 +175,9 @@ cp-helm-charts:
       bootstrapServers: "prerequisites-kafka:9092"
   cp-kafka:
     enabled: false
+    # Use a pullable tag; 7.5.0 is no longer on Docker Hub
+    image: confluentinc/cp-kafka
+    imageTag: "7.5.13"
   cp-zookeeper:
     enabled: false
   cp-kafka-rest:

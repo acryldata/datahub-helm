@@ -2111,7 +2111,6 @@
           },
           "required": [
             "bootstrap",
-            "zookeeper",
             "topics",
             "consumer_groups",
             "metadataChangeLog",

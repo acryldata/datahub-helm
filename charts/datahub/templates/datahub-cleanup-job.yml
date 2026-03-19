@@ -1,0 +1,135 @@
+{{- if .Values.datahubCleanupJob.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-datahub-cleanup-job
+  labels:
+    {{- include "datahub.labels" . | nindent 4 }}
+    {{- with .Values.datahubCleanupJob.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.datahubCleanupJob.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  template:
+    {{- if or .Values.global.podLabels .Values.datahubCleanupJob.podAnnotations }}
+    metadata:
+    {{- with .Values.datahubCleanupJob.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.global.podLabels }}
+      labels:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    spec:
+    {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.datahubCleanupJob.serviceAccount }}
+      serviceAccountName: {{ . }}
+    {{- else }}
+    {{- with .Values.datahubSystemUpdate.serviceAccount }}
+      serviceAccountName: {{ .name }}
+    {{- end }}
+    {{- end }}
+      restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.datahubCleanupJob.podSecurityContext | nindent 8 }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- with .Values.global.credentialsAndCertsSecrets }}
+        - name: datahub-certs-dir
+          secret:
+            defaultMode: 0444
+            secretName: {{ .name }}
+        {{- end }}
+      {{- with .Values.datahubCleanupJob.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.datahubCleanupJob.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: datahub-cleanup-job
+          image: {{ include "datahub.image" (dict "imageRegistry" .Values.global.imageRegistry "version" .Values.global.datahub.version "image" (merge (.Values.datahubCleanupJob.image | default dict) .Values.datahubSystemUpdate.image)) }}
+          imagePullPolicy: {{ .Values.datahubCleanupJob.image.pullPolicy | default .Values.datahubSystemUpdate.image.pullPolicy | default "IfNotPresent" }}
+          args:
+            - "-u"
+            - "Cleanup"
+          env:
+            {{- include "datahub.upgrade.env" . | nindent 12 }}
+            - name: CLEANUP_KAFKA_ENABLED
+              value: {{ .Values.datahubCleanupJob.kafka.enabled | quote }}
+            - name: CLEANUP_ELASTICSEARCH_ENABLED
+              value: {{ .Values.datahubCleanupJob.elasticsearch.enabled | quote }}
+            - name: CLEANUP_SQL_ENABLED
+              value: {{ .Values.datahubCleanupJob.sql.enabled | quote }}
+            - name: DATAHUB_SQL_SETUP_ENABLED
+              value: "true"
+            {{- if .Values.datahubCleanupJob.sql.enabled }}
+            - name: CREATE_TABLES
+              value: "false"
+            - name: CREATE_DB
+              value: "false"
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.createUser }}
+            - name: CREATE_USER_ES
+              value: "true"
+            {{- $username := .Values.datahubSystemUpdate.elasticsearch.setup.createUsername | default .Values.global.elasticsearch.auth.username }}
+            {{- if $username }}
+            - name: CREATE_USER_ES_USERNAME
+              value: {{ $username | quote }}
+            {{- end }}
+            {{- if .Values.datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn }}
+            - name: CREATE_USER_ES_IAM_ROLE_ARN
+              value: {{ .Values.datahubSystemUpdate.elasticsearch.setup.createUserIamRoleArn | quote }}
+            {{- end }}
+            {{- end }}
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: {{ .Values.global.datahub_analytics_enabled | quote }}
+            {{- with .Values.global.elasticsearch.indexPrefix }}
+            - name: INDEX_PREFIX
+              value: {{ . }}
+            {{- end }}
+          {{- with .Values.datahubCleanupJob.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.datahubCleanupJob.securityContext | nindent 12 }}
+          volumeMounts:
+          {{- with .Values.global.credentialsAndCertsSecrets }}
+            - name: datahub-certs-dir
+              mountPath: {{ .path | default "/mnt/certs" }}
+          {{- end }}
+          {{- with .Values.datahubCleanupJob.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.datahubCleanupJob.resources | nindent 12 }}
+        {{- with .Values.datahubCleanupJob.extraSidecars }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with default .Values.global.nodeSelector .Values.datahubCleanupJob.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.datahubCleanupJob.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.global.tolerations .Values.datahubCleanupJob.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

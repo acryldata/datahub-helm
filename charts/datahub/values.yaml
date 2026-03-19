@@ -420,6 +420,43 @@ datahubSystemCronHourly:
   jvmOpts:
     XX: ":+ExitOnOutOfMemoryError -XX:MaxRAMPercentage=75.0"
 
+## Cleanup job that runs on helm uninstall (pre-delete hook).
+## Tears down Elasticsearch indices, Kafka topics, and SQL database.
+## DESTRUCTIVE: only enable if you want a clean slate on uninstall.
+datahubCleanupJob:
+  enabled: false
+  kafka:
+    enabled: true
+  elasticsearch:
+    enabled: true
+  sql:
+    enabled: true
+  image: {}
+  podSecurityContext: {}
+  securityContext: {}
+  labels: {}
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+  podAnnotations: {}
+  extraEnvs: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraInitContainers: []
+  extraSidecars: []
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  serviceAccount:
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
 datahubSystemUpdate:

@@ -339,9 +339,9 @@ schedule:
 {{- end -}}
 
 {{/*
-  default cli version
+  acryl-datahub PyPI version for bootstrap ingestion MCPs (PEP 440). Empty or whitespace-only fails render.
 */}}
 {{- define "datahub.bootstrapMCPs.default.ingestion.version" -}}
 ingestion:
-  version: {{ .Values.global.datahub.managed_ingestion.defaultCliVersion | quote }}
+  version: {{ required "global.datahub.managed_ingestion.defaultCliVersion must be set (non-empty) for bootstrap ingestion MCPs" (.Values.global.datahub.managed_ingestion.defaultCliVersion | toString | trim) | quote }}
 {{- end -}}

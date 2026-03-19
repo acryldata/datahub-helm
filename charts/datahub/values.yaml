@@ -549,6 +549,12 @@ datahubSystemUpdate:
           keep_last_n: 10
         soft_deleted_entities_cleanup:
           retention_days: 30
+    datahubDocuments:
+      values_env: DATAHUB_DOCUMENTS_BOOTSTRAP_VALUES
+      revision_env: DATAHUB_DOCUMENTS_REVISION
+      values:
+        ingestion:
+          name: datahub-documents
   podAnnotations: {}
   resources:
     limits:
@@ -978,7 +984,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.5.0rc2
+    version: v1.5.0rc3
     gms:
       protocol: "http"
       port: "8080"
@@ -999,7 +1005,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.5.0rc2"
+    appVersion: "1.5.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1022,6 +1028,7 @@ global:
 
     managed_ingestion:
       enabled: true
+      # PyPI acryl-datahub version (PEP 440); do not use a leading "v" (unlike global.datahub.version tags).
       defaultCliVersion: "1.4.0.9"
 
     metadata_service_authentication:

@@ -1283,6 +1283,41 @@
                 "revision_env",
                 "values"
               ]
+            },
+            "datahubDocuments": {
+              "type": "object",
+              "properties": {
+                "values_env": {
+                  "type": "string"
+                },
+                "revision_env": {
+                  "type": "string"
+                },
+                "values": {
+                  "type": "object",
+                  "properties": {
+                    "ingestion": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ingestion"
+                  ]
+                }
+              },
+              "required": [
+                "values_env",
+                "revision_env",
+                "values"
+              ]
             }
           },
           "required": [

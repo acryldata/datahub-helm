@@ -244,7 +244,13 @@ spec:
               value: {{ .clientSecret }}
             {{- end }}
             - name: AUTH_OIDC_BASE_URL
+            {{- if .oidcBaseUrl }}
+              value: {{ .oidcBaseUrl }}
+            {{- else if $.Values.global.basePath.enabled }}
+              value: https://{{ (first $.Values.ingress.hosts).host }}{{ $.Values.global.basePath.frontend }}
+            {{- else }}
               value: https://{{ (first $.Values.ingress.hosts).host }}
+            {{- end }}
             - name: AUTH_OIDC_USER_NAME_CLAIM
               value: {{ .user_name_claim | default "email" }}
             - name: AUTH_OIDC_USER_NAME_CLAIM_REGEX

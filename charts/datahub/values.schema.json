@@ -2178,6 +2178,9 @@
                 "driver": {
                   "type": "string"
                 },
+                "database": {
+                  "type": "string"
+                },
                 "username": {
                   "oneOf": [
                     {

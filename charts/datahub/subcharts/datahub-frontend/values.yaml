@@ -126,6 +126,10 @@ oidcAuthentication:
   # if needed, it should set meaningful defaults from provider
   # scope: "openid profile email"
 
+  # Override the base URL used for OIDC redirect URIs.
+  # When not set, the chart builds it from the first ingress host (and basePath if enabled).
+  # oidcBaseUrl: https://example.com/datahub
+
   # The attribute that will contain the username used on the DataHub platform.
   # user_name_claim: "email"
   # A regex string used for extracting the username from the userNameClaim attribute.

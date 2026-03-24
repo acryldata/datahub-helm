@@ -86,7 +86,7 @@ spec:
             - name: POSTGRES_PORT
               value: {{ .Values.global.sql.datasource.port | quote }}
             - name: DATAHUB_DB_NAME
-              value: "datahub"
+              value: {{ .Values.global.sql.datasource.database | quote }}
           {{- if .Values.global.cdc.enabled }}
             - name: CDC_MCL_PROCESSING_ENABLED
               value: {{ .Values.global.cdc.enabled | quote }}

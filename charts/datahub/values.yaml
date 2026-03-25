@@ -323,7 +323,7 @@ postgresqlSetupJob:
 
 ## No code data migration
 datahubUpgrade:
-  enabled: true
+  enabled: false
   image:
     repository: acryldata/datahub-upgrade
     # tag: "v0.11.0"  # defaults to .global.datahub.version
@@ -549,6 +549,12 @@ datahubSystemUpdate:
           keep_last_n: 10
         soft_deleted_entities_cleanup:
           retention_days: 30
+    datahubDocuments:
+      values_env: DATAHUB_DOCUMENTS_BOOTSTRAP_VALUES
+      revision_env: DATAHUB_DOCUMENTS_REVISION
+      values:
+        ingestion:
+          name: datahub-documents
   podAnnotations: {}
   resources:
     limits:
@@ -637,9 +643,9 @@ global:
       # pluginName: "decoderbufs"
 
   elasticsearch:
-    host: "elasticsearch-master"
-    # If you want to use OpenSearch instead of ElasticSearch use different hostname below
-    # host: "opensearch-cluster-master"
+    # Default matches prerequisites chart with OpenSearch enabled (opensearch-cluster-master).
+    # Use host: "elasticsearch-master" when using prerequisites with Elasticsearch enabled instead.
+    host: "opensearch-cluster-master"
     port: "9200"
     skipcheck: "false"
     insecure: "false"
@@ -819,8 +825,10 @@ global:
     # This is no longer used with  datahub version 1.3.0 and later where datahub system update performs the kafka setup
     # operations if configured. This is retained for legacy reasons for datahub versions before 1.3.0 that still need
     # kafkaSetupJob.enabled = true (current default is kafkaSetupJob.enabled = false)
-    zookeeper:
-      server: "prerequisites-zookeeper:2181"
+
+    # NOTE: Zookeeper is no longer used with Kafka 3.3 and later.
+    # zookeeper:
+    #   server: "prerequisites-zookeeper:2181"
 
     # Set to false if you don't want datahub to create topics during install/upgrade.
     precreateTopics: true
@@ -978,7 +986,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.4.0.3
+    version: v1.5.0
     gms:
       protocol: "http"
       port: "8080"
@@ -999,7 +1007,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.4.0.3"
+    appVersion: "1.5.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1022,7 +1030,8 @@ global:
 
     managed_ingestion:
       enabled: true
-      defaultCliVersion: "1.4.0.3"
+      # PyPI acryl-datahub version (PEP 440); do not use a leading "v" (unlike global.datahub.version tags).
+      defaultCliVersion: "1.4.0.9"
 
     metadata_service_authentication:
       enabled: true

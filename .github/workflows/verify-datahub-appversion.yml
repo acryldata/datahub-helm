@@ -1,0 +1,24 @@
+name: Verify DataHub appVersion
+
+on:
+  pull_request:
+    paths:
+      - "charts/datahub/**"
+      - ".github/scripts/check-datahub-appversion.sh"
+      - ".github/workflows/verify-datahub-appversion.yml"
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - "charts/datahub/**"
+      - ".github/scripts/check-datahub-appversion.sh"
+      - ".github/workflows/verify-datahub-appversion.yml"
+
+jobs:
+  consistent-appversion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Subchart appVersion matches umbrella chart
+        run: bash .github/scripts/check-datahub-appversion.sh

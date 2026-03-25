@@ -29,6 +29,9 @@ spec:
     {{- end }}
       labels:
         {{- include "datahub-gms.selectorLabels" . | nindent 8 }}
+        {{- if .Chart.AppVersion }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+        {{- end }}
         {{- range $key, $value := .Values.global.podLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}

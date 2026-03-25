@@ -12,5 +12,9 @@ spec:
       targetPort: 5701
   selector:
     app.kubernetes.io/name: {{- include "datahub-gms.name" . | nindent 6 }}
+    {{- if .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    {{- end }}
   type: ClusterIP
 {{- end }}
+

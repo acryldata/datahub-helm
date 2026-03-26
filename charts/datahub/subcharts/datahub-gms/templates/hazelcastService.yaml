@@ -11,10 +11,9 @@ spec:
       protocol: TCP
       targetPort: 5701
   selector:
-    app.kubernetes.io/name: {{- include "datahub-gms.name" . | nindent 6 }}
-    {{- if .Chart.AppVersion }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-    {{- end }}
+    app.kubernetes.io/name: {{ include "datahub-gms.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- include "datahub-gms.applicationVersionLabels" . | trimPrefix "\n" | nindent 4 }}
   type: ClusterIP
 {{- end }}
 

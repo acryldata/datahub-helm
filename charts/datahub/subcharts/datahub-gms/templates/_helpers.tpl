@@ -32,14 +32,33 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Resolved GMS image / DataHub release version (subchart image.tag when set, else global.datahub.version).
+Same as template "datahub.image" tag; used for datahub.acryl.io/datahub-version and Hazelcast selection.
+*/}}
+{{- define "datahub-gms.deploymentAppVersion" -}}
+{{- .Values.image.tag | default .Values.global.datahub.version -}}
+{{- end -}}
+
+{{/*
+Standard Helm/Kubernetes app version (Chart.AppVersion) plus deployed DataHub image version label.
+*/}}
+{{- define "datahub-gms.applicationVersionLabels" -}}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+{{- $dv := include "datahub-gms.deploymentAppVersion" . -}}
+{{- if $dv }}
+datahub.acryl.io/datahub-version: {{ $dv | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Common labels
 */}}
 {{- define "datahub-gms.labels" -}}
 helm.sh/chart: {{ include "datahub-gms.chart" . }}
 {{ include "datahub-gms.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+{{- include "datahub-gms.applicationVersionLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 

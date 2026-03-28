@@ -1,4 +1,5 @@
 {{- if .Values.datahubSystemCronHourly.enabled -}}
+{{- $cronRestore := .Values.datahubSystemCronHourly.restoreIndices | default dict }}
 # Hourly cron job
 #   - tweaking replicas (set to 0 when 0 docs, increase when >0 docs)
 # Run the following command to do so
@@ -11,7 +12,7 @@ metadata:
     {{- include "datahub.labels" . | nindent 4 }}
 spec:
   suspend: {{ .Values.global.readonly }}
-  {{- include "datahub.upgrade.dailyCronWindow" . | nindent 2}}
+  {{- include "datahub.systemUpdate.datahubGC.dailyCronWindow" . | nindent 2}}
   jobTemplate:
     metadata:
       labels:
@@ -100,8 +101,8 @@ spec:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               resources:
-                {{- toYaml .Values.datahubSystemCronHourly.restoreIndices.resources | nindent 16}}
-            {{- with .Values.datahubSystemCronHourly.restoreIndices.extraSidecars }}
+                {{- toYaml (default .Values.datahubSystemUpdate.resources $cronRestore.resources) | nindent 16 }}
+            {{- with $cronRestore.extraSidecars }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- with .Values.datahubSystemCronHourly.nodeSelector }}

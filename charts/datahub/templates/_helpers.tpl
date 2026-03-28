@@ -439,9 +439,44 @@ USAGE: Include in services that directly connect to ElasticSearch/OpenSearch:
 
 For IAM authentication, also include datahub.elasticsearch.iam.env helper after this one.
 
-NOTE: ELASTICSEARCH_THREAD (without _COUNT) is NOT used by the application.
-      MAE Consumer sets ELASTICSEARCH_THREAD_COUNT separately in its deployment.
+Thread count is not set here; include datahub.elasticsearch.threadCount.env (or .systemUpdate for upgrade jobs)
+after the Elasticsearch connection variables. See VALUES_REFERENCE.md for per-subchart keys and datahubSystemUpdate.
 */}}
+
+{{/* Per-subchart only: <dependency>.elasticsearch.threadCount merged onto .Values.elasticsearch. */}}
+{{- define "datahub.elasticsearch.threadCount.value.subchart" -}}
+{{- include "datahub.elasticsearch.threadCount.pickFromMap" (dict "m" .Values.elasticsearch) | trim -}}
+{{- end -}}
+
+{{/* threadCount from .m (map); range works reliably on chartutil.Values for merged parent keys. */}}
+{{- define "datahub.elasticsearch.threadCount.pickFromMap" -}}
+{{- $m := index . "m" -}}
+{{- if $m -}}
+{{- range $k, $v := $m -}}
+{{- if eq $k "threadCount" -}}{{- printf "%v" $v -}}{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "datahub.elasticsearch.threadCount.env" }}
+{{- $tc := include "datahub.elasticsearch.threadCount.value.subchart" . | trim }}
+{{- if ne $tc "" }}
+- name: ELASTICSEARCH_THREAD_COUNT
+  value: {{ $tc | quote }}
+{{- end }}
+{{- end }}
+
+{{- define "datahub.elasticsearch.threadCount.env.systemUpdate" }}
+{{- if and .Values.datahubSystemUpdate .Values.datahubSystemUpdate.elasticsearch }}
+{{- range $k, $v := .Values.datahubSystemUpdate.elasticsearch }}
+{{- if eq $k "threadCount" }}
+- name: ELASTICSEARCH_THREAD_COUNT
+  value: {{ printf "%v" $v | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
 {{- define "datahub.elasticsearch.connection.env" -}}
 - name: ELASTICSEARCH_HOST
   value: "{{ .Values.global.elasticsearch.host }}"

@@ -463,6 +463,8 @@ datahubSystemUpdate:
       createUser: false         # Create SQL user (for non-IAM setups)
   # Elasticsearch setup configuration (when enabled, runs ES setup as part of system update)
   elasticsearch:
+    # Optional. ELASTICSEARCH_THREAD_COUNT for system-update / datahub-upgrade jobs only (via datahub.upgrade.env).
+    # threadCount: 8
     # Override IAM authentication for Elasticsearch
     iam:
       enabled: false  # Inherit from global.elasticsearch.iam.enabled if not set
@@ -647,6 +649,9 @@ global:
     # Use host: "elasticsearch-master" when using prerequisites with Elasticsearch enabled instead.
     host: "opensearch-cluster-master"
     port: "9200"
+    # ES client thread count is per workload: set <subchart>.elasticsearch.threadCount (e.g. datahub-gms,
+    # datahub-mae-consumer, datahub-mce-consumer) or datahubSystemUpdate.elasticsearch.threadCount for upgrade jobs.
+    # There is no global.elasticsearch.threadCount. When unset, ELASTICSEARCH_THREAD_COUNT is omitted (application default).
     skipcheck: "false"
     insecure: "false"
     useSSL: "false"

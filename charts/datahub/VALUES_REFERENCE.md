@@ -72,6 +72,18 @@ This document provides a comprehensive reference for every single configurable v
 <td>Port number for Elasticsearch/OpenSearch cluster connection.</td>
 </tr>
 <tr>
+<td><code>&lt;subchart&gt;.elasticsearch.threadCount</code></td>
+<td>integer</td>
+<td>—</td>
+<td>Optional per-component setting for <code>ELASTICSEARCH_THREAD_COUNT</code> (Spring <code>elasticsearch.threadCount</code>). Set under the umbrella dependency key for that workload, for example <code>datahub-gms.elasticsearch.threadCount</code>, <code>datahub-mae-consumer.elasticsearch.threadCount</code>, or <code>datahub-mce-consumer.elasticsearch.threadCount</code>. When unset, the env var is omitted and the application default applies. Use an integer ≥ 1 in YAML (unquoted); prefer <code>helm upgrade --set datahub-gms.elasticsearch.threadCount=4</code> over <code>--set-string</code> so the value is not coerced to a string.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.elasticsearch.threadCount</code></td>
+<td>integer</td>
+<td>—</td>
+<td>Optional setting for system-update and other jobs that use <code>datahub.upgrade.env</code>. Rendered via <code>datahub.elasticsearch.threadCount.env.systemUpdate</code>. Same integer ≥ 1 guidance as for subchart <code>elasticsearch.threadCount</code>.</td>
+</tr>
+<tr>
 <td><code>global.elasticsearch.skipcheck</code></td>
 <td>string</td>
 <td><code>false</code></td>

@@ -120,6 +120,7 @@ Return the env variables for upgrade jobs
 - name: INDEX_PREFIX
   value: {{ . }}
 {{- end }}
+{{- include "datahub.elasticsearch.threadCount.env.systemUpdate" . | nindent 0 }}
 - name: GRAPH_SERVICE_IMPL
   value: {{ .Values.global.graph_service_impl }}
 {{- if eq .Values.global.graph_service_impl "neo4j" }}

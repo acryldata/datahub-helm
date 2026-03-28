@@ -160,6 +160,15 @@
               "type": "string"
             }
           }
+        },
+        "elasticsearch": {
+          "type": "object",
+          "properties": {
+            "threadCount": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
         }
       },
       "required": [
@@ -371,6 +380,15 @@
             "limits",
             "requests"
           ]
+        },
+        "elasticsearch": {
+          "type": "object",
+          "properties": {
+            "threadCount": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
         }
       },
       "required": [
@@ -426,6 +444,15 @@
             "limits",
             "requests"
           ]
+        },
+        "elasticsearch": {
+          "type": "object",
+          "properties": {
+            "threadCount": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
         }
       },
       "required": [
@@ -1419,6 +1446,10 @@
         "elasticsearch": {
           "type": "object",
           "properties": {
+            "threadCount": {
+              "type": "integer",
+              "minimum": 1
+            },
             "iam": {
               "type": "object",
               "properties": {

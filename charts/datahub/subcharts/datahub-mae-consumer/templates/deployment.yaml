@@ -197,6 +197,7 @@ spec:
             - name: INDEX_PREFIX
               value: {{ . }}
             {{- end }}
+            {{- include "datahub.elasticsearch.threadCount.env" . | nindent 12 }}
             {{- include "datahub.elasticsearch.iam.env" . | nindent 12 }}
             - name: GRAPH_SERVICE_IMPL
               value: {{ .Values.global.graph_service_impl }}

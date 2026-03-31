@@ -289,6 +289,14 @@ spec:
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+            - name: FRONTEND_GRACEFUL_SHUTDOWN_ENABLED
+              value: {{ .Values.gracefulshutdownEnabled | quote }}
+            - name: FRONTEND_BEFORE_SERVICE_UNBIND_TIMEOUT
+              value: {{ .Values.beforeServiceUnbindTimeout | quote }}
+            - name: FRONTEND_SERVICE_REQUESTS_DONE_TIMEOUT
+              value: {{ .Values.serviceRequestDoneTimeout | quote }}
+            - name: FRONTEND_SERVICE_STOP_TIMEOUT
+              value: {{ .Values.serviceStopTimeout | quote }}
           volumeMounts:
           {{- with .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir

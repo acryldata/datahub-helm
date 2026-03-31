@@ -557,6 +557,10 @@ spec:
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+            - name: SERVER_SHUTDOWN_MODE
+              value: {{ .Values.serverShutdownMode | quote }}
+            - name: GMS_LIFECYCLE_TIMEOUT
+              value: {{ .Values.springShutdownLifeCycleTime | quote }}
           volumeMounts:
           {{- with .Values.global.credentialsAndCertsSecrets }}
             - name: datahub-certs-dir

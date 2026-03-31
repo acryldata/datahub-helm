@@ -40,7 +40,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-terminationGracePeriodSeconds: 150
+terminationGracePeriodSeconds: 120
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -68,6 +68,27 @@ securityContext: {}
   # runAsUser: 1000
 
 priorityClassName:
+
+# Graceful shutdown configuration for spot instance termination
+# When enabled, frontend will stop accepting new requests and drain existing connections before shutdown
+gracefulshutdownEnabled: false
+
+# Duration for Akka coordinated shutdown phases (how long to wait for each phase)
+# Must be less than terminationGracePeriodSeconds (default 120s)
+# Format: Xs (e.g., 10s)
+# Note: Total shutdown time = beforeServiceUnbindTimeout + serviceRequestDoneTimeout + serviceStopTimeout + buffer
+beforeServiceUnbindTimeout: 10s
+
+# Duration to wait for in-flight HTTP requests to complete before forcefully terminating them
+# Must be less than the GMS async request timeout (55s) to avoid orphaned requests
+# Must be less than terminationGracePeriodSeconds (default 120s)
+# Format: Xs (e.g., 65s)
+serviceRequestDoneTimeout: 65s
+
+# Duration to wait for resources and connections to close gracefully
+# Must be less than terminationGracePeriodSeconds (default 120s)
+# Format: Xs (e.g., 15s)
+serviceStopTimeout: 15s
 
 service:
   type: LoadBalancer # ClusterIP or NodePort
@@ -172,7 +193,13 @@ extraSidecars: []
   #   image: my-image
   #   imagePullPolicy: Always
 
-lifecycle: {}
+lifecycle:
+  preStop:
+    exec:
+      # Graceful shutdown: delay before SIGTERM to allow load balancer draining
+      # Fixes race condition where LB still routes traffic after pod removal from endpoints
+      # Timing: 15s preStop + 90s Play graceful shutdown + 15s buffer = 120s total
+      command: ["/bin/sh", "-c", "sleep 15"]
   # To add a new user to datahub in JAAS config without mounting the user.props file
   # postStart:
   #   exec:

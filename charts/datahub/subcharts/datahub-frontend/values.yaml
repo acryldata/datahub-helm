@@ -80,7 +80,7 @@ gracefulshutdownEnabled: false
 beforeServiceUnbindTimeout: 10s
 
 # Duration to wait for in-flight HTTP requests to complete before forcefully terminating them
-# Must be less than the GMS async request timeout (55s) to avoid orphaned requests
+# Set higher than GMS async request timeout (55s) to allow requests to complete naturally
 # Must be less than terminationGracePeriodSeconds (default 120s)
 # Format: Xs (e.g., 65s)
 serviceRequestDoneTimeout: 65s
@@ -198,7 +198,7 @@ lifecycle:
     exec:
       # Graceful shutdown: delay before SIGTERM to allow load balancer draining
       # Fixes race condition where LB still routes traffic after pod removal from endpoints
-      # Timing: 15s preStop + 90s Play graceful shutdown + 15s buffer = 120s total
+      # Timing: 15s preStop + 90s Akka phases (10+65+15) + 15s buffer = 120s total
       command: ["/bin/sh", "-c", "sleep 15"]
   # To add a new user to datahub in JAAS config without mounting the user.props file
   # postStart:

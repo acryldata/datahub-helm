@@ -1184,6 +1184,30 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>gms-password</code></td>
 <td>Secret key for GMS-specific SQL password.</td>
 </tr>
+<tr>
+<td><code>datahub-gms.terminationGracePeriodSeconds</code></td>
+<td>integer</td>
+<td><code>120</code></td>
+</tr>
+<tr>
+<td colspan="3">Termination grace period in seconds. Aligns with AWS spot instance SIGKILL window (2 mins) for consistent behavior across rolling deploys and spot terminations</td>
+</tr>
+<tr>
+<td><code>datahub-gms.serverShutdownMode</code></td>
+<td>string</td>
+<td><code>immediate</code></td>
+</tr>
+<tr>
+<td colspan="3">Server shutdown mode: <code>immediate</code> (default) or <code>graceful</code>. Set to <code>graceful</code> to enable graceful shutdown with connection draining</td>
+</tr>
+<tr>
+<td><code>datahub-gms.springShutdownLifeCycleTime</code></td>
+<td>string</td>
+<td><code>65s</code></td>
+</tr>
+<tr>
+<td colspan="3">Duration for Spring lifecycle shutdown phase. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 65s)</td>
+</tr>
 </tbody>
 </table>
 
@@ -1318,6 +1342,46 @@ This document provides a comprehensive reference for every single configurable v
 <td>object</td>
 <td><code>{}</code></td>
 <td>Extra labels for frontend service.</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.terminationGracePeriodSeconds</code></td>
+<td>integer</td>
+<td><code>120</code></td>
+</tr>
+<tr>
+<td colspan="3">Termination grace period in seconds. Aligns with AWS spot instance SIGKILL window (2 mins) for consistent behavior across rolling deploys and spot terminations</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.gracefulshutdownEnabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td colspan="3">Enable graceful shutdown with connection draining for frontend pod termination</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.beforeServiceUnbindTimeout</code></td>
+<td>string</td>
+<td><code>10s</code></td>
+</tr>
+<tr>
+<td colspan="3">Duration for Akka coordinated shutdown phase. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 10s)</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.serviceRequestDoneTimeout</code></td>
+<td>string</td>
+<td><code>65s</code></td>
+</tr>
+<tr>
+<td colspan="3">Duration to wait for in-flight HTTP requests to complete before forcefully terminating them. Must be less than GMS async request timeout (55s) and terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 65s)</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.serviceStopTimeout</code></td>
+<td>string</td>
+<td><code>15s</code></td>
+</tr>
+<tr>
+<td colspan="3">Duration to wait for resources and connections to close gracefully. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 15s)</td>
 </tr>
 </tbody>
 </table>

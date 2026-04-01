@@ -169,6 +169,14 @@
               "minimum": 1
             }
           }
+        },
+        "serverShutdownMode": {
+          "type": "string",
+          "description": "Server shutdown mode: 'immediate' (default) or 'graceful'"
+        },
+        "springShutdownLifeCycleTime": {
+          "type": "string",
+          "description": "Duration for Spring lifecycle shutdown phase (must be less than terminationGracePeriodSeconds)"
         }
       },
       "required": [
@@ -259,6 +267,22 @@
           "required": [
             "extraLabels"
           ]
+        },
+        "gracefulshutdownEnabled": {
+          "type": "boolean",
+          "description": "Enable graceful shutdown with connection draining"
+        },
+        "beforeServiceUnbindTimeout": {
+          "type": "string",
+          "description": "Duration for Akka coordinated shutdown phase"
+        },
+        "serviceRequestDoneTimeout": {
+          "type": "string",
+          "description": "Duration to wait for in-flight HTTP requests to complete"
+        },
+        "serviceStopTimeout": {
+          "type": "string",
+          "description": "Duration to wait for resources and connections to close gracefully"
         }
       },
       "required": [

@@ -33,7 +33,7 @@ theme_v2:
   default: true
   toggeable: true
 
-terminationGracePeriodSeconds: 150
+terminationGracePeriodSeconds: 120
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -136,6 +136,15 @@ extraSidecars: []
   #   image: my-image
   #   imagePullPolicy: Always
 
+# Server shutdown mode: "immediate" (default) or "graceful"
+# Set to "graceful" to enable graceful shutdown with connection draining
+serverShutdownMode: immediate
+
+# Duration for Spring lifecycle shutdown phase (how long to wait for requests to drain)
+# Must be less than terminationGracePeriodSeconds (default 120s)
+# Format: Xs (e.g., 65s)
+springShutdownLifeCycleTime: 65s
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -163,6 +172,14 @@ readinessProbe:
   initialDelaySeconds: 60
   periodSeconds: 30
   failureThreshold: 8
+
+lifecycle:
+  preStop:
+    exec:
+      # Graceful shutdown: delay before SIGTERM to allow load balancer draining
+      # Fixes race condition where LB still routes traffic after pod removal from endpoints
+      # Timing: 15s preStop + 65s Spring graceful shutdown + 40s buffer = 120s total
+      command: ["/bin/sh", "-c", "sleep 15"]
 
 #This section is useful if we are installing this chart separately for testing
 # helm install datahub-gms datahub-gms/

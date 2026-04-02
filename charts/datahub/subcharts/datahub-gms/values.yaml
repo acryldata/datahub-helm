@@ -252,8 +252,6 @@ global:
     gms:
       port: "8080"
       graphql:
-        introspection:
-          enabled: 'true' # v0.13.3+
         shapeLogging:
           enabled: false
           fieldCountThreshold: 100

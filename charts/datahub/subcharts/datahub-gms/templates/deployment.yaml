@@ -446,8 +446,16 @@ spec:
               value: {{ .Values.global.datahub.alwaysEmitChangeLog | quote }}
             - name: GRAPH_SERVICE_DIFF_MODE_ENABLED
               value: {{ .Values.global.datahub.enableGraphDiffMode | quote }}
-            - name: GRAPHQL_QUERY_INTROSPECTION_ENABLED
-              value: {{ .Values.global.datahub.gms.graphql.introspection.enabled | quote }}
+            - name: GRAPHQL_SHAPE_LOGGING_ENABLED
+              value: {{ .Values.global.datahub.gms.graphql.shapeLogging.enabled | quote }}
+            - name: GRAPHQL_SHAPE_FIELD_COUNT_THRESHOLD
+              value: {{ .Values.global.datahub.gms.graphql.shapeLogging.fieldCountThreshold | quote }}
+            - name: GRAPHQL_SHAPE_DURATION_THRESHOLD_MS
+              value: {{ .Values.global.datahub.gms.graphql.shapeLogging.durationThresholdMs | quote }}
+            - name: GRAPHQL_SHAPE_RESPONSE_SIZE_THRESHOLD_BYTES
+              value: {{ .Values.global.datahub.gms.graphql.shapeLogging.responseSizeThresholdBytes | quote }}
+            - name: GRAPHQL_SHAPE_ERROR_COUNT_THRESHOLD
+              value: {{ .Values.global.datahub.gms.graphql.shapeLogging.errorCountThreshold | quote }}
             {{- with .Values.global.datahub.mcp.throttle }}
             {{- with .updateIntervalMs }}
             - name: MCP_THROTTLE_UPDATE_INTERVAL_MS

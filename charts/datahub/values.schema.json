@@ -177,6 +177,33 @@
         "springShutdownLifeCycleTime": {
           "type": "string",
           "description": "Duration for Spring lifecycle shutdown phase (must be less than terminationGracePeriodSeconds)"
+        },
+        "shapeLogging": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "fieldCountThreshold": {
+              "type": ["number", "string"]
+            },
+            "durationThresholdMs": {
+              "type": ["number", "string"]
+            },
+            "responseSizeThresholdBytes": {
+              "type": ["number", "string"]
+            },
+            "errorCountThreshold": {
+              "type": ["number", "string"]
+            }
+          },
+          "required": [
+            "enabled",
+            "fieldCountThreshold",
+            "durationThresholdMs",
+            "responseSizeThresholdBytes",
+            "errorCountThreshold"
+          ]
         }
       },
       "required": [
@@ -184,7 +211,8 @@
         "image",
         "resources",
         "livenessProbe",
-        "readinessProbe"
+        "readinessProbe",
+        "shapeLogging"
       ]
     },
     "datahub-frontend": {

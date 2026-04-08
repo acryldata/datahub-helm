@@ -1208,6 +1208,46 @@ This document provides a comprehensive reference for every single configurable v
 <tr>
 <td colspan="3">Duration for Spring lifecycle shutdown phase. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 65s)</td>
 </tr>
+<tr>
+<td><code>global.datahub.gms.graphql.shapeLogging.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td colspan="3">Enable structured logging for GraphQL query shapes that exceed defined thresholds. Logs query complexity, field counts, duration, response size, and errors.</td>
+</tr>
+<tr>
+<td><code>global.datahub.gms.graphql.shapeLogging.fieldCountThreshold</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td colspan="3">Threshold for number of fields in a GraphQL query before logging is triggered. Helps identify overly complex queries.</td>
+</tr>
+<tr>
+<td><code>global.datahub.gms.graphql.shapeLogging.durationThresholdMs</code></td>
+<td>integer</td>
+<td><code>3000</code></td>
+</tr>
+<tr>
+<td colspan="3">Threshold for GraphQL query execution time in milliseconds before logging is triggered. Helps identify slow queries.</td>
+</tr>
+<tr>
+<td><code>global.datahub.gms.graphql.shapeLogging.responseSizeThresholdBytes</code></td>
+<td>integer</td>
+<td><code>1048576</code></td>
+</tr>
+<tr>
+<td colspan="3">Threshold for GraphQL response size in bytes (default 1MB) before logging is triggered. Helps identify queries returning large payloads.</td>
+</tr>
+<tr>
+<td><code>global.datahub.gms.graphql.shapeLogging.errorCountThreshold</code></td>
+<td>integer</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td colspan="3">Threshold for number of errors in a GraphQL query response before logging is triggered. Helps identify problematic queries.</td>
+</tr>
 </tbody>
 </table>
 

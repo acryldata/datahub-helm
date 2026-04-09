@@ -735,6 +735,12 @@ global:
         ## Will use full replication during reindexing which will make the process slower
         reindexOptimizationEnabled: true
 
+        ## Individual override for ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED.
+        ## When set explicitly, overrides the ZDU_STAGE_20 group flag cascade.
+        ## Dual-writes to old backing index during incremental reindex for rollback safety.
+        ## Defaults to ZDU_STAGE_20 value if not set here.
+        # rollbackDualWriteEnabled: false
+
     ## Search related configuration
     search:
       ## Maximum terms in aggregations
@@ -1033,8 +1039,22 @@ global:
       ## managed ES indices and other update related work
       enabled: true
       # K8 scale-down (available in v1.5.0): when true, Java-based scale-down runs (KubernetesScaleDownStep)
+      # NOTE: scaleDown is automatically disabled when zdu.enable=true
       scaleDown:
         enabled: true
+      # Zero Downtime Upgrade (ZDU) group flags — each stage enables a set of individual feature flags.
+      # Individual flags can still be overridden separately (e.g. via global.elasticsearch.index.upgrade).
+      zdu:
+        # ZDU_STAGE_10: group flag for pre-enablement stage.
+        # Enables: CREATE_SCHEMA_VERSION_INDEX (schema version index on metadata_aspect_v2)
+        preEnable: false
+        # ZDU_STAGE_20: group flag for first ZDU release.
+        # Enables: ELASTICSEARCH_BUILD_INDICES_INCREMENTAL_REINDEX_ENABLED,
+        #          ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED,
+        #          SYSTEM_UPDATE_MIGRATE_ASPECTS_ENABLED,
+        #          ASPECT_MIGRATION_MUTATOR_ENABLED (GMS runtime)
+        # NOTE: setting enable=true automatically disables scaleDown operations
+        enable: false
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"

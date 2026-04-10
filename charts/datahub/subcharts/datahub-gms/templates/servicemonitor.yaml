@@ -14,13 +14,39 @@ metadata:
   {{- end }}
 spec:
   endpoints:
+{{- $mode := include "datahub-gms.monitoring.metricsMode" . | trim }}
+{{- if or (eq $mode "legacy") (eq $mode "jmx_and_actuator") }}
   - port: {{ .Values.global.datahub.monitoring.portName }}
+{{- if eq $mode "jmx_and_actuator" }}
+    path: {{ include "datahub-gms.monitoring.jmxMetricsPath" . | quote }}
+{{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+{{- end }}
+{{- if eq (include "datahub-gms.monitoring.gmsScrapeActuatorOnHttp" .) "true" }}
+  - port: {{ .Values.service.name }}
+    path: {{ include "datahub-gms.basePath" . }}/actuator/prometheus
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+{{- end }}
+{{- if or (eq $mode "jmx_and_actuator") (eq $mode "actuator_only") }}
+  - port: prometheus
+    path: {{ include "datahub-gms.basePath" . }}/actuator/prometheus
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+{{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/managed-by: Helm

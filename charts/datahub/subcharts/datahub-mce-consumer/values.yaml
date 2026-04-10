@@ -151,9 +151,7 @@ global:
 
   datahub:
     version: head
-    monitoring:
-      enablePrometheus: false
-      portName: jmx
+    # monitoring: use umbrella global.datahub.monitoring only.
     gms:
       port: "8080"
     metadata_service_authentication:

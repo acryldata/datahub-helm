@@ -26,10 +26,19 @@ spec:
       {{- end }}
       {{- end }}
     {{- if .Values.global.datahub.monitoring.enablePrometheus }}
+    {{- $mode := include "datahub-gms.monitoring.metricsMode" . | trim }}
+    {{- if or (eq $mode "legacy") (eq $mode "jmx_and_actuator") }}
     - name: {{ .Values.global.datahub.monitoring.portName }}
-      port: 4318
+      port: {{ include "datahub-gms.monitoring.jmxPort" . }}
       targetPort: {{ .Values.global.datahub.monitoring.portName }}
       protocol: TCP
+    {{- end }}
+    {{- if or (eq $mode "jmx_and_actuator") (eq $mode "actuator_only") }}
+    - name: prometheus
+      port: {{ include "datahub-gms.monitoring.actuatorPrometheusPort" . }}
+      targetPort: prometheus
+      protocol: TCP
+    {{- end }}
     {{- end }}
     {{- if .Values.service.additionalPorts }}
     {{- toYaml .Values.service.additionalPorts | nindent 4 }}

@@ -77,9 +77,15 @@ spec:
             - name: http
               containerPort: 9090
               protocol: TCP
-          {{- if or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort }}
+          {{- $mode := include "datahub-mce-consumer.monitoring.metricsMode" . }}
+          {{- if and (or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort) (or (eq $mode "legacy") (eq $mode "jmx_and_actuator")) }}
             - name: {{ .Values.global.datahub.monitoring.portName }}
-              containerPort: 4318
+              containerPort: {{ include "datahub-mce-consumer.monitoring.jmxPort" . }}
+              protocol: TCP
+          {{- end }}
+          {{- if and .Values.global.datahub.monitoring.enablePrometheus (or (eq $mode "jmx_and_actuator") (eq $mode "actuator_only")) }}
+            - name: prometheus
+              containerPort: {{ include "datahub-mce-consumer.monitoring.actuatorPrometheusPort" . }}
               protocol: TCP
           {{- end }}
           livenessProbe:

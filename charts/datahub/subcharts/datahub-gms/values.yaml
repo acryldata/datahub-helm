@@ -76,6 +76,8 @@ service:
   targetPort: http
   protocol: TCP
   name: http
+  # WARNING: ServiceMonitor references this port name when global.datahub.monitoring.metricsMode is legacy (scrape /actuator/prometheus on http).
+  # When metricsMode is jmx_and_actuator or actuator_only, actuator is scraped on the prometheus port (actuatorPrometheusPort).
   # Annotations to add to the service, this will help in adding
   # Internal load balancer or various other annotation support in AWS
   annotations: {}
@@ -245,10 +247,8 @@ global:
 
   datahub:
     version: head
-    monitoring:
-      enablePrometheus: false
-      enableJMXPort: false
-      portName: jmx
+    # monitoring: inherited from umbrella global.datahub.monitoring only — do not set here or
+    # Helm may replace the parent map and drop metricsMode / jmxExporter keys.
     gms:
       port: "8080"
       graphql:

@@ -14,13 +14,29 @@ metadata:
   {{- end }}
 spec:
   endpoints:
+{{- $mode := include "datahub-mae-consumer.monitoring.metricsMode" . }}
+{{- if or (eq $mode "legacy") (eq $mode "jmx_and_actuator") }}
   - port: {{ .Values.global.datahub.monitoring.portName }}
+{{- if eq $mode "jmx_and_actuator" }}
+    path: {{ include "datahub-mae-consumer.monitoring.jmxMetricsPath" . | quote }}
+{{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+{{- end }}
+{{- if eq $mode "actuator_only" }}
+  - port: prometheus
+    path: /actuator/prometheus
+    relabelings:
+    - separator: /
+      sourceLabels:
+      - namespace
+      - pod
+      targetLabel: instance
+{{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/managed-by: Helm

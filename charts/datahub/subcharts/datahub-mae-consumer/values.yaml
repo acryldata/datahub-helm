@@ -165,9 +165,7 @@ global:
     version: head
     gms:
       port: "8080"
-    monitoring:
-      enablePrometheus: false
-      portName: jmx
+    # monitoring: use umbrella global.datahub.monitoring only.
 
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will

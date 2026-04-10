@@ -235,3 +235,33 @@ Validates that Kafka and OpenSearch regions match when both are configured with 
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+GMS base path prefix for HTTP paths (matches liveness path construction).
+*/}}
+{{- define "datahub-gms.basePath" -}}
+{{- if .Values.global.basePath.enabled }}{{ if eq .Values.global.basePath.gms "/" }}{{ else }}{{ .Values.global.basePath.gms }}{{ end }}{{ end -}}
+{{- end -}}
+
+{{/*
+global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only (default legacy).
+*/}}
+{{- define "datahub-gms.monitoring.metricsMode" -}}
+{{- .Values.global.datahub.monitoring.metricsMode | default "legacy" | trim -}}
+{{- end -}}
+
+{{- define "datahub-gms.monitoring.jmxPort" -}}
+{{- int (.Values.global.datahub.monitoring.jmxPort | default 4318) -}}
+{{- end -}}
+
+{{- define "datahub-gms.monitoring.actuatorPrometheusPort" -}}
+{{- int (.Values.global.datahub.monitoring.actuatorPrometheusPort | default 4319) -}}
+{{- end -}}
+
+{{- define "datahub-gms.monitoring.jmxMetricsPath" -}}
+{{- (.Values.global.datahub.monitoring.jmxExporter | default dict).metricsPath | default "/metrics" -}}
+{{- end -}}
+
+{{- define "datahub-gms.monitoring.gmsScrapeActuatorOnHttp" -}}
+{{- if eq (include "datahub-gms.monitoring.metricsMode" .) "legacy" }}true{{- end -}}
+{{- end -}}

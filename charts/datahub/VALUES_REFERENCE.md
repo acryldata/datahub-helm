@@ -834,6 +834,30 @@ This document provides a comprehensive reference for every single configurable v
 <td>Custom name for the monitoring port.</td>
 </tr>
 <tr>
+<td><code>global.datahub.monitoring.metricsMode</code></td>
+<td>string</td>
+<td><code>legacy</code></td>
+<td>Prometheus scrape layout for JMX workloads (GMS, frontend, MAE/MCE consumers). Set only via this global key; there are no per-workload overrides. <code>legacy</code>: JMX on <code>jmxPort</code>; GMS Spring actuator on the main HTTP service port only. <code>jmx_and_actuator</code>: JMX exporter scrape uses <code>jmxExporter.metricsPath</code> on <code>jmxPort</code>; <code>/actuator/prometheus</code> is exposed on <code>actuatorPrometheusPort</code>. <code>actuator_only</code>: no JMX sidecar scrape port; actuator only on <code>actuatorPrometheusPort</code>. <code>actuatorPrometheusPort</code> is not derived from <code>jmxPort</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.monitoring.jmxPort</code></td>
+<td>integer</td>
+<td><code>4318</code></td>
+<td>Base port for JMX metrics (<code>legacy</code> and <code>jmx_and_actuator</code>). Configure <code>actuatorPrometheusPort</code> separately for the Spring actuator listener when <code>metricsMode</code> is <code>jmx_and_actuator</code> or <code>actuator_only</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.monitoring.actuatorPrometheusPort</code></td>
+<td>integer</td>
+<td><code>4319</code></td>
+<td>Dedicated port for <code>/actuator/prometheus</code> when <code>metricsMode</code> is <code>jmx_and_actuator</code> or <code>actuator_only</code>. Independent of <code>jmxPort</code> (not computed as <code>jmxPort + 1</code>).</td>
+</tr>
+<tr>
+<td><code>global.datahub.monitoring.jmxExporter.metricsPath</code></td>
+<td>string</td>
+<td><code>/metrics</code></td>
+<td>HTTP path for the JMX exporter sidecar scrape target (ServiceMonitor and pod annotations where applicable).</td>
+</tr>
+<tr>
 <td><code>global.datahub.mae_consumer.port</code></td>
 <td>string</td>
 <td><code>9091</code></td>

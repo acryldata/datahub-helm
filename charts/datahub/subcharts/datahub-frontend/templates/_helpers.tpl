@@ -212,3 +212,22 @@ Selector alternative labels
 app.kubernetes.io/name: {{ include "datahub-frontend-alt.name" . }}
 app.kubernetes.io/instance: {{ $.Release.Name }}
 {{- end -}}
+
+{{/*
+global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only (default legacy).
+*/}}
+{{- define "datahub-frontend.monitoring.metricsMode" -}}
+{{- .Values.global.datahub.monitoring.metricsMode | default "legacy" | trim -}}
+{{- end -}}
+
+{{- define "datahub-frontend.monitoring.jmxPort" -}}
+{{- int (.Values.global.datahub.monitoring.jmxPort | default 4318) -}}
+{{- end -}}
+
+{{- define "datahub-frontend.monitoring.actuatorPrometheusPort" -}}
+{{- int (.Values.global.datahub.monitoring.actuatorPrometheusPort | default 4319) -}}
+{{- end -}}
+
+{{- define "datahub-frontend.monitoring.jmxMetricsPath" -}}
+{{- (.Values.global.datahub.monitoring.jmxExporter | default dict).metricsPath | default "/metrics" -}}
+{{- end -}}

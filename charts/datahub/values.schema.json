@@ -2370,6 +2370,36 @@
                 },
                 "portName": {
                   "type": "string"
+                },
+                "monitoringApiVersion": {
+                  "type": "string",
+                  "description": "Override ServiceMonitor/monitoring.coreos.com API group when the cluster uses a non-default variant (e.g. some AKS setups)."
+                },
+                "metricsMode": {
+                  "type": "string",
+                  "enum": ["legacy", "jmx_and_actuator", "actuator_only"],
+                  "description": "Prometheus scrape layout for JMX workloads (GMS, frontend, MAE/MCE consumers). legacy: JMX on jmxPort; GMS actuator on main http port. jmx_and_actuator: JMX with jmxExporter.metricsPath on jmxPort; Spring /actuator/prometheus on actuatorPrometheusPort. actuator_only: no JMX; actuator on actuatorPrometheusPort only."
+                },
+                "jmxPort": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 65535,
+                  "description": "Container and Service port for JMX metrics (legacy and jmx_and_actuator). Not derived from actuatorPrometheusPort; configure both independently."
+                },
+                "actuatorPrometheusPort": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 65535,
+                  "description": "Dedicated container and Service port for Spring Boot /actuator/prometheus when metricsMode is jmx_and_actuator or actuator_only. Independent of jmxPort (not computed as jmxPort+1)."
+                },
+                "jmxExporter": {
+                  "type": "object",
+                  "properties": {
+                    "metricsPath": {
+                      "type": "string",
+                      "description": "HTTP path for the JMX exporter sidecar scrape target (often /metrics)."
+                    }
+                  }
                 }
               },
               "required": [

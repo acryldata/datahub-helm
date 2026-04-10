@@ -255,9 +255,7 @@ global:
     version: head
     gms:
       port: "8080"
-    monitoring:
-      enablePrometheus: true
-      portName: "jmx"
+    # monitoring: use umbrella global.datahub.monitoring only (do not set here; partial maps drop metricsMode).
     appVersion: "1.0"
     frontend:
       validateSignUpEmail: true

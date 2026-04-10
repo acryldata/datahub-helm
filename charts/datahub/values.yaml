@@ -1,5 +1,6 @@
 # Values to start up datahub after starting up the datahub-prerequisites chart with "prerequisites" release name
 # Copy this chart and change configuration as needed.
+# JMX/actuator metrics layout is controlled only by global.datahub.monitoring.metricsMode (see global.datahub below).
 datahub-gms:
   enabled: true
   image:
@@ -1007,6 +1008,18 @@ global:
       enablePrometheus: true
       # Set a custom name for the monitoring port
       portName: jmx
+      # Change if using a service like AKS where it uses a different API namespace for monitoring.coreos.com
+      # monitoringApiVersion: "azmonitoring.coreos.com/v1"
+      # Prometheus scrape layout for JMX workloads (GMS, frontend, MAE/MCE consumers).
+      # - legacy: JMX on jmxPort; GMS Spring actuator on main http service port only (current default).
+      # - jmx_and_actuator: JMX with explicit metricsPath on jmxPort; /actuator/prometheus on actuatorPrometheusPort.
+      # - actuator_only: no JMX; /actuator/prometheus only on actuatorPrometheusPort where the app exposes it.
+      metricsMode: legacy
+      jmxPort: 4318
+      # Dedicated listener for Spring /actuator/prometheus (non-legacy modes). Independent of jmxPort so JMX can be removed later.
+      actuatorPrometheusPort: 4319
+      jmxExporter:
+        metricsPath: "/metrics"
 
     mae_consumer:
       port: "9091"

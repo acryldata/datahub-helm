@@ -73,11 +73,11 @@ spec:
           {{- if .Values.image.args }}
           args: {{ .Values.image.args | toRawJson }}
           {{- end }}
+          {{- $mode := include "datahub-mce-consumer.monitoring.metricsMode" . }}
           ports:
             - name: http
               containerPort: 9090
               protocol: TCP
-          {{- $mode := include "datahub-mce-consumer.monitoring.metricsMode" . }}
           {{- if and (or .Values.global.datahub.monitoring.enablePrometheus .Values.global.datahub.monitoring.enableJMXPort) (or (eq $mode "legacy") (eq $mode "jmx_and_actuator")) }}
             - name: {{ .Values.global.datahub.monitoring.portName }}
               containerPort: {{ include "datahub-mce-consumer.monitoring.jmxPort" . }}
@@ -91,14 +91,14 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: http
+              port: {{ include "datahub-mce-consumer.monitoring.healthProbePortName" . }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: http
+              port: {{ include "datahub-mce-consumer.monitoring.healthProbePortName" . }}
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}

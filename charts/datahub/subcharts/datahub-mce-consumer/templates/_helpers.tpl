@@ -133,3 +133,16 @@ global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only
 {{- define "datahub-mce-consumer.monitoring.jmxMetricsPath" -}}
 {{- (.Values.global.datahub.monitoring.jmxExporter | default dict).metricsPath | default "/metrics" -}}
 {{- end -}}
+
+{{/*
+Kubernetes httpGet port name for liveness/readiness: when metricsMode moves Spring actuator to actuatorPrometheusPort,
+/actuator/health must be probed on the "prometheus" container port, not the main "http" port.
+*/}}
+{{- define "datahub-mce-consumer.monitoring.healthProbePortName" -}}
+{{- $mode := include "datahub-mce-consumer.monitoring.metricsMode" . -}}
+{{- if and .Values.global.datahub.monitoring.enablePrometheus (or (eq $mode "jmx_and_actuator") (eq $mode "actuator_only")) -}}
+prometheus
+{{- else -}}
+http
+{{- end -}}
+{{- end -}}

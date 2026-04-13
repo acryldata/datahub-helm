@@ -1014,6 +1014,8 @@ global:
       # - legacy: JMX on jmxPort; GMS Spring actuator on main http service port only (current default).
       # - jmx_and_actuator: JMX with explicit metricsPath on jmxPort; /actuator/prometheus on actuatorPrometheusPort.
       # - actuator_only: no JMX; /actuator/prometheus only on actuatorPrometheusPort where the app exposes it.
+      # When jmx_and_actuator or actuator_only: MAE/MCE consumers probe /actuator/health on the
+      # prometheus Service/container port (actuatorPrometheusPort); allow that port if you use NetworkPolicy.
       metricsMode: legacy
       jmxPort: 4318
       # Dedicated listener for Spring /actuator/prometheus (non-legacy modes). Independent of jmxPort so JMX can be removed later.

@@ -49,15 +49,19 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
+        {{- include "datahub.globalTls.volume" . | nindent 8 }}
       {{- with .Values.datahubSystemUpdate.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
-      {{- with .Values.datahubSystemUpdate.extraInitContainers }}
+      {{- if or (eq (include "datahub.globalTls.enabled" .) "true") .Values.datahubSystemUpdate.extraInitContainers }}
       initContainers:
+        {{- include "datahub.globalTls.initContainer" . | nindent 8 }}
+        {{- with .Values.datahubSystemUpdate.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       containers:
         - name: datahub-system-update-job
@@ -258,6 +262,7 @@ spec:
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
+            {{- include "datahub.globalTls.volumeMount" . | nindent 12 }}
           {{- with .Values.datahubSystemUpdate.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -327,6 +332,7 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
         {{- end }}
+        {{- include "datahub.globalTls.volume" . | nindent 8 }}
       {{- with .Values.datahubSystemUpdate.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -334,9 +340,12 @@ spec:
       securityContext:
         {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
       {{- $scaleDownEffective := .Values.global.datahub.systemUpdate.scaleDown.enabled | default false }}
-      {{- with .Values.datahubSystemUpdate.extraInitContainers }}
+      {{- if or (eq (include "datahub.globalTls.enabled" .) "true") .Values.datahubSystemUpdate.extraInitContainers }}
       initContainers:
+        {{- include "datahub.globalTls.initContainer" . | nindent 8 }}
+        {{- with .Values.datahubSystemUpdate.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       containers:
         - name: datahub-system-update-job
@@ -474,6 +483,7 @@ spec:
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
+            {{- include "datahub.globalTls.volumeMount" . | nindent 12 }}
           {{- with .Values.datahubSystemUpdate.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

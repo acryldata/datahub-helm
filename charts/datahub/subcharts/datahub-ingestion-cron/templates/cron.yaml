@@ -42,9 +42,12 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- if .extraInitContainers }}
+        {{- if or (eq (include "datahub.globalTls.enabled" $) "true") .extraInitContainers }}
           initContainers:
+            {{- include "datahub.globalTls.initContainer" $ | nindent 12 }}
+          {{- if .extraInitContainers }}
           {{- toYaml .extraInitContainers | nindent 12 }}
+          {{- end }}
         {{- end }}
         {{- if .hostAliases }}
           hostAliases:
@@ -66,6 +69,7 @@ spec:
             volumeMounts:
               - name: recipe
                 mountPath: /etc/recipe
+              {{- include "datahub.globalTls.volumeMount" $ | nindent 14 }}
             {{- if .extraVolumeMounts }}
               {{- toYaml .extraVolumeMounts | nindent 14 }}
             {{- end }}
@@ -90,6 +94,8 @@ spec:
                     key: {{ $value.key | quote }}
               {{- end }}
               {{- end }}
+              {{- include "datahub.globalTls.librdkafka.env" $ | nindent 14 }}
+              {{- include "datahub.globalTls.requestsCaBundle.env" $ | nindent 14 }}
             {{- if .extraSidecars }}
               {{- toYaml .extraSidecars | nindent 10 }}
             {{- end }}
@@ -110,6 +116,7 @@ spec:
             - name: recipe
               configMap:
                 name: {{ required "A valid .recipe.configmapName entry is required!" $val.recipe.configmapName }}
+            {{- include "datahub.globalTls.volume" $ | nindent 12 }}
           {{- if .extraVolumes }}
             {{- toYaml .extraVolumes | nindent 12 }}
           {{- end }}

@@ -1310,6 +1310,8 @@ global:
 #      keyPasswordFile:                    # optional, encrypted keys
 #        secretName: datahub-workload-tls
 #        key: key.pass
+#      initContainer:
+#        image: busybox:1.37.0             # concatenates cert+key into bundle.pem
 
 ## ────────────────────────────────────────────────────────────────────
 ## Kafka SSL — low-level escape hatch (free-form overrides)

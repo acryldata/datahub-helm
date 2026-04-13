@@ -52,6 +52,7 @@ spec:
                 defaultMode: 0444
                 secretName: {{ .name }}
             {{- end }}
+            {{- include "datahub.globalTls.volume" . | nindent 12 }}
           {{- with .Values.datahubSystemCronHourly.extraVolumes }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -59,6 +60,7 @@ spec:
           securityContext:
             {{- toYaml .Values.datahubSystemCronHourly.podSecurityContext | nindent 12 }}
           initContainers:
+            {{- include "datahub.globalTls.initContainer" . | nindent 12 }}
           {{- with .Values.datahubSystemCronHourly.extraInitContainers }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -96,6 +98,7 @@ spec:
                 - name: datahub-certs-dir
                   mountPath: {{ .path | default "/mnt/certs" }}
               {{- end }}
+                {{- include "datahub.globalTls.volumeMount" . | nindent 16 }}
               {{- with .Values.datahubSystemCronHourly.extraVolumeMounts }}
                 {{- toYaml . | nindent 16 }}
               {{- end }}

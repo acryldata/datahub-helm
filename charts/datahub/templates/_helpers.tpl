@@ -881,44 +881,64 @@ USAGE: Include in services that run embedding ingestion:
 
 {{/*
 ────────────────────────────────────────────────────────────────────
-global.tls — projected volume and runtime-native env var helpers
+global.datahub.tls — volumes, init container, and env var helpers
 ────────────────────────────────────────────────────────────────────
 
-global.tls is a single operator input for PEM TLS that the chart
-templates into each runtime's native env vars:
+global.datahub.tls is a single operator input for PEM TLS that the
+chart fans out into each runtime's native env vars.
+
+Shape at pod level:
+
+  - A projected volume `datahub-tls-src` pulls the referenced secret
+    keys and mounts them read-only at /etc/datahub/tls-src/.
+  - A tmpfs emptyDir `datahub-tls` is mounted at /etc/datahub/tls/
+    in the main container read-only.
+  - A tiny busybox init container reads from /etc/datahub/tls-src/
+    and writes to /etc/datahub/tls/: copies ca.pem, tls.crt,
+    tls.key, and key.pass as-is; concatenates tls.crt + tls.key
+    into bundle.pem when both exist (required by Java Kafka's PEM
+    file-mode keystore).
+
+Main containers see:
+
+  /etc/datahub/tls/ca.pem        (always)
+  /etc/datahub/tls/tls.crt       (when cert set)
+  /etc/datahub/tls/tls.key       (when key set)
+  /etc/datahub/tls/bundle.pem    (when cert AND key set)
+  /etc/datahub/tls/key.pass      (when keyPasswordFile set)
+
+Env vars emitted per runtime:
 
   Spring Boot Kafka / Schema Registry clients
-    SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_TYPE=PEM
-    SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION=/etc/datahub/tls/ca.pem
-    KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE=PEM
-    KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION=/etc/datahub/tls/ca.pem
-    SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE=PEM
-    SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION=/etc/datahub/tls/ca.pem
+    SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_{TYPE,LOCATION}
+    KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_{TYPE,LOCATION}
+    SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_{TYPE,LOCATION}
+    (+ keystore variants pointing at bundle.pem when cert+key set)
 
   librdkafka clients
-    KAFKA_PROPERTIES_SSL_CA_LOCATION=/etc/datahub/tls/ca.pem
-    KAFKA_PROPERTIES_SSL_CERTIFICATE_LOCATION=/etc/datahub/tls/tls.crt
-    KAFKA_PROPERTIES_SSL_KEY_LOCATION=/etc/datahub/tls/tls.key
-    KAFKA_SCHEMA_REGISTRY_PROPERTIES_SSL_CA_LOCATION=/etc/datahub/tls/ca.pem
+    KAFKA_PROPERTIES_SSL_CA_LOCATION
+    KAFKA_PROPERTIES_SSL_CERTIFICATE_LOCATION  (when cert set)
+    KAFKA_PROPERTIES_SSL_KEY_LOCATION          (when key set)
+    KAFKA_SCHEMA_REGISTRY_PROPERTIES_SSL_CA_LOCATION
 
   Python HTTP clients (requests / httpx / certifi)
-    REQUESTS_CA_BUNDLE=/etc/datahub/tls/ca.pem
-
-Java Kafka mTLS client auth (ssl.keystore.type=PEM with combined
-cert+key file) is intentionally NOT emitted by these helpers yet —
-pending a design decision on how to materialize the combined PEM
-file (projected volume with path rewriting vs. init container).
-librdkafka consumes the separate cert/key files directly and is
-unaffected.
+    REQUESTS_CA_BUNDLE
 */}}
 
 {{- define "datahub.globalTls.enabled" -}}
 {{- and .Values.global.datahub .Values.global.datahub.tls .Values.global.datahub.tls.enabled -}}
 {{- end -}}
 
+{{- define "datahub.globalTls.hasClientIdentity" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" -}}
+{{- $tls := .Values.global.datahub.tls -}}
+{{- if and $tls.cert $tls.key -}}true{{- else -}}false{{- end -}}
+{{- else -}}false{{- end -}}
+{{- end -}}
+
 {{/*
-Projected volume spec for global.tls. Emits a single `projected`
-volume assembling the referenced secret keys into /etc/datahub/tls.
+Volume specs for global.datahub.tls: projected source volume plus
+tmpfs emptyDir target that the init container populates.
 
 USAGE (under spec.template.spec.volumes):
   {{- include "datahub.globalTls.volume" . | nindent 8 }}
@@ -926,7 +946,7 @@ USAGE (under spec.template.spec.volumes):
 {{- define "datahub.globalTls.volume" -}}
 {{- if eq (include "datahub.globalTls.enabled" .) "true" }}
 {{- $tls := .Values.global.datahub.tls }}
-- name: datahub-tls
+- name: datahub-tls-src
   projected:
     defaultMode: 0444
     sources:
@@ -956,12 +976,57 @@ USAGE (under spec.template.spec.volumes):
             - key: {{ $tls.keyPasswordFile.key }}
               path: key.pass
       {{- end }}
+- name: datahub-tls
+  emptyDir:
+    medium: Memory
+    sizeLimit: 1Mi
 {{- end }}
 {{- end -}}
 
 {{/*
-Volume mount spec for global.tls — mounts the projected volume at
-/etc/datahub/tls read-only.
+Init container that materializes /etc/datahub/tls from the projected
+source volume. Copies ca.pem, tls.crt, tls.key, key.pass as-is;
+concatenates tls.crt + tls.key into bundle.pem when both exist.
+
+USAGE (under spec.template.spec.initContainers):
+  {{- include "datahub.globalTls.initContainer" . | nindent 8 }}
+*/}}
+{{- define "datahub.globalTls.initContainer" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" }}
+{{- $tls := .Values.global.datahub.tls }}
+- name: datahub-tls-init
+  image: {{ dig "initContainer" "image" "busybox:1.37.0" $tls | quote }}
+  imagePullPolicy: IfNotPresent
+  command:
+    - sh
+    - -c
+    - |
+      set -eu
+      cp /etc/datahub/tls-src/ca.pem /etc/datahub/tls/ca.pem
+      if [ -f /etc/datahub/tls-src/tls.crt ]; then
+        cp /etc/datahub/tls-src/tls.crt /etc/datahub/tls/tls.crt
+      fi
+      if [ -f /etc/datahub/tls-src/tls.key ]; then
+        cp /etc/datahub/tls-src/tls.key /etc/datahub/tls/tls.key
+      fi
+      if [ -f /etc/datahub/tls-src/tls.crt ] && [ -f /etc/datahub/tls-src/tls.key ]; then
+        cat /etc/datahub/tls-src/tls.crt /etc/datahub/tls-src/tls.key > /etc/datahub/tls/bundle.pem
+      fi
+      if [ -f /etc/datahub/tls-src/key.pass ]; then
+        cp /etc/datahub/tls-src/key.pass /etc/datahub/tls/key.pass
+      fi
+  volumeMounts:
+    - name: datahub-tls-src
+      mountPath: /etc/datahub/tls-src
+      readOnly: true
+    - name: datahub-tls
+      mountPath: /etc/datahub/tls
+{{- end }}
+{{- end -}}
+
+{{/*
+Volume mount spec for global.datahub.tls — mounts the tmpfs target
+at /etc/datahub/tls read-only in the main container.
 
 USAGE (under container.volumeMounts):
   {{- include "datahub.globalTls.volumeMount" . | nindent 12 }}
@@ -975,10 +1040,10 @@ USAGE (under container.volumeMounts):
 {{- end -}}
 
 {{/*
-Spring Boot Kafka + Schema Registry TLS env vars from global.tls.
-Emits only the truststore (server-auth) side today; Kafka mTLS
-client auth on the Java side is TODO pending combined-keystore
-design decision.
+Spring Boot Kafka + Schema Registry TLS env vars from
+global.datahub.tls. Emits truststore (server-auth) always; emits
+keystore (mTLS client-auth) when cert+key are set, pointing at the
+bundle.pem produced by the init container.
 
 USAGE (under container.env):
   {{- include "datahub.globalTls.spring.env" . | nindent 12 }}
@@ -997,6 +1062,20 @@ USAGE (under container.env):
   value: "PEM"
 - name: SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
   value: "/etc/datahub/tls/ca.pem"
+{{- if eq (include "datahub.globalTls.hasClientIdentity" .) "true" }}
+- name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_TYPE
+  value: "PEM"
+- name: SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_LOCATION
+  value: "/etc/datahub/tls/bundle.pem"
+- name: KAFKA_SCHEMA_REGISTRY_SSL_KEYSTORE_TYPE
+  value: "PEM"
+- name: KAFKA_SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION
+  value: "/etc/datahub/tls/bundle.pem"
+- name: SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_KEYSTORE_TYPE
+  value: "PEM"
+- name: SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION
+  value: "/etc/datahub/tls/bundle.pem"
+{{- end }}
 {{- end }}
 {{- end -}}
 

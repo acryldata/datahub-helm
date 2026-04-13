@@ -69,6 +69,7 @@ spec:
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
       initContainers:
+        {{- include "datahub.globalTls.initContainer" . | nindent 8 }}
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

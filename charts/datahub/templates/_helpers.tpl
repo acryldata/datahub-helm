@@ -878,3 +878,168 @@ USAGE: Include in services that run embedding ingestion:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+────────────────────────────────────────────────────────────────────
+global.tls — projected volume and runtime-native env var helpers
+────────────────────────────────────────────────────────────────────
+
+global.tls is a single operator input for PEM TLS that the chart
+templates into each runtime's native env vars:
+
+  Spring Boot Kafka / Schema Registry clients
+    SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_TYPE=PEM
+    SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION=/etc/datahub/tls/ca.pem
+    KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE=PEM
+    KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION=/etc/datahub/tls/ca.pem
+    SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE=PEM
+    SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION=/etc/datahub/tls/ca.pem
+
+  librdkafka clients
+    KAFKA_PROPERTIES_SSL_CA_LOCATION=/etc/datahub/tls/ca.pem
+    KAFKA_PROPERTIES_SSL_CERTIFICATE_LOCATION=/etc/datahub/tls/tls.crt
+    KAFKA_PROPERTIES_SSL_KEY_LOCATION=/etc/datahub/tls/tls.key
+    KAFKA_SCHEMA_REGISTRY_PROPERTIES_SSL_CA_LOCATION=/etc/datahub/tls/ca.pem
+
+  Python HTTP clients (requests / httpx / certifi)
+    REQUESTS_CA_BUNDLE=/etc/datahub/tls/ca.pem
+
+Java Kafka mTLS client auth (ssl.keystore.type=PEM with combined
+cert+key file) is intentionally NOT emitted by these helpers yet —
+pending a design decision on how to materialize the combined PEM
+file (projected volume with path rewriting vs. init container).
+librdkafka consumes the separate cert/key files directly and is
+unaffected.
+*/}}
+
+{{- define "datahub.globalTls.enabled" -}}
+{{- and .Values.global.datahub .Values.global.datahub.tls .Values.global.datahub.tls.enabled -}}
+{{- end -}}
+
+{{/*
+Projected volume spec for global.tls. Emits a single `projected`
+volume assembling the referenced secret keys into /etc/datahub/tls.
+
+USAGE (under spec.template.spec.volumes):
+  {{- include "datahub.globalTls.volume" . | nindent 8 }}
+*/}}
+{{- define "datahub.globalTls.volume" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" }}
+{{- $tls := .Values.global.datahub.tls }}
+- name: datahub-tls
+  projected:
+    defaultMode: 0444
+    sources:
+      - secret:
+          name: {{ $tls.ca.secretName }}
+          items:
+            - key: {{ $tls.ca.key }}
+              path: ca.pem
+      {{- if $tls.cert }}
+      - secret:
+          name: {{ $tls.cert.secretName }}
+          items:
+            - key: {{ $tls.cert.key }}
+              path: tls.crt
+      {{- end }}
+      {{- if $tls.key }}
+      - secret:
+          name: {{ $tls.key.secretName }}
+          items:
+            - key: {{ $tls.key.key }}
+              path: tls.key
+      {{- end }}
+      {{- if $tls.keyPasswordFile }}
+      - secret:
+          name: {{ $tls.keyPasswordFile.secretName }}
+          items:
+            - key: {{ $tls.keyPasswordFile.key }}
+              path: key.pass
+      {{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Volume mount spec for global.tls — mounts the projected volume at
+/etc/datahub/tls read-only.
+
+USAGE (under container.volumeMounts):
+  {{- include "datahub.globalTls.volumeMount" . | nindent 12 }}
+*/}}
+{{- define "datahub.globalTls.volumeMount" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" }}
+- name: datahub-tls
+  mountPath: /etc/datahub/tls
+  readOnly: true
+{{- end }}
+{{- end -}}
+
+{{/*
+Spring Boot Kafka + Schema Registry TLS env vars from global.tls.
+Emits only the truststore (server-auth) side today; Kafka mTLS
+client auth on the Java side is TODO pending combined-keystore
+design decision.
+
+USAGE (under container.env):
+  {{- include "datahub.globalTls.spring.env" . | nindent 12 }}
+*/}}
+{{- define "datahub.globalTls.spring.env" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" }}
+- name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_TYPE
+  value: "PEM"
+- name: SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+  value: "/etc/datahub/tls/ca.pem"
+- name: KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE
+  value: "PEM"
+- name: KAFKA_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+  value: "/etc/datahub/tls/ca.pem"
+- name: SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE
+  value: "PEM"
+- name: SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+  value: "/etc/datahub/tls/ca.pem"
+{{- end }}
+{{- end -}}
+
+{{/*
+librdkafka TLS env vars from global.tls, for Python components
+using confluent-kafka. Emits CA plus the separate cert / key files
+when provided (librdkafka natively consumes them as separate files).
+
+USAGE (under container.env):
+  {{- include "datahub.globalTls.librdkafka.env" . | nindent 12 }}
+*/}}
+{{- define "datahub.globalTls.librdkafka.env" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" }}
+{{- $tls := .Values.global.datahub.tls }}
+- name: KAFKA_PROPERTIES_SSL_CA_LOCATION
+  value: "/etc/datahub/tls/ca.pem"
+- name: KAFKA_SCHEMA_REGISTRY_PROPERTIES_SSL_CA_LOCATION
+  value: "/etc/datahub/tls/ca.pem"
+{{- if $tls.cert }}
+- name: KAFKA_PROPERTIES_SSL_CERTIFICATE_LOCATION
+  value: "/etc/datahub/tls/tls.crt"
+{{- end }}
+{{- if $tls.key }}
+- name: KAFKA_PROPERTIES_SSL_KEY_LOCATION
+  value: "/etc/datahub/tls/tls.key"
+{{- end }}
+{{- if $tls.keyPasswordFile }}
+- name: KAFKA_PROPERTIES_SSL_KEY_PASSWORD_LOCATION
+  value: "/etc/datahub/tls/key.pass"
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+REQUESTS_CA_BUNDLE env var from global.tls.ca, for Python HTTP
+clients (requests / httpx / certifi) talking to GMS.
+
+USAGE (under container.env):
+  {{- include "datahub.globalTls.requestsCaBundle.env" . | nindent 12 }}
+*/}}
+{{- define "datahub.globalTls.requestsCaBundle.env" -}}
+{{- if eq (include "datahub.globalTls.enabled" .) "true" }}
+- name: REQUESTS_CA_BUNDLE
+  value: "/etc/datahub/tls/ca.pem"
+{{- end }}
+{{- end -}}

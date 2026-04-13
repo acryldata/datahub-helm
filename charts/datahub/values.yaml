@@ -1277,7 +1277,55 @@ global:
 #        - "elasticsearch"
 #        - "neo4j"
 
-## Add below to enable SSL for kafka
+## ────────────────────────────────────────────────────────────────────
+## TLS for Kafka / Schema Registry / GMS HTTP — recommended path
+## ────────────────────────────────────────────────────────────────────
+## A single operator input, PEM only. The chart mounts the referenced
+## secret keys at /etc/datahub/tls/ and templates them into each
+## component's runtime-native env vars:
+##   - Spring Boot Kafka clients (GMS, MAE, MCE, datahub-system-update)
+##     → SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_* (server auth, always)
+##     → SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_*   (mTLS, when cert+key set)
+##   - librdkafka clients (acryl-datahub-actions)
+##     → KAFKA_PROPERTIES_SSL_CA_LOCATION / SSL_CERTIFICATE_LOCATION /
+##       SSL_KEY_LOCATION
+##   - Python HTTP clients talking to GMS → REQUESTS_CA_BUNDLE
+##
+## Kafka mTLS on the Java side uses ssl.keystore.type=PEM pointed at
+## a combined bundle.pem (tls.crt + tls.key), produced in-cluster by
+## a tiny busybox init container that concatenates the two files into
+## a tmpfs emptyDir. librdkafka consumes the separate cert/key files
+## directly and doesn't need the combined bundle.
+##
+## The existing credentialsAndCertsSecrets + springKafkaConfigurationOverrides
+## interface below keeps working unchanged; global.datahub.tls is additive.
+#  datahub:
+#    tls:
+#      enabled: true
+#      ca:
+#        secretName: datahub-internal-ca
+#        key: ca.pem
+#      cert:                               # optional, Kafka mTLS only
+#        secretName: datahub-workload-tls
+#        key: tls.crt
+#      key:                                # optional, Kafka mTLS only
+#        secretName: datahub-workload-tls
+#        key: tls.key
+#      keyPasswordFile:                    # optional, encrypted keys
+#        secretName: datahub-workload-tls
+#        key: key.pass
+#      initContainer:
+#        image: busybox:1.37.0             # concatenates cert+key into bundle.pem
+
+## ────────────────────────────────────────────────────────────────────
+## Kafka SSL — low-level escape hatch (free-form overrides)
+## ────────────────────────────────────────────────────────────────────
+## Use when global.tls cannot express a corner case (custom cipher
+## suites, CRL paths, non-standard endpoint identification, JKS /
+## PKCS12 material you don't want to convert to PEM, split-PKI, ...).
+##
+## Spring side — applies to GMS, MAE, MCE, datahub-system-update.
+## Emitted by the chart as SPRING_KAFKA_PROPERTIES_* env vars.
 #  credentialsAndCertsSecrets:
 #    name: datahub-certs
 #    path: /mnt/datahub/certs
@@ -1299,3 +1347,24 @@ global:
 #    ssl.endpoint.identification.algorithm:
 #    basic.auth.credentials.source: USER_INFO
 #    basic.auth.user.info:
+#
+## Python side — applies to acryl-datahub-actions and other Python
+## components using librdkafka. Emitted by the chart as KAFKA_PROPERTIES_*
+## env vars. Keys are librdkafka vocabulary (ssl.ca.location,
+## ssl.certificate.location, ssl.key.location) — different from Kafka
+## Java client vocabulary. If unset, the chart falls back to a
+## Java-only-filtered view of springKafkaConfigurationOverrides.
+#  pythonKafkaConfigurationOverrides:
+#    ssl.ca.location: /mnt/datahub/certs/ca.pem
+#    ssl.certificate.location: /mnt/datahub/certs/tls.crt
+#    ssl.key.location: /mnt/datahub/certs/tls.key
+#    security.protocol: SSL
+#    ssl.cipher.suites: "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256"
+#
+## Python-side Kafka secrets (passwords, PEM strings) sourced from
+## Kubernetes secrets. If unset, falls back to a Java-only-filtered
+## view of credentialsAndCertsSecrets.secureEnv.
+#  pythonKafkaSecretsOverrides:
+#    ssl.key.password:
+#      secretRef: datahub-certs
+#      secretKey: datahub.linkedin.com.KeyPass

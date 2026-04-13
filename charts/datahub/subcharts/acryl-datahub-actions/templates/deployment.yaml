@@ -48,6 +48,7 @@ spec:
             defaultMode: 0444
             secretName: {{ .name }}
       {{- end }}
+      {{- include "datahub.globalTls.volume" . | nindent 8 }}
       {{- with .Values.ingestionSecretFiles }}
         - name: ingestion-secret-files
           secret:
@@ -61,6 +62,7 @@ spec:
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
       initContainers:
+        {{- include "datahub.globalTls.initContainer" . | nindent 8 }}
       {{- if .Values.extraInitContainers }}
       {{- .Values.extraInitContainers | toYaml | nindent 6 }}
       {{- end }}
@@ -123,21 +125,10 @@ spec:
             {{- end }}
             - name: KAFKA_AUTO_OFFSET_POLICY
               value: "{{ .Values.actions.kafkaAutoOffsetPolicy }}"
-            {{- if .Values.global.springKafkaConfigurationOverrides }}
-            {{- range $configName, $configValue := .Values.global.springKafkaConfigurationOverrides }}
-            - name: KAFKA_PROPERTIES_{{ $configName | replace "." "_" | upper }}
-              value: {{ $configValue | quote }}
-            {{- end }}
-            {{- end }}
-            {{- if .Values.global.credentialsAndCertsSecrets }}
-            {{- range $envVarName, $envVarValue := .Values.global.credentialsAndCertsSecrets.secureEnv }}
-            - name: KAFKA_PROPERTIES_{{ $envVarName | replace "." "_" | upper }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $.Values.global.credentialsAndCertsSecrets.name }}
-                  key: {{ $envVarValue }}
-            {{- end }}
-            {{- end }}
+            {{- include "datahub.python.kafka.overrides.with.fallback" . | nindent 12 }}
+            {{- include "datahub.python.kafka.secrets.with.fallback" . | nindent 12 }}
+            {{- include "datahub.globalTls.librdkafka.env" . | nindent 12 }}
+            {{- include "datahub.globalTls.requestsCaBundle.env" . | nindent 12 }}
             {{- with .Values.global.kafka.topics }}
             - name: METADATA_CHANGE_EVENT_NAME
               value: {{ .metadata_change_event_name }}
@@ -192,6 +183,7 @@ spec:
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
+            {{- include "datahub.globalTls.volumeMount" . | nindent 12 }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

@@ -157,6 +157,7 @@ Return the env variables for upgrade jobs
       key: {{ $envVarValue }}
 {{- end }}
 {{- end }}
+{{- include "datahub.globalTls.spring.env" . }}
 {{- with .Values.global.kafka.topics }}
 - name: METADATA_CHANGE_EVENT_NAME
   value: {{ .metadata_change_event_name }}

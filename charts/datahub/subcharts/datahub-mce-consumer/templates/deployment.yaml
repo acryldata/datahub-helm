@@ -51,6 +51,7 @@ spec:
             defaultMode: 0444
             secretName: {{ .Values.global.credentialsAndCertsSecrets.name }}
         {{- end }}
+        {{- include "datahub.globalTls.volume" . | nindent 8 }}
       {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -58,6 +59,7 @@ spec:
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
       initContainers:
+        {{- include "datahub.globalTls.initContainer" . | nindent 8 }}
       {{- with .Values.extraInitContainers }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -287,6 +289,7 @@ spec:
                   key: {{ $envVarValue }}
             {{- end }}
             {{- end }}
+            {{- include "datahub.globalTls.spring.env" . | nindent 12 }}
             {{- with .Values.global.kafka.topics }}
             - name: METADATA_CHANGE_EVENT_NAME
               value: {{ .metadata_change_event_name }}
@@ -391,6 +394,7 @@ spec:
             - name: datahub-certs-dir
               mountPath: {{ .path | default "/mnt/certs" }}
           {{- end }}
+            {{- include "datahub.globalTls.volumeMount" . | nindent 12 }}
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

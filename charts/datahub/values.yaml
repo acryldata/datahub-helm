@@ -1282,16 +1282,18 @@ global:
 ## secret keys at /etc/datahub/tls/ and templates them into each
 ## component's runtime-native env vars:
 ##   - Spring Boot Kafka clients (GMS, MAE, MCE, datahub-system-update)
-##     → SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_*
+##     → SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_* (server auth, always)
+##     → SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_*   (mTLS, when cert+key set)
 ##   - librdkafka clients (acryl-datahub-actions)
 ##     → KAFKA_PROPERTIES_SSL_CA_LOCATION / SSL_CERTIFICATE_LOCATION /
 ##       SSL_KEY_LOCATION
 ##   - Python HTTP clients talking to GMS → REQUESTS_CA_BUNDLE
 ##
-## Kafka mTLS client auth on the Java side (ssl.keystore.type=PEM
-## with a combined cert+key file) is not yet wired — pending a chart
-## design decision on how to produce the combined PEM. librdkafka
-## consumes the separate cert/key files directly and is unaffected.
+## Kafka mTLS on the Java side uses ssl.keystore.type=PEM pointed at
+## a combined bundle.pem (tls.crt + tls.key), produced in-cluster by
+## a tiny busybox init container that concatenates the two files into
+## a tmpfs emptyDir. librdkafka consumes the separate cert/key files
+## directly and doesn't need the combined bundle.
 ##
 ## The existing credentialsAndCertsSecrets + springKafkaConfigurationOverrides
 ## interface below keeps working unchanged; global.datahub.tls is additive.

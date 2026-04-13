@@ -35,7 +35,7 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if or $scaleDownEffective (index $sa "name") }}
+    {{- if or (index $sa "name") (and $scaleDownEffective (index $sa "create")) }}
       serviceAccountName: {{ default "datahub-operator-sa" (index $sa "name") }}
     {{- end }}
     {{- with .Values.imagePullSecrets }}

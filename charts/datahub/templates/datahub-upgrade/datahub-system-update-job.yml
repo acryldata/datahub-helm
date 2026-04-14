@@ -236,9 +236,14 @@ spec:
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
               value: {{ . | quote }}
             {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: "true"
+            {{- else }}
             {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
             - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
               value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
             {{- if ne $k "default" }}
@@ -465,9 +470,14 @@ spec:
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
               value: {{ . | quote }}
             {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: "true"
+            {{- else }}
             {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
             - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
               value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
             {{- if ne $k "default" }}

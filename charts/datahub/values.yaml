@@ -729,6 +729,8 @@ global:
         ##
         ## This setting allows continuing if and only if the cloneIndices setting is also enabled which
         ## ensures a complete backup of the original index is preserved.
+        ## Automatically set to true when zdu.enable=true. Individual value is
+        ## only respected when zdu.enable is not set.
         allowDocCountMismatch: false
 
         ## Only disable for OpenSearch/ElasticSearch clusters with zone awareness, otherwise optimization should be utilized

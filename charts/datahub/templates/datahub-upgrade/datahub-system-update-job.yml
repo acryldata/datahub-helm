@@ -1,6 +1,7 @@
 {{- include "datahub.validate.iam.setup" . -}}
 {{- if .Values.global.datahub.systemUpdate.enabled -}}
-{{- $scaleDownEffective := .Values.global.datahub.systemUpdate.scaleDown.enabled | default false }}
+{{- $zduStage20 := .Values.global.datahub.systemUpdate.zdu.enable | default false }}
+{{- $scaleDownEffective := and (.Values.global.datahub.systemUpdate.scaleDown.enabled | default false) (not $zduStage20) }}
 {{- $sa := .Values.datahubSystemUpdate.serviceAccount | default dict }}
 apiVersion: batch/v1
 kind: Job
@@ -107,6 +108,18 @@ spec:
               value: "false"
             - name: DATAHUB_UPGRADE_K8_SCALE_DOWN_JAVA_ENABLED
               value: "false"
+            {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.preEnable }}
+            - name: ZDU_STAGE_10
+              value: "true"
+            {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ZDU_STAGE_20
+              value: "true"
+            {{- end }}
+            {{- if .Values.global.elasticsearch.index.upgrade.rollbackDualWriteEnabled }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED
+              value: {{ .Values.global.elasticsearch.index.upgrade.rollbackDualWriteEnabled | quote }}
             {{- end }}
             {{- if .Values.datahubSystemUpdate.sql.setup.enabled }}
             # Enable SQL setup within system-update job
@@ -223,9 +236,14 @@ spec:
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
               value: {{ . | quote }}
             {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: "true"
+            {{- else }}
             {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
             - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
               value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
             {{- if ne $k "default" }}
@@ -333,7 +351,8 @@ spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.datahubSystemUpdate.podSecurityContext | nindent 8 }}
-      {{- $scaleDownEffective := .Values.global.datahub.systemUpdate.scaleDown.enabled | default false }}
+      {{- $zduStage20 := .Values.global.datahub.systemUpdate.zdu.enable | default false }}
+      {{- $scaleDownEffective := and (.Values.global.datahub.systemUpdate.scaleDown.enabled | default false) (not $zduStage20) }}
       {{- with .Values.datahubSystemUpdate.extraInitContainers }}
       initContainers:
         {{- toYaml . | nindent 8 }}
@@ -379,6 +398,18 @@ spec:
               value: "false"
             - name: DATAHUB_UPGRADE_K8_SCALE_DOWN_JAVA_ENABLED
               value: "false"
+            {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.preEnable }}
+            - name: ZDU_STAGE_10
+              value: "true"
+            {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ZDU_STAGE_20
+              value: "true"
+            {{- end }}
+            {{- if .Values.global.elasticsearch.index.upgrade.rollbackDualWriteEnabled }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED
+              value: {{ .Values.global.elasticsearch.index.upgrade.rollbackDualWriteEnabled | quote }}
             {{- end }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: DATAHUB_ANALYTICS_ENABLED
@@ -439,9 +470,14 @@ spec:
             - name: ELASTICSEARCH_INDEX_BUILDER_REFRESH_INTERVAL_SECONDS
               value: {{ . | quote }}
             {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
+              value: "true"
+            {{- else }}
             {{- with .Values.global.elasticsearch.index.upgrade.allowDocCountMismatch }}
             - name: ELASTICSEARCH_BUILD_INDICES_ALLOW_DOC_COUNT_MISMATCH
               value: {{ . | quote }}
+            {{- end }}
             {{- end }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
             {{- if ne $k "default" }}

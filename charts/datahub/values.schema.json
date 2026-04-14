@@ -1680,6 +1680,9 @@
                     },
                     "reindexOptimizationEnabled": {
                       "type": "boolean"
+                    },
+                    "rollbackDualWriteEnabled": {
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -2435,6 +2438,17 @@
                   "type": "object",
                   "properties": {
                     "enabled": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "zdu": {
+                  "type": "object",
+                  "properties": {
+                    "preEnable": {
+                      "type": "boolean"
+                    },
+                    "enable": {
                       "type": "boolean"
                     }
                   }

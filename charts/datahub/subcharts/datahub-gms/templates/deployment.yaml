@@ -552,6 +552,10 @@ spec:
             - name: STRICT_URN_VALIDATION_ENABLED
               value: "{{ . }}"
             {{- end }}
+            {{- if .Values.global.datahub.systemUpdate.zdu.enable }}
+            - name: ZDU_STAGE_20
+              value: "true"
+            {{- end }}
             - name: MCP_CONSUMER_BATCH_ENABLED
               value: {{ .Values.global.datahub.metadataChangeProposal.consumer.batch.enabled | quote }}
             {{- with .Values.global.datahub.gms.s3 }}

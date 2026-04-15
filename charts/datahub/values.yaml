@@ -720,6 +720,8 @@ global:
       upgrade:
         ## When reindexing is required, this option will clone the existing index as a backup
         ## The clone indices are not currently managed.
+        ## Automatically set to true when zdu.enable=true (ZDU_STAGE_20). Individual value is
+        ## only respected when zdu.enable is not set.
         cloneIndices: true
 
         ## Typically when reindexing the document counts between the original and destination indices should match.

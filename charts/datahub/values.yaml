@@ -506,6 +506,8 @@ datahubSystemUpdate:
     runAsUser: 1000
     runAsGroup: 1000
     allowPrivilegeEscalation: false
+  # Pod + container security contexts above apply to both blocking and nonblocking system-update Jobs
+  # (templates/datahub-upgrade/datahub-system-update-job.yml).
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.

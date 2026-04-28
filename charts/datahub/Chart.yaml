@@ -1,37 +1,37 @@
 apiVersion: v2
 name: datahub
-description: A Helm chart for DataHub
+description: A Helm chart for DataHub (defaults include non-root security contexts for workloads, hook jobs, and datahubSystemUpdate).
 type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.9.10
+version: 0.9.11
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: v1.5.0
 dependencies:
   - name: datahub-gms
-    version: 0.3.11
+    version: 0.3.12
     repository: file://./subcharts/datahub-gms
     condition: datahub-gms.enabled
   - name: datahub-frontend
-    version: 0.3.4
+    version: 0.3.5
     repository: file://./subcharts/datahub-frontend
     condition: datahub-frontend.enabled
   - name: datahub-mae-consumer
-    version: 0.3.5
+    version: 0.3.6
     repository: file://./subcharts/datahub-mae-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-mce-consumer
-    version: 0.3.6
+    version: 0.3.7
     repository: file://./subcharts/datahub-mce-consumer
     condition: global.datahub_standalone_consumers_enabled
   - name: datahub-ingestion-cron
-    version: 0.2.148
+    version: 0.2.149
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
   - name: acryl-datahub-actions
-    version: 0.3.3
+    version: 0.3.4
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
 maintainers:

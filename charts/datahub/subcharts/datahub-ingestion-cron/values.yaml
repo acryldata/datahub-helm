@@ -9,8 +9,14 @@ image:
 
 imagePullSecrets: []
 
-podSecurityContext: {}
-# fsGroup: 2000
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
 
 crons: {}
   #### Example data with externally managed config map

@@ -954,6 +954,9 @@ global:
                       # and KAFKA_PROPERTIES_* environment variables for Python services
       awsRegion: ""   # AWS region where MSK cluster is located, e.g. "us-west-2"
 
+  springKafkaConfigurationOverrides:
+    partition.assignment.strategy: "org.apache.kafka.clients.consumer.CooperativeStickyAssignor"
+
   neo4j:
     host: "prerequisites-neo4j:7474"
     uri: "bolt://prerequisites-neo4j"

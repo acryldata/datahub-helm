@@ -40,7 +40,8 @@ spec:
           hostAliases:
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- with .Values.datahubUpgrade.serviceAccount }}
+        {{- $jobSa := default (include "datahub.appServiceAccountName" .) .Values.datahubUpgrade.serviceAccount }}
+        {{- with $jobSa }}
           serviceAccountName: {{ . }}
         {{- end }}
         {{- with .Values.imagePullSecrets }}

@@ -38,7 +38,8 @@ spec:
           hostAliases:
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- with .Values.datahubSystemCronHourly.serviceAccount }}
+        {{- $jobSa := default (include "datahub.appServiceAccountName" .) .Values.datahubSystemCronHourly.serviceAccount }}
+        {{- with $jobSa }}
           serviceAccountName: {{ . }}
         {{- end }}
         {{- with .Values.datahubSystemCronHourly.imagePullSecrets }}

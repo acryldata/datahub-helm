@@ -32,7 +32,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.mysqlSetupJob.serviceAccount }}
+    {{- $jobSa := default (include "datahub.operatorServiceAccountName" .) .Values.mysqlSetupJob.serviceAccount }}
+    {{- with $jobSa }}
       serviceAccountName: {{ . }}
     {{- end }}
     {{- with .Values.imagePullSecrets }}

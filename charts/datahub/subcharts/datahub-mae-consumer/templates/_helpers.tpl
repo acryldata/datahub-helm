@@ -55,10 +55,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "datahub-mae-consumer.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "datahub-mae-consumer.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.serviceAccount.name -}}
+{{- .Values.serviceAccount.name -}}
+{{- else if and .Values.global.datahub.appServiceAccount .Values.global.datahub.appServiceAccount.name -}}
+{{- .Values.global.datahub.appServiceAccount.name -}}
+{{- else if .Values.serviceAccount.create -}}
+{{- default (include "datahub-mae-consumer.fullname" .) .Values.serviceAccount.name -}}
 {{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.serviceAccount.name -}}
 {{- end -}}
 {{- end -}}
 

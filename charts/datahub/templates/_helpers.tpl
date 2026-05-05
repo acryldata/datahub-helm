@@ -63,6 +63,23 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
+Consolidated application ServiceAccount name from global.datahub.appServiceAccount (for Jobs/CronJobs templates).
+Returns empty string when unset.
+*/}}
+{{- define "datahub.appServiceAccountName" -}}
+{{- $asa := .Values.global.datahub.appServiceAccount | default dict }}
+{{- with $asa.name }}{{ . }}{{ end }}
+{{- end -}}
+
+{{/*
+Operator / system-update ServiceAccount name (same as datahubSystemUpdate.serviceAccount; default datahub-operator-sa).
+*/}}
+{{- define "datahub.operatorServiceAccountName" -}}
+{{- $sa := .Values.datahubSystemUpdate.serviceAccount | default dict }}
+{{- default "datahub-operator-sa" (index $sa "name") }}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for cronjob.
 */}}
 {{- define "datahub.cronjob.apiVersion" -}}

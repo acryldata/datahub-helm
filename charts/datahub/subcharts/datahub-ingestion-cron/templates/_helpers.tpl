@@ -63,6 +63,15 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
+Global consolidated app ServiceAccount name from parent chart values (optional).
+*/}}
+{{- define "datahub-ingestion-cron.globalAppSA" -}}
+{{- if and .Values.global.datahub.appServiceAccount .Values.global.datahub.appServiceAccount.name }}
+{{- .Values.global.datahub.appServiceAccount.name }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for cronjob.
 */}}
 {{- define "datahub-ingestion-cron.cronjob.apiVersion" -}}

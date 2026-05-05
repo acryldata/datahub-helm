@@ -32,7 +32,8 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.kafkaSetupJob.serviceAccount }}
+    {{- $jobSa := default (include "datahub.operatorServiceAccountName" .) .Values.kafkaSetupJob.serviceAccount }}
+    {{- with $jobSa }}
       serviceAccountName: {{ . }}
     {{- end }}
       restartPolicy: Never

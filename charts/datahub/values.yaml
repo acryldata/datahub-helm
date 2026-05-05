@@ -28,6 +28,8 @@ datahub-gms:
     enabled: true
     default: true
     toggeable: true
+  serviceAccount:
+    create: false
   # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   # service:
   #   type: ClusterIP
@@ -100,6 +102,8 @@ datahub-frontend:
     #   initialViewer:manualPassword
   service:
     extraLabels: {}
+  serviceAccount:
+    create: false
   # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   #   type: ClusterIP
 
@@ -122,6 +126,8 @@ acryl-datahub-actions:
     requests:
       cpu: 300m
       memory: 256Mi
+  serviceAccount:
+    create: false
 
 datahub-mae-consumer:
   image:
@@ -137,8 +143,12 @@ datahub-mae-consumer:
     requests:
       cpu: 100m
       memory: 256Mi
+  serviceAccount:
+    create: false
 
 datahub-mce-consumer:
+  serviceAccount:
+    create: false
   image:
     repository: acryldata/datahub-mce-consumer
     # tag: "v0.11.0" # defaults to .global.datahub.version
@@ -1025,6 +1035,12 @@ global:
 
   datahub:
     version: v1.5.0.1
+    # Consolidated ServiceAccount for application Deployments/Jobs/CronJobs (not system-update operator).
+    # Override per subchart via <subchart>.serviceAccount.name / .create.
+    appServiceAccount:
+      create: true
+      name: datahub-app-sa
+      annotations: {}
     gms:
       protocol: "http"
       port: "8080"

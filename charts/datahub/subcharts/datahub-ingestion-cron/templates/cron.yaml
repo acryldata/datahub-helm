@@ -50,8 +50,9 @@ spec:
           hostAliases:
           {{- toYaml .hostAliases | nindent 12 }}
         {{- end }}
-        {{- if .serviceAccountName }}
-          serviceAccountName: {{ .serviceAccountName }}
+        {{- $cronSa := default (include "datahub-ingestion-cron.globalAppSA" $) .serviceAccountName }}
+        {{- with $cronSa }}
+          serviceAccountName: {{ . }}
         {{- end }}
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}

@@ -451,6 +451,7 @@ datahubSystemCronHourly:
 
 ## Runs system update processes
 ## Includes: Elasticsearch Indices Creation/Reindex (See global.elasticsearch.index for additional configuration)
+## Umbrella: global.datahub.systemUpdate.consolidatedUpgrade toggles legacy SetupJobs vs in-job SQL/ES setup (see global section).
 datahubSystemUpdate:
   # Custom labels to add to the Job metadata
   labels: {}
@@ -481,9 +482,15 @@ datahubSystemUpdate:
     rbac: true  # Create Role and RoleBinding for this ServiceAccount
   # SQL setup configuration (when enabled, runs database setup as part of system update)
   sql:
-    # Override IAM authentication for Ebean (SQL)
-    iam:
-      enabled: false  # Inherit from global.sql.iam.enabled if not set
+    # Override IAM authentication for Ebean (SQL) on system-update Jobs only.
+    # Omit `enabled` under iam to follow global.sql.iam.enabled; set enabled: true/false to override for this Job only.
+    iam: {}
+    # Override Ebean credentials for system-update Jobs only (defaults to global.sql.datasource). Host/url/driver stay global.
+    # username: "override-username"
+    # password:
+    #   value: "override-password"
+    #   secretRef: "override-secret-name"
+    #   secretKey: "override-secret-key"
     # SQL setup within system-update job (replaces legacy mysqlSetupJob/postgresqlSetupJob when IAM is enabled)
     setup:
       enabled: true            # Enable SQL database setup
@@ -494,9 +501,15 @@ datahubSystemUpdate:
   elasticsearch:
     # Optional. ELASTICSEARCH_THREAD_COUNT for system-update / datahub-upgrade jobs only (via datahub.upgrade.env).
     # threadCount: 8
-    # Override IAM authentication for Elasticsearch
-    iam:
-      enabled: false  # Inherit from global.elasticsearch.iam.enabled if not set
+    # Override IAM authentication for Elasticsearch on system-update Jobs only.
+    # Omit `enabled` under iam to follow global.elasticsearch.iam.enabled; set enabled: true/false to override for this Job only.
+    iam: {}
+    # Override Elasticsearch credentials for setup flows (defaults to global.elasticsearch.auth).
+    # username: "override-username"
+    # password:
+    #   value: "override-password"
+    #   secretRef: "override-secret-name"
+    #   secretKey: "override-secret-key"
     # Elasticsearch setup within system-update job
     setup:
       enabled: true             # Enable Elasticsearch index setup (BuildIndices)
@@ -1080,6 +1093,10 @@ global:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
       enabled: true
+      # When true: skip legacy elasticsearch/kafka/mysql/postgresql SetupJob hooks; run SQL and Elasticsearch
+      # setup via the system-update job (see datahubSystemUpdate.sql / elasticsearch). Legacy hooks stay off
+      # unless consolidatedUpgrade is set false. Java KubernetesScaleDownStep applies when scaleDown is enabled.
+      consolidatedUpgrade: true
       # K8 scale-down (available in v1.5.0): when true, Java-based scale-down runs (KubernetesScaleDownStep)
       # NOTE: scaleDown is automatically disabled when zdu.enable=true
       scaleDown:

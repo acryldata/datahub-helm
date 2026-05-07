@@ -85,7 +85,7 @@ spec:
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12 }}
+            {{- include "datahub.upgrade.env" (merge (dict "sqlConnTpl" "datahub.sql.connection.env.systemUpdate" "sqlIamTpl" "datahub.sql.iam.env.systemUpdate" "esIamTpl" "datahub.elasticsearch.iam.env.systemUpdate") .) | nindent 12 }}
             {{- if $scaleDownEffective }}
             - name: DATAHUB_UPGRADE_K8_SCALE_DOWN_ENABLED
               value: "true"
@@ -370,7 +370,7 @@ spec:
             {{- include "datahub.upgrade.auth.env" . | nindent 12 }}
             - name: DATAHUB_REVISION
               value: {{ .Release.Revision | quote }}
-            {{- include "datahub.upgrade.env" . | nindent 12 }}
+            {{- include "datahub.upgrade.env" (merge (dict "sqlConnTpl" "datahub.sql.connection.env.systemUpdate" "sqlIamTpl" "datahub.sql.iam.env.systemUpdate" "esIamTpl" "datahub.elasticsearch.iam.env.systemUpdate") .) | nindent 12 }}
             {{- if $scaleDownEffective }}
             - name: DATAHUB_UPGRADE_K8_SCALE_DOWN_ENABLED
               value: "true"

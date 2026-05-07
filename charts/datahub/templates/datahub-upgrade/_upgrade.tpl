@@ -19,32 +19,12 @@ Return the env variables for upgrade jobs
   value: {{ printf "%s-%s" .Release.Name "datahub-mae-consumer" }}
 - name: DATAHUB_MAE_CONSUMER_PORT
   value: "{{ .Values.global.datahub.mae_consumer.port }}"
-- name: EBEAN_DATASOURCE_USERNAME
-  {{- $usernameValue := (.Values.sql).datasource.username | default .Values.global.sql.datasource.username }}
-  {{- if and (kindIs "string" $usernameValue) $usernameValue }}
-  value: {{ $usernameValue | quote }}
-  {{- else }}
-  valueFrom:
-    secretKeyRef:
-      name: "{{ (.Values.sql).datasource.username.secretRef | default .Values.global.sql.datasource.username.secretRef }}"
-      key: "{{ (.Values.sql).datasource.username.secretKey | default .Values.global.sql.datasource.username.secretKey }}"
-  {{- end }}
-- name: EBEAN_DATASOURCE_PASSWORD
-  {{- $passwordValue := (.Values.sql).datasource.password.value | default .Values.global.sql.datasource.password.value }}
-  {{- if $passwordValue }}
-  value: {{ $passwordValue | quote }}
-  {{- else }}
-  valueFrom:
-    secretKeyRef:
-      name: "{{ (.Values.sql).datasource.password.secretRef | default .Values.global.sql.datasource.password.secretRef }}"
-      key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
-  {{- end }}
-- name: EBEAN_DATASOURCE_HOST
-  value: "{{ .Values.global.sql.datasource.host }}"
-- name: EBEAN_DATASOURCE_URL
-  value: "{{ .Values.global.sql.datasource.url }}"
-- name: EBEAN_DATASOURCE_DRIVER
-  value: "{{ .Values.global.sql.datasource.driver }}"
+{{- $sqlTpl := .sqlConnTpl | default "datahub.sql.connection.env" }}
+{{- include $sqlTpl . | nindent 0 }}
+{{- $iamTpl := .sqlIamTpl | default "datahub.sql.iam.env" }}
+{{- include $iamTpl . | nindent 0 }}
+{{- $esIamTpl := .esIamTpl | default "datahub.elasticsearch.iam.env" }}
+{{- include $esIamTpl . | nindent 0 }}
 - name: KAFKA_BOOTSTRAP_SERVER
   value: "{{ .Values.global.kafka.bootstrap.server }}"
 {{- with .Values.global.kafka.maxMessageBytes }}

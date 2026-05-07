@@ -1,4 +1,4 @@
-{{- if .Values.kafkaSetupJob.enabled -}}
+{{- if and .Values.kafkaSetupJob.enabled (not (.Values.global.datahub.systemUpdate.consolidatedUpgrade | default true)) -}}
 apiVersion: batch/v1
 kind: Job
 metadata:

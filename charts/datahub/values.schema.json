@@ -1431,6 +1431,21 @@
         "sql": {
           "type": "object",
           "properties": {
+            "username": {},
+            "password": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "secretRef": {
+                  "type": "string"
+                },
+                "secretKey": {
+                  "type": "string"
+                }
+              }
+            },
             "iam": {
               "type": "object",
               "properties": {
@@ -1438,7 +1453,7 @@
                   "type": "boolean"
                 }
               },
-              "required": ["enabled"]
+              "required": []
             },
             "setup": {
               "type": "object",
@@ -1481,7 +1496,7 @@
                   "type": "boolean"
                 }
               },
-              "required": ["enabled"]
+              "required": []
             },
             "setup": {
               "type": "object",
@@ -2432,6 +2447,9 @@
               "type": "object",
               "properties": {
                 "enabled": {
+                  "type": "boolean"
+                },
+                "consolidatedUpgrade": {
                   "type": "boolean"
                 },
                 "scaleDown": {

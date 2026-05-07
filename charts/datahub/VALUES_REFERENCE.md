@@ -888,6 +888,12 @@ This document provides a comprehensive reference for every single configurable v
 <td>When true, the system-update job runs the Java-based Kubernetes scale-down step (KubernetesScaleDownStep), scaling selected deployments to zero and applying deployment env updates during upgrade. Available in v1.5.0.</td>
 </tr>
 <tr>
+<td><code>global.datahub.systemUpdate.consolidatedUpgrade</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>When <code>true</code>, the chart does not render the legacy <code>elasticsearchSetupJob</code>, <code>kafkaSetupJob</code>, <code>mysqlSetupJob</code>, or <code>postgresqlSetupJob</code> hooks; SQL and Elasticsearch setup stay under <code>datahubSystemUpdate.sql</code> / <code>datahubSystemUpdate.elasticsearch</code> and the system-update Job. IAM validation (<code>_iam-validation.tpl</code>) allows that layout when consolidated upgrade replaces those Jobs.</td>
+</tr>
+<tr>
 <td><code>global.datahub.encryptionKey.secretRef</code></td>
 <td>string</td>
 <td><code>datahub-encryption-secrets</code></td>
@@ -2047,7 +2053,7 @@ This document provides a comprehensive reference for every single configurable v
 
 ## DataHub System Update Configuration
 
-System-update scale-down options and operator ServiceAccount/RBAC are available in v1.5.0.
+System-update scale-down options and operator ServiceAccount/RBAC are available in v1.5.0. Legacy prerequisite SetupJobs are gated by <code>global.datahub.systemUpdate.consolidatedUpgrade</code> (see Global Values). Optional JDBC and IAM overrides under <code>datahubSystemUpdate.sql</code> / <code>datahubSystemUpdate.elasticsearch</code> apply to the system-update Job via helpers documented below under <code>datahub.upgrade.env</code>.
 
 <table>
 <thead>
@@ -2198,10 +2204,28 @@ System-update scale-down options and operator ServiceAccount/RBAC are available 
 <td>ServiceAccount for the system-update job. When <code>global.datahub.systemUpdate.scaleDown.enabled</code> is true or this is set, the job uses an operator SA with RBAC for configmaps and KEDA scaledobjects. Available in v1.5.0.</td>
 </tr>
 <tr>
+<td><code>datahubSystemUpdate.sql.iam</code></td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>SQL IAM override for system-update Jobs only. Omit <code>enabled</code> under <code>iam</code> to follow <code>global.sql.iam.enabled</code>; set <code>enabled: true|false</code> to override for this Job. Rendered via <code>datahub.sql.iam.env.systemUpdate</code> (with <code>datahub.sql.connection.env.systemUpdate</code> for <code>EBEAN_*</code>).</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.username</code></td>
+<td>string / object</td>
+<td>—</td>
+<td>Optional override for <code>EBEAN_DATASOURCE_USERNAME</code> on system-update Jobs (merged onto <code>global.sql.datasource</code>). Same shapes as <code>global.sql.datasource.username</code> (plain string or <code>secretRef</code>/<code>secretKey</code>). Host, URL, and driver always come from <code>global.sql.datasource</code>.</td>
+</tr>
+<tr>
+<td><code>datahubSystemUpdate.sql.password</code></td>
+<td>object</td>
+<td>—</td>
+<td>Optional override for <code>EBEAN_DATASOURCE_PASSWORD</code> on system-update Jobs (<code>value</code> and/or <code>secretRef</code>/<code>secretKey</code>). Not emitted when SQL IAM is effective for the Job.</td>
+</tr>
+<tr>
 <td><code>datahubSystemUpdate.sql.setup.enabled</code></td>
 <td>boolean</td>
-<td><code>false</code></td>
-<td>Enable SQL setup within system-update job. Replaces the legacy <code>mysqlSetupJob</code> and <code>postgresqlSetupJob</code>. REQUIRED when <code>global.sql.iam.enabled=true</code>. Default enabled in chart for v1.5.0+.</td>
+<td><code>true</code></td>
+<td>Enable SQL setup within system-update job (<code>DATAHUB_SQL_SETUP_ENABLED</code>, …). Replaces the legacy <code>mysqlSetupJob</code> and <code>postgresqlSetupJob</code>. When <code>global.sql.iam.enabled=true</code>, IAM validation expects SQL setup via this job (see <code>_iam-validation.tpl</code>).</td>
 </tr>
 <tr>
 <td><code>datahubSystemUpdate.sql.setup.createTables</code></td>
@@ -2246,10 +2270,16 @@ System-update scale-down options and operator ServiceAccount/RBAC are available 
 <td>Secret key for the new user password. Defaults to <code>global.sql.datasource.password.secretKey</code>.</td>
 </tr>
 <tr>
+<td><code>datahubSystemUpdate.elasticsearch.iam</code></td>
+<td>object</td>
+<td><code>{}</code></td>
+<td>OpenSearch/Elasticsearch IAM override for system-update Jobs only. Omit <code>enabled</code> under <code>iam</code> to follow <code>global.elasticsearch.iam.enabled</code>; set <code>enabled: true|false</code> to override for this Job. Rendered via <code>datahub.elasticsearch.iam.env.systemUpdate</code>.</td>
+</tr>
+<tr>
 <td><code>datahubSystemUpdate.elasticsearch.setup.enabled</code></td>
 <td>boolean</td>
-<td><code>false</code></td>
-<td>Enable Elasticsearch setup (BuildIndices) within system-update job. Replaces the legacy <code>elasticsearchSetupJob</code>. Default enabled in chart for v1.5.0+.</td>
+<td><code>true</code></td>
+<td>Enable Elasticsearch setup (BuildIndices) within system-update job. Replaces the legacy <code>elasticsearchSetupJob</code>.</td>
 </tr>
 <tr>
 <td><code>datahubSystemUpdate.elasticsearch.setup.createUser</code></td>
@@ -2289,6 +2319,20 @@ System-update scale-down options and operator ServiceAccount/RBAC are available 
 </tr>
 </tbody>
 </table>
+
+### System-update upgrade environment (`datahub.upgrade.env`)
+
+The named template `datahub.upgrade.env` renders shared environment variables for workloads that run **datahub-upgrade**, including the blocking and non-blocking **system-update** Jobs, the **restore-indices** CronJob template, and the **hourly system-update** CronJob template.
+
+Templates are selected via optional context keys merged into the chart root (same pattern as optional Helm values):
+
+| Key | Default helper | Purpose |
+|-----|----------------|---------|
+| `sqlConnTpl` | `datahub.sql.connection.env` | JDBC / `EBEAN_*` variables |
+| `sqlIamTpl` | `datahub.sql.iam.env` | SQL IAM (`EBEAN_USE_IAM_AUTH`, …) when `global.sql.iam.enabled` |
+| `esIamTpl` | `datahub.elasticsearch.iam.env` | OpenSearch IAM (`OPENSEARCH_USE_AWS_IAM_AUTH`, `AWS_REGION`, …) when effective |
+
+The **system-update** Job passes `sqlConnTpl=datahub.sql.connection.env.systemUpdate`, `sqlIamTpl=datahub.sql.iam.env.systemUpdate`, and `esIamTpl=datahub.elasticsearch.iam.env.systemUpdate` so optional `datahubSystemUpdate.sql` / `sql.iam` / `elasticsearch.iam` apply **only** there; restore-indices and hourly cron keep the defaults above.
 
 ## DataHub System Cron Hourly Configuration
 

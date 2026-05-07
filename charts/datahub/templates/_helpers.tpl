@@ -343,6 +343,35 @@ Validates that Kafka and OpenSearch regions match when both are configured with 
 {{- end -}}
 
 {{/*
+Elasticsearch/OpenSearch IAM env for system-update Jobs: uses global.elasticsearch.iam.enabled unless
+datahubSystemUpdate.elasticsearch.iam.enabled is explicitly set.
+*/}}
+{{- define "datahub.elasticsearch.iam.env.systemUpdate" -}}
+{{- $effective := .Values.global.elasticsearch.iam.enabled }}
+{{- if .Values.datahubSystemUpdate.elasticsearch }}
+{{- if hasKey .Values.datahubSystemUpdate.elasticsearch "iam" }}
+{{- $ji := .Values.datahubSystemUpdate.elasticsearch.iam | default dict }}
+{{- if hasKey $ji "enabled" }}
+{{- $effective = $ji.enabled }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if $effective }}
+{{- if and .Values.global.elasticsearch.region .Values.global.kafka.region }}
+{{- if ne .Values.global.elasticsearch.region .Values.global.kafka.region }}
+{{- fail (printf "AWS_REGION mismatch: Kafka region (%s) differs from OpenSearch region (%s). Both must be in the same region for IAM authentication." .Values.global.kafka.region .Values.global.elasticsearch.region) }}
+{{- end }}
+{{- end }}
+- name: OPENSEARCH_USE_AWS_IAM_AUTH
+  value: "true"
+{{- if .Values.global.elasticsearch.region }}
+- name: AWS_REGION
+  value: {{ .Values.global.elasticsearch.region | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
 SQL IAM authentication environment variables for AWS RDS IAM authentication.
 Supports both MySQL and PostgreSQL with automatic cloud provider detection.
 Sets EBEAN_USE_IAM_AUTH=true and EBEAN_CLOUD_PROVIDER when IAM authentication is enabled.
@@ -356,6 +385,35 @@ DO NOT include in services that only connect to GMS or Kafka (Frontend, Actions,
 */}}
 {{- define "datahub.sql.iam.env" -}}
 {{- if .Values.global.sql.iam.enabled }}
+- name: EBEAN_POSTGRES_USE_AWS_IAM_AUTH
+  value: "true"
+- name: EBEAN_USE_IAM_AUTH
+  value: "true"
+{{- if .Values.global.sql.iam.cloudProvider }}
+- name: EBEAN_CLOUD_PROVIDER
+  value: {{ .Values.global.sql.iam.cloudProvider | quote }}
+{{- else }}
+- name: EBEAN_CLOUD_PROVIDER
+  value: "auto"
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+SQL IAM env for system-update Jobs: uses global.sql.iam.enabled unless datahubSystemUpdate.sql.iam.enabled
+is explicitly set (same override idea as the fork system-update template).
+*/}}
+{{- define "datahub.sql.iam.env.systemUpdate" -}}
+{{- $effective := .Values.global.sql.iam.enabled }}
+{{- if .Values.datahubSystemUpdate.sql }}
+{{- if hasKey .Values.datahubSystemUpdate.sql "iam" }}
+{{- $ji := .Values.datahubSystemUpdate.sql.iam | default dict }}
+{{- if hasKey $ji "enabled" }}
+{{- $effective = $ji.enabled }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if $effective }}
 - name: EBEAN_POSTGRES_USE_AWS_IAM_AUTH
   value: "true"
 - name: EBEAN_USE_IAM_AUTH
@@ -440,6 +498,57 @@ also include datahub.sql.iam.env helper after this one.
     secretKeyRef:
       name: "{{ (.Values.sql).datasource.password.secretRef | default .Values.global.sql.datasource.password.secretRef }}"
       key: "{{ (.Values.sql).datasource.password.secretKey | default .Values.global.sql.datasource.password.secretKey }}"
+  {{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+SQL env for system-update Jobs only: same as fork — EBEAN host/url/driver come from global.sql.datasource only;
+optional datahubSystemUpdate.sql username/password are merged onto global.sql.datasource for credentials.
+Then applies the same username/password precedence as datahub.sql.connection.env (.Values.sql, then effective datasource).
+Password is omitted when SQL IAM is effective (global.sql.iam.enabled, or datahubSystemUpdate.sql.iam.enabled when set).
+*/}}
+{{- define "datahub.sql.connection.env.systemUpdate" -}}
+{{- $sqlIamEffective := .Values.global.sql.iam.enabled }}
+{{- if .Values.datahubSystemUpdate.sql }}
+{{- if hasKey .Values.datahubSystemUpdate.sql "iam" }}
+{{- $ji := .Values.datahubSystemUpdate.sql.iam | default dict }}
+{{- if hasKey $ji "enabled" }}
+{{- $sqlIamEffective = $ji.enabled }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- $sql := .Values.datahubSystemUpdate.sql | default dict }}
+{{- $overlay := dict }}
+{{- if hasKey $sql "username" }}{{- $overlay = merge $overlay (dict "username" $sql.username) }}{{- end }}
+{{- if hasKey $sql "password" }}{{- $overlay = merge $overlay (dict "password" $sql.password) }}{{- end }}
+{{- $merged := mergeOverwrite (deepCopy .Values.global.sql.datasource) $overlay }}
+- name: EBEAN_DATASOURCE_HOST
+  value: "{{ .Values.global.sql.datasource.host }}"
+- name: EBEAN_DATASOURCE_URL
+  value: "{{ .Values.global.sql.datasource.url }}"
+- name: EBEAN_DATASOURCE_DRIVER
+  value: "{{ .Values.global.sql.datasource.driver }}"
+- name: EBEAN_DATASOURCE_USERNAME
+  {{- $usernameValue := (.Values.sql).datasource.username | default $merged.username }}
+  {{- if and (kindIs "string" $usernameValue) $usernameValue }}
+  value: {{ $usernameValue | quote }}
+  {{- else }}
+  valueFrom:
+    secretKeyRef:
+      name: "{{ (.Values.sql).datasource.username.secretRef | default $merged.username.secretRef }}"
+      key: "{{ (.Values.sql).datasource.username.secretKey | default $merged.username.secretKey }}"
+  {{- end }}
+{{- if not $sqlIamEffective }}
+- name: EBEAN_DATASOURCE_PASSWORD
+  {{- $passwordValue := (.Values.sql).datasource.password.value | default $merged.password.value }}
+  {{- if $passwordValue }}
+  value: {{ $passwordValue | quote }}
+  {{- else }}
+  valueFrom:
+    secretKeyRef:
+      name: "{{ (.Values.sql).datasource.password.secretRef | default $merged.password.secretRef }}"
+      key: "{{ (.Values.sql).datasource.password.secretKey | default $merged.password.secretKey }}"
   {{- end }}
 {{- end }}
 {{- end -}}

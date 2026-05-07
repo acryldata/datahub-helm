@@ -1,4 +1,4 @@
-{{- if .Values.elasticsearchSetupJob.enabled -}}
+{{- if and .Values.elasticsearchSetupJob.enabled (not (.Values.global.datahub.systemUpdate.consolidatedUpgrade | default true)) -}}
 apiVersion: batch/v1
 kind: Job
 metadata:

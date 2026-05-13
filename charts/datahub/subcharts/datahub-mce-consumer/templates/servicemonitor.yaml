@@ -20,22 +20,42 @@ spec:
 {{- if eq $mode "jmx_and_actuator" }}
     path: {{ include "datahub-mce-consumer.monitoring.jmxMetricsPath" . | quote }}
 {{- end }}
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+    {{- with .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
 {{- if eq $mode "actuator_only" }}
   - port: prometheus
     path: /actuator/prometheus
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+    {{- with .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
   selector:
     matchLabels:

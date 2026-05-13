@@ -33,6 +33,9 @@ serviceAccount:
 serviceMonitor:
   create: false
   extraLabels: {}
+  interval: ""
+  scrapeTimeout: ""
+  metricRelabelings: []
 
 podAnnotations: {}
   # co.elastic.logs/enabled: "true"

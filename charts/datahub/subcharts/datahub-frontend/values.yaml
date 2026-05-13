@@ -104,6 +104,9 @@ service:
 serviceMonitor:
   create: false
   extraLabels: {}
+  interval: ""
+  scrapeTimeout: ""
+  metricRelabelings: []
 
 ingress:
   # className: ""

@@ -120,10 +120,10 @@ OpenSearch/Elasticsearch IAM authentication environment variables for AWS OpenSe
 {{- end -}}
 
 {{/*
-global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only (default legacy).
+global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only (default jmx_and_actuator).
 */}}
 {{- define "datahub-mae-consumer.monitoring.metricsMode" -}}
-{{- .Values.global.datahub.monitoring.metricsMode | default "legacy" | trim -}}
+{{- .Values.global.datahub.monitoring.metricsMode | default "jmx_and_actuator" | trim -}}
 {{- end -}}
 
 {{- define "datahub-mae-consumer.monitoring.jmxPort" -}}

@@ -1047,7 +1047,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.5.0.1
+    version: v1.6.0
     # Consolidated ServiceAccount for application Deployments/Jobs/CronJobs (not system-update operator).
     # Override per subchart via <subchart>.serviceAccount.name / .create.
     appServiceAccount:
@@ -1072,12 +1072,12 @@ global:
       # Change if using a service like AKS where it uses a different API namespace for monitoring.coreos.com
       # monitoringApiVersion: "azmonitoring.coreos.com/v1"
       # Prometheus scrape layout for JMX workloads (GMS, frontend, MAE/MCE consumers).
-      # - legacy: JMX on jmxPort; GMS Spring actuator on main http service port only (current default).
-      # - jmx_and_actuator: JMX with explicit metricsPath on jmxPort; /actuator/prometheus on actuatorPrometheusPort.
+      # - legacy: JMX on jmxPort; GMS Spring actuator on main http service port only.
+      # - jmx_and_actuator: JMX with explicit metricsPath on jmxPort; /actuator/prometheus on actuatorPrometheusPort (default; matches v1.6.0 Docker).
       # - actuator_only: no JMX; /actuator/prometheus only on actuatorPrometheusPort where the app exposes it.
       # When jmx_and_actuator or actuator_only: MAE/MCE consumers probe /actuator/health on the
       # prometheus Service/container port (actuatorPrometheusPort); allow that port if you use NetworkPolicy.
-      metricsMode: legacy
+      metricsMode: jmx_and_actuator
       jmxPort: 4318
       # Dedicated listener for Spring /actuator/prometheus (non-legacy modes). Independent of jmxPort so JMX can be removed later.
       actuatorPrometheusPort: 4319
@@ -1088,7 +1088,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.5.0"
+    appVersion: "1.6.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1106,7 +1106,7 @@ global:
       zdu:
         # ZDU_STAGE_10: group flag for pre-enablement stage.
         # Enables: CREATE_SCHEMA_VERSION_INDEX (schema version index on metadata_aspect_v2)
-        preEnable: false
+        preEnable: true
         # ZDU_STAGE_20: group flag for first ZDU release.
         # Enables: ELASTICSEARCH_BUILD_INDICES_INCREMENTAL_REINDEX_ENABLED,
         #          ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED,
@@ -1130,7 +1130,7 @@ global:
     managed_ingestion:
       enabled: true
       # PyPI acryl-datahub version (PEP 440); do not use a leading "v" (unlike global.datahub.version tags).
-      defaultCliVersion: "1.4.0.9"
+      defaultCliVersion: "1.6.0"
 
     metadata_service_authentication:
       enabled: true

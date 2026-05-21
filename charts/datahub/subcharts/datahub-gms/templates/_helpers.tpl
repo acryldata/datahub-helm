@@ -248,10 +248,10 @@ GMS base path prefix for HTTP paths (matches liveness path construction).
 {{- end -}}
 
 {{/*
-global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only (default legacy).
+global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only (default jmx_and_actuator).
 */}}
 {{- define "datahub-gms.monitoring.metricsMode" -}}
-{{- .Values.global.datahub.monitoring.metricsMode | default "legacy" | trim -}}
+{{- .Values.global.datahub.monitoring.metricsMode | default "jmx_and_actuator" | trim -}}
 {{- end -}}
 
 {{- define "datahub-gms.monitoring.jmxPort" -}}

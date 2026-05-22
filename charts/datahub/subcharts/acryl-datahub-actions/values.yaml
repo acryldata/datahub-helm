@@ -29,6 +29,9 @@ serviceAccount:
 serviceMonitor:
   create: false
   extraLabels: {}
+  interval: ""
+  scrapeTimeout: ""
+  metricRelabelings: []
 
 annotations: {}
 

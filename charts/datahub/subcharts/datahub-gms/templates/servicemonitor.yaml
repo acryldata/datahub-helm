@@ -20,32 +20,62 @@ spec:
 {{- if eq $mode "jmx_and_actuator" }}
     path: {{ include "datahub-gms.monitoring.jmxMetricsPath" . | quote }}
 {{- end }}
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+    {{- with .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
 {{- if eq (include "datahub-gms.monitoring.gmsScrapeActuatorOnHttp" .) "true" }}
   - port: {{ .Values.service.name }}
     path: {{ include "datahub-gms.basePath" . }}/actuator/prometheus
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+    {{- with .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
 {{- if or (eq $mode "jmx_and_actuator") (eq $mode "actuator_only") }}
   - port: prometheus
     path: {{ include "datahub-gms.basePath" . }}/actuator/prometheus
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+    {{- with .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
   selector:
     matchLabels:

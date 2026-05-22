@@ -15,12 +15,22 @@ metadata:
 spec:
   endpoints:
   - port: {{ .Values.global.datahub.monitoring.portName }}
+    {{- with .Values.serviceMonitor.interval }}
+    interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ . }}
+    {{- end }}
     relabelings:
     - separator: /
       sourceLabels:
       - namespace
       - pod
       targetLabel: instance
+    {{- with .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/managed-by: Helm

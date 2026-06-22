@@ -19,6 +19,6 @@ jobs:
   consistent-appversion:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Subchart appVersion matches umbrella chart
         run: bash .github/scripts/check-datahub-appversion.sh

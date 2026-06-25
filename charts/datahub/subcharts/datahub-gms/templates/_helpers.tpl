@@ -269,3 +269,71 @@ global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only
 {{- define "datahub-gms.monitoring.gmsScrapeActuatorOnHttp" -}}
 {{- if eq (include "datahub-gms.monitoring.metricsMode" .) "legacy" }}true{{- end -}}
 {{- end -}}
+
+{{/*
+OpenTelemetry env vars for datahub-gms.
+Resolves global.otel.* with optional per-subchart override under .Values.otel.
+Override semantics: explicit true/false at subchart level wins; null/missing inherits global.
+*/}}
+{{- define "datahub-gms.otelEnvs" -}}
+{{- $g := .Values.global.otel | default dict -}}
+{{- $s := .Values.otel | default dict -}}
+{{- $enabled := $g.enabled | default false -}}
+{{- if not (kindIs "invalid" $s.enabled) -}}{{- $enabled = $s.enabled -}}{{- end -}}
+{{- if $enabled }}
+- name: ENABLE_OTEL
+  value: "true"
+- name: OTEL_EXPORTER_OTLP_ENDPOINT
+  value: {{ default $g.endpoint $s.endpoint | quote }}
+- name: OTEL_EXPORTER_OTLP_PROTOCOL
+  value: {{ default $g.protocol $s.protocol | quote }}
+- name: OTEL_SERVICE_NAME
+  value: {{ default "datahub-gms" $s.serviceName | quote }}
+{{- $tracesEnabled := $g.tracesEnabled | default false -}}
+{{- if not (kindIs "invalid" $s.tracesEnabled) -}}{{- $tracesEnabled = $s.tracesEnabled -}}{{- end }}
+- name: OTEL_TRACES_EXPORTER
+  value: {{ ternary "otlp" "none" $tracesEnabled | quote }}
+{{- $metricsEnabled := $g.metricsEnabled | default false -}}
+{{- if not (kindIs "invalid" $s.metricsEnabled) -}}{{- $metricsEnabled = $s.metricsEnabled -}}{{- end }}
+- name: OTEL_METRICS_EXPORTER
+  value: {{ ternary "otlp" "none" $metricsEnabled | quote }}
+{{- $logsEnabled := $g.logsEnabled | default false -}}
+{{- if not (kindIs "invalid" $s.logsEnabled) -}}{{- $logsEnabled = $s.logsEnabled -}}{{- end }}
+- name: OTEL_LOGS_EXPORTER
+  value: {{ ternary "otlp" "none" $logsEnabled | quote }}
+{{- $graphqlTracesEnabled := $g.graphqlTracesEnabled | default false -}}
+{{- if not (kindIs "invalid" $s.graphqlTracesEnabled) -}}{{- $graphqlTracesEnabled = $s.graphqlTracesEnabled -}}{{- end }}
+{{- /* GraphQL traces only take effect when trace export is on. Without it, GMS would
+       create per-resolver spans that are immediately dropped (exporter=none) — wasted CPU.
+       Gate the effective value on both flags. */ -}}
+- name: ENABLE_OTEL_GRAPHQL_TRACES
+  value: {{ ternary "true" "false" (and $graphqlTracesEnabled $tracesEnabled) | quote }}
+- name: OTEL_TRACES_SAMPLER
+  value: {{ default $g.tracesSampler $s.tracesSampler | quote }}
+- name: OTEL_TRACES_SAMPLER_ARG
+  value: {{ default $g.tracesSamplerArg $s.tracesSamplerArg | quote }}
+- name: OTEL_METRIC_EXPORT_INTERVAL
+  value: {{ default $g.metricExportInterval $s.metricExportInterval | quote }}
+{{- /* Agent-side method instrumentation: treat listed methods as @WithSpan without code.
+       Format: "fqcn[method1,method2];fqcn2[method3]" — NO method wildcards. Emitted only when set.
+       NOTE: STRING field — uses `default` (subchart wins when non-empty), same as endpoint/
+       protocol/tracesSampler. Boolean fields MUST instead use the `kindIs "invalid"` pattern
+       above, because `default` treats `false` as empty and would wrongly inherit the global. */ -}}
+{{- $methodsInclude := default $g.methodsInclude $s.methodsInclude -}}
+{{- if $methodsInclude }}
+- name: OTEL_INSTRUMENTATION_METHODS_INCLUDE
+  value: {{ $methodsInclude | quote }}
+{{- end }}
+{{- $svcNs := default $g.serviceNamespace $s.serviceNamespace -}}
+{{- $depEnv := default $g.deploymentEnvironment $s.deploymentEnvironment -}}
+{{- $extras := default $g.extraResourceAttributes $s.extraResourceAttributes -}}
+{{- $attrs := list (printf "k8s.namespace.name=%s" .Release.Namespace) -}}
+{{- if $svcNs }}{{- $attrs = append $attrs (printf "service.namespace=%s" $svcNs) -}}{{- end -}}
+{{- if $depEnv }}{{- $attrs = append $attrs (printf "deployment.environment=%s" $depEnv) -}}{{- end -}}
+{{- if $extras }}{{- $attrs = append $attrs $extras -}}{{- end -}}
+{{- if $attrs }}
+- name: OTEL_RESOURCE_ATTRIBUTES
+  value: {{ join "," $attrs | quote }}
+{{- end }}
+{{- end -}}
+{{- end -}}

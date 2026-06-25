@@ -1300,6 +1300,60 @@ global:
     ## Reprocess UI events at MAE Consumer, normally if preprocess is enabled this is not required.
     reProcessUIEventHooks: false
 
+  ## OpenTelemetry observability configuration.
+  ## All defaults are OFF — nothing is forwarded unless explicitly enabled.
+  ##
+  ## The datahub-gms subchart exposes a per-service `otel:` block that can
+  ## override any of these values on a per-service basis.
+  ##
+  ## Override semantics: at subchart level, explicit true/false wins; null or
+  ## missing inherits the global value below.
+  otel:
+    # Master toggle. Required true to attach the OTel Java agent. When false,
+    # no OTel env vars are emitted to any pod.
+    enabled: false
+
+    # OTLP collector endpoint. Used by all services.
+    endpoint: "http://otel-collector.example.com:4317"
+
+    # OTLP transport protocol for the Java agent. MUST match the port on
+    # `endpoint`: `grpc` for 4317, `http/protobuf` for 4318.
+    #
+    # Why this is explicit: OTel Java agent 2.x defaults to `http/protobuf`,
+    # not `grpc`. Without setting this, an agent pointed at port 4317 will try
+    # to speak HTTP to a gRPC receiver and fail with "Connection reset" on
+    # every export. Older guidance assuming a gRPC default no longer applies.
+    protocol: "grpc"
+
+    # Per-signal toggles. Each requires `enabled: true` to take effect.
+    # Translated to OTEL_{TRACES,METRICS,LOGS}_EXPORTER=otlp|none.
+    tracesEnabled: false
+    metricsEnabled: false
+    logsEnabled: false
+
+    # Enable per-resolver GraphQL OTel spans on GMS (sets ENABLE_OTEL_GRAPHQL_TRACES).
+    graphqlTracesEnabled: false
+
+    # Treat specific methods as @WithSpan via the OTel Java agent — no code change.
+    # Sets OTEL_INSTRUMENTATION_METHODS_INCLUDE on GMS; emitted only when non-empty.
+    # Requires enabled: true (agent attached). NO method wildcards — list method names.
+    # Format: "fqcn[method1,method2];fqcn2[method3]". Example:
+    #   "com.linkedin.metadata.search.SearchService[search,searchAcrossEntities]"
+    methodsInclude: ~
+
+    # Resource attributes (emitted as OTEL_RESOURCE_ATTRIBUTES).
+    serviceNamespace: "datahub"
+    deploymentEnvironment: ""           # e.g. "prod", "staging" — empty = unset
+    extraResourceAttributes: ""         # comma-separated key=value pairs
+
+    # Sampling. Java agent samplers: parentbased_traceidratio, parentbased_always_on,
+    # parentbased_always_off, traceidratio, always_on, always_off, jaeger_remote.
+    tracesSampler: "parentbased_traceidratio"
+    tracesSamplerArg: "0.1"
+
+    # Metric export interval (ms). Default 60s.
+    metricExportInterval: "60000"
+
   externalSecrets:
     enabled: false
     # stores:

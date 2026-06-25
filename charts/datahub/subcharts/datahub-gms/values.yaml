@@ -335,3 +335,31 @@ global:
         - "mysql"
         - "elasticsearch"
         - "neo4j"
+
+# OpenTelemetry per-subchart overrides for datahub-gms.
+# All values default to null (~), meaning "inherit from global.otel".
+# Setting a non-null value here overrides the global for this subchart only.
+# To explicitly disable OTel for this service when global is enabled, set
+# `enabled: false` here (must be a real boolean — null means inherit).
+otel:
+  # service.name resource attribute. Defaults to the OSS/agent convention.
+  serviceName: "datahub-gms"
+  enabled: ~
+  endpoint: ~
+  protocol: ~
+  tracesEnabled: ~
+  metricsEnabled: ~
+  logsEnabled: ~
+  # Per-resolver GraphQL OTel spans (ENABLE_OTEL_GRAPHQL_TRACES). null = inherit global.
+  graphqlTracesEnabled: ~
+  # Treat specific methods as @WithSpan via the OTel agent (OTEL_INSTRUMENTATION_METHODS_INCLUDE).
+  # Emitted only when non-empty. NO method wildcards. null = inherit global.
+  # Format: "fqcn[method1,method2];fqcn2[method3]". Example:
+  #   "com.linkedin.metadata.search.SearchService[search,searchAcrossEntities]"
+  methodsInclude: ~
+  serviceNamespace: ~
+  deploymentEnvironment: ~
+  extraResourceAttributes: ~
+  tracesSampler: ~
+  tracesSamplerArg: ~
+  metricExportInterval: ~

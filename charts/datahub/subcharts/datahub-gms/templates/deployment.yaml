@@ -564,6 +564,8 @@ spec:
             - name: DATAHUB_ROLE_ARN
               value: {{ .roleArn }}
             {{- end}}
+            {{- /* OpenTelemetry env vars (driven by global.otel; per-subchart override under .Values.otel). */}}
+            {{- include "datahub-gms.otelEnvs" . | nindent 12 }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

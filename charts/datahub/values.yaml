@@ -1257,6 +1257,18 @@ global:
           ## Cohere API endpoint
           endpoint: "https://api.cohere.ai/v1/embed"  # Sets COHERE_EMBEDDING_ENDPOINT
 
+    ## GMS entity graph cache (Hazelcast-backed hierarchy/membership snapshots).
+    ## Opt-in on GMS only; never enabled on standalone MAE/MCE consumers or system-update jobs.
+    ## Chart always sets ENTITY_GRAPH_CACHE_ENABLED on GMS (false unless enabled below) because
+    ## DataHub application.yaml defaults enabled=true when that env var is omitted.
+    ## Uncomment to enable. CONFIG_FILE* uses application.yaml defaults unless overridden via configJson.
+    # entity_graph_cache:
+    #   enabled: true  # ENTITY_GRAPH_CACHE_ENABLED
+    #   configJson: |  # ENTITY_GRAPH_CACHE_CONFIG_JSON — optional per-graph overlay
+    #     {"graphs":{"domain":{"bounds":{"maxVertices":50000}}}}
+    ## Application defaults when env vars are unset (GMS): ENTITY_GRAPH_CACHE_CONFIG_FILE_ENABLED=true,
+    ## ENTITY_GRAPH_CACHE_CONFIG_FILE=entity-graph-cache.yaml
+
     ## v0.15.0+
     metadataChangeProposal:
       consumer:

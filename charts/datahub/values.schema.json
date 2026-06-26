@@ -2649,6 +2649,20 @@
                 "backfill_browse_v2"
               ]
             },
+            "entity_graph_cache": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Opt-in GMS entity graph cache (Hazelcast-backed hierarchy and membership snapshots). Chart default when unset: false. Sets ENTITY_GRAPH_CACHE_ENABLED on datahub-gms only. Never enabled on standalone MAE/MCE consumers or datahub-upgrade jobs (including system-update). Provisions the headless Hazelcast service on single-replica GMS when true."
+                },
+                "configJson": {
+                  "type": "string",
+                  "description": "Optional JSON overlay merged at startup (ENTITY_GRAPH_CACHE_CONFIG_JSON). Per-graph bounds, refresh intervals, etc. CONFIG_FILE settings use DataHub application.yaml defaults (entity-graph-cache.yaml) when not overridden via env."
+                }
+              },
+              "required": []
+            },
             "mcp": {
               "type": "object",
               "properties": {

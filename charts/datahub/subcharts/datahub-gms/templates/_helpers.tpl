@@ -269,3 +269,17 @@ global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only
 {{- define "datahub-gms.monitoring.gmsScrapeActuatorOnHttp" -}}
 {{- if eq (include "datahub-gms.monitoring.metricsMode" .) "legacy" }}true{{- end -}}
 {{- end -}}
+
+{{/*
+Headless Hazelcast service name shared by search cache (multi-replica) and entity graph cache.
+*/}}
+{{- define "datahub-gms.hazelcast.serviceName" -}}
+{{- printf "%s-%s-%s" .Release.Name (regexReplaceAll "[^-a-z0-9]+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Hazelcast cluster required when GMS runs distributed search cache (replicaCount > 1) or entity graph cache.
+*/}}
+{{- define "datahub-gms.hazelcast.required" -}}
+{{- if or (gt (.Values.replicaCount | int) 1) (eq (include "datahub.entity-graph-cache.enabled" .) "true") -}}true{{- end -}}
+{{- end -}}

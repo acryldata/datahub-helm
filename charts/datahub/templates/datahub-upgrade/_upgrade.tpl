@@ -215,6 +215,8 @@ Return the env variables for upgrade jobs
   value: {{ . | quote }}
 {{- end }}
 {{- end }}
+- name: ENTITY_GRAPH_CACHE_ENABLED
+  value: "false"
 {{- end -}}
 
 {{/*

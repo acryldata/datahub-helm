@@ -365,6 +365,35 @@ This document provides a comprehensive reference for every single configurable v
 </tbody>
 </table>
 
+### Global Entity Graph Cache Configuration
+
+GMS-only, opt-in cache for domain/container/glossary hierarchies and group membership (see DataHub `docs/deploy/gms-entity-graph-cache.md`). The chart default is disabled when `entity_graph_cache` is unset. Standalone MAE/MCE consumers and all datahub-upgrade jobs (including system-update) always receive `ENTITY_GRAPH_CACHE_ENABLED=false`.
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>global.datahub.entity_graph_cache.enabled</code></td>
+<td>boolean</td>
+<td><em>unset</em> (chart: <code>false</code>)</td>
+<td>Enable entity graph cache on <strong>datahub-gms</strong> only. Sets <code>ENTITY_GRAPH_CACHE_ENABLED</code>. Requires a GMS image that includes the entity graph cache feature. When <code>true</code> on single-replica GMS, the chart provisions Hazelcast (headless service, port 5701, <code>SEARCH_SERVICE_HAZELCAST_SERVICE_NAME</code>). DataHub <code>application.yaml</code> defaults this to <code>true</code> when the env var is unset on GMS; this chart explicitly sets the env var so the default install stays off until opted in.</td>
+</tr>
+<tr>
+<td><code>global.datahub.entity_graph_cache.configJson</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td>Optional JSON overlay merged at startup. Sets <code>ENTITY_GRAPH_CACHE_CONFIG_JSON</code> on GMS when non-empty (per-graph bounds, <code>population.intervalSeconds</code>, etc.). Omitted from manifests when unset. <code>ENTITY_GRAPH_CACHE_CONFIG_FILE*</code> env vars are not set by the chart; GMS uses bundled <code>entity-graph-cache.yaml</code> via application defaults when enabled.</td>
+</tr>
+</tbody>
+</table>
+
 ### Global Kafka Configuration
 
 <table>

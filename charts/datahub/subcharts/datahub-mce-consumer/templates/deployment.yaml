@@ -118,6 +118,8 @@ spec:
               value: {{ .Values.global.cdc.enabled | quote }}
             {{- end }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}
+            - name: ENTITY_GRAPH_CACHE_ENABLED
+              value: "false"
             - name: ENTITY_VERSIONING_ENABLED
               value: {{ .Values.global.datahub.entityVersioning.enabled | quote }}
             - name: SHOW_SEARCH_FILTERS_V2

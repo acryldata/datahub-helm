@@ -1,8 +1,8 @@
-{{- if gt (.Values.replicaCount | int) 1 }}
+{{- if eq (include "datahub-gms.hazelcast.required" .) "true" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ printf "%s-%s-%s" .Release.Name (regexReplaceAll "[^-a-z0-9]+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" }}
+  name: {{ include "datahub-gms.hazelcast.serviceName" . }}
   labels:
     {{- include "datahub-gms.labels" . | nindent 4 }}
 spec:

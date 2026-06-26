@@ -1004,3 +1004,29 @@ USAGE: Include in services that run embedding ingestion:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Whether GMS entity graph cache is enabled (chart default: false).
+Always emitted as ENTITY_GRAPH_CACHE_ENABLED on GMS — required because DataHub application.yaml defaults enabled=true when unset.
+*/}}
+{{- define "datahub.entity-graph-cache.enabled" -}}
+{{- $egc := .Values.global.datahub.entity_graph_cache | default dict -}}
+{{- if hasKey $egc "enabled" -}}
+{{- $egc.enabled -}}
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+{{/*
+GMS entity graph cache env vars. CONFIG_FILE* and other toggles use application.yaml defaults when omitted.
+USAGE: datahub-gms deployment only.
+*/}}
+{{- define "datahub.entity-graph-cache.gms.env" -}}
+- name: ENTITY_GRAPH_CACHE_ENABLED
+  value: {{ include "datahub.entity-graph-cache.enabled" . | quote }}
+{{- with (.Values.global.datahub.entity_graph_cache | default dict).configJson }}
+- name: ENTITY_GRAPH_CACHE_CONFIG_JSON
+  value: {{ . | quote }}
+{{- end }}
+{{- end -}}

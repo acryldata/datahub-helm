@@ -98,7 +98,7 @@ spec:
               containerPort: {{ include "datahub-gms.monitoring.actuatorPrometheusPort" . }}
               protocol: TCP
           {{- end }}
-          {{- if gt (.Values.replicaCount | int) 1 }}
+          {{- if eq (include "datahub-gms.hazelcast.required" .) "true" }}
             - name: hazelcast
               containerPort: 5701
               protocol: TCP
@@ -162,8 +162,10 @@ spec:
             {{- if gt (.Values.replicaCount | int) 1 }}
             - name: SEARCH_SERVICE_CACHE_IMPLEMENTATION
               value: "hazelcast"
+            {{- end }}
+            {{- if eq (include "datahub-gms.hazelcast.required" .) "true" }}
             - name: SEARCH_SERVICE_HAZELCAST_SERVICE_NAME
-              value: {{ printf "%s-%s-%s" .Release.Name (regexReplaceAll "[^-a-z0-9]+" .Values.global.datahub.version "-") "hazelcast-svc" | trunc 63 | trimSuffix "-" }}
+              value: {{ include "datahub-gms.hazelcast.serviceName" . }}
             {{- end }}
             {{- if .Values.global.datahub.systemUpdate.enabled }}
             - name: DATAHUB_REVISION
@@ -432,6 +434,7 @@ spec:
               value: {{ .Values.global.datahub.cache.search.homepage.entityCounts.ttlSeconds | quote }}
             {{- end }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}
+            {{- include "datahub.entity-graph-cache.gms.env" . | nindent 12 }}
             - name: LINEAGE_SEARCH_CACHE_ENABLED
               value: {{ .Values.global.datahub.cache.search.lineage.enabled | quote }}
             {{- if .Values.global.datahub.cache.search.lineage.enabled }}

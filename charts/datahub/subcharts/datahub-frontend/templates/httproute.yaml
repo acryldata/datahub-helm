@@ -26,14 +26,14 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.httproute.rules }}
-    {{- with .matches }}
-    - matches:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .filters }}
+    - {{- with .matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .filters }}
       filters:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       backendRefs:
         - group: ""
           kind: Service

@@ -245,6 +245,24 @@ Helper to process extraIndex URLs - handles multiple formats:
 {{- end -}}
 
 {{/*
+Kafka producer/consumer size limits shared by GMS, MAE, MCE, system-update, and upgrade jobs.
+*/}}
+{{- define "datahub.kafka.producerConsumerLimits.env" -}}
+{{- with .Values.global.kafka.producer.compressionType }}
+- name: KAFKA_PRODUCER_COMPRESSION_TYPE
+  value: "{{ . }}"
+{{- end }}
+{{- with .Values.global.kafka.producer.maxRequestSize }}
+- name: KAFKA_PRODUCER_MAX_REQUEST_SIZE
+  value: {{ . | quote }}
+{{- end }}
+{{- with .Values.global.kafka.consumer.maxPartitionFetchBytes }}
+- name: KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES
+  value: {{ . | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Kafka IAM environment variables for AWS MSK authentication if enabled.
 For Java/Spring-based services that use Spring Kafka.
 */}}

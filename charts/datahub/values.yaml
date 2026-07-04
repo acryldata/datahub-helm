@@ -781,6 +781,13 @@ global:
         ## Will use full replication during reindexing which will make the process slower
         reindexOptimizationEnabled: true
 
+        ## SQL page size for incremental reindex catch-up MCL emission
+        catchUpSqlPageSize: 50
+        ## Row count between producer flush and checkpoint during catch-up
+        catchUpFlushInterval: 500
+        ## Metadata-column char proxy for early catch-up flush (128 MiB); 0 disables byte-based flush
+        catchUpFlushBytesThreshold: 134217728
+
         ## Individual override for ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED.
         ## When set explicitly, overrides the ZDU_STAGE_20 group flag cascade.
         ## Dual-writes to old backing index during incremental reindex for rollback safety.

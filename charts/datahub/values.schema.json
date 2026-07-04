@@ -1696,6 +1696,15 @@
                     "reindexOptimizationEnabled": {
                       "type": "boolean"
                     },
+                    "catchUpSqlPageSize": {
+                      "type": "integer"
+                    },
+                    "catchUpFlushInterval": {
+                      "type": "integer"
+                    },
+                    "catchUpFlushBytesThreshold": {
+                      "type": "integer"
+                    },
                     "rollbackDualWriteEnabled": {
                       "type": "boolean"
                     }

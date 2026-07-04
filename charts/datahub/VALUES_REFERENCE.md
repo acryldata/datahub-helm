@@ -170,6 +170,24 @@ This document provides a comprehensive reference for every single configurable v
 <td><code>true</code></td>
 <td>Enable optimized reindexing during upgrades. Improves upgrade performance by using efficient bulk operations and parallel processing.</td>
 </tr>
+<tr>
+<td><code>global.elasticsearch.index.upgrade.catchUpSqlPageSize</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>SQL page size for incremental reindex catch-up MCL emission.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.index.upgrade.catchUpFlushInterval</code></td>
+<td>integer</td>
+<td><code>500</code></td>
+<td>Row count between producer flush and checkpoint during catch-up.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.index.upgrade.catchUpFlushBytesThreshold</code></td>
+<td>integer</td>
+<td><code>134217728</code></td>
+<td>Metadata-column char proxy for early catch-up flush (128 MiB). Set to 0 to disable byte-based flush.</td>
+</tr>
 </tbody>
 </table>
 

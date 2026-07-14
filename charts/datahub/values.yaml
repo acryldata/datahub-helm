@@ -1361,7 +1361,8 @@ global:
     # # Secrets definition example
     # secrets:
     #   mysql-secrets:
-    #     store: aws-store
+    #     secretStoreName: aws-store
+    #     secretStoreKind: SecretStore
     #     data:
     #       mysql-password: /NAMESPACE/CLUSTER/mysql-password
     #       mysql-root-password: /CLUSTER/shared/mysql/password

@@ -27,7 +27,7 @@ datahub-gms:
   theme_v2:
     enabled: true
     default: true
-    toggeable: true
+    toggeable: false
   serviceAccount:
     create: false
   # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
@@ -230,8 +230,10 @@ kafkaSetupJob:
   enabled: false
   image:
     repository: acryldata/datahub-kafka-setup
+    # kafka-setup does not publish tags matching DataHub app releases; keep pinned.
+    # Unused when global.datahub.systemUpdate.consolidatedUpgrade is true (default).
     tag: v1.2.0.1
-    # tag: "v0.11.0" # defaults to .global.datahub.version
+    # tag: # defaults to .global.datahub.version when unset
     # Add custom command / arguments to this job.  Useful if you need a custom startup or shutdown script
     # to run
     # command: customCommand
@@ -799,8 +801,10 @@ global:
         catchUpSqlPageSize: 50
         ## Row count between producer flush and checkpoint during catch-up
         catchUpFlushInterval: 500
-        ## Metadata-column char proxy for early catch-up flush (128 MiB); 0 disables byte-based flush
-        catchUpFlushBytesThreshold: 134217728
+        ## Metadata-column char proxy for early catch-up flush (128 MiB); 0 disables byte-based flush.
+        ## Quoted string: unquoted large ints become float64 in Helm YAML and | quote emits scientific
+        ## notation (e.g. 1.34217728e+08), which Spring cannot bind to long.
+        catchUpFlushBytesThreshold: "134217728"
 
         ## Individual override for ELASTICSEARCH_BUILD_INDICES_ROLLBACK_DUAL_WRITE_ENABLED.
         ## When set explicitly, overrides the ZDU_STAGE_20 group flag cascade.
@@ -1068,7 +1072,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.6.0
+    version: v1.7.0
     # Consolidated ServiceAccount for application Deployments/Jobs/CronJobs (not system-update operator).
     # Override per subchart via <subchart>.serviceAccount.name / .create.
     appServiceAccount:
@@ -1079,6 +1083,10 @@ global:
       protocol: "http"
       port: "8080"
       nodePort: "30001"
+      # Legacy S3 settings (DATAHUB_BUCKET_NAME / DATAHUB_ROLE_ARN). Prefer global.datahub.objectStorage.
+      # s3:
+      #   bucketName: ""
+      #   roleArn: ""
 
     # Used for scheduled tasks
     timezone: "UTC"
@@ -1094,7 +1102,7 @@ global:
       # monitoringApiVersion: "azmonitoring.coreos.com/v1"
       # Prometheus scrape layout for JMX workloads (GMS, frontend, MAE/MCE consumers).
       # - legacy: JMX on jmxPort; GMS Spring actuator on main http service port only.
-      # - jmx_and_actuator: JMX with explicit metricsPath on jmxPort; /actuator/prometheus on actuatorPrometheusPort (default; matches v1.6.0 Docker).
+      # - jmx_and_actuator: JMX with explicit metricsPath on jmxPort; /actuator/prometheus on actuatorPrometheusPort (default; matches v1.6+ Docker).
       # - actuator_only: no JMX; /actuator/prometheus only on actuatorPrometheusPort where the app exposes it.
       # When jmx_and_actuator or actuator_only: MAE/MCE consumers probe /actuator/health on the
       # prometheus Service/container port (actuatorPrometheusPort); allow that port if you use NetworkPolicy.
@@ -1109,7 +1117,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.6.0"
+    appVersion: "1.7.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1119,11 +1127,13 @@ global:
       # unless consolidatedUpgrade is set false. Java KubernetesScaleDownStep applies when scaleDown is enabled.
       consolidatedUpgrade: true
       # K8 scale-down (available in v1.5.0): when true, Java-based scale-down runs (KubernetesScaleDownStep)
-      # NOTE: scaleDown is automatically disabled when zdu.enable=true
+      # NOTE: scaleDown is automatically disabled when zdu.enable=true (v1.7+ default).
+      # Keep enabled=true so opting out of ZDU (zdu.enable=false) restores the pre-ZDU scale-down path.
       scaleDown:
         enabled: true
       # Zero Downtime Upgrade (ZDU) group flags — each stage enables a set of individual feature flags.
       # Individual flags can still be overridden separately (e.g. via global.elasticsearch.index.upgrade).
+      # v1.7.0+: ZDU stage 20 on by default (first chart shipping ZDU as the upgrade path).
       zdu:
         # ZDU_STAGE_10: group flag for pre-enablement stage.
         # Enables: CREATE_SCHEMA_VERSION_INDEX (schema version index on metadata_aspect_v2)
@@ -1134,11 +1144,14 @@ global:
         #          SYSTEM_UPDATE_MIGRATE_ASPECTS_ENABLED,
         #          ASPECT_MIGRATION_MUTATOR_ENABLED (GMS runtime)
         # NOTE: setting enable=true automatically disables scaleDown operations
-        enable: false
+        enable: true
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"
       secretKey: "encryption_key_secret"
+      # SECRET_SERVICE_CALLER_GUARD_MODE — ENFORCE (default), AUDIT (staged rollout), or DISABLED (break-glass).
+      # v1.7+: ENFORCE blocks browser/user-PAT getSecretValues; use datahub-actions with system client credentials.
+      callerGuardMode: ENFORCE
       # Set to false if you'd like to provide your own secret.
       provisionSecret:
         enabled: true
@@ -1148,10 +1161,28 @@ global:
       #  secretValues:
       #    encryptionKey: <encryption key value>
 
+    ## Multi-language UI (I18N_ENABLED). v1.7+ defaults on; set false for English-only.
+    i18n:
+      enabled: true
+
+    ## Object storage for product assets / file uploads (datahub.objectStorage in application.yaml).
+    ## Prefer uri (DATAHUB_OBJECT_STORAGE_URI). Legacy global.datahub.gms.s3.bucketName/roleArn still work.
+    # objectStorage:
+    #   uri: "s3://my-bucket/prefix"  # or gs://..., file:///...
+    #   bucket: ""  # DATAHUB_BUCKET_NAME when uri unset
+    #   roleArn: ""  # DATAHUB_ROLE_ARN
+    #   path: ""  # DATAHUB_OBJECT_STORAGE_PATH
+    #   provider: ""  # DATAHUB_OBJECT_STORAGE_PROVIDER
+    #   assetPathPrefix: "product_assets"  # DATAHUB_S3_ASSET_PATH_PREFIX
+    #   presignedUploadUrlExpirationSeconds: 3600
+    #   presignedDownloadUrlExpirationSeconds: 3600
+    #   multipartThresholdBytes: "8388608"
+    #   multipartPartSizeBytes: "8388608"
+
     managed_ingestion:
       enabled: true
       # PyPI acryl-datahub version (PEP 440); do not use a leading "v" (unlike global.datahub.version tags).
-      defaultCliVersion: "1.6.0"
+      defaultCliVersion: "1.7.0"
 
     metadata_service_authentication:
       enabled: true

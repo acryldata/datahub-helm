@@ -130,6 +130,11 @@ spec:
               value: {{ .Values.theme_v2.default | quote }}
             - name: THEME_V2_TOGGLEABLE
               value: {{ .Values.theme_v2.toggeable | quote }}
+            {{- $i18n := .Values.global.datahub.i18n | default dict }}
+            - name: I18N_ENABLED
+              value: {{ ternary $i18n.enabled true (hasKey $i18n "enabled") | quote }}
+            - name: SECRET_SERVICE_CALLER_GUARD_MODE
+              value: {{ (.Values.global.datahub.encryptionKey | default dict).callerGuardMode | default "ENFORCE" | quote }}
             {{- if .Values.global.basePath.enabled }}
             - name: DATAHUB_BASE_PATH
               value: {{ .Values.global.basePath.frontend | quote }}
@@ -561,12 +566,7 @@ spec:
             {{- end }}
             - name: MCP_CONSUMER_BATCH_ENABLED
               value: {{ .Values.global.datahub.metadataChangeProposal.consumer.batch.enabled | quote }}
-            {{- with .Values.global.datahub.gms.s3 }}
-            - name: DATAHUB_BUCKET_NAME
-              value: {{ .bucketName }}
-            - name: DATAHUB_ROLE_ARN
-              value: {{ .roleArn }}
-            {{- end}}
+            {{- include "datahub.object-storage.gms.env" . | nindent 12 }}
           {{- with .Values.extraEnvs }}
             {{- toYaml . | nindent 12 }}
           {{- end }}

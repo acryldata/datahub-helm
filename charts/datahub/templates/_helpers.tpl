@@ -1048,3 +1048,58 @@ USAGE: datahub-gms deployment only.
   value: {{ . | quote }}
 {{- end }}
 {{- end -}}
+
+{{/*
+GMS object storage env vars (datahub.objectStorage). Prefers global.datahub.objectStorage;
+falls back to legacy global.datahub.gms.s3.bucketName / roleArn.
+USAGE: datahub-gms deployment only.
+*/}}
+{{- define "datahub.object-storage.gms.env" -}}
+{{- $os := .Values.global.datahub.objectStorage | default dict -}}
+{{- $gms := (.Values.global.datahub | default dict).gms | default dict -}}
+{{- $legacy := $gms.s3 | default dict -}}
+{{- $uri := $os.uri | default "" -}}
+{{- $bucket := $os.bucket | default $os.bucketName | default $legacy.bucketName | default "" -}}
+{{- $roleArn := $os.roleArn | default $legacy.roleArn | default "" -}}{{- $path := $os.path | default "" -}}
+{{- $provider := $os.provider | default "" -}}
+{{- if $uri }}
+- name: DATAHUB_OBJECT_STORAGE_URI
+  value: {{ $uri | quote }}
+{{- end }}
+{{- if $bucket }}
+- name: DATAHUB_BUCKET_NAME
+  value: {{ $bucket | quote }}
+{{- end }}
+{{- if $roleArn }}
+- name: DATAHUB_ROLE_ARN
+  value: {{ $roleArn | quote }}
+{{- end }}
+{{- if $path }}
+- name: DATAHUB_OBJECT_STORAGE_PATH
+  value: {{ $path | quote }}
+{{- end }}
+{{- if $provider }}
+- name: DATAHUB_OBJECT_STORAGE_PROVIDER
+  value: {{ $provider | quote }}
+{{- end }}
+{{- with $os.assetPathPrefix }}
+- name: DATAHUB_S3_ASSET_PATH_PREFIX
+  value: {{ . | quote }}
+{{- end }}
+{{- if hasKey $os "presignedUploadUrlExpirationSeconds" }}
+- name: DATAHUB_PRESIGNED_UPLOAD_URL_EXPIRATION_SECONDS
+  value: {{ $os.presignedUploadUrlExpirationSeconds | quote }}
+{{- end }}
+{{- if hasKey $os "presignedDownloadUrlExpirationSeconds" }}
+- name: DATAHUB_PRESIGNED_DOWNLOAD_URL_EXPIRATION_SECONDS
+  value: {{ $os.presignedDownloadUrlExpirationSeconds | quote }}
+{{- end }}
+{{- if hasKey $os "multipartThresholdBytes" }}
+- name: OBJECT_STORAGE_MULTIPART_THRESHOLD_BYTES
+  value: {{ $os.multipartThresholdBytes | quote }}
+{{- end }}
+{{- if hasKey $os "multipartPartSizeBytes" }}
+- name: OBJECT_STORAGE_MULTIPART_PART_SIZE_BYTES
+  value: {{ $os.multipartPartSizeBytes | quote }}
+{{- end }}
+{{- end -}}

@@ -1703,7 +1703,11 @@
                       "type": "integer"
                     },
                     "catchUpFlushBytesThreshold": {
-                      "type": "integer"
+                      "description": "Byte proxy threshold for catch-up flush (128 MiB default). Prefer a quoted string in values.yaml so Helm does not emit scientific notation for large integers.",
+                      "oneOf": [
+                        { "type": "string" },
+                        { "type": "integer" }
+                      ]
                     },
                     "rollbackDualWriteEnabled": {
                       "type": "boolean"
@@ -2367,6 +2371,19 @@
                 },
                 "nodePort": {
                   "type": "string"
+                },
+                "s3": {
+                  "type": "object",
+                  "description": "Legacy S3 settings. Prefer global.datahub.objectStorage.",
+                  "properties": {
+                    "bucketName": {
+                      "type": "string"
+                    },
+                    "roleArn": {
+                      "type": "string"
+                    }
+                  },
+                  "required": []
                 }
               },
               "required": [
@@ -2494,6 +2511,11 @@
                 "secretKey": {
                   "type": "string"
                 },
+                "callerGuardMode": {
+                  "type": "string",
+                  "description": "SECRET_SERVICE_CALLER_GUARD_MODE: ENFORCE (default), AUDIT, or DISABLED. v1.7+ ENFORCE blocks browser/user-PAT secret decrypt; use datahub-actions with system client credentials.",
+                  "enum": ["ENFORCE", "AUDIT", "DISABLED"]
+                },
                 "provisionSecret": {
                   "type": "object",
                   "properties": {
@@ -2521,6 +2543,63 @@
                 "secretKey",
                 "provisionSecret"
               ]
+            },
+            "i18n": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "I18N_ENABLED on GMS. v1.7+ defaults true (multi-language UI). Set false for English-only."
+                }
+              },
+              "required": []
+            },
+            "objectStorage": {
+              "type": "object",
+              "description": "GMS object storage (datahub.objectStorage). Prefer uri; legacy global.datahub.gms.s3.bucketName/roleArn still supported.",
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "description": "DATAHUB_OBJECT_STORAGE_URI (s3://, gs://, or file:///)"
+                },
+                "bucket": {
+                  "type": "string",
+                  "description": "DATAHUB_BUCKET_NAME when uri is unset"
+                },
+                "bucketName": {
+                  "type": "string",
+                  "description": "Alias for bucket (legacy naming)"
+                },
+                "roleArn": {
+                  "type": "string",
+                  "description": "DATAHUB_ROLE_ARN"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "DATAHUB_OBJECT_STORAGE_PATH"
+                },
+                "provider": {
+                  "type": "string",
+                  "description": "DATAHUB_OBJECT_STORAGE_PROVIDER"
+                },
+                "assetPathPrefix": {
+                  "type": "string",
+                  "description": "DATAHUB_S3_ASSET_PATH_PREFIX"
+                },
+                "presignedUploadUrlExpirationSeconds": {
+                  "type": "integer"
+                },
+                "presignedDownloadUrlExpirationSeconds": {
+                  "type": "integer"
+                },
+                "multipartThresholdBytes": {
+                  "type": "integer"
+                },
+                "multipartPartSizeBytes": {
+                  "type": "integer"
+                }
+              },
+              "required": []
             },
             "managed_ingestion": {
               "type": "object",

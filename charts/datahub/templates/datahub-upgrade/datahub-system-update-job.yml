@@ -245,7 +245,7 @@ spec:
             - name: ELASTICSEARCH_BUILD_INDICES_CATCH_UP_FLUSH_INTERVAL
               value: {{ (.Values.global.elasticsearch.index.upgrade.catchUpFlushInterval | default 500) | quote }}
             - name: ELASTICSEARCH_BUILD_INDICES_CATCH_UP_FLUSH_BYTES_THRESHOLD
-              value: {{ (.Values.global.elasticsearch.index.upgrade.catchUpFlushBytesThreshold | default 134217728) | quote }}
+              value: {{ (.Values.global.elasticsearch.index.upgrade.catchUpFlushBytesThreshold | default "134217728") | toString | quote }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
             {{- if ne $k "default" }}
             {{- $result := dict }}
@@ -480,7 +480,7 @@ spec:
             - name: ELASTICSEARCH_BUILD_INDICES_CATCH_UP_FLUSH_INTERVAL
               value: {{ (.Values.global.elasticsearch.index.upgrade.catchUpFlushInterval | default 500) | quote }}
             - name: ELASTICSEARCH_BUILD_INDICES_CATCH_UP_FLUSH_BYTES_THRESHOLD
-              value: {{ (.Values.global.elasticsearch.index.upgrade.catchUpFlushBytesThreshold | default 134217728) | quote }}
+              value: {{ (.Values.global.elasticsearch.index.upgrade.catchUpFlushBytesThreshold | default "134217728") | toString | quote }}
             {{- range $k, $v := .Values.datahubSystemUpdate.bootstrapMCPs }}
             {{- if ne $k "default" }}
             {{- $result := dict }}

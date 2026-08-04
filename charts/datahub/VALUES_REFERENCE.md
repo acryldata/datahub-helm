@@ -2,6 +2,8 @@
 
 This document provides a comprehensive reference for every single configurable value in the DataHub Helm chart.
 
+**v1.7.0 defaults of note:** `global.datahub.i18n.enabled` defaults to `true` (`I18N_ENABLED`); `global.datahub.encryptionKey.callerGuardMode` defaults to `ENFORCE` (browser/user-PAT secret decrypt blocked — use datahub-actions with system credentials); `datahub-gms.theme_v2.toggeable` defaults to `false` (V2-only UI). Prefer `global.datahub.objectStorage` over legacy `global.datahub.gms.s3`.
+
 ## Global Values
 
 <table>
@@ -184,9 +186,9 @@ This document provides a comprehensive reference for every single configurable v
 </tr>
 <tr>
 <td><code>global.elasticsearch.index.upgrade.catchUpFlushBytesThreshold</code></td>
-<td>integer</td>
-<td><code>134217728</code></td>
-<td>Metadata-column char proxy for early catch-up flush (128 MiB). Set to 0 to disable byte-based flush.</td>
+<td>string / integer</td>
+<td><code>"134217728"</code></td>
+<td>Metadata-column char proxy for early catch-up flush (128 MiB). Set to 0 to disable byte-based flush. Keep quoted in values.yaml — unquoted large ints can render as scientific notation in env vars and break Spring long binding.</td>
 </tr>
 </tbody>
 </table>
@@ -379,6 +381,95 @@ This document provides a comprehensive reference for every single configurable v
 <td>string</td>
 <td><code>"https://api.cohere.ai/v1/embed"</code></td>
 <td><strong>Cohere only:</strong> Cohere API endpoint. Can customize for self-hosted Cohere endpoints.</td>
+</tr>
+</tbody>
+</table>
+
+### Global Object Storage Configuration
+
+GMS product-asset / file-upload storage (`datahub.objectStorage` in DataHub `application.yaml`). Prefer `uri` (`DATAHUB_OBJECT_STORAGE_URI`). Legacy `global.datahub.gms.s3.bucketName` / `roleArn` still map to `DATAHUB_BUCKET_NAME` / `DATAHUB_ROLE_ARN` when `objectStorage` is unset.
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>global.datahub.objectStorage.uri</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td>Preferred storage URI: <code>s3://bucket</code>, <code>s3://bucket/prefix</code>, <code>gs://...</code>, or <code>file:///...</code>. Sets <code>DATAHUB_OBJECT_STORAGE_URI</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.bucket</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td>Legacy bucket name when <code>uri</code> is unset. Sets <code>DATAHUB_BUCKET_NAME</code>. Alias: <code>bucketName</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.roleArn</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td>AWS IAM role ARN to assume for S3. Sets <code>DATAHUB_ROLE_ARN</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.path</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td>Legacy path/prefix when <code>uri</code> is unset. Sets <code>DATAHUB_OBJECT_STORAGE_PATH</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.provider</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td>Legacy provider when <code>uri</code> is unset. Sets <code>DATAHUB_OBJECT_STORAGE_PROVIDER</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.assetPathPrefix</code></td>
+<td>string</td>
+<td><em>unset</em> (app default <code>product_assets</code>)</td>
+<td>Sets <code>DATAHUB_S3_ASSET_PATH_PREFIX</code> when set.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.presignedUploadUrlExpirationSeconds</code></td>
+<td>integer</td>
+<td><em>unset</em> (app default <code>3600</code>)</td>
+<td>Sets <code>DATAHUB_PRESIGNED_UPLOAD_URL_EXPIRATION_SECONDS</code> when set.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.presignedDownloadUrlExpirationSeconds</code></td>
+<td>integer</td>
+<td><em>unset</em> (app default <code>3600</code>)</td>
+<td>Sets <code>DATAHUB_PRESIGNED_DOWNLOAD_URL_EXPIRATION_SECONDS</code> when set.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.multipartThresholdBytes</code></td>
+<td>integer</td>
+<td><em>unset</em></td>
+<td>Sets <code>OBJECT_STORAGE_MULTIPART_THRESHOLD_BYTES</code> when set.</td>
+</tr>
+<tr>
+<td><code>global.datahub.objectStorage.multipartPartSizeBytes</code></td>
+<td>integer</td>
+<td><em>unset</em></td>
+<td>Sets <code>OBJECT_STORAGE_MULTIPART_PART_SIZE_BYTES</code> when set.</td>
+</tr>
+<tr>
+<td><code>global.datahub.gms.s3.bucketName</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td><strong>Deprecated.</strong> Legacy alias for bucket; prefer <code>global.datahub.objectStorage</code>.</td>
+</tr>
+<tr>
+<td><code>global.datahub.gms.s3.roleArn</code></td>
+<td>string</td>
+<td><em>unset</em></td>
+<td><strong>Deprecated.</strong> Legacy alias for role ARN; prefer <code>global.datahub.objectStorage.roleArn</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -953,6 +1044,12 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td>Secret key for encryption key in the referenced secret.</td>
 </tr>
 <tr>
+<td><code>global.datahub.encryptionKey.callerGuardMode</code></td>
+<td>string</td>
+<td><code>ENFORCE</code></td>
+<td>Sets <code>SECRET_SERVICE_CALLER_GUARD_MODE</code> on GMS. <code>ENFORCE</code> (v1.7+ default) blocks browser sessions and user PATs from decrypting UI secrets via GraphQL; use <strong>datahub-actions</strong> with system client credentials for secret access. <code>AUDIT</code> logs but allows (staged rollout). <code>DISABLED</code> is break-glass only.</td>
+</tr>
+<tr>
 <td><code>global.datahub.encryptionKey.provisionSecret.enabled</code></td>
 <td>boolean</td>
 <td><code>true</code></td>
@@ -969,6 +1066,12 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td>object</td>
 <td><code>{}</code></td>
 <td>Annotations for the provisioned encryption key secret.</td>
+</tr>
+<tr>
+<td><code>global.datahub.i18n.enabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Sets <code>I18N_ENABLED</code> on GMS. v1.7+ defaults <strong>on</strong> so the UI follows the browser locale when translations exist. Set <code>false</code> for English-only. Users can still change language under Settings → Preferences when enabled.</td>
 </tr>
 <tr>
 <td><code>global.datahub.managed_ingestion.enabled</code></td>
@@ -1234,8 +1337,8 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <tr>
 <td><code>datahub-gms.theme_v2.toggeable</code></td>
 <td>boolean</td>
-<td><code>true</code></td>
-<td>Allow toggling between theme versions.</td>
+<td><code>false</code></td>
+<td>Allow toggling theme V2 (Acryl only). Chart default is <code>false</code> (V2-only) as of v1.7.</td>
 </tr>
 <tr>
 <td><code>datahub-gms.service.type</code></td>

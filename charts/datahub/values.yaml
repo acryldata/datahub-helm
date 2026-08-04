@@ -1072,7 +1072,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.7.0rc2
+    version: v1.7.0
     # Consolidated ServiceAccount for application Deployments/Jobs/CronJobs (not system-update operator).
     # Override per subchart via <subchart>.serviceAccount.name / .create.
     appServiceAccount:
@@ -1117,7 +1117,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.7.0rc2"
+    appVersion: "1.7.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work

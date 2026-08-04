@@ -2,7 +2,7 @@
 
 This document provides a comprehensive reference for every single configurable value in the DataHub Helm chart.
 
-**v1.7.0 defaults of note:** `global.datahub.i18n.enabled` defaults to `true` (`I18N_ENABLED`); `global.datahub.encryptionKey.callerGuardMode` defaults to `ENFORCE` (browser/user-PAT secret decrypt blocked — use datahub-actions with system credentials); `datahub-gms.theme_v2.toggeable` defaults to `false` (V2-only UI). Prefer `global.datahub.objectStorage` over legacy `global.datahub.gms.s3`.
+**v1.7.0 defaults of note:** `global.datahub.systemUpdate.zdu.enable` defaults to `true` (`ZDU_STAGE_20`; scale-down is suppressed while ZDU is on); `global.datahub.i18n.enabled` defaults to `true` (`I18N_ENABLED`); `global.datahub.encryptionKey.callerGuardMode` defaults to `ENFORCE` (browser/user-PAT secret decrypt blocked — use datahub-actions with system credentials); `datahub-gms.theme_v2.toggeable` defaults to `false` (V2-only UI). Prefer `global.datahub.objectStorage` over legacy `global.datahub.gms.s3`.
 
 ## Global Values
 
@@ -1023,7 +1023,19 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td><code>global.datahub.systemUpdate.scaleDown.enabled</code></td>
 <td>boolean</td>
 <td><code>true</code></td>
-<td>When true, the system-update job runs the Java-based Kubernetes scale-down step (KubernetesScaleDownStep), scaling selected deployments to zero and applying deployment env updates during upgrade. Available in v1.5.0.</td>
+<td>When true, the system-update job runs the Java-based Kubernetes scale-down step (KubernetesScaleDownStep), scaling selected deployments to zero and applying deployment env updates during upgrade. Available in v1.5.0. Automatically suppressed when <code>global.datahub.systemUpdate.zdu.enable</code> is true (v1.7+ default).</td>
+</tr>
+<tr>
+<td><code>global.datahub.systemUpdate.zdu.preEnable</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Emit <code>ZDU_STAGE_10</code> on system-update (schema version index pre-enablement). Individual Elasticsearch upgrade flags can still override cascaded behavior.</td>
+</tr>
+<tr>
+<td><code>global.datahub.systemUpdate.zdu.enable</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Emit <code>ZDU_STAGE_20</code> on system-update and GMS (v1.7+ default). Cascades incremental reindex, rollback dual-write, and aspect migration flags. Disables effective scale-down while enabled. Set <code>false</code> to opt out of ZDU and restore the scale-down upgrade path when <code>scaleDown.enabled</code> is true.</td>
 </tr>
 <tr>
 <td><code>global.datahub.systemUpdate.consolidatedUpgrade</code></td>

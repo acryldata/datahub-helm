@@ -2488,12 +2488,15 @@
                 },
                 "zdu": {
                   "type": "object",
+                  "description": "Zero Downtime Upgrade group flags. v1.7+ defaults: preEnable and enable both true (ZDU_STAGE_10 / ZDU_STAGE_20).",
                   "properties": {
                     "preEnable": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "ZDU_STAGE_10: schema version index pre-enablement. Default true."
                     },
                     "enable": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "ZDU_STAGE_20: first ZDU release (incremental reindex, rollback dual-write, aspect migration). Default true for v1.7+. Suppresses scaleDown while enabled."
                     }
                   }
                 }

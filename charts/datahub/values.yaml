@@ -1127,11 +1127,13 @@ global:
       # unless consolidatedUpgrade is set false. Java KubernetesScaleDownStep applies when scaleDown is enabled.
       consolidatedUpgrade: true
       # K8 scale-down (available in v1.5.0): when true, Java-based scale-down runs (KubernetesScaleDownStep)
-      # NOTE: scaleDown is automatically disabled when zdu.enable=true
+      # NOTE: scaleDown is automatically disabled when zdu.enable=true (v1.7+ default).
+      # Keep enabled=true so opting out of ZDU (zdu.enable=false) restores the pre-ZDU scale-down path.
       scaleDown:
         enabled: true
       # Zero Downtime Upgrade (ZDU) group flags — each stage enables a set of individual feature flags.
       # Individual flags can still be overridden separately (e.g. via global.elasticsearch.index.upgrade).
+      # v1.7.0+: ZDU stage 20 on by default (first chart shipping ZDU as the upgrade path).
       zdu:
         # ZDU_STAGE_10: group flag for pre-enablement stage.
         # Enables: CREATE_SCHEMA_VERSION_INDEX (schema version index on metadata_aspect_v2)
@@ -1142,7 +1144,7 @@ global:
         #          SYSTEM_UPDATE_MIGRATE_ASPECTS_ENABLED,
         #          ASPECT_MIGRATION_MUTATOR_ENABLED (GMS runtime)
         # NOTE: setting enable=true automatically disables scaleDown operations
-        enable: false
+        enable: true
 
     encryptionKey:
       secretRef: "datahub-encryption-secrets"

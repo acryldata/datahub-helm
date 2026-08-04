@@ -94,6 +94,20 @@ datahub-frontend:
     #    hosts:
     #      - chart-example.local
     # pathType: ImplementationSpecific
+    # httproute:
+    #   enabled: false
+    #   labels: {}
+    #   annotations: {}
+    #   parentRefs:
+    #     - name: my-gateway
+    #       namespace: default
+    #   hostnames:
+    #     - datahub.example.com
+    #   rules:
+    #     - matches:
+    #         - path:
+    #             type: PathPrefix
+    #             value: /
   defaultUserCredentials: {}
     # randomAdminPassword: true
     # You can also set specific passwords for default users

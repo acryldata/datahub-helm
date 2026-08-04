@@ -1056,11 +1056,11 @@ USAGE: datahub-gms deployment only.
 */}}
 {{- define "datahub.object-storage.gms.env" -}}
 {{- $os := .Values.global.datahub.objectStorage | default dict -}}
-{{- $legacy := dig "gms" "s3" (dict) (.Values.global.datahub | default dict) -}}
+{{- $gms := (.Values.global.datahub | default dict).gms | default dict -}}
+{{- $legacy := $gms.s3 | default dict -}}
 {{- $uri := $os.uri | default "" -}}
 {{- $bucket := $os.bucket | default $os.bucketName | default $legacy.bucketName | default "" -}}
-{{- $roleArn := $os.roleArn | default $legacy.roleArn | default "" -}}
-{{- $path := $os.path | default "" -}}
+{{- $roleArn := $os.roleArn | default $legacy.roleArn | default "" -}}{{- $path := $os.path | default "" -}}
 {{- $provider := $os.provider | default "" -}}
 {{- if $uri }}
 - name: DATAHUB_OBJECT_STORAGE_URI

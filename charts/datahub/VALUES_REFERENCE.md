@@ -1317,6 +1317,12 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td>Number of consecutive failures before restarting the pod.</td>
 </tr>
 <tr>
+<td><code>datahub-gms.livenessProbe.timeoutSeconds</code></td>
+<td>integer</td>
+<td><code>1</code></td>
+<td>Number of seconds after which the liveness probe times out.</td>
+</tr>
+<tr>
 <td><code>datahub-gms.readinessProbe.initialDelaySeconds</code></td>
 <td>integer</td>
 <td><code>120</code></td>
@@ -1333,6 +1339,12 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td>integer</td>
 <td><code>8</code></td>
 <td>Number of consecutive failures before marking pod as not ready.</td>
+</tr>
+<tr>
+<td><code>datahub-gms.readinessProbe.timeoutSeconds</code></td>
+<td>integer</td>
+<td><code>1</code></td>
+<td>Number of seconds after which the readiness probe times out.</td>
 </tr>
 <tr>
 <td><code>datahub-gms.theme_v2.enabled</code></td>

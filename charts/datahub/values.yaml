@@ -20,10 +20,12 @@ datahub-gms:
     initialDelaySeconds: 60
     periodSeconds: 30
     failureThreshold: 8
+    timeoutSeconds: 1
   readinessProbe:
     initialDelaySeconds: 120
     periodSeconds: 30
     failureThreshold: 8
+    timeoutSeconds: 1
   theme_v2:
     enabled: true
     default: true

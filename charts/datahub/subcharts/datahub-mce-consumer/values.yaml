@@ -123,11 +123,13 @@ livenessProbe:
   initialDelaySeconds: 60
   periodSeconds: 30
   failureThreshold: 4
+  timeoutSeconds: 1
 
 readinessProbe:
   initialDelaySeconds: 60
   periodSeconds: 30
   failureThreshold: 4
+  timeoutSeconds: 1
 
 global:
   imageRegistry: "docker.io"

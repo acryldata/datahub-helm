@@ -110,6 +110,7 @@ spec:
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           readinessProbe:
             httpGet:
               path: {{ if .Values.global.basePath.enabled }}{{ if eq .Values.global.basePath.gms "/" }}{{ else }}{{ .Values.global.basePath.gms }}{{ end }}{{ end }}/health
@@ -117,6 +118,7 @@ spec:
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           env:
             - name: ELASTICSEARCH_SHIM_ENGINE_TYPE
               value: {{ .Values.global.elasticsearch.engineType | quote }}

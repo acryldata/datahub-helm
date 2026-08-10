@@ -91,6 +91,11 @@ actions:
   kafkaAutoOffsetPolicy: "latest"
   # Configure a custom executor id that will be set as the EXECUTOR_ID environment variable
   # executorId: ""
+  # uv link mode for building dynamic ingestion venvs. "hardlink" (default) shares package bytes
+  # with the uv cache so concurrent/repeated runs don't each copy their dependencies; requires the
+  # venv dir and ~/.cache/uv on the same filesystem, otherwise uv degrades to "copy". Set to "copy"
+  # if hardlinking isn't possible in your storage layout.
+  uvLinkMode: "hardlink"
 
 # mount the k8s secret as a volume in the container, each key name is mounted as a file on the mount path /etc/datahub/ingestion-secret-files
 # ingestionSecretFiles:

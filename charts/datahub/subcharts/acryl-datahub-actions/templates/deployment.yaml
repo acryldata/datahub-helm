@@ -107,6 +107,8 @@ spec:
             - name: EXECUTOR_ID
               value: "{{ .Values.actions.executorId }}"
             {{- end }}
+            - name: UV_LINK_MODE
+              value: {{ .Values.actions.uvLinkMode | default "hardlink" | quote }}
             {{- if .Values.debug.enabled }}
             - name: DATAHUB_DEBUG
               value: "true"

@@ -492,6 +492,7 @@ datahubSystemUpdate:
           PRE_PROCESS_HOOKS_UI_ENABLED: "false"
           MCE_CONSUMER_ENABLED: "false"
           MAE_CONSUMER_ENABLED: "false"
+          MCL_CONSUMER_ENABLED: "false"
           PE_CONSUMER_ENABLED: "false"
           MCP_CONSUMER_ENABLED: "false"
   # ServiceAccount configuration for the system update job (enables RBAC when running upgrade jobs)

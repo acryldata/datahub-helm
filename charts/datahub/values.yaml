@@ -485,6 +485,7 @@ datahubSystemUpdate:
       - app.kubernetes.io/name=datahub-mae-consumer
       - app.kubernetes.io/name=datahub-mce-consumer
     # Deployments that get env vars set when scaling down (labelSelector -> env map). State stores previous env per deployment for restore.
+    # PRE_PROCESS_HOOKS_UI_ENABLED=false must stay paired with MAE_CONSUMER_ENABLED=false (issue 19119).
     deploymentEnvUpdates:
       - labelSelector: app.kubernetes.io/name=datahub-gms
         env:

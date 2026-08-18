@@ -1364,6 +1364,7 @@ global:
     ## Enables a fast path for processing events sourced from the UI, updates indices synchronously for requests originating from GraphQL
     preProcessHooksUIEnabled: true
     ## Reprocess UI events at MAE Consumer, normally if preprocess is enabled this is not required.
+    ## Helm fails install/upgrade if both this and preProcessHooksUIEnabled are false (datahub#19119).
     reProcessUIEventHooks: false
 
   externalSecrets:

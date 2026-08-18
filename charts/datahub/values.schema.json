@@ -2715,6 +2715,14 @@
             "alwaysEmitChangeLog": {
               "type": "boolean"
             },
+            "preProcessHooksUIEnabled": {
+              "type": "boolean",
+              "description": "Synchronous GMS index updates for GraphQL/UI-sourced writes (PRE_PROCESS_HOOKS_UI_ENABLED). Must not be false while reProcessUIEventHooks is also false."
+            },
+            "reProcessUIEventHooks": {
+              "type": "boolean",
+              "description": "Reprocess UI-sourced events in the MAE UpdateIndicesHook (PRE_PROCESS_HOOKS_REPROCESS_ENABLED). Must not be false while preProcessHooksUIEnabled is also false."
+            },
             "enableGraphDiffMode": {
               "type": "boolean"
             },

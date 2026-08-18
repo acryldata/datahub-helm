@@ -1,4 +1,5 @@
 {{- include "datahub.validate.iam.setup" . -}}
+{{- include "datahub.validate.preprocessHooks" . -}}
 {{- if .Values.global.datahub.systemUpdate.enabled -}}
 {{- $zduStage20 := .Values.global.datahub.systemUpdate.zdu.enable | default false }}
 {{- $scaleDownEffective := and (.Values.global.datahub.systemUpdate.scaleDown.enabled | default false) (not $zduStage20) }}

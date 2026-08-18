@@ -1245,7 +1245,7 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td><code>global.datahub.reProcessUIEventHooks</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Reprocess UI events at MAE Consumer. Not required when preprocess is enabled.</td>
+<td>Reprocess UI events at MAE Consumer. Not required when preprocess is enabled. Helm refuses to install if this and <code>preProcessHooksUIEnabled</code> are both false.</td>
 </tr>
 </tbody>
 </table>

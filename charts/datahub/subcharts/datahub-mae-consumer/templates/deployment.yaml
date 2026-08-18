@@ -112,8 +112,9 @@ spec:
             - name: DATAHUB_GMS_BASE_PATH
               value: {{ .Values.global.basePath.gms | quote }}
             {{- end }}
+            {{- /* Same pair as GMS. uiEnabled means GMS already indexed appSource=ui. */}}
             - name: PRE_PROCESS_HOOKS_UI_ENABLED
-              value: {{ or .Values.global.datahub.reProcessUIEventHooks (not .Values.global.datahub.preProcessHooksUIEnabled) | quote }}
+              value: {{ .Values.global.datahub.preProcessHooksUIEnabled | quote }}
             - name: PRE_PROCESS_HOOKS_REPROCESS_ENABLED
               value: {{ or .Values.global.datahub.reProcessUIEventHooks (not .Values.global.datahub.preProcessHooksUIEnabled) | quote }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}

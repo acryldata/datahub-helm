@@ -1361,10 +1361,11 @@ global:
     entityVersioning:
       enabled: false
 
-    ## Enables a fast path for processing events sourced from the UI, updates indices synchronously for requests originating from GraphQL
+    ## GMS GraphQL fast path for UI-sourced index updates. Set the same pair on GMS and MAE so
+    ## both a single GMS with embedded consumers and standalone MAE/MCE consumers stay valid.
     preProcessHooksUIEnabled: true
-    ## Reprocess UI events at MAE Consumer, normally if preprocess is enabled this is not required.
-    ## Helm fails install/upgrade if both this and preProcessHooksUIEnabled are false (datahub#19119).
+    ## Reprocess UI events in MAE UpdateIndicesHook (embedded or standalone). Not required when
+    ## preprocess is on. Helm fails if both this and preProcessHooksUIEnabled are false (#19119).
     reProcessUIEventHooks: false
 
   externalSecrets:

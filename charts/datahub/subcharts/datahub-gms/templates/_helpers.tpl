@@ -287,7 +287,7 @@ Hazelcast cluster required when GMS runs distributed search cache (replicaCount 
 {{/*
 Reject the silent-drop combination from datahub-project/datahub#19119: UI-sourced
 writes are stored but never indexed when both the GMS fast path and MAE reprocess
-path are off.
+path are off. Applies to a single GMS with embedded consumers and to standalone MAE.
 */}}
 {{- define "datahub.validate.preprocessHooks" -}}
 {{- if and (not .Values.global.datahub.preProcessHooksUIEnabled) (not .Values.global.datahub.reProcessUIEventHooks) -}}

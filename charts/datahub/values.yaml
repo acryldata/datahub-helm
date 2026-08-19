@@ -485,12 +485,14 @@ datahubSystemUpdate:
       - app.kubernetes.io/name=datahub-mae-consumer
       - app.kubernetes.io/name=datahub-mce-consumer
     # Deployments that get env vars set when scaling down (labelSelector -> env map). State stores previous env per deployment for restore.
+    # PRE_PROCESS_HOOKS_UI_ENABLED=false must stay paired with MAE_CONSUMER_ENABLED=false (issue 19119).
     deploymentEnvUpdates:
       - labelSelector: app.kubernetes.io/name=datahub-gms
         env:
           PRE_PROCESS_HOOKS_UI_ENABLED: "false"
           MCE_CONSUMER_ENABLED: "false"
           MAE_CONSUMER_ENABLED: "false"
+          MCL_CONSUMER_ENABLED: "false"
           PE_CONSUMER_ENABLED: "false"
           MCP_CONSUMER_ENABLED: "false"
   # ServiceAccount configuration for the system update job (enables RBAC when running upgrade jobs)
@@ -1361,9 +1363,11 @@ global:
     entityVersioning:
       enabled: false
 
-    ## Enables a fast path for processing events sourced from the UI, updates indices synchronously for requests originating from GraphQL
+    ## GMS GraphQL fast path for UI-sourced index updates. Set the same pair on GMS and MAE so
+    ## both a single GMS with embedded consumers and standalone MAE/MCE consumers stay valid.
     preProcessHooksUIEnabled: true
-    ## Reprocess UI events at MAE Consumer, normally if preprocess is enabled this is not required.
+    ## Reprocess UI events in MAE UpdateIndicesHook (embedded or standalone). Not required when
+    ## preprocess is on. Helm fails if both this and preProcessHooksUIEnabled are false (#19119).
     reProcessUIEventHooks: false
 
   externalSecrets:

@@ -165,6 +165,11 @@ datahub-mae-consumer:
 datahub-mce-consumer:
   serviceAccount:
     create: false
+  # Controls the legacy MCE and current MCP Kafka listeners in this deployment.
+  # MCE remains enabled by default for backward compatibility.
+  consumer:
+    mceEnabled: true
+    mcpEnabled: false
   image:
     repository: acryldata/datahub-mce-consumer
     # tag: "v0.11.0" # defaults to .global.datahub.version

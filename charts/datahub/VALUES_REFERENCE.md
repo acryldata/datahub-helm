@@ -1711,6 +1711,18 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 </thead>
 <tbody>
 <tr>
+<td><code>datahub-mce-consumer.consumer.mceEnabled</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable the legacy MetadataChangeEvent listener by setting <code>MCE_CONSUMER_ENABLED</code>. The application also treats this flag as enabling the MCP listener for backward compatibility.</td>
+</tr>
+<tr>
+<td><code>datahub-mce-consumer.consumer.mcpEnabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enable the MetadataChangeProposal listener independently by setting <code>MCP_CONSUMER_ENABLED</code>. Set this to <code>true</code> before disabling the legacy MCE listener when MCP traffic must continue.</td>
+</tr>
+<tr>
 <td><code>datahub-mce-consumer.image.repository</code></td>
 <td>string</td>
 <td><code>acryldata/datahub-mce-consumer</code></td>

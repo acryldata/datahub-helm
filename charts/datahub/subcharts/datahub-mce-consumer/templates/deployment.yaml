@@ -139,7 +139,9 @@ spec:
               value: "true"
             {{- end }}
             - name: MCE_CONSUMER_ENABLED
-              value: "true"
+              value: {{ .Values.consumer.mceEnabled | quote }}
+            - name: MCP_CONSUMER_ENABLED
+              value: {{ .Values.consumer.mcpEnabled | quote }}
             - name: KAFKA_BOOTSTRAP_SERVER
               value: "{{ .Values.global.kafka.bootstrap.server }}"
             {{- include "datahub.kafka.iam.env" . | nindent 12 }}

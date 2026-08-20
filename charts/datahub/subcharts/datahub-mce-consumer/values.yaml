@@ -84,6 +84,13 @@ extraEnvs: []
   # - name: MY_ENVIRONMENT_VAR
   #   value: the_value_goes_here
 
+# Controls the Kafka listeners hosted by this standalone consumer deployment.
+# Keep both values explicit because MCE_CONSUMER_ENABLED also enables the MCP listener
+# in the DataHub application for backward compatibility.
+consumer:
+  mceEnabled: true
+  mcpEnabled: false
+
 extraVolumes: []
   # - name: extras
   #   emptyDir: {}

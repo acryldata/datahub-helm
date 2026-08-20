@@ -434,6 +434,23 @@
             "repository"
           ]
         },
+        "consumer": {
+          "type": "object",
+          "properties": {
+            "mceEnabled": {
+              "type": "boolean",
+              "description": "Enable the legacy MetadataChangeEvent listener (MCE_CONSUMER_ENABLED). This also enables the MCP listener in the application for backward compatibility."
+            },
+            "mcpEnabled": {
+              "type": "boolean",
+              "description": "Enable the MetadataChangeProposal listener (MCP_CONSUMER_ENABLED) independently of the legacy MCE listener."
+            }
+          },
+          "required": [
+            "mceEnabled",
+            "mcpEnabled"
+          ]
+        },
         "resources": {
           "type": "object",
           "properties": {

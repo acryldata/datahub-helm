@@ -1076,7 +1076,7 @@ global:
       awsRegion: ""  # AWS region for RDS/Aurora IAM authentication
 
   datahub:
-    version: v1.7.0
+    version: v1.7.0.1
     # Consolidated ServiceAccount for application Deployments/Jobs/CronJobs (not system-update operator).
     # Override per subchart via <subchart>.serviceAccount.name / .create.
     appServiceAccount:
@@ -1121,7 +1121,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.7.0"
+    appVersion: "1.7.0.1"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -1186,7 +1186,7 @@ global:
     managed_ingestion:
       enabled: true
       # PyPI acryl-datahub version (PEP 440); do not use a leading "v" (unlike global.datahub.version tags).
-      defaultCliVersion: "1.7.0"
+      defaultCliVersion: "1.7.0.1"
 
     metadata_service_authentication:
       enabled: true

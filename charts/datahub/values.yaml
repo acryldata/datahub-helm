@@ -1121,7 +1121,7 @@ global:
       port: "9091"
       nodePort: "30002"
 
-    appVersion: "1.7.0.1"
+    appVersion: "1.7.0"
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work

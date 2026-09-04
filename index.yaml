@@ -3,6 +3,45 @@ entries:
   datahub:
   - apiVersion: v2
     appVersion: v1.7.0
+    created: "2026-09-04T16:04:27.296242006Z"
+    dependencies:
+    - condition: datahub-gms.enabled
+      name: datahub-gms
+      repository: file://./subcharts/datahub-gms
+      version: 0.3.20
+    - condition: datahub-frontend.enabled
+      name: datahub-frontend
+      repository: file://./subcharts/datahub-frontend
+      version: 0.3.11
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mae-consumer
+      repository: file://./subcharts/datahub-mae-consumer
+      version: 0.3.14
+    - condition: global.datahub_standalone_consumers_enabled
+      name: datahub-mce-consumer
+      repository: file://./subcharts/datahub-mce-consumer
+      version: 0.3.16
+    - condition: datahub-ingestion-cron.enabled
+      name: datahub-ingestion-cron
+      repository: file://./subcharts/datahub-ingestion-cron
+      version: 0.2.154
+    - condition: acryl-datahub-actions.enabled
+      name: acryl-datahub-actions
+      repository: file://./subcharts/acryl-datahub-actions
+      version: 0.3.11
+    description: A Helm chart for DataHub (defaults include non-root security contexts
+      for workloads, hook jobs, and datahubSystemUpdate).
+    digest: baa6f9d8bfc5c6c571fc6a1d8f7b60a58f2b3fb64ffe4e37e24f6f4c9b278234
+    maintainers:
+    - email: datahub@acryl.io
+      name: DataHub
+    name: datahub
+    type: application
+    urls:
+    - https://github.com/acryldata/datahub-helm/releases/download/datahub-1.1.4/datahub-1.1.4.tgz
+    version: 1.1.4
+  - apiVersion: v2
+    appVersion: v1.7.0
     created: "2026-08-19T16:12:36.746286781Z"
     dependencies:
     - condition: datahub-gms.enabled
@@ -14871,4 +14910,4 @@ entries:
     urls:
     - https://github.com/acryldata/datahub-helm/releases/download/datahub-prerequisites-0.0.1/datahub-prerequisites-0.0.1.tgz
     version: 0.0.1
-generated: "2026-08-19T16:12:36.75059989Z"
+generated: "2026-09-04T16:04:27.299525545Z"

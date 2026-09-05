@@ -880,7 +880,8 @@ USAGE: Include in Python services (executor, integrations, actions)
 
 {{/*
 Semantic search environment variables for vector similarity search.
-Only emits env vars when semantic search is enabled.
+The two on/off flags are always emitted, explicitly "true" or "false"; the rest of
+the configuration is emitted only when semantic search is enabled.
 
 USAGE: Include in services that need semantic search configuration:
 - datahub-gms
@@ -891,15 +892,22 @@ For credentials only (actions pod), see datahub.semantic-search.credentials.env
 */}}
 {{- define "datahub.semantic-search.env" -}}
 {{- $semantic := .Values.global.datahub.semantic_search -}}
-{{- if $semantic.enabled }}
 {{- /* Two separate env vars control different layers of semantic search:
        ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED  = index-time: creates semantic indices and dual-writes documents into them
        SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED = query-time: allows semantic search queries to execute
-       Both must be true for a fully working setup, so we set them from a single toggle. */ -}}
+       Both must be true for a fully working setup, so we set them from a single toggle.
+
+       These two are emitted even when disabled. Consumers default them to false when
+       absent, so "false" and unset mean the same thing to them -- but an absent variable
+       cannot express "off" to anything that needs to distinguish disabled from
+       unconfigured, such as a bootstrap MCP template's enabledEnvVar kill switch. */ -}}
+{{- $enabled := "false" -}}
+{{- if and $semantic $semantic.enabled -}}{{- $enabled = "true" -}}{{- end }}
 - name: SEARCH_SERVICE_SEMANTIC_SEARCH_ENABLED
-  value: {{ $semantic.enabled | quote }}
+  value: {{ $enabled | quote }}
 - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENABLED
-  value: {{ $semantic.enabled | quote }}
+  value: {{ $enabled | quote }}
+{{- if and $semantic $semantic.enabled }}
 - name: ELASTICSEARCH_SEMANTIC_SEARCH_ENTITIES
   value: {{ $semantic.enabledEntities | quote }}
 - name: ELASTICSEARCH_SEMANTIC_VECTOR_DIMENSION

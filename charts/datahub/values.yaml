@@ -1186,7 +1186,7 @@ global:
     managed_ingestion:
       enabled: true
       # PyPI acryl-datahub version (PEP 440); do not use a leading "v" (unlike global.datahub.version tags).
-      defaultCliVersion: "1.7.0.9"
+      defaultCliVersion: "1.7.0.11"
 
     metadata_service_authentication:
       enabled: true

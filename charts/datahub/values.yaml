@@ -30,6 +30,8 @@ datahub-gms:
     enabled: true
     default: true
     toggeable: false
+  theme_dark_mode:
+    enabled: false
   serviceAccount:
     create: false
   # Optionaly specify service type for datahub-gms: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer

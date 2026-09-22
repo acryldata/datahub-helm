@@ -1365,6 +1365,12 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <td>Allow toggling theme V2 (Acryl only). Chart default is <code>false</code> (V2-only) as of v1.7.</td>
 </tr>
 <tr>
+<td><code>datahub-gms.theme_dark_mode.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Show the light/dark mode toggle in Appearance settings and apply the dark color theme.</td>
+</tr>
+<tr>
 <td><code>datahub-gms.service.type</code></td>
 <td>string</td>
 <td><code>LoadBalancer</code></td>

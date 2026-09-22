@@ -133,6 +133,8 @@ spec:
               value: {{ .Values.theme_v2.default | quote }}
             - name: THEME_V2_TOGGLEABLE
               value: {{ .Values.theme_v2.toggeable | quote }}
+            - name: THEME_DARK_MODE_ENABLED
+              value: {{ .Values.theme_dark_mode.enabled | quote }}
             {{- $i18n := .Values.global.datahub.i18n | default dict }}
             - name: I18N_ENABLED
               value: {{ ternary $i18n.enabled true (hasKey $i18n "enabled") | quote }}

@@ -33,6 +33,9 @@ theme_v2:
   default: true
   toggeable: false
 
+theme_dark_mode:
+  enabled: false
+
 terminationGracePeriodSeconds: 120
 
 serviceAccount:

@@ -120,6 +120,13 @@ datahub-frontend:
     extraLabels: {}
   serviceAccount:
     create: false
+  # Probe /health/live and /health/ready on the management listener instead of
+  # GET /admin on the Play port. Requires a frontend image with
+  # https://github.com/datahub-project/datahub/pull/20049. Leave disabled until
+  # that image is released.
+  management:
+    enabled: false
+    port: 4319
   # Optionaly specify service type for datahub-frontend: LoadBalancer, ClusterIP or NodePort, by default: LoadBalancer
   #   type: ClusterIP
 

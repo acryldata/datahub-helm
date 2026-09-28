@@ -1,3 +1,4 @@
+{{- include "datahub-frontend.management.validate" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -95,18 +96,24 @@ spec:
               containerPort: {{ include "datahub-frontend.monitoring.actuatorPrometheusPort" . }}
               protocol: TCP
           {{- end }}
+          {{- $management := .Values.management | default dict }}
+          {{- if $management.enabled }}
+            - name: management
+              containerPort: {{ int ($management.port | default 4319) }}
+              protocol: TCP
+          {{- end }}
           livenessProbe:
             httpGet:
-              path: {{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.frontend }}{{ end }}/admin
-              port: http
+              path: {{ if $management.enabled }}/health/live{{ else }}{{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.frontend }}{{ end }}/admin{{ end }}
+              port: {{ if $management.enabled }}management{{ else }}http{{ end }}
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           readinessProbe:
             httpGet:
-              path: {{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.frontend }}{{ end }}/admin
-              port: http
+              path: {{ if $management.enabled }}/health/ready{{ else }}{{ if .Values.global.basePath.enabled }}{{ .Values.global.basePath.frontend }}{{ end }}/admin{{ end }}
+              port: {{ if $management.enabled }}management{{ else }}http{{ end }}
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
@@ -132,6 +139,10 @@ spec:
             {{- if .Values.global.datahub.monitoring.enablePrometheus }}
             - name: ENABLE_PROMETHEUS
               value: "true"
+            {{- end }}
+            {{- if $management.enabled }}
+            - name: MANAGEMENT_SERVER_PORT
+              value: {{ $management.port | default 4319 | quote }}
             {{- end }}
             - name: DATAHUB_GMS_HOST
               value: {{ (((.Values.datahub).gms).host | default ((.Values.global.datahub).gms).host) | default (printf "%s-%s" .Release.Name "datahub-gms") | trunc 63 | trimSuffix "-"}}

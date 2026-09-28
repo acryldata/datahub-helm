@@ -1587,6 +1587,18 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <tr>
 <td colspan="3">Duration to wait for resources and connections to close gracefully. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 15s)</td>
 </tr>
+<tr>
+<td><code>datahub-frontend.management.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Probe <code>GET /health/live</code> (liveness) and <code>GET /health/ready</code> (readiness) on the management listener instead of <code>GET /admin</code> on the Play port. Requires a frontend image that includes these paths (<a href="https://github.com/datahub-project/datahub/pull/20049">datahub#20049</a>). Leave disabled until that image is released. Probe timings are unchanged. Paths are not prefixed with <code>global.basePath.frontend</code>.</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.management.port</code></td>
+<td>integer</td>
+<td><code>4319</code></td>
+<td>Container port named <code>management</code>. Sets <code>MANAGEMENT_SERVER_PORT</code>. Must equal <code>global.datahub.monitoring.actuatorPrometheusPort</code> when that listener is exposed, because <code>/health/*</code> and <code>/actuator/prometheus</code> share it. Must not equal the Play HTTP port.</td>
+</tr>
 </tbody>
 </table>
 

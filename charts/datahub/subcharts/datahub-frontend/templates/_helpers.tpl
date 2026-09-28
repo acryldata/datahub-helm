@@ -235,3 +235,24 @@ global.datahub.monitoring metricsMode: legacy | jmx_and_actuator | actuator_only
 {{- define "datahub-frontend.monitoring.jmxMetricsPath" -}}
 {{- (.Values.global.datahub.monitoring.jmxExporter | default dict).metricsPath | default "/metrics" -}}
 {{- end -}}
+
+{{/*
+Management-port probes (/health/live, /health/ready) share the listener that
+serves /actuator/prometheus. Reject a port that cannot be that listener.
+*/}}
+{{- define "datahub-frontend.management.validate" -}}
+{{- $management := .Values.management | default dict -}}
+{{- if $management.enabled -}}
+{{- $mgmtPort := int ($management.port | default 4319) -}}
+{{- if eq $mgmtPort (int .Values.service.containerPort) -}}
+{{- fail "datahub-frontend.management.port must not equal the Play HTTP container port; probes belong on MANAGEMENT_SERVER_PORT" -}}
+{{- end -}}
+{{- $mode := include "datahub-frontend.monitoring.metricsMode" . -}}
+{{- if and .Values.global.datahub.monitoring.enablePrometheus (or (eq $mode "jmx_and_actuator") (eq $mode "actuator_only")) -}}
+{{- $promPort := int (include "datahub-frontend.monitoring.actuatorPrometheusPort" .) -}}
+{{- if ne $mgmtPort $promPort -}}
+{{- fail (printf "datahub-frontend.management.port (%d) must equal global.datahub.monitoring.actuatorPrometheusPort (%d): /health/live, /health/ready, and /actuator/prometheus share MANAGEMENT_SERVER_PORT" $mgmtPort $promPort) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

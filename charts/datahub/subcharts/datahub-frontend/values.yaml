@@ -247,6 +247,16 @@ readinessProbe:
   failureThreshold: 4
   timeoutSeconds: 1
 
+# Management-port health probes. Requires a frontend image that serves
+# GET /health/live and GET /health/ready on MANAGEMENT_SERVER_PORT
+# (https://github.com/datahub-project/datahub/pull/20049).
+# Disabled until that image is released. When enabled, probes leave the Play
+# port and are not prefixed with global.basePath.frontend. Probe timings above
+# are unchanged.
+management:
+  enabled: false
+  port: 4319
+
 datahub:
   play:
     mem:

@@ -1566,26 +1566,42 @@ GMS-only, opt-in cache for domain/container/glossary hierarchies and group membe
 <tr>
 <td><code>datahub-frontend.beforeServiceUnbindTimeout</code></td>
 <td>string</td>
-<td><code>10s</code></td>
+<td><code>5s</code></td>
 </tr>
 <tr>
-<td colspan="3">Duration for Akka coordinated shutdown phase. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 10s)</td>
+<td colspan="3">Max time for the readiness flag flip (Pekko before-service-unbind phase). preStop + beforeServiceUnbindTimeout + serviceRequestDoneTimeout + serviceStopTimeout must stay under terminationGracePeriodSeconds, which counts from before preStop. Format: Xs (e.g., 5s)</td>
 </tr>
 <tr>
 <td><code>datahub-frontend.serviceRequestDoneTimeout</code></td>
 <td>string</td>
-<td><code>65s</code></td>
+<td><code>55s</code></td>
 </tr>
 <tr>
-<td colspan="3">Duration to wait for in-flight HTTP requests to complete before forcefully terminating them. Must be less than GMS async request timeout (55s) and terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 65s)</td>
+<td colspan="3">Max time for Play to drain requests (Pekko service-requests-done phase). Must be greater than waitBeforeTermination + serverTerminationTimeout. Play waits, then terminates for terminationTimeout minus 100ms, so an equal phase times out in silence. With gracefulshutdownEnabled false this phase is the drain after SIGTERM (previously 65s). Format: Xs (e.g., 55s)</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.waitBeforeTermination</code></td>
+<td>string</td>
+<td><code>20s</code></td>
+</tr>
+<tr>
+<td colspan="3">Wait after Play unbinds before it terminates connections, so existing keep-alive connections and streamed (SSE) responses can finish. Applied only when gracefulshutdownEnabled is true. Format: Xs (e.g., 20s)</td>
+</tr>
+<tr>
+<td><code>datahub-frontend.serverTerminationTimeout</code></td>
+<td>string</td>
+<td><code>30s</code></td>
+</tr>
+<tr>
+<td colspan="3">Hard deadline for in-flight requests after waitBeforeTermination; new requests on existing connections then get 503 with Connection: close. Applied only when gracefulshutdownEnabled is true. Format: Xs (e.g., 30s)</td>
 </tr>
 <tr>
 <td><code>datahub-frontend.serviceStopTimeout</code></td>
 <td>string</td>
-<td><code>15s</code></td>
+<td><code>10s</code></td>
 </tr>
 <tr>
-<td colspan="3">Duration to wait for resources and connections to close gracefully. Must be less than terminationGracePeriodSeconds (default 120s). Format: Xs (e.g., 15s)</td>
+<td colspan="3">Max time to close the GMS HTTP client (Pekko service-stop phase). Previously 15s. Format: Xs (e.g., 10s)</td>
 </tr>
 <tr>
 <td><code>datahub-frontend.management.enabled</code></td>

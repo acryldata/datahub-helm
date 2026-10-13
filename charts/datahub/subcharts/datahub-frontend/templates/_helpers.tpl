@@ -256,3 +256,25 @@ serves /actuator/prometheus. Reject a port that cannot be that listener.
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Graceful shutdown env vars.
+FRONTEND_WAIT_BEFORE_TERMINATION and FRONTEND_SERVER_TERMINATION_TIMEOUT are set only when
+gracefulshutdownEnabled is true, so the app keeps its defaults (no wait on stop) otherwise.
+*/}}
+{{- define "datahub-frontend.gracefulShutdownEnvs" -}}
+- name: FRONTEND_GRACEFUL_SHUTDOWN_ENABLED
+  value: {{ .Values.gracefulshutdownEnabled | quote }}
+- name: FRONTEND_BEFORE_SERVICE_UNBIND_TIMEOUT
+  value: {{ .Values.beforeServiceUnbindTimeout | quote }}
+- name: FRONTEND_SERVICE_REQUESTS_DONE_TIMEOUT
+  value: {{ .Values.serviceRequestDoneTimeout | quote }}
+- name: FRONTEND_SERVICE_STOP_TIMEOUT
+  value: {{ .Values.serviceStopTimeout | quote }}
+{{- if .Values.gracefulshutdownEnabled }}
+- name: FRONTEND_WAIT_BEFORE_TERMINATION
+  value: {{ .Values.waitBeforeTermination | quote }}
+- name: FRONTEND_SERVER_TERMINATION_TIMEOUT
+  value: {{ .Values.serverTerminationTimeout | quote }}
+{{- end }}
+{{- end -}}

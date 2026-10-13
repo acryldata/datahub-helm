@@ -44,4 +44,8 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint 
+        run: ct lint
+
+      - name: Run frontend graceful shutdown render tests
+        run: |
+          python3 .github/scripts/test_frontend_graceful_shutdown.py 

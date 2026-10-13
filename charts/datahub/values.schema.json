@@ -288,15 +288,23 @@
         },
         "beforeServiceUnbindTimeout": {
           "type": "string",
-          "description": "Duration for Akka coordinated shutdown phase"
+          "description": "Max duration of the Pekko before-service-unbind phase (readiness flag flip)"
         },
         "serviceRequestDoneTimeout": {
           "type": "string",
-          "description": "Duration to wait for in-flight HTTP requests to complete"
+          "description": "Max duration for Play to drain requests; must be greater than waitBeforeTermination + serverTerminationTimeout (Play terminates for terminationTimeout minus 100ms after the wait)"
+        },
+        "waitBeforeTermination": {
+          "type": "string",
+          "description": "Wait after unbind before terminating connections (applied only when gracefulshutdownEnabled)"
+        },
+        "serverTerminationTimeout": {
+          "type": "string",
+          "description": "Hard deadline for in-flight requests after waitBeforeTermination (applied only when gracefulshutdownEnabled)"
         },
         "serviceStopTimeout": {
           "type": "string",
-          "description": "Duration to wait for resources and connections to close gracefully"
+          "description": "Max time to close the GMS HTTP client (Pekko service-stop phase)"
         }
       },
       "required": [

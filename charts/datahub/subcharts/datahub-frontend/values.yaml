@@ -67,26 +67,51 @@ securityContext:
 
 priorityClassName:
 
-# Graceful shutdown configuration for spot instance termination
-# When enabled, frontend will stop accepting new requests and drain existing connections before shutdown
+# Graceful shutdown for pod termination (spot reclaim, node drain, rollouts).
+# Sequence: pod deleted -> lifecycle.preStop sleep (kube-proxy / load balancers stop sending new
+# connections) -> SIGTERM -> readiness 503 and "Connection: close" on every response -> Play unbinds
+# -> waitBeforeTermination -> in-flight requests drained within serverTerminationTimeout -> cleanup.
+# Budget: terminationGracePeriodSeconds counts from BEFORE preStop, so these ADD UP:
+#   preStop + beforeServiceUnbindTimeout + serviceRequestDoneTimeout + serviceStopTimeout
+#   = 20s + 5s + 55s + 10s = 90s worst case, under terminationGracePeriodSeconds (120s).
+# On AWS spot the node is reclaimed 120s after the interruption notice and drain starts a few
+# seconds later, so keep the total well under 120s.
+# kube-proxy drops the pod from new connections during preStop, but it does not close sockets
+# it already has. After SIGTERM the pod fails readiness and sends Connection: close so Play
+# closes those sockets. In-flight work keeps running until serverTerminationTimeout.
+# Upgrade: preStop (15s -> 20s), beforeServiceUnbindTimeout (10s -> 5s),
+# serviceRequestDoneTimeout (65s -> 55s), and serviceStopTimeout (15s -> 10s) apply with
+# gracefulshutdownEnabled false. With the flag off, serverTerminationTimeout is unset, so the
+# drain after SIGTERM is serviceRequestDoneTimeout. With the flag on, the hard stop is
+# waitBeforeTermination + serverTerminationTimeout (20s + 30s); 55s is slack so the phase
+# does not win that race.
 gracefulshutdownEnabled: false
 
-# Duration for Akka coordinated shutdown phases (how long to wait for each phase)
-# Must be less than terminationGracePeriodSeconds (default 120s)
+# Max time for the readiness flag flip (instant in practice). Pekko before-service-unbind phase.
+# Format: Xs (e.g., 5s)
+beforeServiceUnbindTimeout: 5s
+
+# Max time for Play to drain requests. Pekko service-requests-done phase.
+# Must be greater than waitBeforeTermination + serverTerminationTimeout. Play waits, then
+# calls terminate(terminationTimeout - 100ms), so an equal phase times out in silence.
+# Format: Xs (e.g., 55s)
+serviceRequestDoneTimeout: 55s
+
+# Wait after Play unbinds before it terminates connections. Requests on existing keep-alive
+# connections and streamed responses (SSE) keep working meanwhile; Pekko HTTP does not wait for
+# streamed bodies on its own. Applied only when gracefulshutdownEnabled is true.
+# Format: Xs (e.g., 20s)
+waitBeforeTermination: 20s
+
+# Hard deadline for in-flight requests once termination starts (after waitBeforeTermination).
+# New requests on existing connections then get 503 with "Connection: close".
+# Applied only when gracefulshutdownEnabled is true.
+# Format: Xs (e.g., 30s)
+serverTerminationTimeout: 30s
+
+# Max time to close the GMS HTTP client. Pekko service-stop phase.
 # Format: Xs (e.g., 10s)
-# Note: Total shutdown time = beforeServiceUnbindTimeout + serviceRequestDoneTimeout + serviceStopTimeout + buffer
-beforeServiceUnbindTimeout: 10s
-
-# Duration to wait for in-flight HTTP requests to complete before forcefully terminating them
-# Set higher than GMS async request timeout (55s) to allow requests to complete naturally
-# Must be less than terminationGracePeriodSeconds (default 120s)
-# Format: Xs (e.g., 65s)
-serviceRequestDoneTimeout: 65s
-
-# Duration to wait for resources and connections to close gracefully
-# Must be less than terminationGracePeriodSeconds (default 120s)
-# Format: Xs (e.g., 15s)
-serviceStopTimeout: 15s
+serviceStopTimeout: 10s
 
 service:
   type: LoadBalancer # ClusterIP or NodePort
@@ -208,10 +233,10 @@ extraSidecars: []
 lifecycle:
   preStop:
     exec:
-      # Graceful shutdown: delay before SIGTERM to allow load balancer draining
-      # Fixes race condition where LB still routes traffic after pod removal from endpoints
-      # Timing: 15s preStop + 90s Akka phases (10+65+15) + 15s buffer = 120s total
-      command: ["/bin/sh", "-c", "sleep 15"]
+      # Delay SIGTERM so kube-proxy and load balancers stop sending new connections first.
+      # Kubernetes removes the endpoint when the pod is deleted, but propagation takes time.
+      # Counts toward terminationGracePeriodSeconds; see the graceful shutdown budget above.
+      command: ["/bin/sh", "-c", "sleep 20"]
   # To add a new user to datahub in JAAS config without mounting the user.props file
   # postStart:
   #   exec:

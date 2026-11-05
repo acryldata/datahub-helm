@@ -446,6 +446,8 @@ spec:
             - name: CACHE_ENTITY_COUNTS_TTL_SECONDS
               value: {{ .Values.global.datahub.cache.search.homepage.entityCounts.ttlSeconds | quote }}
             {{- end }}
+            {{- include "datahub.search-v3.env" (dict "Values" .Values "searchV3Templates" true) | nindent 12 }}
+            {{- include "datahub.elasticsearch.clusters.env" . | nindent 12 }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}
             {{- include "datahub.entity-graph-cache.gms.env" . | nindent 12 }}
             - name: LINEAGE_SEARCH_CACHE_ENABLED

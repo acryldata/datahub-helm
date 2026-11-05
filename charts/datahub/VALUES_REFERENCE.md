@@ -274,6 +274,203 @@ This document provides a comprehensive reference for every single configurable v
 </tbody>
 </table>
 
+### Global Elasticsearch Entity Index (Search V3 rollout)
+
+OSS `application.yaml` serves Search V3 when these switches are unset. The chart always emits them. `global.elasticsearch.entityIndex.mode` selects a preset; set an individual flag to override that preset. Semantic and hybrid reads are omitted unless set.
+
+| mode | V2 enabled | V3 write | V3 keyword read | Query templates |
+|------|------------|----------|-----------------|-----------------|
+| `v2` (default) | true | false | false | false |
+| `migrate` | true | true | false | false |
+| `v3` | false | true | true | true |
+
+`migrate` keeps V2 as the read path and also writes V3 so system-update can build and fill `*index_v3`. `v3` turns V2 off and serves keyword search from V3 templates.
+
+Index flags are set on GMS, the MAE and MCE consumers, system-update (blocking and non-blocking), restore-indices, and the hourly system-update cron. `SEARCH_V3_TEMPLATES_ENABLED` is set on GMS only.
+
+<table>
+<thead>
+<tr>
+<th>Configuration Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>global.elasticsearch.entityIndex.mode</code></td>
+<td>string</td>
+<td><code>v2</code></td>
+<td>Search entity index preset: <code>v2</code>, <code>migrate</code>, or <code>v3</code>. An unknown value fails the render. See the table above for the env vars each preset emits.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.v2Enabled</code></td>
+<td>boolean</td>
+<td>preset</td>
+<td>Overrides <code>ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED</code>. Omit to follow <code>mode</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.v3Enabled</code></td>
+<td>boolean</td>
+<td>preset</td>
+<td>Overrides <code>ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED</code> (V3 writes). Omit to follow <code>mode</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.keywordReadEnabled</code></td>
+<td>boolean</td>
+<td>preset</td>
+<td>Overrides <code>ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED</code>. Omit to follow <code>mode</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.templatesEnabled</code></td>
+<td>boolean</td>
+<td>preset</td>
+<td>Overrides <code>SEARCH_V3_TEMPLATES_ENABLED</code> on GMS. Omit to follow <code>mode</code>. Not set on consumers or upgrade jobs.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.semanticReadEnabled</code></td>
+<td>boolean</td>
+<td>unset</td>
+<td>When set, emits <code>ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED</code>. Unset leaves the application default (false).</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.hybridReadEnabled</code></td>
+<td>boolean</td>
+<td>unset</td>
+<td>When set, emits <code>ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED</code>. Unset leaves the application default (false).</td>
+</tr>
+</tbody>
+</table>
+
+### Second search cluster and OpenSearch 3 cutover
+
+`global.elasticsearch.host`, `port`, `auth`, and `iam` configure the **primary** cluster. `global.elasticsearch.clusters.secondary` adds an optional second cluster, and `global.elasticsearch.componentCluster` chooses which cluster hosts each subsystem. Use them to move Search V3, and eventually everything else, onto a new OpenSearch 3 cluster while the old OpenSearch 2 or Elasticsearch cluster keeps serving.
+
+The variables go to GMS, the MAE and MCE consumers, system-update (blocking and non-blocking), restore-indices, and the hourly system-update cron. Nothing is emitted unless the secondary is enabled or a component is routed. The render fails if a component names `secondary` while it is disabled, if a component key or cluster name is unknown, or if the secondary has neither `uri` nor `host`.
+
+GMS readiness (`/check/ready`, `/health/detailed`) requires every configured cluster to be non-RED. Semantic and hybrid V3 reads need OpenSearch 3.5+ or Elasticsearch 8.18+ on the Search V3 cluster. The prerequisites chart can run a local OpenSearch 3 cluster with `opensearch3.enabled: true` (Service `opensearch3-cluster-master`).
+
+<table>
+<thead>
+<tr>
+<th>Configuration Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.enabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Configure the second cluster. Requires <code>uri</code> or <code>host</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.uri</code></td>
+<td>string</td>
+<td>unset</td>
+<td><code>ELASTICSEARCH_CLUSTERS_SECONDARY_URI</code> as <code>scheme://host:port[/pathPrefix]</code>. Wins over <code>host</code>/<code>port</code>/<code>useSSL</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.host</code> / <code>port</code> / <code>useSSL</code></td>
+<td>string / string / boolean</td>
+<td>unset / <code>9200</code> / <code>false</code></td>
+<td>Builds the URI when <code>uri</code> is unset.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.auth.username</code></td>
+<td>string</td>
+<td>unset</td>
+<td><code>ELASTICSEARCH_CLUSTERS_SECONDARY_USERNAME</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.auth.password</code></td>
+<td>object</td>
+<td>unset</td>
+<td><code>value</code>, or <code>secretRef</code> plus <code>secretKey</code>. Sets <code>ELASTICSEARCH_CLUSTERS_SECONDARY_PASSWORD</code>.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.iam.enabled</code> / <code>region</code></td>
+<td>boolean / string</td>
+<td><code>false</code> / unset</td>
+<td>AWS IAM auth for the second cluster (<code>..._OPENSEARCH_USE_AWS_IAM_AUTH</code>, <code>..._REGION</code>). Independent of the primary IAM settings.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.engineType</code> / <code>autoDetect</code> / <code>shimEnabled</code> / <code>engineVersion</code></td>
+<td>string / boolean / boolean / string</td>
+<td><code>AUTO_DETECT</code> / <code>true</code> / <code>true</code> / unset</td>
+<td>Search client shim for the second cluster. The engine is detected separately from primary; set <code>OPENSEARCH_3</code> to pin it. <code>engineVersion</code> skips the cluster info probe.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.dataNodeCount</code> / <code>numShards</code> / <code>numReplicas</code></td>
+<td>integer</td>
+<td>unset</td>
+<td>Sizing for indices created on the second cluster. Never copied from primary.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.clusters.secondary.indexPrefix</code> / <code>threadCount</code></td>
+<td>string / integer</td>
+<td>unset</td>
+<td>Index prefix override (blank inherits <code>indexPrefix</code>) and client thread count for the second cluster.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.componentCluster.&lt;component&gt;</code></td>
+<td>string</td>
+<td>unset (primary)</td>
+<td><code>primary</code> or <code>secondary</code> for <code>searchV2</code>, <code>searchV3</code>, <code>semantic</code>, <code>graph</code>, <code>timeseries</code>, <code>systemMetadata</code>, <code>usage</code>. Sets <code>ELASTICSEARCH_COMPONENT_CLUSTER_*</code>.</td>
+</tr>
+</tbody>
+</table>
+
+#### Cutover phases
+
+Each phase is one chart upgrade. Keep `indexPrefix` the same on both clusters so the final promotion does not rename indices.
+
+1. **Attach OS3 and dual-write Search V3.** Search still reads V2 on the old cluster. System-update builds and fills `*index_v3` on OS3 from SQL.
+
+   ```yaml
+   global:
+     elasticsearch:
+       entityIndex:
+         mode: migrate
+       clusters:
+         secondary:
+           enabled: true
+           host: opensearch3-cluster-master
+           port: "9200"
+       componentCluster:
+         searchV3: secondary
+   ```
+
+2. **Read Search V3 from OS3.** V2 indices on the old cluster are no longer written.
+
+   ```yaml
+   global:
+     elasticsearch:
+       entityIndex:
+         mode: v3
+   ```
+
+3. **Move graph, system metadata, and semantic.** These are rebuilt from SQL. After the upgrade, run restore indices once: `kubectl create job --from=cronjob/<release>-datahub-restore-indices-job-template restore-indices-os3` (requires `datahubUpgrade.enabled: true`).
+
+   ```yaml
+   global:
+     elasticsearch:
+       componentCluster:
+         searchV3: secondary
+         graph: secondary
+         systemMetadata: secondary
+         semantic: secondary
+   ```
+
+4. **Move timeseries and usage.** Timeseries aspects (profiles, assertion runs, operations) and usage events are stored only in the search engine, not in SQL, so restore indices cannot rebuild them and the chart cannot copy them. Copy them before routing: remote `_reindex` on OS3 with `source.remote` pointing at the old cluster (`*aspect_v1` indices and the usage event data stream), or a snapshot restore. The alternative is to accept losing that history. Then add `timeseries: secondary` and `usage: secondary`.
+
+5. **Promote OS3 to primary.** Move the OS3 connection into `global.elasticsearch.host`, `port`, `auth`, and `iam`. Set `clusters.secondary.enabled: false` and remove every `componentCluster` override. Index names stay the same, so nothing is rebuilt. After that the old cluster can be decommissioned.
+
+Starting from Elasticsearch instead of OpenSearch 2 follows the same phases. The secondary engine is detected on its own, so primary can stay pinned to `ELASTICSEARCH_8`.
+
 ### Global Semantic Search Configuration
 
 <table>

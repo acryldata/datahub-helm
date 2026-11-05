@@ -912,6 +912,71 @@ global:
       #           score_mode: multiply
       #           boost_mode: multiply
 
+    ## Search entity index generation. OSS application.yaml now defaults to Search V3
+    ## (V2 off, V3 write, keyword read, and query templates on) when these env vars are
+    ## unset. This chart always emits them so an upgrade keeps the previous V2 behavior
+    ## until mode is changed.
+    ##
+    ## mode:
+    ##   v2 (default) — V2 read and write. V3 write, keyword read, and templates off.
+    ##   migrate — V2 stays the read path. Writes also go to V3 so system-update can
+    ##             build and fill *index_v3. Keyword read and templates stay off.
+    ##   v3 — V2 off. V3 write, keyword read, and query templates on.
+    ##
+    ## Set a flag below to override that preset. Semantic and hybrid reads stay at the
+    ## application default (off) unless set here.
+    entityIndex:
+      mode: v2
+      # v2Enabled: true          # ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED
+      # v3Enabled: false         # ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED
+      # keywordReadEnabled: false  # ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED
+      # templatesEnabled: false  # SEARCH_V3_TEMPLATES_ENABLED (GMS only)
+      # semanticReadEnabled: false  # ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED
+      # hybridReadEnabled: false    # ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED
+
+    ## Optional second search cluster, e.g. an OpenSearch 3 cluster used while moving off
+    ## OpenSearch 2 or Elasticsearch. The connection above (host, port, auth, iam) is the
+    ## primary cluster. Nothing is inherited from primary. See VALUES_REFERENCE.md for the
+    ## phased cutover.
+    clusters:
+      secondary:
+        enabled: false
+        # uri: "https://opensearch3-cluster-master:9200"  # ELASTICSEARCH_CLUSTERS_SECONDARY_URI; wins over host/port
+        # host: "opensearch3-cluster-master"
+        # port: "9200"
+        # useSSL: false
+        # auth:
+        #   username: ""
+        #   password:
+        #     value: ""
+        #     # or
+        #     secretRef: ""
+        #     secretKey: ""
+        # iam:
+        #   enabled: false  # ELASTICSEARCH_CLUSTERS_SECONDARY_OPENSEARCH_USE_AWS_IAM_AUTH
+        # region: ""        # ELASTICSEARCH_CLUSTERS_SECONDARY_REGION
+        # engineType: AUTO_DETECT  # AUTO_DETECT, OPENSEARCH_2, OPENSEARCH_3, ELASTICSEARCH_8, ELASTICSEARCH_9
+        # autoDetect: true
+        # shimEnabled: true
+        # engineVersion: ""  # e.g. 3.9.0; skips the cluster info probe
+        # dataNodeCount: 3
+        # numShards: 3
+        # numReplicas: 1
+        # indexPrefix: ""    # blank inherits indexPrefix
+        # threadCount: 2
+
+    ## Which cluster hosts each subsystem: primary or secondary. Unset keys stay on primary.
+    ## A key naming secondary requires clusters.secondary.enabled.
+    componentCluster: {}
+    # componentCluster:
+    #   searchV2: primary
+    #   searchV3: secondary
+    #   semantic: primary
+    #   graph: primary
+    #   timeseries: primary
+    #   systemMetadata: primary
+    #   usage: primary
+
   kafka:
     bootstrap:
       server: "prerequisites-kafka:9092"

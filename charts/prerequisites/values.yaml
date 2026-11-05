@@ -76,6 +76,37 @@ opensearch:
   #     - ReadWriteOnce
   #   size: 100M
 
+# Optional OpenSearch 3 cluster for a Search V3 / OpenSearch 3 cutover. Point DataHub at it with
+# global.elasticsearch.clusters.secondary (host: opensearch3-cluster-master), or later as primary.
+opensearch3:
+  enabled: false
+
+  # Service and StatefulSet names become opensearch3-cluster-master, distinct from the 2.x release.
+  clusterName: "opensearch3-cluster"
+  masterService: "opensearch3-cluster-master"
+
+  singleNode: true
+  # replicas: 3
+  # antiAffinity: "hard"
+
+  config:
+    opensearch.yml: |
+      plugins:
+        security:
+          disabled: true
+
+  extraEnvs:
+    - name: DISABLE_INSTALL_DEMO_CONFIG
+      value: "true"
+
+  # opensearchJavaOpts: "-Xms768m -Xmx1024m"
+
+  # persistence:
+  #   storageClass: "standard"
+  #   accessModes:
+  #     - ReadWriteOnce
+  #   size: 100M
+
 # Official neo4j chart, supports both community and enterprise editions
 # see https://neo4j.com/docs/operations-manual/current/kubernetes/ for more information
 # source: https://github.com/neo4j/helm-charts

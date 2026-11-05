@@ -119,6 +119,8 @@ spec:
             - name: CDC_MCL_PROCESSING_ENABLED
               value: {{ .Values.global.cdc.enabled | quote }}
             {{- end }}
+            {{- include "datahub.search-v3.env" . | nindent 12 }}
+            {{- include "datahub.elasticsearch.clusters.env" . | nindent 12 }}
             {{- include "datahub.semantic-search.env" . | nindent 12 }}
             - name: ENTITY_GRAPH_CACHE_ENABLED
               value: "false"

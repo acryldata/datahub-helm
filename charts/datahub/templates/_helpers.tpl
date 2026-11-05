@@ -969,6 +969,154 @@ For credentials only (actions pod), see datahub.semantic-search.credentials.env
 {{- end -}}
 
 {{/*
+Search entity index switches (Search V2 / V3 rollout).
+
+Always emits the index flags. Leaving them unset inherits application.yaml, which
+serves Search V3 only. mode v2 | migrate | v3 selects a preset; an explicit
+v2Enabled, v3Enabled, keywordReadEnabled, or templatesEnabled overrides that preset.
+Semantic and hybrid reads are emitted only when set.
+
+SEARCH_V3_TEMPLATES_ENABLED is GMS-only. Pass searchV3Templates true:
+  include "datahub.search-v3.env" (dict "Values" .Values "searchV3Templates" true)
+Other callers include this with the root context and do not get the templates flag.
+*/}}
+{{- define "datahub.search-v3.env" -}}
+{{- $cfg := .Values.global.elasticsearch.entityIndex | default dict -}}
+{{- $mode := $cfg.mode | default "v2" -}}
+{{- $presets := dict "v2" (dict "v2" true "v3" false "keywordRead" false "templates" false) "migrate" (dict "v2" true "v3" true "keywordRead" false "templates" false) "v3" (dict "v2" false "v3" true "keywordRead" true "templates" true) -}}
+{{- $preset := index $presets $mode -}}
+{{- if not $preset -}}
+{{- fail (printf "global.elasticsearch.entityIndex.mode must be v2, migrate, or v3 (got %s)" $mode) -}}
+{{- end -}}
+{{- $v2 := $preset.v2 -}}
+{{- $v3 := $preset.v3 -}}
+{{- $keywordRead := $preset.keywordRead -}}
+{{- $templates := $preset.templates -}}
+{{- if hasKey $cfg "v2Enabled" -}}{{- $v2 = $cfg.v2Enabled -}}{{- end -}}
+{{- if hasKey $cfg "v3Enabled" -}}{{- $v3 = $cfg.v3Enabled -}}{{- end -}}
+{{- if hasKey $cfg "keywordReadEnabled" -}}{{- $keywordRead = $cfg.keywordReadEnabled -}}{{- end -}}
+{{- if hasKey $cfg "templatesEnabled" -}}{{- $templates = $cfg.templatesEnabled -}}{{- end -}}
+- name: ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED
+  value: {{ $v2 | quote }}
+- name: ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED
+  value: {{ $v3 | quote }}
+- name: ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED
+  value: {{ $keywordRead | quote }}
+{{- if .searchV3Templates }}
+- name: SEARCH_V3_TEMPLATES_ENABLED
+  value: {{ $templates | quote }}
+{{- end }}
+{{- if hasKey $cfg "semanticReadEnabled" }}
+- name: ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED
+  value: {{ index $cfg "semanticReadEnabled" | quote }}
+{{- end }}
+{{- if hasKey $cfg "hybridReadEnabled" }}
+- name: ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED
+  value: {{ index $cfg "hybridReadEnabled" | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Optional second search cluster and per-component cluster routing.
+
+global.elasticsearch.clusters.secondary maps to ELASTICSEARCH_CLUSTERS_SECONDARY_*.
+global.elasticsearch.componentCluster maps to ELASTICSEARCH_COMPONENT_CLUSTER_*; unset
+keys are omitted (application default primary). Nothing is emitted by default.
+
+USAGE: same workloads as datahub.search-v3.env (GMS, MAE/MCE consumers, datahub.upgrade.env).
+*/}}
+{{- define "datahub.elasticsearch.clusters.env" -}}
+{{- $es := .Values.global.elasticsearch -}}
+{{- $sec := ($es.clusters | default dict).secondary | default dict -}}
+{{- $secEnabled := $sec.enabled | default false -}}
+{{- $uri := $sec.uri | default "" -}}
+{{- if and $secEnabled (not $uri) $sec.host -}}
+{{- $scheme := ternary "https" "http" (eq (toString ($sec.useSSL | default false)) "true") -}}
+{{- $uri = printf "%s://%s:%v" $scheme $sec.host ($sec.port | default "9200") -}}
+{{- end -}}
+{{- if and $secEnabled (not $uri) -}}
+{{- fail "global.elasticsearch.clusters.secondary.enabled requires uri or host" -}}
+{{- end -}}
+{{- $components := dict "searchV2" "SEARCH_V2" "searchV3" "SEARCH_V3" "semantic" "SEMANTIC" "graph" "GRAPH" "timeseries" "TIMESERIES" "systemMetadata" "SYSTEM_METADATA" "usage" "USAGE" -}}
+{{- $routes := $es.componentCluster | default dict -}}
+{{- range $key, $cluster := $routes -}}
+{{- if not (hasKey $components $key) -}}
+{{- fail (printf "global.elasticsearch.componentCluster.%s is not a known component (searchV2, searchV3, semantic, graph, timeseries, systemMetadata, usage)" $key) -}}
+{{- end -}}
+{{- if not (has $cluster (list "primary" "secondary")) -}}
+{{- fail (printf "global.elasticsearch.componentCluster.%s must be primary or secondary (got %v)" $key $cluster) -}}
+{{- end -}}
+{{- if and (eq $cluster "secondary") (not $secEnabled) -}}
+{{- fail (printf "global.elasticsearch.componentCluster.%s is secondary but global.elasticsearch.clusters.secondary.enabled is false" $key) -}}
+{{- end -}}
+{{- end -}}
+{{- if $secEnabled }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_URI
+  value: {{ $uri | quote }}
+{{- with $sec.auth }}
+{{- with .username }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_USERNAME
+  value: {{ . | quote }}
+{{- end }}
+{{- with .password }}
+{{- if .value }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_PASSWORD
+  value: {{ .value | quote }}
+{{- else if .secretRef }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .secretRef | quote }}
+      key: {{ .secretKey | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if ($sec.iam | default dict).enabled }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_OPENSEARCH_USE_AWS_IAM_AUTH
+  value: "true"
+{{- end }}
+{{- with $sec.region }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_REGION
+  value: {{ . | quote }}
+{{- end }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_SHIM_ENABLED
+  value: {{ (hasKey $sec "shimEnabled" | ternary $sec.shimEnabled true) | quote }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_SHIM_ENGINE_TYPE
+  value: {{ $sec.engineType | default "AUTO_DETECT" | quote }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_SHIM_AUTO_DETECT
+  value: {{ (hasKey $sec "autoDetect" | ternary $sec.autoDetect true) | quote }}
+{{- with $sec.engineVersion }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_SHIM_ENGINE_VERSION
+  value: {{ . | quote }}
+{{- end }}
+{{- with $sec.dataNodeCount }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_DATA_NODE_COUNT
+  value: {{ . | quote }}
+{{- end }}
+{{- with $sec.numShards }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_NUM_SHARDS
+  value: {{ . | quote }}
+{{- end }}
+{{- with $sec.numReplicas }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_NUM_REPLICAS
+  value: {{ . | quote }}
+{{- end }}
+{{- with $sec.indexPrefix }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_INDEX_PREFIX
+  value: {{ . | quote }}
+{{- end }}
+{{- with $sec.threadCount }}
+- name: ELASTICSEARCH_CLUSTERS_SECONDARY_THREAD_COUNT
+  value: {{ . | quote }}
+{{- end }}
+{{- end }}
+{{- range $key, $cluster := $routes }}
+- name: ELASTICSEARCH_COMPONENT_CLUSTER_{{ index $components $key }}
+  value: {{ $cluster | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Embedding provider credentials for the datahub-actions pod.
 The datahub-documents ingestion source fetches model/provider config from
 the server via GraphQL, but still needs credentials as env vars to

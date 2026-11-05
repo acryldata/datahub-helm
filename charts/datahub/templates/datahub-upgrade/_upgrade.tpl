@@ -90,6 +90,8 @@ Return the env variables for upgrade jobs
   value: {{ . }}
 {{- end }}
 {{- include "datahub.elasticsearch.threadCount.env.systemUpdate" . | nindent 0 }}
+{{- include "datahub.search-v3.env" . | nindent 0 }}
+{{- include "datahub.elasticsearch.clusters.env" . | nindent 0 }}
 - name: GRAPH_SERVICE_IMPL
   value: {{ .Values.global.graph_service_impl }}
 {{- if eq .Values.global.graph_service_impl "neo4j" }}

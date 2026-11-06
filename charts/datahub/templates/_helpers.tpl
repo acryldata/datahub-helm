@@ -1089,25 +1089,26 @@ USAGE: same workloads as datahub.search-v3.env (GMS, MAE/MCE consumers, datahub.
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_SHIM_ENGINE_VERSION
   value: {{ . | quote }}
 {{- end }}
-{{- with $sec.dataNodeCount }}
+{{- /* Numeric settings: "with" would drop 0 (e.g. numReplicas for a single-node cluster), so gate on set-ness. */ -}}
+{{- if not (kindIs "invalid" $sec.dataNodeCount) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_DATA_NODE_COUNT
-  value: {{ . | quote }}
+  value: {{ $sec.dataNodeCount | int64 | quote }}
 {{- end }}
-{{- with $sec.numShards }}
+{{- if not (kindIs "invalid" $sec.numShards) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_NUM_SHARDS
-  value: {{ . | quote }}
+  value: {{ $sec.numShards | int64 | quote }}
 {{- end }}
-{{- with $sec.numReplicas }}
+{{- if not (kindIs "invalid" $sec.numReplicas) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_NUM_REPLICAS
-  value: {{ . | quote }}
+  value: {{ $sec.numReplicas | int64 | quote }}
 {{- end }}
 {{- with $sec.indexPrefix }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_INDEX_PREFIX
   value: {{ . | quote }}
 {{- end }}
-{{- with $sec.threadCount }}
+{{- if not (kindIs "invalid" $sec.threadCount) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_THREAD_COUNT
-  value: {{ . | quote }}
+  value: {{ $sec.threadCount | int64 | quote }}
 {{- end }}
 {{- end }}
 {{- range $key, $cluster := $routes }}

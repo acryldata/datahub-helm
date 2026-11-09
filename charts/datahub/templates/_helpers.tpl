@@ -974,7 +974,8 @@ Search entity index switches (Search V2 / V3 rollout).
 Always emits the index flags. Leaving them unset inherits application.yaml, which
 serves Search V3 only. mode v2 | migrate | v3 selects a preset; an explicit
 v2Enabled, v3Enabled, keywordReadEnabled, or templatesEnabled overrides that preset.
-Semantic and hybrid reads are emitted only when set.
+Semantic search follows keyword read. semanticReadEnabled fails the render.
+Hybrid read is emitted only when set.
 
 SEARCH_V3_TEMPLATES_ENABLED is GMS-only. Pass searchV3Templates true:
   include "datahub.search-v3.env" (dict "Values" .Values "searchV3Templates" true)
@@ -982,6 +983,9 @@ Other callers include this with the root context and do not get the templates fl
 */}}
 {{- define "datahub.search-v3.env" -}}
 {{- $cfg := .Values.global.elasticsearch.entityIndex | default dict -}}
+{{- if hasKey $cfg "semanticReadEnabled" -}}
+{{- fail "global.elasticsearch.entityIndex.semanticReadEnabled was removed. Semantic search follows keyword read (ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED)." -}}
+{{- end -}}
 {{- $mode := $cfg.mode | default "v2" -}}
 {{- $presets := dict "v2" (dict "v2" true "v3" false "keywordRead" false "templates" false) "migrate" (dict "v2" true "v3" true "keywordRead" false "templates" false) "v3" (dict "v2" false "v3" true "keywordRead" true "templates" true) -}}
 {{- $preset := index $presets $mode -}}
@@ -1005,10 +1009,6 @@ Other callers include this with the root context and do not get the templates fl
 {{- if .searchV3Templates }}
 - name: SEARCH_V3_TEMPLATES_ENABLED
   value: {{ $templates | quote }}
-{{- end }}
-{{- if hasKey $cfg "semanticReadEnabled" }}
-- name: ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED
-  value: {{ index $cfg "semanticReadEnabled" | quote }}
 {{- end }}
 {{- if hasKey $cfg "hybridReadEnabled" }}
 - name: ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED

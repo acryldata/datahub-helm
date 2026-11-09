@@ -276,7 +276,7 @@ This document provides a comprehensive reference for every single configurable v
 
 ### Global Elasticsearch Entity Index (Search V3 rollout)
 
-OSS `application.yaml` serves Search V3 when these switches are unset. The chart always emits them. `global.elasticsearch.entityIndex.mode` selects a preset; set an individual flag to override that preset. Semantic and hybrid reads are omitted unless set.
+OSS `application.yaml` serves Search V3 when these switches are unset. The chart always emits them. `global.elasticsearch.entityIndex.mode` selects a preset; set an individual flag to override that preset. Semantic search follows keyword read. Setting `semanticReadEnabled` fails the render. Hybrid read is omitted unless set.
 
 | mode | V2 enabled | V3 write | V3 keyword read | Query templates |
 |------|------------|----------|-----------------|-----------------|
@@ -284,7 +284,9 @@ OSS `application.yaml` serves Search V3 when these switches are unset. The chart
 | `migrate` | true | true | false | false |
 | `v3` | false | true | true | true |
 
-`migrate` keeps V2 as the read path and also writes V3 so system-update can build and fill `*index_v3`. `v3` turns V2 off and serves keyword search from V3 templates.
+`v2` and `migrate` are unchanged by the startup read hold. `migrate` keeps V2 as the read path and also writes V3 so system-update can build and fill `*index_v3`.
+
+`v3` is the configured target: the chart emits V2 off, V3 write on, keyword read on, and query templates on. Semantic search follows keyword read. A process that still has a V2 entity index holds reads on V2 until each paired V3 index is stamped complete, then GMS, the MAE consumer, and the MCE consumer must restart together before reads move.
 
 Index flags are set on GMS, the MAE and MCE consumers, system-update (blocking and non-blocking), restore-indices, and the hourly system-update cron. `SEARCH_V3_TEMPLATES_ENABLED` is set on GMS only.
 
@@ -320,19 +322,13 @@ Index flags are set on GMS, the MAE and MCE consumers, system-update (blocking a
 <td><code>global.elasticsearch.entityIndex.keywordReadEnabled</code></td>
 <td>boolean</td>
 <td>preset</td>
-<td>Overrides <code>ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED</code>. Omit to follow <code>mode</code>.</td>
+<td>Overrides <code>ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED</code>. Semantic search follows this switch. Omit to follow <code>mode</code>.</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.entityIndex.templatesEnabled</code></td>
 <td>boolean</td>
 <td>preset</td>
 <td>Overrides <code>SEARCH_V3_TEMPLATES_ENABLED</code> on GMS. Omit to follow <code>mode</code>. Not set on consumers or upgrade jobs.</td>
-</tr>
-<tr>
-<td><code>global.elasticsearch.entityIndex.semanticReadEnabled</code></td>
-<td>boolean</td>
-<td>unset</td>
-<td>When set, emits <code>ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED</code>. Unset leaves the application default (false).</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.entityIndex.hybridReadEnabled</code></td>
@@ -444,7 +440,7 @@ Each phase is one chart upgrade. Keep `indexPrefix` the same on both clusters so
          searchV3: secondary
    ```
 
-2. **Read Search V3 from OS3.** V2 indices on the old cluster are no longer written.
+2. **Read Search V3 from OS3.** This sets `mode: v3`. A process that still has a V2 entity index holds reads on V2 until each paired V3 index is stamped complete. Restart GMS, the MAE consumer, and the MCE consumer together after that.
 
    ```yaml
    global:

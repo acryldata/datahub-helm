@@ -284,6 +284,8 @@ OSS `application.yaml` serves Search V3 when these switches are unset. The chart
 | `migrate` | true | true | false | false |
 | `v3` | false | true | true | true |
 
+`v3` also emits `ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED` as true. The documented default mode remains `v2`.
+
 `v2` and `migrate` are unchanged by the startup read hold. `migrate` keeps V2 as the read path and also writes V3 so system-update can build and fill `*index_v3`.
 
 `v3` is the configured target: the chart emits V2 off, V3 write on, keyword read on, and query templates on. Semantic search follows keyword read. A process that still has a V2 entity index holds reads on V2 until each paired V3 index is stamped complete, then GMS, the MAE consumer, and the MCE consumer must restart together before reads move.
@@ -329,6 +331,12 @@ Index flags are set on GMS, the MAE and MCE consumers, system-update (blocking a
 <td>boolean</td>
 <td>preset</td>
 <td>Overrides <code>SEARCH_V3_TEMPLATES_ENABLED</code> on GMS. Omit to follow <code>mode</code>. Not set on consumers or upgrade jobs.</td>
+</tr>
+<tr>
+<td><code>global.elasticsearch.entityIndex.cutoverAcknowledged</code></td>
+<td>boolean</td>
+<td>derived</td>
+<td>Overrides <code>ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED</code> on GMS, the MAE and MCE consumers, and the upgrade job. Omit to follow the effective flags: true when V2 is off and keyword read is on, false otherwise. When set, it wins.</td>
 </tr>
 <tr>
 <td><code>global.elasticsearch.entityIndex.hybridReadEnabled</code></td>

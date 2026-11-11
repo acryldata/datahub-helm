@@ -923,17 +923,20 @@ global:
     ##   migrate — V2 stays the read path. Writes also go to V3 so system-update can
     ##             build and fill *index_v3. Keyword read and templates stay off.
     ##   v3 — Configured target: V2 off, V3 write, keyword read, and query templates on.
-    ##        A process that still has V2 indices holds reads on V2 until each paired
-    ##        V3 index is stamped complete, then GMS and both consumers must restart.
+    ##        Also sets ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED=true because
+    ##        effective V2 is off and keyword read is on. cutoverAcknowledged overrides
+    ##        that. A process that still has V2 indices holds reads on V2 until each
+    ##        paired V3 index is stamped complete, then GMS and both consumers must restart.
     ##
     ## Set a flag below to override that preset. Hybrid read stays at the application
-    ## default (off) unless set here.
+    ## default (off) unless set here. mode stays v2.
     entityIndex:
       mode: v2
       # v2Enabled: true          # ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED
       # v3Enabled: false         # ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED
       # keywordReadEnabled: false  # ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED
       # templatesEnabled: false  # SEARCH_V3_TEMPLATES_ENABLED (GMS only)
+      # cutoverAcknowledged: false  # ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED
       # hybridReadEnabled: false    # ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED
 
     ## Optional second search cluster, e.g. an OpenSearch 3 cluster used while moving off

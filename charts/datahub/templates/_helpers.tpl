@@ -977,6 +977,10 @@ v2Enabled, v3Enabled, keywordReadEnabled, or templatesEnabled overrides that pre
 Semantic search follows keyword read. semanticReadEnabled fails the render.
 Hybrid read is emitted only when set.
 
+Also always emits ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED, including on
+the upgrade job. It is true when effective V2 is off and effective keyword read is
+on, unless cutoverAcknowledged is set. It is not GMS-only.
+
 SEARCH_V3_TEMPLATES_ENABLED is GMS-only. Pass searchV3Templates true:
   include "datahub.search-v3.env" (dict "Values" .Values "searchV3Templates" true)
 Other callers include this with the root context and do not get the templates flag.
@@ -1000,12 +1004,16 @@ Other callers include this with the root context and do not get the templates fl
 {{- if hasKey $cfg "v3Enabled" -}}{{- $v3 = $cfg.v3Enabled -}}{{- end -}}
 {{- if hasKey $cfg "keywordReadEnabled" -}}{{- $keywordRead = $cfg.keywordReadEnabled -}}{{- end -}}
 {{- if hasKey $cfg "templatesEnabled" -}}{{- $templates = $cfg.templatesEnabled -}}{{- end -}}
+{{- $cutoverAcknowledged := and (not $v2) $keywordRead -}}
+{{- if hasKey $cfg "cutoverAcknowledged" -}}{{- $cutoverAcknowledged = $cfg.cutoverAcknowledged -}}{{- end -}}
 - name: ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED
   value: {{ $v2 | quote }}
 - name: ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED
   value: {{ $v3 | quote }}
 - name: ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED
   value: {{ $keywordRead | quote }}
+- name: ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED
+  value: {{ $cutoverAcknowledged | quote }}
 {{- if .searchV3Templates }}
 - name: SEARCH_V3_TEMPLATES_ENABLED
   value: {{ $templates | quote }}

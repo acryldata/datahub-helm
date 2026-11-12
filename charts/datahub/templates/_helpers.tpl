@@ -974,7 +974,12 @@ Search entity index switches (Search V2 / V3 rollout).
 Always emits the index flags. Leaving them unset inherits application.yaml, which
 serves Search V3 only. mode v2 | migrate | v3 selects a preset; an explicit
 v2Enabled, v3Enabled, keywordReadEnabled, or templatesEnabled overrides that preset.
-Semantic and hybrid reads are emitted only when set.
+Semantic search follows keyword read. semanticReadEnabled fails the render.
+Hybrid read is emitted only when set.
+
+Also always emits ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED, including on
+the upgrade job. It is true when effective V2 is off and effective keyword read is
+on, unless cutoverAcknowledged is set. It is not GMS-only.
 
 SEARCH_V3_TEMPLATES_ENABLED is GMS-only. Pass searchV3Templates true:
   include "datahub.search-v3.env" (dict "Values" .Values "searchV3Templates" true)
@@ -982,6 +987,9 @@ Other callers include this with the root context and do not get the templates fl
 */}}
 {{- define "datahub.search-v3.env" -}}
 {{- $cfg := .Values.global.elasticsearch.entityIndex | default dict -}}
+{{- if hasKey $cfg "semanticReadEnabled" -}}
+{{- fail "global.elasticsearch.entityIndex.semanticReadEnabled was removed. Semantic search follows keyword read (ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED)." -}}
+{{- end -}}
 {{- $mode := $cfg.mode | default "v2" -}}
 {{- $presets := dict "v2" (dict "v2" true "v3" false "keywordRead" false "templates" false) "migrate" (dict "v2" true "v3" true "keywordRead" false "templates" false) "v3" (dict "v2" false "v3" true "keywordRead" true "templates" true) -}}
 {{- $preset := index $presets $mode -}}
@@ -996,19 +1004,19 @@ Other callers include this with the root context and do not get the templates fl
 {{- if hasKey $cfg "v3Enabled" -}}{{- $v3 = $cfg.v3Enabled -}}{{- end -}}
 {{- if hasKey $cfg "keywordReadEnabled" -}}{{- $keywordRead = $cfg.keywordReadEnabled -}}{{- end -}}
 {{- if hasKey $cfg "templatesEnabled" -}}{{- $templates = $cfg.templatesEnabled -}}{{- end -}}
+{{- $cutoverAcknowledged := and (not $v2) $keywordRead -}}
+{{- if hasKey $cfg "cutoverAcknowledged" -}}{{- $cutoverAcknowledged = $cfg.cutoverAcknowledged -}}{{- end -}}
 - name: ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED
   value: {{ $v2 | quote }}
 - name: ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED
   value: {{ $v3 | quote }}
 - name: ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED
   value: {{ $keywordRead | quote }}
+- name: ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED
+  value: {{ $cutoverAcknowledged | quote }}
 {{- if .searchV3Templates }}
 - name: SEARCH_V3_TEMPLATES_ENABLED
   value: {{ $templates | quote }}
-{{- end }}
-{{- if hasKey $cfg "semanticReadEnabled" }}
-- name: ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED
-  value: {{ index $cfg "semanticReadEnabled" | quote }}
 {{- end }}
 {{- if hasKey $cfg "hybridReadEnabled" }}
 - name: ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED
@@ -1089,25 +1097,26 @@ USAGE: same workloads as datahub.search-v3.env (GMS, MAE/MCE consumers, datahub.
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_SHIM_ENGINE_VERSION
   value: {{ . | quote }}
 {{- end }}
-{{- with $sec.dataNodeCount }}
+{{- /* Numeric settings: "with" would drop 0 (e.g. numReplicas for a single-node cluster), so gate on set-ness. */ -}}
+{{- if not (kindIs "invalid" $sec.dataNodeCount) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_DATA_NODE_COUNT
-  value: {{ . | quote }}
+  value: {{ $sec.dataNodeCount | int64 | quote }}
 {{- end }}
-{{- with $sec.numShards }}
+{{- if not (kindIs "invalid" $sec.numShards) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_NUM_SHARDS
-  value: {{ . | quote }}
+  value: {{ $sec.numShards | int64 | quote }}
 {{- end }}
-{{- with $sec.numReplicas }}
+{{- if not (kindIs "invalid" $sec.numReplicas) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_NUM_REPLICAS
-  value: {{ . | quote }}
+  value: {{ $sec.numReplicas | int64 | quote }}
 {{- end }}
 {{- with $sec.indexPrefix }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_INDEX_PREFIX
   value: {{ . | quote }}
 {{- end }}
-{{- with $sec.threadCount }}
+{{- if not (kindIs "invalid" $sec.threadCount) }}
 - name: ELASTICSEARCH_CLUSTERS_SECONDARY_THREAD_COUNT
-  value: {{ . | quote }}
+  value: {{ $sec.threadCount | int64 | quote }}
 {{- end }}
 {{- end }}
 {{- range $key, $cluster := $routes }}

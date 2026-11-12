@@ -915,23 +915,28 @@ global:
     ## Search entity index generation. OSS application.yaml now defaults to Search V3
     ## (V2 off, V3 write, keyword read, and query templates on) when these env vars are
     ## unset. This chart always emits them so an upgrade keeps the previous V2 behavior
-    ## until mode is changed.
+    ## until mode is changed. Semantic search follows keyword read. Setting
+    ## semanticReadEnabled fails the render.
     ##
     ## mode:
     ##   v2 (default) — V2 read and write. V3 write, keyword read, and templates off.
     ##   migrate — V2 stays the read path. Writes also go to V3 so system-update can
     ##             build and fill *index_v3. Keyword read and templates stay off.
-    ##   v3 — V2 off. V3 write, keyword read, and query templates on.
+    ##   v3 — Configured target: V2 off, V3 write, keyword read, and query templates on.
+    ##        Also sets ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED=true because
+    ##        effective V2 is off and keyword read is on. cutoverAcknowledged overrides
+    ##        that. A process that still has V2 indices holds reads on V2 until each
+    ##        paired V3 index is stamped complete, then GMS and both consumers must restart.
     ##
-    ## Set a flag below to override that preset. Semantic and hybrid reads stay at the
-    ## application default (off) unless set here.
+    ## Set a flag below to override that preset. Hybrid read stays at the application
+    ## default (off) unless set here. mode stays v2.
     entityIndex:
       mode: v2
       # v2Enabled: true          # ELASTICSEARCH_ENTITY_INDEX_V2_ENABLED
       # v3Enabled: false         # ELASTICSEARCH_ENTITY_INDEX_V3_ENABLED
       # keywordReadEnabled: false  # ELASTICSEARCH_ENTITY_INDEX_V3_KEYWORD_READ_ENABLED
       # templatesEnabled: false  # SEARCH_V3_TEMPLATES_ENABLED (GMS only)
-      # semanticReadEnabled: false  # ELASTICSEARCH_ENTITY_INDEX_V3_SEMANTIC_READ_ENABLED
+      # cutoverAcknowledged: false  # ELASTICSEARCH_ENTITY_INDEX_V3_CUTOVER_ACKNOWLEDGED
       # hybridReadEnabled: false    # ELASTICSEARCH_ENTITY_INDEX_V3_HYBRID_READ_ENABLED
 
     ## Optional second search cluster, e.g. an OpenSearch 3 cluster used while moving off

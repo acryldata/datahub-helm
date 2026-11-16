@@ -31,7 +31,7 @@ dependencies:
     repository: file://./subcharts/datahub-ingestion-cron
     condition: datahub-ingestion-cron.enabled
   - name: acryl-datahub-actions
-    version: 0.3.13
+    version: 0.3.14
     repository: file://./subcharts/acryl-datahub-actions
     condition: acryl-datahub-actions.enabled
 maintainers:

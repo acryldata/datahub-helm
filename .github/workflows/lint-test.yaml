@@ -49,3 +49,11 @@ jobs:
       - name: Run frontend graceful shutdown render tests
         run: |
           python3 .github/scripts/test_frontend_graceful_shutdown.py 
+
+      - name: Run Search V3 secondary cluster numeric render tests
+        run: |
+          python3 .github/scripts/test_search_v3_numeric_zero.py
+
+      - name: Run Search V3 entity index flag render tests
+        run: |
+          python3 .github/scripts/test_search_v3_env.py

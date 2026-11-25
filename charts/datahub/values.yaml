@@ -588,8 +588,10 @@ datahubSystemUpdate:
   # Depends on v0.14.2 or greater
   bootstrapMCPs:
     default:
+      # ingestion.version is deliberately not injected from
+      # global.datahub.managed_ingestion.defaultCliVersion: system sources run on the
+      # CLI bundled into the actions image, so they always match the deployed release.
       value_configs:
-        - "datahub.bootstrapMCPs.default.ingestion.version"
         - "datahub.bootstrapMCPs.default.schedule.timezone"
     datahubGC:
       # For information about this recipe https://datahubproject.io/docs/0.14.0/generated/ingestion/sources/datahubgc/#install-the-plugin
@@ -607,8 +609,8 @@ datahubSystemUpdate:
       values:
         ingestion:
           name: datahub-gc
-          # # override global.datahub.managed_ingestion.defaultCliVersion
-          # version: "0.14.1.7rc2"
+          # "bundled" runs on the CLI pre-installed in the actions image.
+          version: "bundled"
         # schedule:
           # # override global.datahub.timezone
           # timezone: "UTC"
@@ -634,6 +636,7 @@ datahubSystemUpdate:
         enabled: true
         ingestion:
           name: datahub-documents
+          version: "bundled"
   podAnnotations: {}
   resources:
     limits:

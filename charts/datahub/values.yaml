@@ -629,6 +629,9 @@ datahubSystemUpdate:
       values_env: DATAHUB_DOCUMENTS_BOOTSTRAP_VALUES
       revision_env: DATAHUB_DOCUMENTS_REVISION
       values:
+        # Without this the env var replaces the image default ({"enabled": true}) and the source
+        # keeps a schedule that never fires. Set false to stop the datahub-documents source.
+        enabled: true
         ingestion:
           name: datahub-documents
   podAnnotations: {}
